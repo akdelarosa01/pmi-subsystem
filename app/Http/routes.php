@@ -2300,35 +2300,29 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => '/summaryRpt'
             ]);
              Route::get('/summaryREpt', [
-                'uses' => 'Phase3\YieldPerformanceController@summaryREpt',
+                'uses' => 'Phase3\YPSummaryReportController@summaryREpt',
                 'name' => '/summaryREpt'
             ]);
-            /*Route::get('/summaryREptpdf', [
-                'uses' => 'Phase3\YieldPerformanceController@summaryREptpdf',
-                'name' => '/summaryREptpdf'
-            ]);*/
+          
             Route::get('/defectsummaryRpt', [
-                'uses' => 'Phase3\YieldPerformanceController@defectsummaryRpt',
+                'uses' => 'Phase3\YPSummaryDefectController@defectsummaryRpt',
                 'name' => '/defectsummaryRpt'
             ]);
-            /*Route::get('/defectsummaryRptpdf', [
-                'uses' => 'Phase3\YieldPerformanceController@defectsummaryRptpdf',
-                'name' => '/defectsummaryRptpdf'
-            ]);*/
+            
             Route::get('/yieldsumRpt', [
-                'uses' => 'Phase3\YieldPerformanceController@yieldsumRpt',
+                'uses' => 'Phase3\YPYieldPerformanceSummaryController@yieldsumRpt',
                 'name' => '/yieldsumRpt'
             ]);
             Route::get('/yieldsumRptpdf', [
-                'uses' => 'Phase3\YieldPerformanceController@yieldsumRptpdf',
+                'uses' => 'Phase3\YPYieldPerformanceSummaryController@yieldsumRptpdf',
                 'name' => '/yieldsumRptpdf'
             ]);
             Route::get('/yieldsumfamRpt', [
-                'uses' => 'Phase3\YieldPerformanceController@yieldsumfamRpt',
+                'uses' => 'Phase3\YPSummaryFamilyReportController@yieldsumfamRpt',
                 'name' => '/yieldsumfamRpt'
             ]);
             Route::get('/yieldsumfamRptpdf', [
-                'uses' => 'Phase3\YieldPerformanceController@yieldsumfamRptpdf',
+                'uses' => 'Phase3\YPSummaryFamilyReportController@yieldsumfamRptpdf',
                 'name' => '/yieldsumfamRptpdf'
             ]);
             Route::get('/summaryRptPdf', [

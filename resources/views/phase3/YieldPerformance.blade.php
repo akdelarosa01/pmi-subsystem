@@ -2627,111 +2627,12 @@ function update(){
           console.log(errorThrown+'|'+textStatus);
      });
 }
-function summaryREpt(){
-     var srdatefrom = $('#srdatefrom').val();
-     var srdateto = $('#srdateto').val();
-     var srprodtype = $('#srprodtype').val();
-     var token = "{{ Session::token() }}";
-     var paramfrom = srdatefrom.split("/");
-     var paramto = srdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
-    
-     window.location = "{{ url('/summaryREpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&srprodtype=" + srprodtype;
-}
 
-/*function summaryREptpdf(){
-     var srdatefrom = $('#srdatefrom').val();
-     var srdateto = $('#srdateto').val();
-     var srprodtype = $('#srprodtype').val();
-     var token = "{{ Session::token() }}";
-     var paramfrom = srdatefrom.split("/");
-     var paramto = srdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
-    
-     window.location = "{{ url('/summaryREptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&srprodtype=" + srprodtype;
-}
-*/
-function defectsummaryRpt(){
-     var dsrdatefrom = $('#dsr-datefrom').val();
-     var dsrdateto = $('#dsr-dateto').val();
-     var ptype = $('#dsr-ptype').val();
-     var icsocket = $('#dsr-icsocket').val();
-     var fol = $('#dsr-fol').val();
-     var option = "";
-     if($('#dsr-icsocket').is(':checked')){
-          option = icsocket;   
-     }
-     if($('#dsr-fol').is(':checked')){
-          option = fol;
-     }
-    
-     var token = "{{ Session::token() }}";
-     var paramfrom = dsrdatefrom.split("/");
-     var paramto = dsrdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
 
-     window.location = "{{ url('/defectsummaryRpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
-}
 
-/*function defectsummaryRptpdf(){
-     var dsrdatefrom = $('#dsr-datefrom').val();
-     var dsrdateto = $('#dsr-dateto').val();
-     var ptype = $('#dsr-ptype').val();
-     var icsocket = $('#dsr-icsocket').val();
-     var fol = $('#dsr-fol').val();
-     var option = "";
-     if($('#dsr-icsocket').is(':checked')){
-          option = icsocket;   
-     }
-     if($('#dsr-fol').is(':checked')){
-          option = fol;
-     }
-    
-     var token = "{{ Session::token() }}";
-     var paramfrom = dsrdatefrom.split("/");
-     var paramto = dsrdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
 
-     window.location = "{{ url('/defectsummaryRptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
-}
-*/
-function yieldsumRpt(){
-     var prodtype = $('#ypsr-prodtype').val();
-     var family = $('#ypsr-family').val();
-     var series = $('#ypsr-seriesname').val();
-     var device = $('#ypsr-device').val();
-     var pono = $('#ypsr-ponumber').val();
-     var ypsrdatefrom = $('#ypsr-datefrom').val();
-     var ypsrdateto = $('#ypsr-dateto').val();
-     var token = "{{ Session::token() }}";
-     var paramfrom = ypsrdatefrom.split("/");
-     var paramto = ypsrdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];  
 
-     window.location = "{{ url('/yieldsumRpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&prodtype=" + prodtype + "&&family=" + family + "&&series=" + series + "&&device=" + device + "&&pono=" + pono;    
-}
 
-function yieldsumRptpdf(){
-     var prodtype = $('#ypsr-prodtype').val();
-     var family = $('#ypsr-family').val();
-     var series = $('#ypsr-seriesname').val();
-     var device = $('#ypsr-device').val();
-     var pono = $('#ypsr-ponumber').val();
-     var ypsrdatefrom = $('#ypsr-datefrom').val();
-     var ypsrdateto = $('#ypsr-dateto').val();
-     var token = "{{ Session::token() }}";
-     var paramfrom = ypsrdatefrom.split("/");
-     var paramto = ypsrdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];  
-
-     window.location = "{{ url('/yieldsumRptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&prodtype=" + prodtype + "&&family=" + family + "&&series=" + series + "&&device=" + device + "&&pono=" + pono;    
-}
 
 
 function yieldsumfamRpt(){
