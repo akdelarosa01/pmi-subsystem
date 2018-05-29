@@ -67,6 +67,7 @@ return [
     'MODULE_CODE_XHIKI'    => '5001',
     'MODULE_CODE_lOCMAT'   => '3037',
     'MODULE_CODE_MATRIX'   => '3038',
+    'MODULE_WBS_INV'       => '3039',
     'MODULE_CODE_DISPATCH' => '5002',
     'DB_SQLSRV'            => 'mysql',
     'DB_SQLSRV_BARCODE'    => 'mysql_barcode',

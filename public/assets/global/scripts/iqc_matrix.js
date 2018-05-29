@@ -17,7 +17,7 @@ $( function() {
 
 	$('#btn_add').on('click', function() {
 		$('#formMatrixModal').modal('show');
-	})
+	});
 
 	$('#tbl_matrix_body').on('click','.btn_edit', function() {
 		$('#id').val($(this).attr('data-id'));
