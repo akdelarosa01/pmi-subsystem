@@ -31,27 +31,29 @@ $( function() {
 	});
 
 	$("#btn_delete").on('click', removeByID);
-
-	
 });
 
 
 function removeByID(){
-     var tray = [];
-     $(".check_item:checked").each(function () {
-          tray.push($(this).val());
-     });
-     var traycount =tray.length;
-     $.ajax({
-          url: deleteselected,
-          method: 'post',
-          data:  { 
-               tray : tray, 
-               traycount : traycount
-          },
-          success:function(){
-                    msg("Item Deleted","success"); 
-                   	getDatatable('tbl_inventory',inventoryListURL,dataColumn,[],0);
-          },
-     });
+    var id = [];
+    $(".check_item:checked").each(function () {
+         id.push($(this).val());
+    });
+
+    var data = {
+    	_token: token,
+    	id: id
+    };
+
+    $.ajax({
+    	url: deleteselected,
+     	type: 'POST',
+     	dataType: 'JSON',
+     	data: data
+    }).done(function(data, textStatus,xhr) {
+     	msg(data.msg,data.status);
+     	getDatatable('tbl_inventory',inventoryListURL,dataColumn,[],0);
+    }).fail(function(xhr,textStatus) {
+     	console.log("error");
+    });
 }

@@ -112,16 +112,25 @@ class WBSInventoryController extends Controller
                         })->make(true);
     }
 
-    public function deleteselected(Request $request)
-    {  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-      
-        if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_wbs_inventory')
-            ->whereIn('id',$tray)
-            ->delete();  
-        } 
-        return 1;
+    public function deleteselected(Request $req)
+    {
+        $data = [
+            'msg' => "Deleting failed.",
+            'status' => 'failed'
+        ];
+        foreach ($req->id as $key => $id) {
+            $deleted = DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                        ->where('id',$id)
+                        ->delete();
+
+            if ($deleted) {
+                $data = [
+                    'msg' => "Data were successfully deleted.",
+                    'status' => 'success'
+                ];
+            }
+        }
+
+        return $data;
     }
 }
