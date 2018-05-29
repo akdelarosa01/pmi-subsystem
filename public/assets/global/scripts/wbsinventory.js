@@ -32,6 +32,18 @@ $( function() {
 
 	$("#btn_delete").on('click', removeByID);
 
+	$('#tbl_inventory_body').on('click', '.btn_edit', function(e) {
+		e.preventDefault();
+		
+		$('#item_code').val($(this).attr('data-item'));
+		$('#item_desc').val($(this).attr('data-item_desc'));
+		$('#lot_no').val($(this).attr('data-lot_no'));
+		$('#qty').val($(this).attr('data-qty'));
+		$('#location').val($(this).attr('data-location'));
+		$('#supplier').val($(this).attr('data-supplier'));
+		$('#status').val($(this).attr('data-iqc_status'));
+		
+	});
 	
 });
 

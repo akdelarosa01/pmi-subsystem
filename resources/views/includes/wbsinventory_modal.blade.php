@@ -95,8 +95,9 @@
 					
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-success" {{ $state }}><i class="fa fa-save"></i> Save</button>
-					<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+{{-- 					<button type="submit" class="btn btn-success" {{ $state }}><i class="fa fa-save"></i> Save</button>
+ --}}					<button type="button" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+ 						<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
 				</div>
 			</form>
 		</div>
