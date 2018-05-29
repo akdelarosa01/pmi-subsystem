@@ -4,6 +4,8 @@ namespace App\Http\Controllers\WBS;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CommonController;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use Datatables;
@@ -108,5 +110,18 @@ class WBSInventoryController extends Controller
                                         <i class="fa fa-edit"></i>
                                     </button>';
                         })->make(true);
+    }
+
+    public function deleteselected(Request $request)
+    {  
+        $tray = $request->tray;
+        $traycount = $request->traycount;  
+      
+        if($traycount > 0){
+            DB::connection($this->mysql)->table('tbl_wbs_inventory')
+            ->whereIn('id',$tray)
+            ->delete();  
+        } 
+        return 1;
     }
 }

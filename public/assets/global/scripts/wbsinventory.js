@@ -29,4 +29,29 @@ $( function() {
 	$('#tbl_inventory').on('click', '.btn_edit', function() {
 		$('#form_inventory_modal').modal('show');
 	});
+
+	$("#btn_delete").on('click', removeByID);
+
+	
 });
+
+
+function removeByID(){
+     var tray = [];
+     $(".check_item:checked").each(function () {
+          tray.push($(this).val());
+     });
+     var traycount =tray.length;
+     $.ajax({
+          url: deleteselected,
+          method: 'post',
+          data:  { 
+               tray : tray, 
+               traycount : traycount
+          },
+          success:function(){
+                    msg("Item Deleted","success"); 
+                   	getDatatable('tbl_inventory',inventoryListURL,dataColumn,[],0);
+          },
+     });
+}

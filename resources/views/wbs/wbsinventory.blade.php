@@ -76,9 +76,9 @@
 
                         <div class="row">
                         	<div class="col-md-12 text-center">
-                        		<button class="btn btn-sm green" id="btn_add">
+                        		{{-- <button class="btn btn-sm green" id="btn_add">
                         			<i class="fa fa-plus"></i> Add
-                        		</button>
+                        		</button> --}}
 
                         		<button class="btn btn-sm red" id="btn_delete" {{ $state }}>
                         			<i class="fa fa-trash"></i> Delete
@@ -107,6 +107,7 @@
 	<script>
 		var token = '{{ Session::token() }}';
         var inventoryListURL = "{{ url('/wbs-inventory-list') }}";
+        var deleteselected = "{{ url('/wbs-inventory-delete') }}";
 	</script>
 	<script src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
 	<script src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/wbsinventory.js') }}" type="text/javascript"></script>
