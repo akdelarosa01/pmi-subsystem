@@ -3136,6 +3136,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/wbs-inventory', 'WBS\WBSInventoryController@index');
     Route::get('/wbs-inventory-list', 'WBS\WBSInventoryController@list');
     Route::post('/wbs-inventory-delete', 'WBS\WBSInventoryController@deleteselected');
+    Route::post('/wbs-inventory-save', 'WBS\WBSInventoryController@savedata');
 
 
 

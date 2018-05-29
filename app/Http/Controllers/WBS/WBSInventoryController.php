@@ -112,16 +112,92 @@ class WBSInventoryController extends Controller
                         })->make(true);
     }
 
-    public function deleteselected(Request $request)
-    {  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-      
-        if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_wbs_inventory')
-            ->whereIn('id',$tray)
-            ->delete();  
-        } 
-        return 1;
+    public function deleteselected(Request $req)
+    {
+        $data = [
+            'msg' => "Deleting failed.",
+            'status' => 'failed'
+        ];
+        foreach ($req->id as $key => $id) {
+            $deleted = DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                        ->where('id',$id)
+                        ->delete();
+
+            if ($deleted) {
+                $data = [
+                    'msg' => "Data were successfully deleted.",
+                    'status' => 'success'
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    public function savedata(Request $req)
+    {
+        $result = "";
+        $NFI = 0;
+        if (isset($req->id)) {
+            $this->validate($req, [
+                'item' => 'required',
+                'item_desc' => 'required',
+            ]);
+            $NFI = (isset($req->nr))?1:0;
+            $UP = DB::connection($this->mysql)
+                    ->table('tbl_wbs_inventory')
+                    ->where('id',$req->id)
+                    ->update([
+                        'item' => $req->item,
+                        'item_desc' => $req->item_desc,
+                        'lot_no' => $req->lot_no,
+                        'qty' => $req->qty,
+                        'not_for_iqc'=> $NFI,
+                        'location' => $req->location,
+                        'supplier' => $req->supplier,
+                        'iqc_status' => $req->iqc_status,
+                        'update_user' => Auth::user()->user_id,
+                        'updated_at' => date('Y-m-d h:i:s'),
+                    ]);
+
+
+        $forID = DB::table('tbl_wbs_inventory')->select('mat_batch_id', 'loc_batch_id')->get();
+        if(isser($local->mat_batch_id)){
+            $local = DB::connection($this->mysql)
+                    ->table('tbl_wbs_local_receiving_batch')
+                    ->where('id',$forID->mat_batch_id)
+                    ->update([
+                        'item' => $req->item,
+                        'item_desc' => $req->item_desc,
+                        'lot_no' => $req->lot_no,
+                        'qty' => $req->qty,
+                        'not_for_iqc'=> $NFI,
+                        'location' => $req->location,
+                        'supplier' => $req->supplier,
+                        'iqc_status' => $req->iqc_status,
+                        'update_user' => Auth::user()->user_id,
+                        'updated_at' => date('Y-m-d h:i:s'),
+                    ]);
+        }
+        else{
+            $mat = DB::connection($this->mysql)
+                    ->table('tbl_wbs_material_receiving_batch')
+                    ->where('id',$forID->mat_batch_id)
+                    ->update([
+                        'item' => $req->item,
+                        'item_desc' => $req->item_desc,
+                        'lot_no' => $req->lot_no,
+                        'qty' => $req->qty,
+                        'not_for_iqc'=> $NFI,
+                        'location' => $req->location,
+                        'supplier' => $req->supplier,
+                        'iqc_status' => $req->iqc_status,
+                        'update_user' => Auth::user()->user_id,
+                        'updated_at' => date('Y-m-d h:i:s'),
+                    ]);
+        }
+        $result ="Updated";
+        }
+        return response()->json($result);
     }
 }
