@@ -139,10 +139,10 @@ class WBSInventoryController extends Controller
         $result = "";
         $NFI = 0;
         if (isset($req->id)) {
-            $this->validate($req, [
-                'item' => 'required',
-                'item_desc' => 'required',
-            ]);
+            // $this->validate($req, [
+            //     'item' => 'required',
+            //     'item_desc' => 'required',
+            // ]);
             $NFI = (isset($req->nr))?1:0;
             $UP = DB::connection($this->mysql)
                     ->table('tbl_wbs_inventory')
@@ -155,16 +155,19 @@ class WBSInventoryController extends Controller
                         'not_for_iqc'=> $NFI,
                         'location' => $req->location,
                         'supplier' => $req->supplier,
-                        'iqc_status' => $req->iqc_status,
+                        'iqc_status' => $req->status,
                         'update_user' => Auth::user()->user_id,
                         'updated_at' => date('Y-m-d h:i:s'),
                     ]);
 
 
-        $forID = DB::table('tbl_wbs_inventory')->select('mat_batch_id', 'loc_batch_id')->get();
-        if(isser($local->mat_batch_id)){
-            $local = DB::connection($this->mysql)
-                    ->table('tbl_wbs_local_receiving_batch')
+        $forID = DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                ->select('mat_batch_id', 'loc_batch_id')
+                ->where('id',$req->id)
+                ->first();
+        if(isset($forID->mat_batch_id)){
+            $mat = DB::connection($this->mysql)
+                    ->table('tbl_wbs_material_receiving_batch')
                     ->where('id',$forID->mat_batch_id)
                     ->update([
                         'item' => $req->item,
@@ -180,9 +183,9 @@ class WBSInventoryController extends Controller
                     ]);
         }
         else{
-            $mat = DB::connection($this->mysql)
-                    ->table('tbl_wbs_material_receiving_batch')
-                    ->where('id',$forID->mat_batch_id)
+            $local = DB::connection($this->mysql)
+                    ->table('tbl_wbs_local_receiving_batch')
+                    ->where('id',$forID->loc_batch_id)
                     ->update([
                         'item' => $req->item,
                         'item_desc' => $req->item_desc,
