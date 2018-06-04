@@ -146,7 +146,7 @@ class WBSWhsMatIssueanceController extends Controller
                         })
                         ->setRowClass(function($data) {
                             if ($data->status == 'Serving') {
-                                return 'alert-warning';
+                                return 'alert-info';
                             }
 
                             if ($data->status == 'Alert') {
