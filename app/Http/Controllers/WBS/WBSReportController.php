@@ -852,7 +852,7 @@ class WBSReportController extends Controller
                                 d.classification classification,
                                 d.requestedby requestedby,
                                 d.request_date request_date,
-                                ifnull(s.`status`,'Alert') as `status`,
+                                ifnull(s.`status`,rs.`status`) as `status`,
                                 d.remarks as remarks
                             from tbl_request_detail as d
                             left join tbl_wbs_warehouse_mat_issuance_details as s
@@ -987,10 +987,15 @@ class WBSReportController extends Controller
                     ->where('item',$code)
                     ->select('status')
                     ->first();
-            return $db->status;
+            
         } else {
-            return 'Alert';
+            $db = DB::connection($this->wbs)->table('tbl_request_summary')
+                    ->where('transno',$transno)
+                    ->select('status')
+                    ->first();
         }
+
+        return $db->status;
     }
 
     private function getVENDOR($code)

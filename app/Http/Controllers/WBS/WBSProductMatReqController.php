@@ -781,6 +781,7 @@ class WBSProductMatReqController extends Controller
                         'status'       => 'Cancelled'
                         ,'updatedby' => Auth::user()->user_id
                         ,'updated_at'  => date("Y/m/d H:i:sa")]);
+                    
 
             $message = "Selected transaction successfully cancelled.";
             $output = redirect(url('/wbsprodmatrequest?page=CUR&id='. $recid))

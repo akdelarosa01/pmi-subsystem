@@ -41,13 +41,6 @@ class WHSCheckRequestFired
             $servedqty = DB::connection($event->conn)->table('tbl_request_detail')
                             ->where('transno',$db->transno)->sum('servedqty');
 
-            // $check = DB::connection($event->conn)->table('tbl_request_detail')
-            //             ->select('transno',DB::raw('SUM(requestqty) as requestqty'),
-            //                     DB::raw('SUM(servedqty) as servedqty'))
-            //             ->where('transno',$pmr->transno)
-            //             ->groupBy('transno')
-            //             ->get();
-            //if (isset($check[0])) {
                 if ( ($servedqty > 0) && ($requestqty == $servedqty) ) {
                     $status = 'Closed';
                 }
@@ -63,8 +56,6 @@ class WHSCheckRequestFired
                 DB::connection($event->conn)->table('tbl_request_summary')
                     ->where('transno',$db->transno)
                     ->update(['status' => $status]);
-            //}
-                
             
         }
     }
