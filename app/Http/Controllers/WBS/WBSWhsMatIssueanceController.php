@@ -316,23 +316,30 @@ class WBSWhsMatIssueanceController extends Controller
                 //}
             }
 
+            
+
+            $ok = DB::connection($this->mysql)->table('tbl_request_summary')
+                    ->where('transno',$req->reqno)->update([
+                        'status' => $status,
+                        'lastservedby' => Auth::user()->user_id,
+                        'lastserveddate' => date("Y/m/d H:i:sa")
+                    ]);
+
             $status = $this->checkStatus($req->issuancenowhs,$req->totreqqty);
 
-            $ok = DB::connection($this->mysql)->table('tbl_request_summary')->where('transno',$req->reqno)->update([
+            DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
+                ->insert([
+                    'issuance_no' => $req->issuancenowhs,
+                    'request_no' =>$req->reqno,
                     'status' => $status,
-                    'lastservedby' => Auth::user()->user_id,
-                    'lastserveddate' => date("Y/m/d H:i:sa")
-            ]);
-            DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')->insert([
-                'issuance_no' => $req->issuancenowhs,
-                'request_no' =>$req->reqno,
-                'status' => $status,
-                'total_req_qty' => $req->totreqqty,
-                'create_user' => Auth::user()->user_id,
-                'update_user' => Auth::user()->user_id,
-                'created_at' => date("Y/m/d H:i:sa"),
-                'updated_at' => date("Y/m/d H:i:sa")
-            ]);
+                    'total_req_qty' => $req->totreqqty,
+                    'create_user' => Auth::user()->user_id,
+                    'update_user' => Auth::user()->user_id,
+                    'created_at' => date("Y/m/d H:i:sa"),
+                    'updated_at' => date("Y/m/d H:i:sa")
+                ]);
+
+            Event::fire(new WHSCheckRequest($this->mysql,$req->reqno));
 
             if ($ok) {
                 $e['msg'] = "Issuance Number [".$req->issuancenowhs."] was successfully saved.";
@@ -351,16 +358,19 @@ class WBSWhsMatIssueanceController extends Controller
 
             $status = $this->checkStatus($req->issuancenowhs,$req->totreqqty);
 
-            $ok = DB::connection($this->mysql)->table('tbl_request_summary')->where('transno',$req->reqno)->update([
-                'status' => $status,
-                'lastservedby' => Auth::user()->user_id,
-                'lastserveddate' => date("Y/m/d H:i:sa")
-            ]);
-            DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')->where('issuance_no',$req->issuancenowhs)->update([
-                'status' => $status,
-                'update_user' => Auth::user()->user_id,
-                'updated_at' => date("Y/m/d H:i:sa")
-            ]);
+            $ok = DB::connection($this->mysql)->table('tbl_request_summary')
+                    ->where('transno',$req->reqno)->update([
+                        'status' => $status,
+                        'lastservedby' => Auth::user()->user_id,
+                        'lastserveddate' => date("Y/m/d H:i:sa")
+                    ]);
+
+            DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
+                ->where('issuance_no',$req->issuancenowhs)->update([
+                    'status' => $status,
+                    'update_user' => Auth::user()->user_id,
+                    'updated_at' => date("Y/m/d H:i:sa")
+                ]);
 
             Event::fire(new WHSCheckRequest($this->mysql,$req->reqno));
 
@@ -386,32 +396,33 @@ class WBSWhsMatIssueanceController extends Controller
 
     private function insertDetails($req,$key,$id)
     {
-        $status = "Serving";
+        $status = "";
         if ($req->requestqty[$key] == $req->qtyiss[$key]) {
             $status = "Closed";
         } else {
             $status = "Serving";
         }
         
-        DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')->insert([
-            'issuance_no' => $req->issuancenowhs,
-            'request_no' => $req->reqno,
-            'pmr_detail_id' => $id,
-            'detail_id' => $req->detid[$key],
-            'item' => $req->itemiss[$key],
-            'item_desc' => $req->itemdesciss[$key],
-            'request_qty' => $req->requestqty[$key],
-            'issued_qty_o' => $req->issuedkit[$key],
-            'issued_qty_t' => $req->qtyiss[$key],
-            'issued_date' => date('Y-m-d'),
-            'lot_no' => $req->lotiss[$key],
-            'location' => $req->lociss[$key],
-            'status' => $status,
-            'create_user' => Auth::user()->user_id,
-            'update_user' => Auth::user()->user_id,
-            'created_at' => date("Y/m/d H:i:sa"),
-            'updated_at' => date("Y/m/d H:i:sa")
-        ]);
+        DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+            ->insert([
+                'issuance_no' => $req->issuancenowhs,
+                'request_no' => $req->reqno,
+                'pmr_detail_id' => $id,
+                'detail_id' => $req->detid[$key],
+                'item' => $req->itemiss[$key],
+                'item_desc' => $req->itemdesciss[$key],
+                'request_qty' => $req->requestqty[$key],
+                'issued_qty_o' => $req->issuedkit[$key],
+                'issued_qty_t' => $req->qtyiss[$key],
+                'issued_date' => date('Y-m-d'),
+                'lot_no' => $req->lotiss[$key],
+                'location' => $req->lociss[$key],
+                'status' => $status,
+                'create_user' => Auth::user()->user_id,
+                'update_user' => Auth::user()->user_id,
+                'created_at' => date("Y/m/d H:i:sa"),
+                'updated_at' => date("Y/m/d H:i:sa")
+            ]);
 
         if (isset($req->fifoid[$key])) {
             $fifoqty = DB::connection($this->mysql)->table('tbl_wbs_inventory')
@@ -452,7 +463,7 @@ class WBSWhsMatIssueanceController extends Controller
     private function updateDetails($req)
     {
         foreach ($req->db_id as $key => $id) {
-            $status = "Serving";
+            $status = "";
             if ($req->requestqty[$key] == $req->qtyiss[$key]) {
                 $status = "Closed";
             } else {
