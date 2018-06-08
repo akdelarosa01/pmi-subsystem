@@ -377,7 +377,7 @@ class WBSWhsMatIssueanceController extends Controller
             ->where('issuance_no',$issuance_no)
             ->select(DB::raw("SUM(issued_qty_t) as issued_qty_t"))
             ->first();
-        if ($total_req_qty < $db->issued_qty_t) {
+        if ($total_req_qty <= $db->issued_qty_t) {
             return 'Closed';
         } else {
             return 'Serving';
