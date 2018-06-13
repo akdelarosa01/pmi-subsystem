@@ -2259,21 +2259,23 @@ class WBSMaterialReceivingController extends Controller
 
     private function UpdateCalculateQty($receiveno,$item,$qty)
     {
-        $old =  DB::connection($this->mysql)->table('tbl_wbs_material_receiving_summary')
-                    ->select('qty','received_qty','variance')
+            $old =  DB::connection($this->mysql)->table('tbl_wbs_material_receiving_summary')
+                        ->select('qty','received_qty','variance')
+                        ->where('wbs_mr_id',$receiveno)
+                        ->where('item',$item)
+                        ->first();
+
+            if (count((array)$old)) {
+                $variance = $old->qty - $qty;
+
+                DB::connection($this->mysql)->table('tbl_wbs_material_receiving_summary')
                     ->where('wbs_mr_id',$receiveno)
                     ->where('item',$item)
-                    ->first();
-
-        $variance = $old->qty - $qty;
-
-        DB::connection($this->mysql)->table('tbl_wbs_material_receiving_summary')
-            ->where('wbs_mr_id',$receiveno)
-            ->where('item',$item)
-            ->update([
-                'received_qty' => $qty,
-                'variance' => $variance
-            ]);
+                    ->update([
+                        'received_qty' => $qty,
+                        'variance' => $variance
+                    ]);
+            }
     }
 
     private function checkItemIfExist($receivingno,$item,$lotno)

@@ -316,14 +316,6 @@ class WBSWhsMatIssueanceController extends Controller
                 //}
             }
 
-            
-
-            $ok = DB::connection($this->mysql)->table('tbl_request_summary')
-                    ->where('transno',$req->reqno)->update([
-                        'status' => $status,
-                        'lastservedby' => Auth::user()->user_id,
-                        'lastserveddate' => date("Y/m/d H:i:sa")
-                    ]);
 
             $status = $this->checkStatus($req->issuancenowhs,$req->totreqqty);
 
@@ -338,6 +330,14 @@ class WBSWhsMatIssueanceController extends Controller
                     'created_at' => date("Y/m/d H:i:sa"),
                     'updated_at' => date("Y/m/d H:i:sa")
                 ]);
+
+            $ok = DB::connection($this->mysql)->table('tbl_request_summary')
+                    ->where('transno',$req->reqno)->update([
+                        'status' => $status,
+                        'lastservedby' => Auth::user()->user_id,
+                        'lastserveddate' => date("Y/m/d H:i:sa")
+                    ]);
+
 
             Event::fire(new WHSCheckRequest($this->mysql,$req->reqno));
 
@@ -396,68 +396,86 @@ class WBSWhsMatIssueanceController extends Controller
 
     private function insertDetails($req,$key,$id)
     {
-        $status = "";
-        if ($req->requestqty[$key] == $req->qtyiss[$key]) {
-            $status = "Closed";
+        $checkItem = DB::connection($this->mysql)
+                        ->table('tbl_wbs_warehouse_mat_issuance_details')
+                        ->where('issuance_no',$req->issuancenowhs)
+                        ->where('request_no',$req->reqno)
+                        ->where('item',$req->itemiss[$key])
+                        ->where('item_desc',$req->itemdesciss[$key])
+                        ->where('request_qty',$req->requestqty[$key])
+                        ->where('issued_qty_o',$req->issuedkit[$key])
+                        ->where('issued_qty_t',$req->qtyiss[$key])
+                        ->where('lot_no',$req->lotiss[$key])
+                        ->where('location',$req->lociss[$key])
+                        ->count();
+
+        if ($checkItem > 0) {
+            # code...
         } else {
-            $status = "Serving";
-        }
-        
-        DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
-            ->insert([
-                'issuance_no' => $req->issuancenowhs,
-                'request_no' => $req->reqno,
-                'pmr_detail_id' => $id,
-                'detail_id' => $req->detid[$key],
-                'item' => $req->itemiss[$key],
-                'item_desc' => $req->itemdesciss[$key],
-                'request_qty' => $req->requestqty[$key],
-                'issued_qty_o' => $req->issuedkit[$key],
-                'issued_qty_t' => $req->qtyiss[$key],
-                'issued_date' => date('Y-m-d'),
-                'lot_no' => $req->lotiss[$key],
-                'location' => $req->lociss[$key],
-                'status' => $status,
-                'create_user' => Auth::user()->user_id,
-                'update_user' => Auth::user()->user_id,
-                'created_at' => date("Y/m/d H:i:sa"),
-                'updated_at' => date("Y/m/d H:i:sa")
-            ]);
+            $status = "";
+            if ($req->requestqty[$key] == $req->qtyiss[$key]) {
+                $status = "Closed";
+            } else {
+                $status = "Serving";
+            }
+            
+            DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+                ->insert([
+                    'issuance_no' => $req->issuancenowhs,
+                    'request_no' => $req->reqno,
+                    'pmr_detail_id' => $id,
+                    'detail_id' => $req->detid[$key],
+                    'item' => $req->itemiss[$key],
+                    'item_desc' => $req->itemdesciss[$key],
+                    'request_qty' => $req->requestqty[$key],
+                    'issued_qty_o' => $req->issuedkit[$key],
+                    'issued_qty_t' => $req->qtyiss[$key],
+                    'issued_date' => date('Y-m-d'),
+                    'lot_no' => $req->lotiss[$key],
+                    'location' => $req->lociss[$key],
+                    'status' => $status,
+                    'create_user' => Auth::user()->user_id,
+                    'update_user' => Auth::user()->user_id,
+                    'created_at' => date("Y/m/d H:i:sa"),
+                    'updated_at' => date("Y/m/d H:i:sa")
+                ]);
 
-        if (isset($req->fifoid[$key])) {
-            $fifoqty = DB::connection($this->mysql)->table('tbl_wbs_inventory')
-                        ->select('id','qty')
-                        ->where('id',$req->fifoid[$key])
-                        ->first();
-
-            $updateqtyfifo = $fifoqty->qty - $req->qtyiss[$key];
-
-            DB::connection($this->mysql)->table('tbl_wbs_inventory')
-                ->where('id',$req->fifoid[$key])
-                ->update(['qty' => $updateqtyfifo]);
-
-            $pmr = DB::connection($this->mysql)->table('tbl_request_detail')
-                            ->where('id',$id)
-                            ->select('requestqty','servedqty')
+            if (isset($req->fifoid[$key])) {
+                $fifoqty = DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                            ->select('id','qty')
+                            ->where('id',$req->fifoid[$key])
                             ->first();
 
-            if ($pmr->servedqty != 0) {
-                if ($pmr->requestqty > $pmr->servedqty) {
-                    $served = $pmr->servedqty + $req->qtyiss[$key];
+                $updateqtyfifo = $fifoqty->qty - $req->qtyiss[$key];
+
+                DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                    ->where('id',$req->fifoid[$key])
+                    ->update(['qty' => $updateqtyfifo]);
+
+                $pmr = DB::connection($this->mysql)->table('tbl_request_detail')
+                                ->where('id',$id)
+                                ->select('requestqty','servedqty')
+                                ->first();
+
+                if ($pmr->servedqty != 0) {
+                    if ($pmr->requestqty > $pmr->servedqty) {
+                        $served = $pmr->servedqty + $req->qtyiss[$key];
+                        DB::connection($this->mysql)->table('tbl_request_detail')->where('id',$id)->update([
+                            'servedqty' => $served,
+                            'last_served_by' => Auth::user()->user_id,
+                            'last_served_date' => date("Y/m/d H:i:sa")
+                        ]);
+                    }
+                } else {
                     DB::connection($this->mysql)->table('tbl_request_detail')->where('id',$id)->update([
-                        'servedqty' => $served,
+                        'servedqty' => $req->qtyiss[$key],
                         'last_served_by' => Auth::user()->user_id,
                         'last_served_date' => date("Y/m/d H:i:sa")
                     ]);
                 }
-            } else {
-                DB::connection($this->mysql)->table('tbl_request_detail')->where('id',$id)->update([
-                    'servedqty' => $req->qtyiss[$key],
-                    'last_served_by' => Auth::user()->user_id,
-                    'last_served_date' => date("Y/m/d H:i:sa")
-                ]);
             }
         }
+            
     }
 
     private function updateDetails($req)

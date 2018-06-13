@@ -697,9 +697,9 @@ Route::group(['middleware' => 'web'], function () {
                     'name' => 'issuance-sheet'
                 ]);
 
-                Route::post('/cancelpo', [
+                Route::post('/cancel-po', [
                     'uses' => 'WBS\WBSSakidashiIssuanceController@cancelPO',
-                    'name' => 'cancelpo'
+                    'name' => 'cancel-po'
                 ]);
 
                 Route::post('/search', [

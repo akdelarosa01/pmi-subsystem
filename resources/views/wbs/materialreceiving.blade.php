@@ -1898,8 +1898,8 @@
                             '</td>'+
                             '<td style="width:6.1%">'+cnt+'</td>'+
                             '<td style="width:7.1%">'+item+
-                                '<input type="hidden" name="item_batch[]" value="'+item+'">'+
-                                '<input type="hidden" name="id_batch[]" value="">'+
+                                '<input type="text" name="item_batch[]" value="'+item+'">'+
+                                '<input type="text" name="id_batch[]" value="">'+
                             '</td>'+
                             '<td style="width:18.1%">'+item_desc+
                                 '<input type="hidden" name="item_desc_batch[]" value="'+item_desc+'">'+

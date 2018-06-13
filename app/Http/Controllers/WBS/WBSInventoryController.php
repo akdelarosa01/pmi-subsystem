@@ -321,7 +321,7 @@ class WBSInventoryController extends Controller
                     $count++;
                 }
                 
-                $sheet->cells('A6:J'.$row, function($cells) {
+                $sheet->cells('A'.$row.':J'.$row, function($cells) {
                     $cells->setBorder('thick', 'thick', 'thick', 'thick');
                 });
             });
