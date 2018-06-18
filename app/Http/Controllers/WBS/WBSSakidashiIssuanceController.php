@@ -79,7 +79,7 @@ class WBSSakidashiIssuanceController extends Controller
                         ->select(DB::raw('s.CODE as code'),
                                 DB::raw('h.NAME as prodname'),
                                 DB::raw('r.KVOL as POqty'),
-                                DB::raw('s.PORDER as porder'))
+                                DB::raw('s.PORDER as porder'),
                                 DB::raw('r.SEDA as branch'))
                         ->where('s.SEIBAN',$req->po)
                         ->orderBy('r.SEDA','desc')
