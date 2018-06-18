@@ -870,6 +870,7 @@ class WBSWhsMatIssueanceController extends Controller
                 ]);
 
         if ($iss) {
+
              DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
                 ->where('issuance_no',$req->issuancenowhs)
                 ->where('request_no',$req->reqno)->update([
@@ -879,8 +880,6 @@ class WBSWhsMatIssueanceController extends Controller
             
             $e['msg'] = "Issuance Number [".$req->issuancenowhs."] was successfully cancelled.";
         }
-
-       
         return $e;
     }
 
