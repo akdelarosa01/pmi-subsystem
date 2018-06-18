@@ -861,17 +861,26 @@ class WBSWhsMatIssueanceController extends Controller
 
     public function postCancelIssuance(Request $req)
     {
-        DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
-            ->where('issuance_no',$req->issuancenowhs)
-            ->where('request_no',$req->reqno)->update([
-                'status' => 'Cancelled'
-            ]);
-        DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
-            ->where('issuance_no',$req->issuancenowhs)
-            ->where('request_no',$req->reqno)->update([
-                'status' => 'Cancelled'
-            ]);
-        $e['msg'] = "Issuance Number [".$req->issuancenowhs."] was successfully cancelled.";
+        $e = ['msg' => ''];
+        $iss = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
+                ->where('issuance_no',$req->issuancenowhs)
+                ->update([
+                    'status' => 'Cancelled',
+                    'update_user' => Auth::user()->user_id
+                ]);
+
+        if ($iss) {
+             DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+                ->where('issuance_no',$req->issuancenowhs)
+                ->where('request_no',$req->reqno)->update([
+                    'status' => 'Cancelled',
+                    'update_user' => Auth::user()->user_id
+                ]);
+            
+            $e['msg'] = "Issuance Number [".$req->issuancenowhs."] was successfully cancelled.";
+        }
+
+       
         return $e;
     }
 
