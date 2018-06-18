@@ -861,7 +861,7 @@ class WBSWhsMatIssueanceController extends Controller
 
     public function postCancelIssuance(Request $req)
     {
-        $e = ['msg' => ''];
+        $e = ['msg' => 'Cancelling failed.'];
         $iss = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
                 ->where('issuance_no',$req->issuancenowhs)
                 ->update([
