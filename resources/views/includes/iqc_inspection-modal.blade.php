@@ -67,6 +67,7 @@
 							<div class="form-group">
 								<label class="control-label col-sm-3">Lot No.</label>
 								<div class="col-sm-9">
+									{{-- <button type="button" id="btn_lotno" class="btn btn-prinmary">LOT NUMBERS</button> --}}
 									<input type="text" name="lot_no" id="lot_no" class="form-control required input-sm lot_no clear clearselect">
 									<!-- </select> -->
 									<div id="er_lot_no"></div>
@@ -1333,6 +1334,31 @@
 	</div>
 </div>
 
+<div id="LotNoModal" class="modal fade" role="dialog" data-backdrop="static">
+	<div class="modal-dialog gray-gallery">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Lot Numbers</h4>
+			</div>
+			<form class="form-horizontal">
+				<div class="modal-body">
+					<table class="table table-striped" id="tbl_lot_no">
+						<thead>
+							<td></td>
+							<td>Lot No.</td>
+							<td>Qty.</td>
+						</thead>
+						<tbody id="tbl_lot_no_body"></tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" data-dismiss="modal" class="btn btn-danger" id="btn_search-close">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <!-- MSG -->
 <div id="confirmDeleteModal" class="modal fade" role="dialog" data-backdrop="static">
 	 <div class="modal-dialog modal-sm gray-gallery">
@@ -1351,3 +1377,4 @@
 		  </div>
 	 </div>
 </div>
+
