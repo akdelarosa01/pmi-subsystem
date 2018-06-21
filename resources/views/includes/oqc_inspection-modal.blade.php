@@ -215,7 +215,7 @@
                                 <div class="form-group" id="date_inspected_div">
                                     <label class="control-label col-sm-3">Date Inspected</label>
                                     <div class="col-sm-9">
-                                        <input class="form-control enter input-sm validate" type="date" name="date_inspected" id="date_inspected" />
+                                        <input class="form-control enter input-sm validate clear" type="date" name="date_inspected" id="date_inspected" />
                                         <span class="help-block">
                                             <strong id="date_inspected_msg"></strong>
                                         </span>
@@ -224,17 +224,17 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">WW#</label>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control input-sm" id="ww" name="ww" readonly>
+                                        <input type="text" class="form-control input-sm clear" id="ww" name="ww" readonly>
                                     </div>
                                     <label class="control-label col-sm-3">FY#</label>
                                     <div class="col-sm-3">
-                                        <input type="text" class="form-control input-sm" id="fy" name="fy" readonly>
+                                        <input type="text" class="form-control input-sm clear" id="fy" name="fy" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group" id="time_ins_div">
                                     <label class="control-label col-sm-3">Time Inspected</label>
                                     <div class="col-sm-4">
-                                        <input type="text" data-format="hh:mm A" class="form-control enter input-sm validate" name="time_ins_from" id="time_ins_from"/>
+                                        <input type="text" data-format="hh:mm A" class="form-control enter input-sm validate clear" name="time_ins_from" id="time_ins_from"/>
                                         <span class="help-block">
                                             <strong id="time_ins_msg"></strong>
                                         </span>
@@ -263,7 +263,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Inspector</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" id="inspector" name="inspector" readonly value="{{ Auth::user()->firstname }}" />
+                                        <input type="text" class="form-control input-sm clear" id="inspector" name="inspector" readonly value="{{ Auth::user()->firstname }}" />
                                     </div>
                                 </div>
                                 <div class="form-group" id="submission_div">

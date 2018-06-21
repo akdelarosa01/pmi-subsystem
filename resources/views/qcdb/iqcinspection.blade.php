@@ -210,6 +210,10 @@
 			$('#partcode').select2('container').hide();
 		});
 
+		$('#btn_lotno').on('click', function() {
+			$('#LotNoModal').modal('show');
+		});
+
 		$('#rq_inspection_body').scroll(function() {
 			if($('#rq_inspection_body').scrollTop() + $('#rq_inspection_body').height() >= $('#rq_inspection_body').height()) {
 				row = row+2;

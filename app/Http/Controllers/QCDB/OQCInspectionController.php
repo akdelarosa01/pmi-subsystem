@@ -1282,8 +1282,68 @@ class OQCInspectionController extends Controller
                     'reject' => $plan->reject
                 ];
             }
+        } else {
+            //return response()->json($data = ['gago' => 'gago']);
+            return $this->nonNumericAQL($req);
         }
         
+
+        return response()->json($data);
+    }
+
+    public function nonNumericAQL($req)
+    {
+        $data = [
+            'ins_lvl' => 'II',
+            'size' => 0,
+            'accept' => 0,
+            'reject' => 1
+        ];
+
+        if ($req->lot_qty >= 1 && $req->lot_qty <= 8) {
+            $data = [
+                'ins_lvl' => 'II',
+                'size' => 2,
+                'accept' => 0,
+                'reject' => 1
+            ];
+        }
+
+        if ($req->lot_qty >= 9 && $req->lot_qty <= 15) {
+            $data = [
+                'ins_lvl' => 'II',
+                'size' => 3,
+                'accept' => 0,
+                'reject' => 1
+            ];
+        }
+
+        if ($req->lot_qty >= 16 && $req->lot_qty <= 25) {
+            $data = [
+                'ins_lvl' => 'II',
+                'size' => 5,
+                'accept' => 0,
+                'reject' => 1
+            ];
+        }
+
+        if ($req->lot_qty >= 26 && $req->lot_qty <= 50) {
+            $data = [
+                'ins_lvl' => 'II',
+                'size' => 8,
+                'accept' => 0,
+                'reject' => 1
+            ];
+        }
+
+        if ($req->lot_qty >= 51 && $req->lot_qty <= 99) {
+            $data = [
+                'ins_lvl' => 'II',
+                'size' => 13,
+                'accept' => 0,
+                'reject' => 1
+            ];
+        }
 
         return response()->json($data);
     }
@@ -1327,7 +1387,4 @@ class OQCInspectionController extends Controller
     {
         return date('H:i:s',strtotime($time));
     }
-
-    
-
 }
