@@ -375,6 +375,7 @@ $( document ).ready(function(e) {
 	});
 
 	$('#btn_save').on('click', function() {
+		$('#btn_save').hide();
 		$('#loading').modal('show');
 		var url = saveWhsIssuanceURL;
 
@@ -507,19 +508,6 @@ function loadMassAlert() {
         ]
     });
 }
-
-// function checkRequest() {
-// 	$.ajax({
-// 		url: checkReuestURL,
-// 		type: 'GET',
-// 		dataType: 'JSON',
-// 		data: {_token: token},
-// 	}).done(function(data,textStatus,jqXHR) {
-// 		console.log("success");
-// 	}).fail(function(data,textStatus,jqXHR) {
-// 		console.log("error");
-// 	});
-// }
 
 function viewDetails(e,transno,status) {
 	var formURL = viewdetailsURL;
