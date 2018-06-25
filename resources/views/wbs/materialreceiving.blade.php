@@ -556,7 +556,7 @@
                 invoiceno: $('#srch_invoiceno').val(),
                 invfrom: $('#srch_invfrom').val(),
                 invto: $('#srch_invto').val(),
-                palletno: $('#srch_palletno').val(),
+                item: $('#srch_item').val(),
                 open: $('#srch_open').val(),
                 close: $('#srch_close').val(),
                 cancelled: $('#srch_cancelled').val(),
@@ -568,6 +568,7 @@
                 data: data,
             }).done( function(data, textStatus, jqXHR) {
                 var status = '';
+                var iqc_status = '';
                 $.each(data, function(index, x) {
                     if (x.status == 'O') {
                         status = 'Open';
@@ -579,6 +580,22 @@
                     if (x.status == 'C') {
                         status = 'Cancelled';
                     }
+
+                    if (x.iqc_status == 1) {
+                        iqc_status = 'Accepted';
+                    }
+                    if (x.iqc_status == 2) {
+                        iqc_status = 'Rejected';
+                    }
+
+                    if (x.iqc_status == 3) {
+                        iqc_status = 'On-going';
+                    }
+
+                    if (x.iqc_status == 0) {
+                        iqc_status = 'Pending';
+                    }
+
                     tbl_search = '<tr class="search_row">'+
                                     '<td>'+
                                         '<a href="javascript:;" class="btn blue input-sm look_search" data-id="'+x.id+'">'+
@@ -586,11 +603,14 @@
                                         '</a>'+
                                     '</td>'+
                                     '<td>'+x.receive_no+'</td>'+
-                                    '<td>'+x.receive_date+'</td>'+
+                                    '<td>'+x.received_date+'</td>'+
                                     '<td>'+x.invoice_no+'</td>'+
                                     '<td>'+x.invoice_date+'</td>'+
-                                    '<td>'+x.pallet_no+'</td>'+
+                                    '<td>'+x.item+'</td>'+
+                                    '<td>'+x.lot_no+'</td>'+
+                                    '<td>'+x.qty+'</td>'+
                                     '<td>'+status+'</td>'+
+                                    '<td>'+iqc_status+'</td>'+
                                     '<td>'+x.create_user+'</td>'+
                                     '<td>'+x.created_at+'</td>'+
                                     '<td>'+x.update_user+'</td>'+

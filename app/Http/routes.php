@@ -1623,6 +1623,8 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'iqc-calculate-dppm'
             ]);
 
+
+
             Route::get('/iqc-groupby-values', [
                 'uses' => 'QCDB\IQCGroupByController@GroupByValues',
                 'name' => 'iqc-groupby-values'
@@ -1696,6 +1698,9 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'oqc-groupby-values'
             ]);
 
+
+            
+
             Route::get('/oqc-initiatedata', [
                 'uses' => 'QCDB\OQCInspectionController@initData',
                 'name' => 'oqc-initiatedata'
@@ -1741,6 +1746,33 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'QCDB\OQCGroupByController@GrpByPDFReport',
                 'name' => 'oqc-groupby-pdf'
             ]);
+
+            Route::get('/oqc-groupby-dppmgroup1', [
+                'uses' => 'QCDB\OQCGroupByController@dppmgroup1',
+                'name' => 'oqc-groupby-dppmgroup1'
+            ]);
+
+            Route::get('/oqc-groupby-dppmgroup2', [
+                'uses' => 'QCDB\OQCGroupByController@dppmgroup2',
+                'name' => 'oqc-groupby-dppmgroup2'
+            ]);
+
+            Route::get('/oqc-groupby-dppmgroup3', [
+                'uses' => 'QCDB\OQCGroupByController@dppmgroup3',
+                'name' => 'oqc-groupby-dppmgroup3'
+            ]);
+
+            Route::get('/oqc-groupby-dppmgroup2_Details', [
+                'uses' => 'QCDB\OQCGroupByController@dppmgroup2_Details',
+                'name' => 'oqc-groupby-dppmgroup2_Details'
+            ]);
+
+            Route::get('/oqc-groupby-dppmgroup3_Details', [
+                'uses' => 'QCDB\OQCGroupByController@dppmgroup3_Details',
+                'name' => 'oqc-groupby-dppmgroup3_Details'
+            ]);
+
+            
 
 
 
