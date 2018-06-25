@@ -859,16 +859,16 @@ class WBSMaterialReceivingController extends Controller
         $invoiceno = $req->invoiceno;
         $invfrom = $this->formatDate($req->invfrom, 'Y-m-d');
         $invto = $this->formatDate($req->invto, 'Y-m-d');
-        $palletno = $req->palletno;
         $open = $req->open;
         $close = $req->close;
         $cancelled = $req->cancelled;
+        $item = $req->item;
 
         $receivedate_cond = '';
         $invoiceno_cond = '';
         $invoicedate_cond = '';
-        $palletno_cond = '';
         $status_cond = '';
+        $item_cond = '';
 
         # Create Receive Date Condition.
             if(is_null($from) and is_null($to))
@@ -877,7 +877,7 @@ class WBSMaterialReceivingController extends Controller
             }
             else
             {
-                $receivedate_cond = " AND receive_date BETWEEN '" . $from . "' AND '" . $to . "'";
+                $receivedate_cond = " AND b.received_date BETWEEN '" . $from . "' AND '" . $to . "'";
             }
 
             # Create Invoice No. Condition
@@ -887,7 +887,17 @@ class WBSMaterialReceivingController extends Controller
             }
             else
             {
-                $invoiceno_cond = " AND invoice_no = '" . $invoiceno . "'";
+                $invoiceno_cond = " AND b.invoice_no = '" . $invoiceno . "'";
+            }
+
+            # Create Invoice No. Condition
+            if(empty($item))
+            {
+                $item_cond ='';
+            }
+            else
+            {
+                $item_cond = " AND b.item = '" . $item . "'";
             }
 
             # Create Invoice Date. Condition
@@ -897,17 +907,7 @@ class WBSMaterialReceivingController extends Controller
             }
             else
             {
-                $invoicedate_cond = " AND invoice_date BETWEEN '" . $invfrom . "' AND '" . $invto . "'";
-            }
-
-            # Create Pallet No. Condition
-            if(empty($palletno))
-            {
-                $palletno_cond = '';
-            }
-            else
-            {
-                $palletno_cond = " AND pallet_no = '" . $palletno . "'";
+                $invoicedate_cond = " AND r.invoice_date BETWEEN '" . $invfrom . "' AND '" . $invto . "'";
             }
 
             # Create Status Condition
@@ -943,13 +943,39 @@ class WBSMaterialReceivingController extends Controller
                 $status_cond = " AND `status` IN (". $open .", ". $close .",". $cancelled.")";
             }
 
-        $data = DB::connection($this->mysql)->table('tbl_wbs_material_receiving')
+        $data = DB::connection($this->mysql)->table('tbl_wbs_material_receiving as r')
+                    ->leftJoin('tbl_wbs_material_receiving_batch as b','r.receive_no','=','b.wbs_mr_id')
                     ->whereRaw(" 1=1 "
                             . $receivedate_cond
                             . $invoiceno_cond
                             . $invoicedate_cond
-                            . $palletno_cond
-                            . $status_cond)
+                            . $status_cond
+                            . $item_cond)
+                    ->select('r.id',
+                            'r.receive_no',
+                            'b.received_date',
+                            'b.invoice_no',
+                            'r.invoice_date',
+                            'b.item',
+                            'b.lot_no',
+                            'b.qty',
+                            'r.status',
+                            'b.iqc_status',
+                            'r.create_user',
+                            'r.created_at',
+                            'r.update_user',
+                            'r.updated_at')
+                    ->groupBy('r.id',
+                            'r.receive_no',
+                            'b.received_date',
+                            'b.invoice_no',
+                            'r.invoice_date',
+                            'b.item',
+                            'b.lot_no',
+                            'b.qty',
+                            'r.status',
+                            'b.iqc_status')
+                    ->orderBy('r.id','desc')
                     ->get();
         if ($this->checkIfExistObject($data) > 0) {
             return $data;

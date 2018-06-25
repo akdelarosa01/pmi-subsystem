@@ -514,144 +514,111 @@ Route::group(['middleware' => 'web'], function () {
 
 
         /*Prod Material Request*/
-            Route::get('/wbsprodmatrequest', [
-                'uses' => 'WBS\WBSProductMatReqController@getProdMatRequest',
-                'name' => 'wbsprodmatrequest'
-            ]);
 
-            Route::post('/wbsprodmatrequest', [
-                'uses' => 'WBS\WBSProductMatReqController@getProdMatRequest',
-                'name' => 'wbsprodmatrequest'
-            ]);
+            Route::group(['prefix' => 'wbsprodmatrequest'], function() {
+                Route::get('/', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@index',
+                    'name' => 'wbsprodmatrequest'
+                ]);
 
-            Route::post('/posearch', [
-                'uses' => 'WBS\WBSProductMatReqController@postSearchPO',
-                'name' => 'posearch'
-            ]);
+                Route::post('/search-po', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@SearchPO',
+                    'name' => 'search-po'
+                ]);
 
-            Route::post('/savedetailpmr', [
-                'uses' => 'WBS\WBSProductMatReqController@postSaveDetail',
-                'name' => 'savedetailpmr'
-            ]);
+                Route::get('/select-po-details', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@selectPOeDetails',
+                    'name' => 'select-po-details'
+                ]);
 
-            Route::post('/requestsummaryfrm', [
-                'uses' => 'WBS\WBSProductMatReqController@postSaveRequest',
-                'name' => 'requestsummaryfrm'
-            ]);
+                Route::get('/get-selections', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@getSelections',
+                    'name' => 'get-selections'
+                ]);
 
-            Route::post('/cancelpmr', [
-                'uses' => 'WBS\WBSProductMatReqController@postCancelPmr',
-                'name' => 'cancelpmr'
-            ]);
+                Route::post('/save', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@save',
+                    'name' => 'save'
+                ]);
 
-            Route::post('/searchpmr', [
-                'uses' => 'WBS\WBSProductMatReqController@postSearchPmr',
-                'name' => 'searchpmr'
-            ]);
+                Route::get('/get-data', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@getData',
+                    'name' => 'get-data'
+                ]);
 
-            Route::get('/printpmr', [
-                'uses' => 'WBS\WBSProductMatReqController@postPrintPmr',
-                'name' => 'printpmr'
-            ]);
-            Route::get('/getmassalertprodreq', [
-                'uses' => 'WBS\WBSProductMatReqController@getMassAlert',
-                'name' => 'getmassalertprodreq'
-            ]);
+                Route::post('/acknowledge', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@acknowledge',
+                    'name' => 'acknowledge'
+                ]);
 
-            Route::post('/edit-acknowledgeby', [
-                'uses' => 'WBS\WBSProductMatReqController@editAcknowledgeby',
-                'name' => 'edit-acknowledgeby'
-            ]);
+                Route::get('/get-pdf', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@getPDF',
+                    'name' => 'get-pdf'
+                ]);
 
-            Route::post('/checkacknowledge', [
-                'uses' => 'WBS\WBSProductMatReqController@checkAcknowledge',
-                'name' => 'checkacknowledge'
-            ]);
+                Route::post('/cancel-request', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@cancelRequest',
+                    'name' => 'cancel-request'
+                ]);
 
-        /* Sakidashi Inspection*/
-            // Route::get('/wbssakidashi', [
-            //     'uses' => 'WBS\WBSSakidashiController@getSakidahi',
-            //     'name' => 'wbssakidashi'
+                Route::post('/search-request', [
+                    'uses' => 'WBS\WBSProductionMaterialRequestController@searchRequest',
+                    'name' => 'search-request'
+                ]);
+            }); 
+
+            // Route::get('/wbsprodmatrequest', [
+            //     'uses' => 'WBS\WBSProductMatReqController@index',
+            //     'name' => 'wbsprodmatrequest'
             // ]);
 
-            // Route::post('/wbssi-searchpo', [
-            //     'uses' => 'WBS\WBSSakidashiController@searchPO',
-            //     'name' => 'wbssi-searchpo'
+            // Route::post('/wbsprodmatrequest', [
+            //     'uses' => 'WBS\WBSProductMatReqController@getProdMatRequest',
+            //     'name' => 'wbsprodmatrequest'
             // ]);
 
-            // Route::post('/wbssisave', [
-            //     'uses' => 'WBS\WBSSakidashiController@saveRecord',
-            //     'name' => 'wbssisave'
+            // Route::post('/posearch', [
+            //     'uses' => 'WBS\WBSProductMatReqController@postSearchPO',
+            //     'name' => 'posearch'
             // ]);
 
-            // Route::get('/wbssi-getlatest', [
-            //     'uses' => 'WBS\WBSSakidashiController@getLatest',
-            //     'name' => 'wbssi-getlatest'
+            // Route::post('/savedetailpmr', [
+            //     'uses' => 'WBS\WBSProductMatReqController@postSaveDetail',
+            //     'name' => 'savedetailpmr'
             // ]);
 
-            // Route::get('/wbssi-gettranscode', [
-            //     'uses' => 'WBS\WBSSakidashiController@getTransCode',
-            //     'name' => 'wbssi-gettranscode'
+            // Route::post('/requestsummaryfrm', [
+            //     'uses' => 'WBS\WBSProductMatReqController@postSaveRequest',
+            //     'name' => 'requestsummaryfrm'
             // ]);
 
-            // Route::get('/wbssi-history', [
-            //     'uses' => 'WBS\WBSSakidashiController@itemHistory',
-            //     'name' => 'wbssi-history'
+            // Route::post('/cancelpmr', [
+            //     'uses' => 'WBS\WBSProductMatReqController@postCancelPmr',
+            //     'name' => 'cancelpmr'
             // ]);
 
-            // Route::get('/wbssi-nav', [
-            //     'uses' => 'WBS\WBSSakidashiController@sakiNavigate',
-            //     'name' => 'wbssi-nav'
+            // Route::post('/searchpmr', [
+            //     'uses' => 'WBS\WBSProductMatReqController@postSearchPmr',
+            //     'name' => 'searchpmr'
             // ]);
 
-            // Route::get('/wbssi-report', [
-            //     'uses' => 'WBS\WBSSakidashiController@printSiReport',
-            //     'name' => 'wbssi-report'
+            // Route::get('/printpmr', [
+            //     'uses' => 'WBS\WBSProductMatReqController@postPrintPmr',
+            //     'name' => 'printpmr'
+            // ]);
+            // Route::get('/getmassalertprodreq', [
+            //     'uses' => 'WBS\WBSProductMatReqController@getMassAlert',
+            //     'name' => 'getmassalertprodreq'
             // ]);
 
-            // Route::post('/wbssi-cancel', [
-            //     'uses' => 'WBS\WBSSakidashiController@cancelPO',
-            //     'name' => 'wbssi-cancel'
+            // Route::post('/edit-acknowledgeby', [
+            //     'uses' => 'WBS\WBSProductMatReqController@editAcknowledgeby',
+            //     'name' => 'edit-acknowledgeby'
             // ]);
 
-            // Route::post('/wbssi-search', [
-            //     'uses' => 'WBS\WBSSakidashiController@searchSiWbsData',
-            //     'name' => 'wbssi-search'
-            // ]);
-
-            // Route::get('/sakiExportToExcel', [
-            //     'uses' => 'WBS\WBSSakidashiController@sakiExportToExcel',
-            //     'name' => 'sakiExportToExcel'
-            // ]);
-
-            // Route::get('/wbssi-fifo', [
-            //     'uses' => 'WBS\WBSSakidashiController@getFifoTable',
-            //     'name' => 'wbssi-fifo'
-            // ]);
-
-            // Route::get('/wbssi-checkinpo', [
-            //     'uses' => 'WBS\WBSSakidashiController@checkInPO',
-            //     'name' => 'wbssi-checkinpo'
-            // ]);
-
-            // Route::get('/wbssi-checkinfifo', [
-            //     'uses' => 'WBS\WBSSakidashiController@checkInFIFO',
-            //     'name' => 'wbssi-checkinfifo'
-            // ]);
-
-            // Route::get('/wbssaki-brprint', [
-            //     'uses' => 'WBS\WBSSakidashiController@BrCodePrint',
-            //     'name' => 'wbssaki-brprint'
-            // ]);
-
-            // Route::post('/wbssakififoreason', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@fifoReason',
-            //     'name' => 'wbssakififoreason'
-            // ]);
-
-            // Route::get('/wbssakireasonexcel', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@fifoReasonExcel',
-            //     'name' => 'wbssakireasonexcel'
+            // Route::post('/checkacknowledge', [
+            //     'uses' => 'WBS\WBSProductMatReqController@checkAcknowledge',
+            //     'name' => 'checkacknowledge'
             // ]);
 
             Route::group(['prefix' => 'sakidashi-issuance'], function() {
