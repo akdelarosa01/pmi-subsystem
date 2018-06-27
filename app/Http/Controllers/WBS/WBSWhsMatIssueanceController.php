@@ -1381,7 +1381,7 @@ class WBSWhsMatIssueanceController extends Controller
                         $sheet->cell('F'.$row, 1);
                         $sheet->cell('G'.$row, $val->issued_qty_t);
                         $sheet->cell('H'.$row, $val->lot_no);
-                        $sheet->cell('I'.$row, $this->formatDate($val->created_at));
+                        $sheet->cell('I'.$row, $this->convertDate($val->created_at,'Ymd'));
                         $sheet->cell('J'.$row, substr($val->issuance_no,4));
                         $sheet->cell('K'.$row, $val->item_desc);
                        

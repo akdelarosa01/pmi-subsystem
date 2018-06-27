@@ -13,6 +13,10 @@ $( function() {
 		getData($('#req_no').val());
 	});
 
+	$('#req_no').on('change', function() {
+		getData($(this).val());
+	});
+
 	$('#btn_edit_req').on('click', function() {
 		editState();
 	});
@@ -193,7 +197,8 @@ $( function() {
 			dataType: 'JSON',
 			data: data,
 		}).done(function(data, textStatus, xhr) {
-			getData(data.req_no);
+			//getData(data.req_no);
+			getData($('#req_no').val());
 		}).fail(function(xhr, textStatus, errorThrown) {
 			console.log("error");
 		}).always(function() {
