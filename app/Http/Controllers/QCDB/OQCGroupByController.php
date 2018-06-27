@@ -163,13 +163,14 @@ class OQCGroupByController extends Controller
                                                     WHERE 1=1 ".$sub_date_inspected."
                                                     AND ".$req->firstData." = '".$req->content1[$x]."'
                                                     AND ".$req->secondData." = '".$req->content2[$y]."'
-                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'
+                                                    GROUP BY ".$req->thirdData.""
                                                 );
                         if(count($ins) > 0){
                             array_push($list, $ins);
                         }
                     }
-                    if(count($list) > 0){
+                    if(count($list) > 0 ){
                     array_push($list2, $list);
                     }
                 }

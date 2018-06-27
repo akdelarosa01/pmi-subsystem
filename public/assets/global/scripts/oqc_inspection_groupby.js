@@ -231,9 +231,9 @@ $( function() {
                                                 g1.push($('#content2').val());
                                         }
                                         else{
+                                            var uniqueField = [];
                                                 for(var x=0;x<returnDataDetails.length;x++){
                                                     g2.push(returnDataDetails[x].chosenfield2);
-                                                    var uniqueField = [];
                                                     $.each(g2, function(i, el){
                                                         if($.inArray(el, uniqueField) === -1) uniqueField.push(el);
                                                     });
@@ -243,8 +243,12 @@ $( function() {
                                                 g1.push($('#content3').val());
                                         }
                                         else{
+                                            var uniqueField2 = [];
                                                 for(var x=0;x<returnDataDetails.length;x++){
                                                     g3.push(returnDataDetails[x].chosenfield3);
+                                                    $.each(g3, function(i, el){
+                                                        if($.inArray(el, uniqueField2) === -1) uniqueField2.push(el);
+                                                    });
                                                 }
                                         }
                                                         $.ajax({
@@ -254,7 +258,7 @@ $( function() {
                                                         data:{ _token:token,
                                                                 content1:g1,
                                                                 content2:uniqueField,
-                                                                content3:g3,
+                                                                content3:uniqueField2,
                                                                 firstData:desFirst.field1,
                                                                 secondData:desFirst.field2,
                                                                 thirdData:desFirst.field3,
