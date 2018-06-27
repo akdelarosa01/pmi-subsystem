@@ -698,7 +698,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Calculate</button>
+                    <button type="submit" class="btn btn-success" id="calID">Calculate</button>
                     <button type="button" class="btn grey-gallery" id="btn_clear_grpby">Clear</button>
                     <button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
                 </div>

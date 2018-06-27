@@ -9,7 +9,12 @@ $( function() {
                 GroupByValues($(this).val(),$('#content1'));
                 $("#content1").prop('disabled', false);
                 $("#field2").prop('disabled', false);
+                $("#calID").prop('disabled', false);
+                
             }
+        }
+        else{
+            disabledContent2();
         }
         
     });
@@ -25,6 +30,9 @@ $( function() {
                 $("#field3").prop('disabled', false);
             }
         }
+        else{
+            disabledContent2();
+        }
     });
 
     $('#field3').on('change',function(){
@@ -36,6 +44,9 @@ $( function() {
                 GroupByValues($(this).val(),$('#content3'));
                 $("#content3").prop('disabled', false);
             }
+        }
+        else{
+            disabledContent2();
         }
     });
 
@@ -119,7 +130,7 @@ $( function() {
                 }
             });
         }
-        else if($('#field3').val() == "" && $('#field2').val() != "" && $('#content2').val() != ""){
+        else if($('#field2').val() != "" && $('#field1').val() != "" && $('#field3').val() == ""){
             var start = $(this).serialize();
             $.ajax({
                 url: $(this).attr('action'),
@@ -367,6 +378,7 @@ $( function() {
 
     $('#btn_clear_grpby').on('click', function() {
         clearGrpByFields();
+        disabledContent2();
     });
 
     $('#btn_pdf_groupby').live('click', function() {
@@ -379,11 +391,31 @@ $( function() {
 
 function disabledContent(){
     $("#field1").prop('disabled', true);
+    $("#field1").val('');
     $("#field2").prop('disabled', true);
+    $("#field2").val('');
     $("#field3").prop('disabled', true);
+    $("#field3").val('');
     $("#content1").prop('disabled', true);
+    $("#content1").val('');
     $("#content2").prop('disabled', true);
+    $("#content2").val('');
     $("#content3").prop('disabled', true);
+    $("#content3").val('');
+    $("#calID").prop('disabled', true);
+}
+function disabledContent2(){
+    $("#field2").prop('disabled', true);
+    $("#field2").val('');
+    $("#field3").prop('disabled', true);
+    $("#field3").val('');
+    $("#content1").prop('disabled', true);
+    $("#content1").val('');
+    $("#content2").prop('disabled', true);
+    $("#content2").val('');
+    $("#content3").prop('disabled', true);
+    $("#content3").val('');
+    $("#calID").prop('disabled', true);
 }
 
 
