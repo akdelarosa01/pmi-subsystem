@@ -191,9 +191,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputname" class="col-md-3 control-label">Pallet No</label>
+                                <label for="inputname" class="col-md-3 control-label">Item Code</label>
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control input-sm reset" id="srch_palletno" placeholder="Pallet No" name="srch_palletno" <?php echo($readonly); ?> />
+                                    <input type="text" class="form-control input-sm reset" id="srch_item" placeholder="Item Code" name="srch_item" <?php echo($readonly); ?> />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -206,7 +206,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-7" style="height:200px; overflow: auto;">
+                    <div class="col-md-7" style="height:400px; overflow: auto;">
                         <table class="table table-striped table-bordered table-hover table-responsive sortable">
                             <thead>
                                 <tr>
@@ -215,8 +215,11 @@
                                     <td>Receive Date</td>
                                     <td>Invoice No.</td>
                                     <td>Invoice Date</td>
-                                    <td>Pallet No.</td>
-                                    <td>Status</td>
+                                    <td>Code</td>
+                                    <td>Lot No.</td>
+                                    <td>Qty</td>
+                                    <td>Invoice Status</td>
+                                    <td>IQC status</td>
                                     <td>Created By</td>
                                     <td>Created Date</td>
                                     <td>Updated By</td>

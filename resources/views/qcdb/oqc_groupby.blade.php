@@ -81,6 +81,8 @@
             <div class="col-md-12" id="main"></div>
         </div>
 
+
+
     </div>
     @include('includes.oqc_inspection-modal')
     @include('includes.modals')

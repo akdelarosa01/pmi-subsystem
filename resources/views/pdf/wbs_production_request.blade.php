@@ -101,23 +101,23 @@
         <tbody>
             <tr>
                 <td>Request No. :</td>
-                <td class="text-left">{{ $transno }}</td>
+                <td class="text-left">{{ $summary->transno }}</td>
                 <td>Requested By :</td>
-                <td class="text-left">{{ $requestedby }}</td>
+                <td class="text-left">{{ $summary->requestedby }}</td>
             </tr>
             <tr>
                 <td>PO No. :</td>
-                <td class="text-left">{{ $pono }}</td>
+                <td class="text-left">{{ $summary->pono }}</td>
                 <td>Date Requested :</td>
-                <td class="text-left">{{ $daterequested }}</td>
+                <td class="text-left">{{ $summary->requested_at }}</td>
             </tr>
             <tr>
                 <td>Dispatch Destination :</td>
-                <td class="text-left" colspan="2">{{ $productdestination }}</td>
+                <td class="text-left" colspan="2">{{ $summary->destination }}</td>
             </tr>
             <tr>
                 <td>Line:</td>
-                <td class="text-left" colspan="2">{{ $linedestination }}</td>
+                <td class="text-left" colspan="2">{{ $summary->line }}</td>
             </tr>
         </tbody>
     </table>
@@ -138,7 +138,7 @@
         </thead>
         <tbody>
             <?php
-                foreach ($pmr_details_data as $key => $row)
+                foreach ($details as $key => $row)
                 {
             ?>
                     <tr>

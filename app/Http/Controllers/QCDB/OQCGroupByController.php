@@ -50,7 +50,188 @@ class OQCGroupByController extends Controller
 
     public function CalculateDPPM(Request $req)
     {
-        return $this->DPPMTables($req,false);
+        //return $this->DPPMTables($req,false);
+         $data =  $this->DPPMTablesv2($req);
+         // return response()->json([
+         //    'data' => $data,
+         //    'req' => $req->field2
+         // ]);
+         return response()->json($data);
+    }
+
+    public function dppmgroup1(Request $req){
+        if (!empty($req->gfrom) && !empty($req->gto)) {
+            $sub_date_inspected =   " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                                    "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+        }
+        $ins="";
+        $list = array();
+        for($x=0;$x<count($req->data);$x++){
+             $chosen = $req->data[$x]['chosenfield'];
+                $ins = DB::connection($this->mysql)
+                                ->select("SELECT *
+                                        FROM oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND ".$req->firstData." = '".$chosen."'"
+                                    );
+                array_push($list, $ins);
+         }
+        return response()->json($list);
+    }
+
+    public function dppmgroup2(Request $req){
+        if (!empty($req->gfrom) && !empty($req->gto)) {
+            $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                            "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+        }
+            $ins = DB::connection($this->mysql)
+                                ->select("SELECT *,".$req->secondData." as chosenfield2
+                                        FROM oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        GROUP BY ".$req->secondData.""
+                                    );
+        return response()->json($ins);
+    }
+
+    public function dppmgroup3(Request $req){
+        if (!empty($req->gfrom) && !empty($req->gto)) {
+            $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                            "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+        }
+            $ins = DB::connection($this->mysql)
+                                ->select("SELECT *,".$req->secondData." as chosenfield2,".$req->thirdData." as chosenfield3
+                                        FROM oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        GROUP BY ".$req->secondData.", ".$req->thirdData." "
+                                    );
+        return response()->json($ins);
+    }
+
+    public function dppmgroup2_Details(Request $req){
+        if (!empty($req->gfrom) && !empty($req->gto)) {
+            $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                            "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+        }
+        $ins="";
+        $list2 = array();
+        $list = array();
+            for($x=0;$x<count($req->content1);$x++){
+                $list = array();
+                    for($y=0;$y<count($req->content2);$y++)
+                    {
+                            $ins = DB::connection($this->mysql)
+                                            ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
+                                                    FROM oqc_inspections
+                                                    WHERE 1=1 ".$sub_date_inspected."
+                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                                );
+                            if(count($ins) > 0){
+                                array_push($list, $ins);
+                            }
+                        
+                    }
+                if(count($list) > 0){
+                array_push($list2, $list);
+                }
+             }
+     
+
+
+        return response()->json($list2);
+    }
+
+    public function dppmgroup3_Details(Request $req){
+        if (!empty($req->gfrom) && !empty($req->gto)) {
+            $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                            "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+        }
+        $ins="";
+        $list = array();
+        $list2 = array();
+        $list3 = array();
+            for($x=0;$x<count($req->content1);$x++){
+                $list2 = array();
+                    for($y=0;$y<count($req->content2);$y++)
+                    {
+                        $list = array();
+                        for($z=0;$z<count($req->content3);$z++)
+                        {
+                            $ins = DB::connection($this->mysql)
+                                            ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2,".$req->thirdData." as chosenfield3 
+                                                    FROM oqc_inspections
+                                                    WHERE 1=1 ".$sub_date_inspected."
+                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'
+                                                    GROUP BY ".$req->thirdData.""
+                                                );
+                        if(count($ins) > 0){
+                            array_push($list, $ins);
+                        }
+                    }
+                    if(count($list) > 0 ){
+                    array_push($list2, $list);
+                    }
+                }
+                if(count($list2) > 0){
+                array_push($list3, $list2);
+                }
+            }
+     
+
+
+        return response()->json($list3);
+    }
+
+    public function DPPMTablesv2($req){
+        $ins="";
+        if (!empty($req->gfrom) && !empty($req->gto)) {
+            $date_inspected = " AND main.date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                            "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+            $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
+                            "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
+        }
+        if(!empty($req->field3) && !empty($req->content3)){
+            $ins = DB::connection($this->mysql)
+                    ->select("SELECT *,".$req->field1." as chosenfield
+                            FROM oqc_inspections
+                            WHERE 1=1 ".$sub_date_inspected."
+                            AND ".$req->field1." = '".$req->content1."'
+                            AND ".$req->field2." = '".$req->content2."'
+                            AND ".$req->field3." = '".$req->content3."'
+                            GROUP BY ".$req->field1.""
+                        );
+        }
+        else if(!empty($req->field2) && !empty($req->content2)){
+            $ins = DB::connection($this->mysql)
+                    ->select("SELECT *,".$req->field1." as chosenfield
+                            FROM oqc_inspections
+                            WHERE 1=1 ".$sub_date_inspected."
+                            AND ".$req->field1." = '".$req->content1."'
+                            AND ".$req->field2." = '".$req->content2."'
+                            GROUP BY ".$req->field1.""
+                        );
+        }
+        else if(!empty($req->field1) && !empty($req->content1)){
+            $ins = DB::connection($this->mysql)
+                    ->select("SELECT *,".$req->field1." as chosenfield
+                            FROM oqc_inspections
+                            WHERE 1=1 ".$sub_date_inspected."
+                            AND ".$req->field1." = '".$req->content1."'
+                            GROUP BY ".$req->field1.""
+                        );
+        }
+        
+        else{
+            $ins = DB::connection($this->mysql)
+                    ->select("SELECT *,".$req->field1." as chosenfield
+                            FROM oqc_inspections
+                            WHERE 1=1 ".$sub_date_inspected."
+                            GROUP BY ".$req->field1.""
+                        );
+        }
+        return $ins;
     }
 
     private function DPPMTables($req,$join)
