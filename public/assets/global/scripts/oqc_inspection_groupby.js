@@ -1,35 +1,52 @@
 $( function() {
     disabledContent();
     $('#field1').on('change',function(){
-        if($('#field1').val() == $('#field2').val() || $('#field1').val() == $('#field3').val()){
-            msg("Duplicate Grouping","failed");
+        if($('#field1').val() != ""){
+            if($('#field1').val() == $('#field2').val() || $('#field1').val() == $('#field3').val()){
+                msg("Duplicate Grouping","failed");
+            }
+            else{
+                GroupByValues($(this).val(),$('#content1'));
+                $("#content1").prop('disabled', false);
+                $("#field2").prop('disabled', false);
+                $("#calID").prop('disabled', false);
+                
+            }
         }
         else{
-            GroupByValues($(this).val(),$('#content1'));
-            $("#content1").prop('disabled', false);
-            $("#field2").prop('disabled', false);
+            disabledContent2();
         }
         
     });
 
     $('#field2').on('change',function(){
-        if($('#field1').val() == $('#field2').val() || $('#field2').val() == $('#field3').val()){
-            msg("Duplicate Grouping","failed");
+        if($('#field2').val() != ""){
+            if($('#field1').val() == $('#field2').val() || $('#field2').val() == $('#field3').val()){
+                msg("Duplicate Grouping","failed");
+            }
+            else{
+                GroupByValues($(this).val(),$('#content2'));
+                $("#content2").prop('disabled', false);
+                $("#field3").prop('disabled', false);
+            }
         }
         else{
-            GroupByValues($(this).val(),$('#content2'));
-            $("#content2").prop('disabled', false);
-            $("#field3").prop('disabled', false);
+            disabledContent2();
         }
     });
 
     $('#field3').on('change',function(){
-        if($('#field3').val() == $('#field2').val() || $('#field1').val() == $('#field3').val()){
-            msg("Duplicate Grouping","failed");
+        if($('#field3').val() != ""){
+            if($('#field3').val() == $('#field2').val() || $('#field1').val() == $('#field3').val()){
+                msg("Duplicate Grouping","failed");
+            }
+            else{
+                GroupByValues($(this).val(),$('#content3'));
+                $("#content3").prop('disabled', false);
+            }
         }
         else{
-            GroupByValues($(this).val(),$('#content3'));
-            $("#content3").prop('disabled', false);
+            disabledContent2();
         }
     });
 
@@ -113,7 +130,7 @@ $( function() {
                 }
             });
         }
-        else if($('#field3').val() == "" || $('#field2').val() != "" && $('#content2').val() != ""){
+        else if($('#field2').val() != "" && $('#field1').val() != "" && $('#field3').val() == ""){
             var start = $(this).serialize();
             $.ajax({
                 url: $(this).attr('action'),
@@ -139,7 +156,7 @@ $( function() {
                                         var g1 = [], g2 =[];
                                         if($('#content1').val() != "")
                                         {
-                                                g1.push($('#content1').val());
+                                                    g1.push($('#content1').val());
                                         }
                                         else{
                                                 for(var x=0;x<form.length;x++){
@@ -148,7 +165,7 @@ $( function() {
                                         }
                                         if($('#content2').val() != "")
                                         {
-                                                g2.push($('#content2').val());
+                                                    g2.push($('#content2').val());
                                         }
                                         else{
                                                 for(var x=0;x<returnDataDetails.length;x++){
@@ -228,24 +245,30 @@ $( function() {
                                             }
                                         }
                                         if($('#content2').val() != ""){
-                                                g1.push($('#content2').val());
+                                                g2.push($('#content2').val());
                                         }
                                         else{
+                                            var uniqueField = [];
                                                 for(var x=0;x<returnDataDetails.length;x++){
                                                     g2.push(returnDataDetails[x].chosenfield2);
-                                                    var uniqueField = [];
                                                     $.each(g2, function(i, el){
                                                         if($.inArray(el, uniqueField) === -1) uniqueField.push(el);
                                                     });
                                                 }
+                                            g2 = uniqueField;
                                         }
                                         if($('#content3').val() != ""){
-                                                g1.push($('#content3').val());
+                                                g3.push($('#content3').val());
                                         }
                                         else{
+                                            var uniqueField2 = [];
                                                 for(var x=0;x<returnDataDetails.length;x++){
                                                     g3.push(returnDataDetails[x].chosenfield3);
+                                                    $.each(g3, function(i, el){
+                                                        if($.inArray(el, uniqueField2) === -1) uniqueField2.push(el);
+                                                    });
                                                 }
+                                                g3 = uniqueField2;
                                         }
                                                         $.ajax({
                                                         url: GettripleGroupByURLdetails,
@@ -253,7 +276,7 @@ $( function() {
                                                         dataType: 'JSON',
                                                         data:{ _token:token,
                                                                 content1:g1,
-                                                                content2:uniqueField,
+                                                                content2:g2,
                                                                 content3:g3,
                                                                 firstData:desFirst.field1,
                                                                 secondData:desFirst.field2,
@@ -355,6 +378,7 @@ $( function() {
 
     $('#btn_clear_grpby').on('click', function() {
         clearGrpByFields();
+        disabledContent2();
     });
 
     $('#btn_pdf_groupby').live('click', function() {
@@ -367,11 +391,31 @@ $( function() {
 
 function disabledContent(){
     $("#field1").prop('disabled', true);
+    $("#field1").val('');
     $("#field2").prop('disabled', true);
+    $("#field2").val('');
     $("#field3").prop('disabled', true);
+    $("#field3").val('');
     $("#content1").prop('disabled', true);
+    $("#content1").val('');
     $("#content2").prop('disabled', true);
+    $("#content2").val('');
     $("#content3").prop('disabled', true);
+    $("#content3").val('');
+    $("#calID").prop('disabled', true);
+}
+function disabledContent2(){
+    $("#field2").prop('disabled', true);
+    $("#field2").val('');
+    $("#field3").prop('disabled', true);
+    $("#field3").val('');
+    $("#content1").prop('disabled', true);
+    $("#content1").val('');
+    $("#content2").prop('disabled', true);
+    $("#content2").val('');
+    $("#content3").prop('disabled', true);
+    $("#content3").val('');
+    $("#calID").prop('disabled', true);
 }
 
 
@@ -397,15 +441,15 @@ function FirstTable(req,datas,details){
     var d = deparam(datas);
     for(var x=0;x<details.length;x++){
         var gp1 = "";
-            gp1 += "<div class='panel-group accordion' scrollable id=grp"+x+">";
-            gp1 += "<div class=panel panel-info><div class=panel-heading>";
-            gp1 += "<h4 class=panel-title><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent=#grp"+x+" href=#grp_val"+x+" aria-expanded='false'>";
+            gp1 += "<div class='panel-group accordion scrollable' id='grp"+x+"'>";
+            gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
+            gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false'>";
             gp1 += d.field1 + ": "+req[x].chosenfield+"</a>";
             gp1 += "</h4>";
             gp1 += "</div>";
-            gp1 += "<div id=grp_val"+x+" class=panel-collapse collapse aria-expanded='false' style=>";
-            gp1 += "<div class=panel-body table-responsive id=child"+x+">";
-            gp1 += "<table style=font-size:9px class=table table-condensed table-bordered>";
+            gp1 += "<div id='grp_val"+x+"' class='panel-collapse collapse' aria-expanded='false' style=>";
+            gp1 += "<div class='panel-body table-responsive' id='child"+x+"'>";
+            gp1 += "<table style='font-size:9px' class='table table-condensed table-bordered'>";
             gp1 += "<thead>";
             gp1 += "<tr>";
             gp1 += "<td></td>";
@@ -444,7 +488,7 @@ function FirstTable(req,datas,details){
             gp1 += "<td><strong>Type</strong></td>";
             gp1 += "</tr>";
             gp1 += "</thead>";
-            gp1 += "<tbody id=details_tbody><tr>";
+            gp1 += "<tbody id='details_tbody'><tr>";
 
             for(y=0;y<details[x].length;y++){
                     var num = y+1;
