@@ -636,13 +636,15 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
             // gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"</a>";
             if(DPPMg1[x]["0"].DPPM != null){
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                var acc = req[x].length - REJg1[x]["0"].rejects;
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
                 gp1 += "DPPM: "+DPPMg1[x]["0"].DPPM+" &emsp;";
                 gp1 += "("+DPPMg1[x]["0"].num_of_defects+"/"+DPPMg1[x]["0"].sample_size+")</a>";
             }
             else{
+                var acc = req[x].length - REJg1[x]["0"].rejects;
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
                 gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
             }
             gp1 += "</h4>";
@@ -670,14 +672,18 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
                     if(DPPM[x][y]["0"].DPPM != null){
                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent=#grp"+idc+" href=#grp_val"+idc+" aria-expanded='false' style='background-color:red;'>";
                         gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"  &emsp;"
-                        gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+REJ[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        
+
+                        var acc = req[x][y].length - REJ[x][y]["0"].rejects;
+                        gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
                         gp1 += "DPPM: "+DPPM[x][y]["0"].DPPM+" &emsp;";
                         gp1 += "("+DPPM[x][y]["0"].num_of_defects+"/"+DPPM[x][y]["0"].sample_size+")</a>";
                     }
                     else{
                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent=#grp"+idc+" href=#grp_val"+idc+" aria-expanded='false'>";
                         gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"  &emsp;"
-                        gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+REJ[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        var acc = req[x][y].length - REJ[x][y]["0"].rejects;
+                        gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
                         gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                     }
                     gp1 += "</h4>";
@@ -798,13 +804,15 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
             //gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"</a>";
             if(DPPMg1[x]["0"].DPPM != null){
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                var acc = req[x].length - REJg1[x]["0"].rejects;
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
                 gp1 += "DPPM: "+DPPMg1[x]["0"].DPPM+" &emsp;";
                 gp1 += "("+DPPMg1[x]["0"].num_of_defects+"/"+DPPMg1[x]["0"].sample_size+")</a>";
             }
             else{
+                var acc = req[x].length - REJg1[x]["0"].rejects;
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
                 gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
             }
             gp1 += "</h4>";
@@ -828,13 +836,15 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                     //gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"</a>";
                     if(DPPM_2nd[x][y]["0"].DPPM != null){
                         gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+REJ_2nd[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        var acc = req[x][y].length - REJ_2nd[x][y]["0"].rejects;
+                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
                         gp1 += "DPPM: "+DPPM_2nd[x][y]["0"].DPPM+" &emsp;";
                         gp1 += "("+DPPM_2nd[x][y]["0"].num_of_defects+"/"+DPPM_2nd[x][y]["0"].sample_size+")</a>";
                     }
                     else{
+                        var acc = req[x][y].length - REJ_2nd[x][y]["0"].rejects;
                         gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+REJ_2nd[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
                         gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                     }
                     gp1 += "</h4>";
@@ -845,9 +855,7 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
 
                                 gp1 += "<table style=width:100%>";
                                 for(z=0;z<req[x][y].length;z++){
-                                    var ss = req[x][y].length;
                                     var idc2 = guidGenerator();
-                                    var yy= req[x][y].length;
                                     gp1 += "<tr>";
                                     gp1 += "<td>";
                                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc2+"'>";
@@ -857,14 +865,16 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                                     if(DPPM_3rd[x][y][z]["0"].DPPM != null){
                                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true' style='background-color:red;'>";
                                         gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;"
-                                        gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+REJ_3rd[x][y][z]["0"].rejects+"/"+req[x][y][z].length+") &emsp;"
+                                        var acc = req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
+                                        gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
                                         gp1 += "DPPM: "+DPPM_3rd[x][y][z]["0"].DPPM+" &emsp;";
                                         gp1 += "("+DPPM_3rd[x][y][z]["0"].num_of_defects+"/"+DPPM_3rd[x][y][z]["0"].sample_size+")</a>";
                                     }
                                     else{
                                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true'>";
                                         gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;"
-                                        gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+REJ_3rd[x][y][z]["0"].rejects+"/"+req[x][y][z].length+") &emsp;"
+                                        var acc = req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
+                                        gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
                                         gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                                     }
                                     gp1 += "</h4>";

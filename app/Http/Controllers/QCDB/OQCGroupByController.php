@@ -90,7 +90,7 @@ class OQCGroupByController extends Controller
                                 ->select("SELECT COUNT(*) AS rejects
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
-                                        AND judgement = 'Reject'
+                                        AND judgement = 'Accept'
                                         AND ".$req->firstData." = '".$chosen."'"
                                     );
                 $DPPM = DB::connection($this->mysql)
