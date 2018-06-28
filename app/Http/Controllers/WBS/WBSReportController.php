@@ -785,7 +785,7 @@ class WBSReportController extends Controller
                             LEFT JOIN tbl_request_summary as po1
                             ON w.request_no = po1.transno
                         WHERE w.issued_qty_t <> 0 ".$pono_cond.$issno_cond.$item_cond.$from_cond."
-                            GROUP BY w.issuance_no,w.item,w.lot_no
+                            GROUP BY w.item,w.lot_no
                             ORDER BY w.request_no");
 
         
@@ -862,7 +862,7 @@ class WBSReportController extends Controller
                             left join tbl_request_summary as rs
                             on rs.transno = d.transno
                             where 1=1 ".$pono_cond.$issno_cond.$item_cond.$from_cond."
-                            group by d.id"); //GROUP BY d.whstransno,d.code,d.lot_no
+                            group by d.code,d.lot_no"); //GROUP BY d.whstransno,d.code,d.lot_no
 
         
         $this->production_request($data);
@@ -995,7 +995,11 @@ class WBSReportController extends Controller
                     ->first();
         }
 
-        return $db->status;
+        if (count((array)$db) > 0) {
+            return $db->status;
+        }
+
+        return '';
     }
 
     private function getVENDOR($code)
