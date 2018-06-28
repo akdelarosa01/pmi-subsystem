@@ -270,115 +270,6 @@ Route::group(['middleware' => 'web'], function () {
             // ]);
 
         /*Material Kitting*/
-            // Route::get('/wbsmaterialkitting', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@getMaterialKitting',
-            //     'name' => 'wbsmaterialkitting'
-            // ]);
-
-            // Route::post('/wbsmaterialkitting', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@getMaterialKitting',
-            //     'name' => 'wbsmaterialkitting'
-            // ]);
-
-            // Route::post('/searchpo', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postSearchPO',
-            //     'name' => 'searchpo'
-            // ]);
-
-            // Route::post('/searchpoprod', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postSearchPOprod',
-            //     'name' => 'searchpoprod'
-            // ]);
-
-            // Route::post('/getcodedetails', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postCodeDetails',
-            //     'name' => 'getcodedetails'
-            // ]);
-
-            // Route::post('/getlotnodetails', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postLotNoDetails',
-            //     'name' => 'getlotnodetails'
-            // ]);
-
-            // Route::post('/updatekitqty', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postUpdateKitQty',
-            //     'name' => 'updatekitqty'
-            // ]);
-
-            // Route::post('/savematkit', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postSaveMatKit',
-            //     'name' => 'savematkit'
-            // ]);
-
-            // Route::post('/savematissue', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postSaveMatIss',
-            //     'name' => 'savematissue'
-            // ]);
-
-            // Route::post('/cancelkit', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postCancelMatKit',
-            //     'name' => 'cancelkit'
-            // ]);
-
-            // Route::post('/wbskit-search', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@searchKitWbsData',
-            //     'name' => 'wbskit-search'
-            // ]);
-
-            // Route::get('/wbskit-report', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@printMkReport',
-            //     'name' => 'wbskit-report'
-            // ]);
-
-            // Route::get('/wbskit-print-report', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@printMkReport2',
-            //     'name' => 'wbskit-print-report'
-            // ]);
-
-            // Route::get('/wbsmatkitexceldispatch', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@excelMkReport',
-            //     'name' => 'wbsmatkitexceldispatch'
-            // ]);
-
-            // Route::post('/transfertosakidashi', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postTransferToSakidashi',
-            //     'name' => 'transfertosakidashi'
-            // ]);
-
-            // Route::post('/deletekitdetails', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@postDeleteKitDetails',
-            //     'name' => 'deletekitdetails'
-            // ]);
-
-            // Route::get('/wbsmatkitfifotbl', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@getFifoTable',
-            //     'name' => 'wbsmatkitfifotbl'
-            // ]);
-
-            // Route::get('/getbarcode', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@getbarcode',
-            //     'name' => 'getbarcode'
-            // ]);
-
-            // Route::get('/getlotno', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@getlotno',
-            //     'name' => 'getlotno'
-            // ]);
-
-            // Route::get('/wbskit-brprint', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@BrCodePrint',
-            //     'name' => 'wbskit-brprint'
-            // ]);
-
-            // Route::post('/wbsmatkitfiforeason', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@fifoReason',
-            //     'name' => 'wbsmatkitfiforeason'
-            // ]);
-
-            // Route::get('/wbsmatkitreasonexcel', [
-            //     'uses' => 'WBS\WBSMaterialKittingController@fifoReasonExcel',
-            //     'name' => 'wbsmatkitreasonexcel'
-            // ]);
 
 
             Route::group(['prefix' => 'material-kitting'], function() {
@@ -565,61 +456,9 @@ Route::group(['middleware' => 'web'], function () {
                     'uses' => 'WBS\WBSProductionMaterialRequestController@searchRequest',
                     'name' => 'search-request'
                 ]);
-            }); 
+            });
 
-            // Route::get('/wbsprodmatrequest', [
-            //     'uses' => 'WBS\WBSProductMatReqController@index',
-            //     'name' => 'wbsprodmatrequest'
-            // ]);
-
-            // Route::post('/wbsprodmatrequest', [
-            //     'uses' => 'WBS\WBSProductMatReqController@getProdMatRequest',
-            //     'name' => 'wbsprodmatrequest'
-            // ]);
-
-            // Route::post('/posearch', [
-            //     'uses' => 'WBS\WBSProductMatReqController@postSearchPO',
-            //     'name' => 'posearch'
-            // ]);
-
-            // Route::post('/savedetailpmr', [
-            //     'uses' => 'WBS\WBSProductMatReqController@postSaveDetail',
-            //     'name' => 'savedetailpmr'
-            // ]);
-
-            // Route::post('/requestsummaryfrm', [
-            //     'uses' => 'WBS\WBSProductMatReqController@postSaveRequest',
-            //     'name' => 'requestsummaryfrm'
-            // ]);
-
-            // Route::post('/cancelpmr', [
-            //     'uses' => 'WBS\WBSProductMatReqController@postCancelPmr',
-            //     'name' => 'cancelpmr'
-            // ]);
-
-            // Route::post('/searchpmr', [
-            //     'uses' => 'WBS\WBSProductMatReqController@postSearchPmr',
-            //     'name' => 'searchpmr'
-            // ]);
-
-            // Route::get('/printpmr', [
-            //     'uses' => 'WBS\WBSProductMatReqController@postPrintPmr',
-            //     'name' => 'printpmr'
-            // ]);
-            // Route::get('/getmassalertprodreq', [
-            //     'uses' => 'WBS\WBSProductMatReqController@getMassAlert',
-            //     'name' => 'getmassalertprodreq'
-            // ]);
-
-            // Route::post('/edit-acknowledgeby', [
-            //     'uses' => 'WBS\WBSProductMatReqController@editAcknowledgeby',
-            //     'name' => 'edit-acknowledgeby'
-            // ]);
-
-            // Route::post('/checkacknowledge', [
-            //     'uses' => 'WBS\WBSProductMatReqController@checkAcknowledge',
-            //     'name' => 'checkacknowledge'
-            // ]);
+        /*Sakidashi Issuance*/
 
             Route::group(['prefix' => 'sakidashi-issuance'], function() {
                 Route::get('/', 'WBS\WBSSakidashiIssuanceController@index')->middleware('auth','revalidate');
@@ -701,10 +540,68 @@ Route::group(['middleware' => 'web'], function () {
             });
 
         /* Material Issuance*/
-            Route::get('/wbswhsmatissuance', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getWarehouse',
-                'name' => 'wbswhsmatissuance'
-            ]);
+            Route::group(['prefix' => 'whs-issuance'], function() {
+                Route::get('/', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@index',
+                    'name' => 'whs-issuance'
+                ]);
+
+                Route::get('/pending-requests', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@getPendingRequest',
+                    'name' => 'pending-requests'
+                ]);
+
+                Route::get('/view-details', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@viewReqDetails',
+                    'name' => 'view-details'
+                ]);
+
+                Route::get('/request-details', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@getReqDetails',
+                    'name' => 'request-details'
+                ]);
+
+                Route::get('/get-inventory', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@getInventory',
+                    'name' => 'get-inventory'
+                ]);
+
+                Route::post('/save', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@save',
+                    'name' => 'save'
+                ]);
+
+                Route::get('/get-data', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@getData',
+                    'name' => 'get-data'
+                ]);
+
+                Route::post('/search-request', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@searchIssuance',
+                    'name' => 'search-request'
+                ]);
+
+                Route::get('/get-excel', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@exportToExcel',
+                    'name' => 'get-excel'
+                ]);
+
+                Route::get('/get-pdf', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@exportToPDF',
+                    'name' => 'get-pdf'
+                ]);
+
+                Route::get('/clean-data', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@cleanData',
+                    'name' => 'clean-data'
+                ]);
+
+                Route::post('/cancel-issuance', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@cancelIssuance',
+                    'name' => 'cancel-issuance'
+                ]);
+            });
+            
 
             Route::post('/wbswhsmatissuance', [
                 'uses' => 'WBS\WBSWhsMatIssueanceController@getWarehouse',
