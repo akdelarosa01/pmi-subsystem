@@ -595,6 +595,11 @@ Route::group(['middleware' => 'web'], function () {
                     'uses' => 'WBS\WBSWhsIssuanceController@cleanData',
                     'name' => 'clean-data'
                 ]);
+
+                Route::post('/cancel-issuance', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@cancelIssuance',
+                    'name' => 'cancel-issuance'
+                ]);
             });
             
 

@@ -760,6 +760,43 @@ class WBSWhsIssuanceController extends Controller
         return $data;
     }
 
+    public function cancelIssuance(Request $req)
+    {
+    	$data = [
+	    		'msg' => "Cancelling failed.",
+	    		'status' => 'failed',
+	    		'issuance_no' => $req->cancel_issuance_no
+	    	];
+
+    	$checkWHS = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
+    					->where('issuance_no',$req->cancel_issuance_no)
+    					->count();
+    	if ($checkWHS > 0) {
+    		DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
+    					->where('issuance_no',$req->cancel_issuance_no)
+    					->update(['status' => 'Cancelled']);
+
+    		DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+    					->where('issuance_no',$req->cancel_issuance_no)
+    					->where('status','<>','Closed')
+    					->update(['status' => 'Cancelled']);
+    	}
+
+    	$cancelled = DB::connection($this->mysql)->table('tbl_request_summary')
+	    				->where('whstransno',$req->cancel_issuance_no)
+	    				->update(['status' => 'Cancelled']);
+
+	    if ($cancelled) {
+	    	$data = [
+	    		'msg' => "Issuance No. [".$req->cancel_issuance_no."] is now cancelled.",
+	    		'status' => 'success',
+	    		'issuance_no' => $req->cancel_issuance_no
+	    	];
+	    }
+
+	    return $data;
+    }
+
     public function searchIssuance(Request $req)
     {
         $ctr = 0;

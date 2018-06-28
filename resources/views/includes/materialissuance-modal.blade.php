@@ -201,3 +201,21 @@
 		</div>
 	</div>
 </div>
+
+<div id="ConfirmModal" class="modal fade" role="dialog" data-backdrop="static">
+	<div class="modal-dialog modal-sm blue">
+		<form role="form" method="POST" action="{{url('/whs-issuance/cancel-issuance')}}" id="frm_cancel">
+			<div class="modal-content ">
+				<div class="modal-body">
+					<p>Are you sure you want to cancel this Issuance?</p>
+					{!! csrf_field() !!}
+					<input type="hidden" name="cancel_issuance_no" id="cancel_issuance_no"/>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" id="btn_confirm_cancel">Yes</button>
+					<button type="button" data-dismiss="modal" class="btn">Cancel</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

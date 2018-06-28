@@ -136,11 +136,35 @@ $( function() {
 	});
 
 	$('#btn_edit').on('click', function() {
-		addState();
+		ediState();
 	});
 
 	$('#btn_discard').on('click', function() {
 		getData($('#issuance_no').val());
+	});
+
+	$('#btn_cancel').on('click', function() {
+		$('#cancel_issuance_no').val($('#issuance_no').val());
+		$('#ConfirmModal').modal('show');
+	});
+
+	$('#frm_cancel').on('submit', function(e) {
+		$('#loading').modal('show');
+		e.preventDefault();
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'POST',
+			dataType: 'JSON',
+			data: $(this).serialize(),
+		}).done(function(data, textStatus, xhr) {
+			getData(data.issuance_no);
+			msg(data.msg,data.status);
+		}).fail(function(xhr, textStatus, errorThrown) {
+			console.log("error");
+		}).always(function() {
+			$('#loading').modal('hide');
+			$('#ConfirmModal').modal('hide');
+		});
 	});
 
 	$('#btn_first').on('click', function() {
@@ -470,6 +494,33 @@ function addState() {
 	$('#btn_save').show();
 	$('#btn_edit').hide();
 	$('#btn_cancel').hide();
+	$('#btn_discard').show();
+	$('#btn_search').hide();
+	$('#btn_report_excel').hide();
+	$('#btn_report_pdf').hide();
+
+	$('.btn_edit_issuance_details').prop('disabled', false);
+}
+
+function ediState() {
+	$('#btn_first').prop('disabled', true);
+	$('#btn_prv').prop('disabled', true);
+	$('#btn_nxt').prop('disabled', true);
+	$('#btn_last').prop('disabled', true);
+
+	$('#issuance_no').prop('readonly', true);
+	$('#req_no').prop('readonly', true);
+	$('#status').prop('readonly', true);
+	$('#created_by').prop('readonly', true);
+	$('#created_at').prop('readonly', true);
+	$('#total_req_qty').prop('readonly', true);
+	$('#updated_by').prop('readonly', true);
+	$('#updated_at').prop('readonly', true);
+	$('#total_bal_qty').prop('readonly', true);
+
+	$('#btn_save').show();
+	$('#btn_edit').hide();
+	$('#btn_cancel').show();
 	$('#btn_discard').show();
 	$('#btn_search').hide();
 	$('#btn_report_excel').hide();
