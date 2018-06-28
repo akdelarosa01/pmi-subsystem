@@ -424,12 +424,13 @@ class WBSWhsIssuanceController extends Controller
 						->first();
 
     		if ($this->com->checkIfExistObject($summary) > 0) {
-    			$request = DB::connection($this->mysql)->table('tbl_request_detail')
-    						->where('whstransno',$req->issuance_no)
+    			$request = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+    						->where('issuance_no',$req->issuance_no)
     						->select(
-    							DB::raw("SUM(servedqty) as total_served_qty")
-    						)->first();
-    			$total_bal_qty = $summary->total_req_qty - $request->total_served_qty;
+    							DB::raw("SUM(issued_qty_t) as total_served_qty")
+    						)->get();
+
+    			$total_bal_qty = $summary->total_req_qty - $request[0]->total_served_qty;
 
 	            $details = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
                                 ->where('issuance_no',$summary->issuance_no)
@@ -453,7 +454,10 @@ class WBSWhsIssuanceController extends Controller
 	            return $data = [
                                 'summary' => $summary,
 			                	'details' => $details,
-			                	'total_bal_qty' => $total_bal_qty
+			                	'total_req_qty' => $summary->total_req_qty,
+			                	'total_served_qty' => $request[0]->total_served_qty,
+			                	'total_bal_qty' => $total_bal_qty,
+			                	'request' => $request
 			                ];
 	        } else {
 	        	return $data = [
@@ -516,36 +520,40 @@ class WBSWhsIssuanceController extends Controller
 						->first();
 
         if ($this->com->checkIfExistObject($summary) > 0) {
-        	$request = DB::connection($this->mysql)->table('tbl_request_detail')
-						->where('whstransno',$summary->issuance_no)
-						->select(
-							DB::raw("SUM(servedqty) as total_served_qty")
-						)->first();
-			$total_bal_qty = $summary->total_req_qty - $request->total_served_qty;
+        	$request = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+    						->where('issuance_no',$req->issuance_no)
+    						->select(
+    							DB::raw("SUM(issued_qty_t) as total_served_qty")
+							)->get();
+
+    			$total_bal_qty = $summary->total_req_qty - $request[0]->total_served_qty;
 
             $details = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
-                                ->where('issuance_no',$summary->issuance_no)
-                                ->select('id',
-									'issuance_no',
-									'request_no',
-									'pmr_detail_id',
-									'detail_id',
-									'item',
-									'item_desc',
-									'request_qty',
-									'issued_qty_o',
-									'issued_qty_t',
-									'lot_no',
-									DB::raw("IFNULL(location,'') as location"),
-									DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
-									DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"),
-									DB::raw("DATE_FORMAT(issued_date, '%m/%d/%Y') as issued_date"))
-                               	->get();
+                            ->where('issuance_no',$summary->issuance_no)
+                            ->select('id',
+								'issuance_no',
+								'request_no',
+								'pmr_detail_id',
+								'detail_id',
+								'item',
+								'item_desc',
+								'request_qty',
+								'issued_qty_o',
+								'issued_qty_t',
+								'lot_no',
+								DB::raw("IFNULL(location,'') as location"),
+								DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
+								DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"),
+								DB::raw("DATE_FORMAT(issued_date, '%m/%d/%Y') as issued_date"))
+                           	->get();
 
             return $data = [
                             'summary' => $summary,
 		                	'details' => $details,
-		                	'total_bal_qty' => $total_bal_qty
+		                	'total_req_qty' => $summary->total_req_qty,
+			                'total_served_qty' => $request[0]->total_served_qty,
+		                	'total_bal_qty' => $total_bal_qty,
+		                	'request' => $request
 		                ];
 		}
 		return $data;
@@ -574,12 +582,13 @@ class WBSWhsIssuanceController extends Controller
                         ->first();
 
             if ($this->com->checkIfExistObject($summary) > 0) {
-            	$request = DB::connection($this->mysql)->table('tbl_request_detail')
-								->where('whstransno',$issuance_no)
-								->select(
-									DB::raw("SUM(servedqty) as total_served_qty")
-								)->first();
-				$total_bal_qty = $summary->total_req_qty - $request->total_served_qty;
+            	$request = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+	    						->where('issuance_no',$summary->issuance_no)
+	    						->select(
+	    							DB::raw("SUM(issued_qty_t) as total_served_qty")
+								)->get();
+
+    			$total_bal_qty = $summary->total_req_qty - $request[0]->total_served_qty;
 
             	$details = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
                                 ->where('issuance_no',$summary->issuance_no)
@@ -603,7 +612,10 @@ class WBSWhsIssuanceController extends Controller
 	            return $data = [
                                 'summary' => $summary,
 			                	'details' => $details,
-			                	'total_bal_qty' => $total_bal_qty
+			                	'total_req_qty' => $summary->total_req_qty,
+			                	'total_served_qty' => $request[0]->total_served_qty,
+			                	'total_bal_qty' => $total_bal_qty,
+			                	'request' => $request
 			                ];
             } else {
                 return $this->first();
@@ -640,12 +652,13 @@ class WBSWhsIssuanceController extends Controller
                         ->first();
 
             if ($this->com->checkIfExistObject($summary) > 0) {
-            	$request = DB::connection($this->mysql)->table('tbl_request_detail')
-								->where('whstransno',$issuance_no)
-								->select(
-									DB::raw("SUM(servedqty) as total_served_qty")
-								)->first();
-				$total_bal_qty = $summary->total_req_qty - $request->total_served_qty;
+            	$request = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+	    						->where('issuance_no',$summary->issuance_no)
+	    						->select(
+	    							DB::raw("SUM(issued_qty_t) as total_served_qty")
+								)->get();
+
+    			$total_bal_qty = $summary->total_req_qty - $request[0]->total_served_qty;
 
             	$details = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
                                 ->where('issuance_no',$summary->issuance_no)
@@ -669,7 +682,10 @@ class WBSWhsIssuanceController extends Controller
 	            return $data = [
                                 'summary' => $summary,
 			                	'details' => $details,
-			                	'total_bal_qty' => $total_bal_qty
+			                	'total_req_qty' => $summary->total_req_qty,
+			                	'total_served_qty' => $request[0]->total_served_qty,
+			                	'total_bal_qty' => $total_bal_qty,
+			                	'request' => $request
 			                ];
             } else {
                 return $this->last();
@@ -704,12 +720,13 @@ class WBSWhsIssuanceController extends Controller
 						->first();
 
         if ($this->com->checkIfExistObject($summary) > 0) {
-        	$request = DB::connection($this->mysql)->table('tbl_request_detail')
-							->where('whstransno',$summary->issuance_no)
-							->select(
-								DB::raw("SUM(servedqty) as total_served_qty")
-							)->first();
-			$total_bal_qty = $summary->total_req_qty - $request->total_served_qty;
+        	$request = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
+    						->where('issuance_no',$summary->issuance_no)
+    						->select(
+    							DB::raw("SUM(issued_qty_t) as total_served_qty")
+							)->get();
+
+    			$total_bal_qty = $summary->total_req_qty - $request[0]->total_served_qty;
 
             $details = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
                         ->where('issuance_no',$summary->issuance_no)
@@ -733,7 +750,10 @@ class WBSWhsIssuanceController extends Controller
             return $data = [
                             'summary' => $summary,
 		                	'details' => $details,
-		                	'total_bal_qty' => $total_bal_qty
+		                	'total_req_qty' => $summary->total_req_qty,
+			                'total_served_qty' => $request[0]->total_served_qty,
+		                	'total_bal_qty' => $total_bal_qty,
+		                	'request' => $request
 		                ];
         }
 

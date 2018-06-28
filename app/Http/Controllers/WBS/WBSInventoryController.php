@@ -140,10 +140,6 @@ class WBSInventoryController extends Controller
         $result = "";
         $NFI = 0;
         if (isset($req->id)) {
-            // $this->validate($req, [
-            //     'item' => 'required',
-            //     'item_desc' => 'required',
-            // ]);
             $NFI = (isset($req->nr))?1:0;
             $UP = DB::connection($this->mysql)
                     ->table('tbl_wbs_inventory')
@@ -162,45 +158,48 @@ class WBSInventoryController extends Controller
                     ]);
 
 
-        $forID = DB::connection($this->mysql)->table('tbl_wbs_inventory')
-                ->select('mat_batch_id', 'loc_batch_id')
-                ->where('id',$req->id)
-                ->first();
-        if(isset($forID->mat_batch_id)){
-            $mat = DB::connection($this->mysql)
-                    ->table('tbl_wbs_material_receiving_batch')
-                    ->where('id',$forID->mat_batch_id)
-                    ->update([
-                        'item' => $req->item,
-                        'item_desc' => $req->item_desc,
-                        'lot_no' => $req->lot_no,
-                        'qty' => $req->qty,
-                        'not_for_iqc'=> $NFI,
-                        'location' => $req->location,
-                        'supplier' => $req->supplier,
-                        'iqc_status' => $req->iqc_status,
-                        'update_user' => Auth::user()->user_id,
-                        'updated_at' => date('Y-m-d h:i:s'),
-                    ]);
-        }
-        else{
-            $local = DB::connection($this->mysql)
-                    ->table('tbl_wbs_local_receiving_batch')
-                    ->where('id',$forID->loc_batch_id)
-                    ->update([
-                        'item' => $req->item,
-                        'item_desc' => $req->item_desc,
-                        'lot_no' => $req->lot_no,
-                        'qty' => $req->qty,
-                        'not_for_iqc'=> $NFI,
-                        'location' => $req->location,
-                        'supplier' => $req->supplier,
-                        'iqc_status' => $req->iqc_status,
-                        'update_user' => Auth::user()->user_id,
-                        'updated_at' => date('Y-m-d h:i:s'),
-                    ]);
-        }
-        $result ="Updated";
+            $forID = DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                    ->select('mat_batch_id', 'loc_batch_id')
+                    ->where('id',$req->id)
+                    ->first();
+
+            if(isset($forID->mat_batch_id)){
+                $mat = DB::connection($this->mysql)
+                        ->table('tbl_wbs_material_receiving_batch')
+                        ->where('id',$forID->mat_batch_id)
+                        ->update([
+                            'item' => $req->item,
+                            'item_desc' => $req->item_desc,
+                            'lot_no' => $req->lot_no,
+                            'qty' => $req->qty,
+                            'not_for_iqc'=> $NFI,
+                            'location' => $req->location,
+                            'supplier' => $req->supplier,
+                            'iqc_status' => $req->iqc_status,
+                            'update_user' => Auth::user()->user_id,
+                            'updated_at' => date('Y-m-d h:i:s'),
+                        ]);
+            }
+
+            if(isset($forID->loc_batch_id)){
+                $local = DB::connection($this->mysql)
+                        ->table('tbl_wbs_local_receiving_batch')
+                        ->where('id',$forID->loc_batch_id)
+                        ->update([
+                            'item' => $req->item,
+                            'item_desc' => $req->item_desc,
+                            'lot_no' => $req->lot_no,
+                            'qty' => $req->qty,
+                            'not_for_iqc'=> $NFI,
+                            'location' => $req->location,
+                            'supplier' => $req->supplier,
+                            'iqc_status' => $req->iqc_status,
+                            'update_user' => Auth::user()->user_id,
+                            'updated_at' => date('Y-m-d h:i:s'),
+                        ]);
+            }
+            
+            $result ="Updated";
         }
         return response()->json($result);
     }

@@ -526,6 +526,8 @@ function getData(issuance_no='',to = '') {
 			$('#updated_at').val(sum.updated_at);
 			$('#total_bal_qty').val(data.total_bal_qty);
 
+			console.log(data);
+
 			issuance = data.details;
 
 			makeIssuanceTable(issuance);

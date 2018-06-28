@@ -1,4 +1,4 @@
-/config/database.php
+/config
 /node_modules
 .env
 /public/storage
