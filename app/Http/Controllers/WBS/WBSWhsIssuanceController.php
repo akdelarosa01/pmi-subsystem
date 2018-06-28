@@ -970,4 +970,46 @@ class WBSWhsIssuanceController extends Controller
                     ->setOrientation('landscape');
         return $pdf->inline('Warehouse_Issuance_'.$date);
     }
+
+    public function cleanData()
+    {
+    	$data = [];
+    	$edited = [];
+    	$requests = DB::connection($this->mysql)->table('tbl_request_summary')
+    					->where('status','<>','Alert')
+    					->select(
+    						DB::raw('transno as transno')
+    					)->get();
+
+    	foreach ($requests as $key => $req) {
+    		$detail = DB::connection($this->mysql)->table('tbl_request_detail')
+						->where('transno',$req->transno)
+						->select(
+							DB::raw('SUM(servedqty) as total_served_qty'),
+							DB::raw('SUM(requestqty) as total_req_qty')
+						)->get();
+
+    		if ($detail[0]->total_req_qty > $detail[0]->total_served_qty) {
+    			DB::connection($this->mysql)->table('tbl_request_summary')
+    				->where('transno',$req->transno)
+    				->update(['status' => 'Serving']);
+
+    			DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance')
+    				->where('request_no',$req->transno)
+    				->update(['status' => 'Serving']);
+
+    			array_push($edited,[
+    				'request_no' => $req->transno,
+    				'detail' => $detail
+    			]);
+    		}
+    	}
+
+    	$data = [
+    		'requests' => $requests,
+    		'edited' => $edited
+    	];
+
+    	return dd($data);
+    }
 }

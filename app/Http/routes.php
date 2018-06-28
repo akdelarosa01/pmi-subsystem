@@ -590,6 +590,11 @@ Route::group(['middleware' => 'web'], function () {
                     'uses' => 'WBS\WBSWhsIssuanceController@exportToPDF',
                     'name' => 'get-pdf'
                 ]);
+
+                Route::get('/clean-data', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@cleanData',
+                    'name' => 'clean-data'
+                ]);
             });
             
 
