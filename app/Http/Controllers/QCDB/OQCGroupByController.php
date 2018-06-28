@@ -66,17 +66,56 @@ class OQCGroupByController extends Controller
         }
         $ins="";
         $list = array();
+        $LARresult;
+        $LARList = array();
+        $DPPMresult;
+        $DPPMList = array();
+        $rejectednum;
+        $rejectednumList = array();
+        $DPPM;
+        $DPPMList = array();
         for($x=0;$x<count($req->data);$x++){
              $chosen = $req->data[$x]['chosenfield'];
                 $ins = DB::connection($this->mysql)
-                                ->select("SELECT *
+                                ->select("SELECT *,".$req->firstData." as group_one
                                         FROM oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND ".$req->firstData." = '".$chosen."'"
                                     );
+                $this->insertToReportsv2($ins,"group1");    //FOR REPORTS
+
+                $LARresult = DB::connection($this->mysql)
+                                ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND ".$req->firstData." = '".$chosen."'"
+                                    );
+                $rejectednum = DB::connection($this->mysql)
+                                ->select("SELECT COUNT(*) AS rejects
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND judgement = 'Reject'
+                                        AND ".$req->firstData." = '".$chosen."'"
+                                    );
+                $DPPM = DB::connection($this->mysql)
+                                ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND judgement = 'Reject'
+                                        AND ".$req->firstData." = '".$chosen."'"
+                                    );
+                
                 array_push($list, $ins);
-         }
-        return response()->json($list);
+                array_push($LARList, $LARresult);
+                array_push($rejectednumList, $rejectednum);
+                array_push($DPPMList, $DPPM);
+        }
+         return response()->json([
+            'returnData' => $list,
+            'LARList' => $LARList,
+            'rejectednumList' => $rejectednumList,
+            'DPPMList' => $DPPMList,
+         ]);
     }
 
     public function dppmgroup2(Request $req){
@@ -90,6 +129,8 @@ class OQCGroupByController extends Controller
                                         WHERE 1=1 ".$sub_date_inspected."
                                         GROUP BY ".$req->secondData.""
                                     );
+
+
         return response()->json($ins);
     }
 
@@ -112,33 +153,133 @@ class OQCGroupByController extends Controller
             $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
         }
+        $insG1="";
+        $listG1 = array();
+        $LARresultG1;
+        $LARListG1 = array();
+        $DPPMresultG1;
+        $DPPMListG1 = array();
+        $rejectednumG1;
+        $rejectednumListG1 = array();
+        $DPPMG1;
+        $DPPMListG1 = array();
+        for($x=0;$x<count($req->content1);$x++){
+                $insG1 = DB::connection($this->mysql)
+                                ->select("SELECT *,".$req->firstData." as group_one
+                                        FROM oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+
+                $LARresultG1 = DB::connection($this->mysql)
+                                ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+                $rejectednumG1 = DB::connection($this->mysql)
+                                ->select("SELECT COUNT(*) AS rejects
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND judgement = 'Reject'
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+                $DPPMG1 = DB::connection($this->mysql)
+                                ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND judgement = 'Reject'
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+                
+                array_push($listG1, $insG1);
+                array_push($LARListG1, $LARresultG1);
+                array_push($rejectednumListG1, $rejectednumG1);
+                array_push($DPPMListG1, $DPPMG1);
+        }
+
         $ins="";
-        $list2 = array();
         $list = array();
-            for($x=0;$x<count($req->content1);$x++){
-                $list = array();
-                    for($y=0;$y<count($req->content2);$y++)
-                    {
-                            $ins = DB::connection($this->mysql)
-                                            ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
-                                                    FROM oqc_inspections
-                                                    WHERE 1=1 ".$sub_date_inspected."
-                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
-                                                );
-                            if(count($ins) > 0){
-                                array_push($list, $ins);
-                            }
-                        
-                    }
-                if(count($list) > 0){
-                array_push($list2, $list);
+        $list2 = array();
+        
+        $LARresult;
+        $LARList = array();
+        $LARList2 = array();
+
+        $DPPMresult;
+        $DPPMList = array();
+        $DPPMList2 = array();
+
+        $rejectednum;
+        $rejectednumList = array();
+        $rejectednumList2 = array();
+
+        for($x=0;$x<count($req->content1);$x++){
+            $list = array();
+            $LARList = array();
+            $DPPMList = array();
+            $rejectednumList = array();
+                for($y=0;$y<count($req->content2);$y++)
+                {
+                        $ins = DB::connection($this->mysql)
+                                        ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
+                                                FROM oqc_inspections
+                                                WHERE 1=1 ".$sub_date_inspected."
+                                                AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                            );
+
+                        $LARresult = DB::connection($this->mysql)
+                            ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
+                                    FROM pmi_ts.oqc_inspections
+                                    WHERE 1=1 ".$sub_date_inspected."
+                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                );
+
+                        $rejectednum = DB::connection($this->mysql)
+                            ->select("SELECT COUNT(*) AS rejects
+                                    FROM pmi_ts.oqc_inspections
+                                    WHERE 1=1 ".$sub_date_inspected."
+                                    AND judgement = 'Reject'
+                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                );
+
+                        $DPPM = DB::connection($this->mysql)
+                            ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                    FROM pmi_ts.oqc_inspections
+                                    WHERE 1=1 ".$sub_date_inspected."
+                                    AND judgement = 'Reject'
+                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                );
+
+                        if(count($ins) > 0){
+                            $this->insertToReportsv2($ins,"group2");
+                            array_push($list, $ins);
+                            array_push($LARList, $LARresult);
+                            array_push($rejectednumList, $rejectednum);
+                            array_push($DPPMList, $DPPM);
+                        }
                 }
-             }
+            if(count($list) > 0){
+                array_push($list2, $list);
+                array_push($LARList2, $LARList);
+                array_push($rejectednumList2, $rejectednumList);
+                array_push($DPPMList2, $DPPMList);
+            }
+         }
      
-
-
-        return response()->json($list2);
+     return response()->json([
+            'returnData' => $list2,
+            'LARList' => $LARList2,
+            'rejectednumList' => $rejectednumList2,
+            'DPPMList' => $DPPMList2,
+            'LARListG1' => $LARListG1,
+            'rejectednumListG1' => $rejectednumListG1,
+            'DPPMListG1' => $DPPMListG1
+         ]);
     }
 
     public function dppmgroup3_Details(Request $req){
@@ -146,43 +287,235 @@ class OQCGroupByController extends Controller
             $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
         }
+        $insG1="";
+        $listG1 = array();
+        $LARresultG1;
+        $LARListG1 = array();
+        $DPPMresultG1;
+        $DPPMListG1 = array();
+        $rejectednumG1;
+        $rejectednumListG1 = array();
+        $DPPMG1;
+        $DPPMListG1 = array();
+        for($x=0;$x<count($req->content1);$x++){
+                $insG1 = DB::connection($this->mysql)
+                                ->select("SELECT *,".$req->firstData." as group_one
+                                        FROM oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+
+                $LARresultG1 = DB::connection($this->mysql)
+                                ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+                $rejectednumG1 = DB::connection($this->mysql)
+                                ->select("SELECT COUNT(*) AS rejects
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND judgement = 'Reject'
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+                $DPPMG1 = DB::connection($this->mysql)
+                                ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                        FROM pmi_ts.oqc_inspections
+                                        WHERE 1=1 ".$sub_date_inspected."
+                                        AND judgement = 'Reject'
+                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                    );
+                
+                array_push($listG1, $insG1);
+                array_push($LARListG1, $LARresultG1);
+                array_push($rejectednumListG1, $rejectednumG1);
+                array_push($DPPMListG1, $DPPMG1);
+        }
+
         $ins="";
         $list = array();
         $list2 = array();
-        $list3 = array();
+        
+        $LARresult;
+        $LARList = array();
+        $LARList_2nd = array();
+
+        $DPPMresult;
+        $DPPMList = array();
+        $DPPMList_2nd = array();
+
+        $rejectednum;
+        $rejectednumList = array();
+        $rejectednumList_2nd = array();
+
+        for($x=0;$x<count($req->content1);$x++){
+            $list = array();
+            $LARList = array();
+            $DPPMList = array();
+            $rejectednumList = array();
+                for($y=0;$y<count($req->content2);$y++)
+                {
+                        $ins = DB::connection($this->mysql)
+                                        ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
+                                                FROM oqc_inspections
+                                                WHERE 1=1 ".$sub_date_inspected."
+                                                AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                            );
+
+                        $LARresult = DB::connection($this->mysql)
+                            ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
+                                    FROM pmi_ts.oqc_inspections
+                                    WHERE 1=1 ".$sub_date_inspected."
+                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                );
+
+                        $rejectednum = DB::connection($this->mysql)
+                            ->select("SELECT COUNT(*) AS rejects
+                                    FROM pmi_ts.oqc_inspections
+                                    WHERE 1=1 ".$sub_date_inspected."
+                                    AND judgement = 'Reject'
+                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                );
+
+                        $DPPM = DB::connection($this->mysql)
+                            ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                    FROM pmi_ts.oqc_inspections
+                                    WHERE 1=1 ".$sub_date_inspected."
+                                    AND judgement = 'Reject'
+                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                );
+
+                        if(count($ins) > 0){
+                            array_push($list, $ins);
+                            array_push($LARList, $LARresult);
+                            array_push($rejectednumList, $rejectednum);
+                            array_push($DPPMList, $DPPM);
+                        }
+                }
+            if(count($list) > 0){
+                array_push($list2, $list);
+                array_push($LARList_2nd, $LARList);
+                array_push($rejectednumList_2nd, $rejectednumList);
+                array_push($DPPMList_2nd, $DPPMList);
+            }
+         }
+
+
+        //=========================//
+        $ins_3rd="";
+        $list_3rd = array();
+        $list2_3rd = array();
+        $list3_3rd = array();
+
+        $LARresult;
+        $LARList = array();
+        $LARList2 = array();
+        $LARList3 = array();
+
+        $DPPMresult;
+        $DPPMList = array();
+        $DPPMList2 = array();
+        $DPPMList3 = array();
+
+        $rejectednum;
+        $rejectednumList = array();
+        $rejectednumList2 = array();
+        $rejectednumList3 = array();
+
             for($x=0;$x<count($req->content1);$x++){
-                $list2 = array();
+                $list2_3rd = array();
+                $LARList2 = array();
+                $DPPMList2 = array();
+                $rejectednumList2 = array();
                     for($y=0;$y<count($req->content2);$y++)
                     {
-                        $list = array();
+                        $list_3rd = array();
+                        $LARList = array();
+                        $DPPMList = array();
+                        $rejectednumList = array();
                         for($z=0;$z<count($req->content3);$z++)
                         {
-                            $ins = DB::connection($this->mysql)
+                            $ins_3rd = DB::connection($this->mysql)
                                             ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2,".$req->thirdData." as chosenfield3 
                                                     FROM oqc_inspections
                                                     WHERE 1=1 ".$sub_date_inspected."
                                                     AND ".$req->firstData." = '".$req->content1[$x]."'
                                                     AND ".$req->secondData." = '".$req->content2[$y]."'
-                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'
-                                                    GROUP BY ".$req->thirdData.""
+                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                    // GROUP BY ".$req->thirdData.""
                                                 );
-                        if(count($ins) > 0){
-                            array_push($list, $ins);
+                            $LARresult = DB::connection($this->mysql)
+                                            ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
+                                                    FROM pmi_ts.oqc_inspections
+                                                    WHERE 1=1 ".$sub_date_inspected."
+                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                );
+
+                            $rejectednum = DB::connection($this->mysql)
+                                            ->select("SELECT COUNT(*) AS rejects
+                                                    FROM pmi_ts.oqc_inspections
+                                                    WHERE 1=1 ".$sub_date_inspected."
+                                                    AND judgement = 'Reject'
+                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                );
+
+                            $DPPM = DB::connection($this->mysql)
+                                            ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                                    FROM pmi_ts.oqc_inspections
+                                                    WHERE 1=1 ".$sub_date_inspected."
+                                                    AND judgement = 'Reject'
+                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
+                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                );
+                        if(count($ins_3rd) > 0){
+                            $this->insertToReportsv2($ins_3rd,"group3");
+                            array_push($list_3rd, $ins_3rd);
+                            array_push($LARList , $LARresult);
+                            array_push($DPPMList , $DPPM);
+                            array_push($rejectednumList , $rejectednum);
+
                         }
                     }
-                    if(count($list) > 0 ){
-                    array_push($list2, $list);
+                    if(count($list_3rd) > 0 ){
+                    array_push($list2_3rd, $list_3rd);
+                    array_push($LARList2, $LARList);
+                    array_push($DPPMList2, $DPPMList);
+                    array_push($rejectednumList2, $rejectednumList);
                     }
                 }
-                if(count($list2) > 0){
-                array_push($list3, $list2);
+                if(count($list2_3rd) > 0){
+                array_push($list3_3rd, $list2_3rd);
+                array_push($LARList3, $LARList2);
+                array_push($DPPMList3 , $DPPMList2);
+                array_push($rejectednumList3 , $rejectednumList2);
                 }
             }
      
 
-
-        return response()->json($list3);
+        return response()->json([
+            'returnData' => $list3_3rd,
+            'LARList_3rd' => $LARList3,
+            'DPPMList_3rd' => $DPPMList3,
+            'rejectednumList_3rd' => $rejectednumList3,
+            'LARList_2nd' => $LARList_2nd,
+            'rejectednumList_2nd' => $rejectednumList_2nd,
+            'DPPMList_2nd' => $DPPMList_2nd,
+            'LARListG1' => $LARListG1,
+            'rejectednumListG1' => $rejectednumListG1,
+            'DPPMListG1' => $DPPMListG1
+         ]);
+        //return response()->json($list3);
     }
+
 
     public function DPPMTablesv2($req){
         $ins="";
@@ -1178,6 +1511,144 @@ class OQCGroupByController extends Controller
             });
 
         })->download('xls');
+    }
+
+
+    private function insertToReportsv2($details,$type)
+    {
+        $fields = [];
+        if($type == "group1"){
+            foreach ($details as $key => $x) {
+                array_push($fields,[
+                    'assembly_line' => $x->assembly_line,
+                    'lot_no' => $x->lot_no,
+                    'app_date' => $this->com->convertDate($x->app_date,'Y-m-d'),
+                    'app_time' => $x->app_time,
+                    'prod_category' => $x->prod_category,
+                    'po_no' => $x->po_no,
+                    'device_name' => $x->device_name,
+                    'customer' => $x->customer,
+                    'po_qty' => $x->po_qty,
+                    'family' => $x->family,
+                    'type_of_inspection' => $x->type_of_inspection,
+                    'severity_of_inspection' => $x->severity_of_inspection,
+                    'inspection_lvl' => $x->inspection_lvl,
+                    'aql' => $x->aql,
+                    'accept' => $x->accept,
+                    'reject' => $x->reject,
+                    'date_inspected' => $this->com->convertDate($x->date_inspected,'Y-m-d'),
+                    'ww' => $x->ww,
+                    'fy' => $x->fy,
+                    'time_ins_from' => $x->time_ins_from,
+                    'time_ins_to' => $x->time_ins_to,
+                    'shift' => $x->shift,
+                    'inspector' => $x->inspector,
+                    'submission' => $x->submission,
+                    'coc_req' => $x->coc_req,
+                    'judgement' => $x->judgement,
+                    'lot_qty' => $x->lot_qty,
+                    'sample_size' => $x->sample_size,
+                    'lot_inspected' => $x->lot_inspected,
+                    'lot_accepted' => $x->lot_accepted,
+                    'lot_rejected' =>$x->lot_rejected,
+                    'num_of_defects' => $x->num_of_defects,
+                    'remarks' => $x->remarks,
+                    'type'=> $x->type,
+                    'group_one' => $x->group_one
+                ]);
+            }
+        }
+        else if($type == "group2")
+        {
+            foreach ($details as $key => $x) {
+                array_push($fields,[
+                    'assembly_line' => $x->assembly_line,
+                    'lot_no' => $x->lot_no,
+                    'app_date' => $this->com->convertDate($x->app_date,'Y-m-d'),
+                    'app_time' => $x->app_time,
+                    'prod_category' => $x->prod_category,
+                    'po_no' => $x->po_no,
+                    'device_name' => $x->device_name,
+                    'customer' => $x->customer,
+                    'po_qty' => $x->po_qty,
+                    'family' => $x->family,
+                    'type_of_inspection' => $x->type_of_inspection,
+                    'severity_of_inspection' => $x->severity_of_inspection,
+                    'inspection_lvl' => $x->inspection_lvl,
+                    'aql' => $x->aql,
+                    'accept' => $x->accept,
+                    'reject' => $x->reject,
+                    'date_inspected' => $this->com->convertDate($x->date_inspected,'Y-m-d'),
+                    'ww' => $x->ww,
+                    'fy' => $x->fy,
+                    'time_ins_from' => $x->time_ins_from,
+                    'time_ins_to' => $x->time_ins_to,
+                    'shift' => $x->shift,
+                    'inspector' => $x->inspector,
+                    'submission' => $x->submission,
+                    'coc_req' => $x->coc_req,
+                    'judgement' => $x->judgement,
+                    'lot_qty' => $x->lot_qty,
+                    'sample_size' => $x->sample_size,
+                    'lot_inspected' => $x->lot_inspected,
+                    'lot_accepted' => $x->lot_accepted,
+                    'lot_rejected' =>$x->lot_rejected,
+                    'num_of_defects' => $x->num_of_defects,
+                    'remarks' => $x->remarks,
+                    'type'=> $x->type,
+                    'group_one' => $x->chosenfield,
+                    'group_two' => $x->chosenfield2
+                ]);
+            }
+        }
+        else{
+            foreach ($details as $key => $x) {
+                array_push($fields,[
+                    'assembly_line' => $x->assembly_line,
+                    'lot_no' => $x->lot_no,
+                    'app_date' => $this->com->convertDate($x->app_date,'Y-m-d'),
+                    'app_time' => $x->app_time,
+                    'prod_category' => $x->prod_category,
+                    'po_no' => $x->po_no,
+                    'device_name' => $x->device_name,
+                    'customer' => $x->customer,
+                    'po_qty' => $x->po_qty,
+                    'family' => $x->family,
+                    'type_of_inspection' => $x->type_of_inspection,
+                    'severity_of_inspection' => $x->severity_of_inspection,
+                    'inspection_lvl' => $x->inspection_lvl,
+                    'aql' => $x->aql,
+                    'accept' => $x->accept,
+                    'reject' => $x->reject,
+                    'date_inspected' => $this->com->convertDate($x->date_inspected,'Y-m-d'),
+                    'ww' => $x->ww,
+                    'fy' => $x->fy,
+                    'time_ins_from' => $x->time_ins_from,
+                    'time_ins_to' => $x->time_ins_to,
+                    'shift' => $x->shift,
+                    'inspector' => $x->inspector,
+                    'submission' => $x->submission,
+                    'coc_req' => $x->coc_req,
+                    'judgement' => $x->judgement,
+                    'lot_qty' => $x->lot_qty,
+                    'sample_size' => $x->sample_size,
+                    'lot_inspected' => $x->lot_inspected,
+                    'lot_accepted' => $x->lot_accepted,
+                    'lot_rejected' =>$x->lot_rejected,
+                    'num_of_defects' => $x->num_of_defects,
+                    'remarks' => $x->remarks,
+                    'type'=> $x->type,
+                    'group_one' => $x->chosenfield,
+                    'group_two' => $x->chosenfield2,
+                    'group_three' => $x->chosenfield3
+                ]);
+            }
+        }
+
+        $insertBatchs = array_chunk($fields, 2000);
+        foreach ($insertBatchs as $batch) {
+            DB::connection($this->mysql)->table('oqc_inspection_excel')->insert($batch);
+        }
     }
 
 }

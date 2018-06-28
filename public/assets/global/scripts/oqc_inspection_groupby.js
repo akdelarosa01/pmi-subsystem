@@ -16,7 +16,6 @@ $( function() {
         else{
             disabledContent2();
         }
-        
     });
 
     $('#field2').on('change',function(){
@@ -68,7 +67,6 @@ $( function() {
             $("#content3").val('');
             $("#content3").prop('disabled', true);
         }
-
     });
 
     $('#gto').on('change',function(){
@@ -86,6 +84,16 @@ $( function() {
         $('#group_by_pane').show();
         e.preventDefault();
         openloading();
+        $('#group_by_pane').html('<div class="btn-group pull-right">'+
+                                '<button class="btn btn-danger btn-sm" id="btn_close_groupby">'+
+                                    '<i class="fa fa-times"></i> Close'+
+                                '</button>'+
+                                '<button class="btn btn-info btn-sm" id="btn_pdf_groupby">'+
+                                    '<i class="fa fa-file-pdf-o"></i> PDF'+
+                                '</button>'+
+                                '<button class="btn btn-success btn-sm" id="btn_excel_groupby">'+
+                                    '<i class="fa fa-file-excel-o"></i> Excel'+
+                                '</button></div><br><br>');
         if($('#field2').val() == "" && $('#field3').val() == ""){
             var datas = $(this).serialize();
             var desFirst = deparam(datas);
@@ -109,8 +117,13 @@ $( function() {
                                         gfrom:desFirst.gfrom
                                 },
                                 success:function(returnDataDetails){
-                                        var details = returnDataDetails;
-                                        FirstTable(form,datas,details);
+                                        var details = returnDataDetails.returnData;
+                                        FirstTable(form,
+                                                    datas,
+                                                    details,
+                                                    returnDataDetails.LARList,
+                                                    returnDataDetails.rejectednumList,
+                                                    returnDataDetails.DPPMList);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                         alert(xhr.status);
@@ -185,7 +198,14 @@ $( function() {
                                                                 gfrom:desFirst.gfrom,
                                                         },
                                                         success:function(returDetails){
-                                                             secondTable(returDetails,desFirst);
+                                                             secondTable(returDetails.returnData,
+                                                                desFirst,
+                                                                returDetails.LARList,
+                                                                returDetails.rejectednumList,
+                                                                returDetails.DPPMList,
+                                                                returDetails.LARListG1,
+                                                                returDetails.rejectednumListG1,
+                                                                returDetails.DPPMListG1);
                                                         },
                                                         error: function (xhr, ajaxOptions, thrownError) {
                                                                 alert(xhr.status);
@@ -285,7 +305,18 @@ $( function() {
                                                                 gfrom:desFirst.gfrom,
                                                         },
                                                         success:function(returDetails){
-                                                             thirdTable(returDetails,desFirst);
+                                                            thirdTable(returDetails.returnData,
+                                                                desFirst,
+                                                                returDetails.LARListG1,
+                                                                returDetails.rejectednumListG1,
+                                                                returDetails.DPPMListG1,
+                                                                returDetails.LARList_2nd,
+                                                                returDetails.rejectednumList_2nd,
+                                                                returDetails.DPPMList_2nd,
+                                                                returDetails.LARList_3rd,
+                                                                returDetails.rejectednumList_3rd,
+                                                                returDetails.DPPMList_3rd
+                                                                );
                                                         },
                                                         error: function (xhr, ajaxOptions, thrownError) {
                                                                 alert(xhr.status);
@@ -311,7 +342,7 @@ $( function() {
                 }
             });
         }
-        });
+    });
         // }).done(function(data,xhr,textStatus) {
         //     console.log(data);
         //     // closeloading();
@@ -384,6 +415,7 @@ $( function() {
     $('#btn_pdf_groupby').live('click', function() {
         window.location.href=PDFGroupByReportURL;
     });
+
     $('#btn_excel_groupby').live('click', function() {
         window.location.href=ExcelGroupByReportURL;
     });
@@ -404,6 +436,7 @@ function disabledContent(){
     $("#content3").val('');
     $("#calID").prop('disabled', true);
 }
+
 function disabledContent2(){
     $("#field2").prop('disabled', true);
     $("#field2").val('');
@@ -417,7 +450,6 @@ function disabledContent2(){
     $("#content3").val('');
     $("#calID").prop('disabled', true);
 }
-
 
 function deparam(query) {
     var pairs, i, keyValuePair, key, value, map = {};
@@ -437,14 +469,26 @@ function deparam(query) {
     return map;
 }
 
-function FirstTable(req,datas,details){
+function FirstTable(req,datas,details,LAR,REJ,DPPM){
     var d = deparam(datas);
     for(var x=0;x<details.length;x++){
         var gp1 = "";
             gp1 += "<div class='panel-group accordion scrollable' id='grp"+x+"'>";
             gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
-            gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false'>";
-            gp1 += d.field1 + ": "+req[x].chosenfield+"</a>";
+            gp1 += "<h4 class='panel-title'>";
+            if(DPPM[x]["0"].DPPM != null){
+                gp1 += "<a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false' style='background-color:red;'>";
+                gp1 += d.field1 + ": "+req[x].chosenfield+"  &emsp;"
+                gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+REJ[x]["0"].rejects+"/"+details[x].length+") &emsp;"
+                gp1 += "DPPM: "+DPPM[x]["0"].DPPM+" &emsp;";
+                gp1 += "("+DPPM[x]["0"].num_of_defects+"/"+DPPM[x]["0"].sample_size+")</a>";
+            }
+            else{
+                gp1 += "<a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false'>";
+                gp1 += d.field1 + ": "+req[x].chosenfield+"  &emsp;"
+                gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+REJ[x]["0"].rejects+"/"+details[x].length+") &emsp;"
+                gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
+            }
             gp1 += "</h4>";
             gp1 += "</div>";
             gp1 += "<div id='grp_val"+x+"' class='panel-collapse collapse' aria-expanded='false' style=>";
@@ -488,10 +532,18 @@ function FirstTable(req,datas,details){
             gp1 += "<td><strong>Type</strong></td>";
             gp1 += "</tr>";
             gp1 += "</thead>";
-            gp1 += "<tbody id='details_tbody'><tr>";
+            gp1 += "<tbody id='details_tbody'>";
 
             for(y=0;y<details[x].length;y++){
                     var num = y+1;
+                    if(details[x][y].judgement == "Reject")
+                    {
+                        gp1 += "<tr style='background-color:red;'>";
+                    }
+                    else{
+                        gp1 += "<tr>";
+                    }
+                   
                     gp1 += "<td>"+num+"</td>";
                     gp1 += "<td><button class=btn btn-sm view_inspection blue ";
                     gp1 += "data-id="+details[x][y].id+" ";
@@ -575,13 +627,24 @@ function FirstTable(req,datas,details){
  closeloading();
 }
 
-function secondTable(req,datas){
+function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
     for(var x=0;x<req.length;x++){
         var gp1 = "";
             gp1 += "<div class='panel-group accordion scrollable' id='grp"+x+"'>";
             gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
             gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+"' href='#grp_val"+x+"' aria-expanded='false'>";
-            gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"</a>";
+            // gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"</a>";
+            if(DPPMg1[x]["0"].DPPM != null){
+                gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                gp1 += "DPPM: "+DPPMg1[x]["0"].DPPM+" &emsp;";
+                gp1 += "("+DPPMg1[x]["0"].num_of_defects+"/"+DPPMg1[x]["0"].sample_size+")</a>";
+            }
+            else{
+                gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
+            }
             gp1 += "</h4>";
             gp1 += "</div>";
             gp1 += "<div id='grp_val"+x+"' class='panel-collapse collapse' aria-expanded='false' style=>";
@@ -602,8 +665,21 @@ function secondTable(req,datas){
                     gp1 += "<td>";
                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc+"'>";
                     gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
-                    gp1 += "<h4 class=panel-title><a class='accordion-toggle' data-toggle='collapse' data-parent=#grp"+idc+" href=#grp_val"+idc+" aria-expanded='false'>";
-                    gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"</a>";
+                    gp1 += "<h4 class=panel-title>";
+                    //gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"</a>";
+                    if(DPPM[x][y]["0"].DPPM != null){
+                        gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent=#grp"+idc+" href=#grp_val"+idc+" aria-expanded='false' style='background-color:red;'>";
+                        gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"  &emsp;"
+                        gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+REJ[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        gp1 += "DPPM: "+DPPM[x][y]["0"].DPPM+" &emsp;";
+                        gp1 += "("+DPPM[x][y]["0"].num_of_defects+"/"+DPPM[x][y]["0"].sample_size+")</a>";
+                    }
+                    else{
+                        gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent=#grp"+idc+" href=#grp_val"+idc+" aria-expanded='false'>";
+                        gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"  &emsp;"
+                        gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+REJ[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
+                    }
                     gp1 += "</h4>";
                     gp1 += "</div>";
 
@@ -651,8 +727,13 @@ function secondTable(req,datas){
                     gp1 += "</tr>";
                     gp1 += "</tr>";
                     for(z=0;z<req[x][y].length;z++){
-                        //var pp = req["0"][x][z].po_no;
-                        gp1 += "<tr>";
+                        if(req[x][y][z].judgement == "Reject")
+                        {
+                            gp1 += "<tr style='background-color:red;'>";
+                        }
+                        else{
+                            gp1 += "<tr>";
+                        }
                         gp1 += "<td></td>";
                         gp1 += "<td></td>";
                         gp1 += "<td>"+req[x][y][z].po_no+"</td>";
@@ -708,15 +789,24 @@ function secondTable(req,datas){
  closeloading();
 }
 
-function thirdTable(req,datas){
-    closeloading();
-    var xreplicator = 0;
+function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3rd,REJ_3rd,DPPM_3rd){
     for(var x=0;x<req.length;x++){
         var gp1 = "";
             gp1 += "<div class='panel-group accordion scrollable' id='grp"+x+"'>";
             gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
             gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+"' href='#grp_val"+x+"' aria-expanded='false'>";
-            gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"</a>";
+            //gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"</a>";
+            if(DPPMg1[x]["0"].DPPM != null){
+                gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                gp1 += "DPPM: "+DPPMg1[x]["0"].DPPM+" &emsp;";
+                gp1 += "("+DPPMg1[x]["0"].num_of_defects+"/"+DPPMg1[x]["0"].sample_size+")</a>";
+            }
+            else{
+                gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
+                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+REJg1[x]["0"].rejects+"/"+req[x].length+") &emsp;"
+                gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
+            }
             gp1 += "</h4>";
             gp1 += "</div>";
             gp1 += "<div id='grp_val"+x+"' class='panel-collapse collapse' aria-expanded='false'>";
@@ -728,14 +818,25 @@ function thirdTable(req,datas){
             gp1 += "<tbody id='details_tbody'>";
 
             for(y=0;y<req[x].length;y++){
+                var ss = req[x].length;
                     var idc = guidGenerator();
                     gp1 += "<tr>";
                     gp1 += "<td>";
                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc+"'>";
                     gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
                     gp1 += "<h4 class='panel-title'><a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc+"' href='#grp_val"+idc+"' aria-expanded='true'>";
-                    gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"</a>";
-                    //xreplicator++;
+                    //gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"</a>";
+                    if(DPPM_2nd[x][y]["0"].DPPM != null){
+                        gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
+                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+REJ_2nd[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        gp1 += "DPPM: "+DPPM_2nd[x][y]["0"].DPPM+" &emsp;";
+                        gp1 += "("+DPPM_2nd[x][y]["0"].num_of_defects+"/"+DPPM_2nd[x][y]["0"].sample_size+")</a>";
+                    }
+                    else{
+                        gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
+                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+REJ_2nd[x][y]["0"].rejects+"/"+req[x][y].length+") &emsp;"
+                        gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
+                    }
                     gp1 += "</h4>";
                     gp1 += "</div>";
 
@@ -744,14 +845,28 @@ function thirdTable(req,datas){
 
                                 gp1 += "<table style=width:100%>";
                                 for(z=0;z<req[x][y].length;z++){
+                                    var ss = req[x][y].length;
                                     var idc2 = guidGenerator();
                                     var yy= req[x][y].length;
                                     gp1 += "<tr>";
                                     gp1 += "<td>";
                                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc2+"'>";
                                     gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
-                                    gp1 += "<h4 class='panel-title'><a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true'>";
-                                    gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"</a>";
+                                    gp1 += "<h4 class='panel-title'>";
+                                    //gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"</a>";
+                                    if(DPPM_3rd[x][y][z]["0"].DPPM != null){
+                                        gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true' style='background-color:red;'>";
+                                        gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;"
+                                        gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+REJ_3rd[x][y][z]["0"].rejects+"/"+req[x][y][z].length+") &emsp;"
+                                        gp1 += "DPPM: "+DPPM_3rd[x][y][z]["0"].DPPM+" &emsp;";
+                                        gp1 += "("+DPPM_3rd[x][y][z]["0"].num_of_defects+"/"+DPPM_3rd[x][y][z]["0"].sample_size+")</a>";
+                                    }
+                                    else{
+                                        gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true'>";
+                                        gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;"
+                                        gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+REJ_3rd[x][y][z]["0"].rejects+"/"+req[x][y][z].length+") &emsp;"
+                                        gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
+                                    }
                                     gp1 += "</h4>";
                                     gp1 += "</div>";
 
@@ -799,9 +914,13 @@ function thirdTable(req,datas){
                                             gp1 += "</tr>";
                                             gp1 += "</tr>";
                                             for(a=0;a<req[x][y][z].length;a++){
-                                                var ssl = req[x][y][z].length;
-                                                var pp = req[x][y][z][a].po_no;
-                                                gp1 += "<tr>";
+                                               if(req[x][y][z][a].judgement == "Reject")
+                                                {
+                                                    gp1 += "<tr style='background-color:red;'>";
+                                                }
+                                                else{
+                                                    gp1 += "<tr>";
+                                                }
                                                 gp1 += "<td></td>";
                                                 gp1 += "<td></td>";
                                                 gp1 += "<td>"+req[x][y][z][a].po_no+"</td>";
@@ -1432,7 +1551,6 @@ function calculateLARDPPM(data) {
 
     });
     //node_parent_count++;
-
 }
 
 function clearGrpByFields() {

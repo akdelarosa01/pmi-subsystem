@@ -1,3 +1,4 @@
+/config
 /config/database.php
 /node_modules
 .env
