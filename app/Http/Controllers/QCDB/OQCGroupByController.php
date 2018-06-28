@@ -50,14 +50,9 @@ class OQCGroupByController extends Controller
 
     public function CalculateDPPM(Request $req)
     {
-        DB::connection($this->mysql)->table($oqc_inspection_excel)->truncate();
-        //return $this->DPPMTables($req,false);
-         $data =  $this->DPPMTablesv2($req);
-         // return response()->json([
-         //    'data' => $data,
-         //    'req' => $req->field2
-         // ]);
-         return response()->json($data);
+        DB::connection($this->mysql)->table('oqc_inspection_excel')->truncate();
+        $data =  $this->DPPMTablesv2($req);
+        return response()->json($data);
     }
 
     public function dppmgroup1(Request $req){
