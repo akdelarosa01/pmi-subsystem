@@ -477,18 +477,19 @@ function FirstTable(req,datas,details,LAR,REJ,DPPM){
                 gp1 += "<div class='panel panel-info'>";
                     gp1 += "<div class='panel-heading'>";
                         gp1 += "<h4 class='panel-title'>";
+                        //var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+                        var acc = (details[x].length == 1)?1:details[x].length - REJ[x]["0"].rejects;
+                        var Larc = ((acc/details[x].length)*100).toFixed(2);
                         if(DPPM[x]["0"].DPPM != null){
                             gp1 += "<a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false' style='background-color:red;'>";
                             gp1 += d.field1 + ": "+req[x].chosenfield+"  &emsp;"
-                            var acc = (details[x].length == 1)?1:details[x].length - REJ[x]["0"].rejects;
-                            gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+acc+"/"+details[x].length+") &emsp;"
+                            gp1 += "LAR : "+Larc+"% ("+acc+"/"+details[x].length+") &emsp;"
                             gp1 += "DPPM: "+DPPM[x]["0"].DPPM+" &emsp;";
                             gp1 += "("+DPPM[x]["0"].num_of_defects+"/"+DPPM[x]["0"].sample_size+")</a>";
                         }
                         else{
                             gp1 += "<a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false'>";
                             gp1 += d.field1 + ": "+req[x].chosenfield+"  &emsp;"
-                            var acc = (details[x].length == 1)?1:req[x].length - REJ[x]["0"].rejects;
                             gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+acc+"/"+details[x].length+") &emsp;"
                             gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                         }
@@ -679,7 +680,7 @@ function GETDPPMthird(req,DPPM,REJ,xvideos,youporn,stage){
                      //(req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
                         JonnySins += acc;
                         MariaOzawa += req[x1][y1].length;
-                      
+                      break;
                 }
                 break;
         }
@@ -724,9 +725,12 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
             gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
             gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+"' href='#grp_val"+x+"' aria-expanded='false'>";
            
-            if(MushRoomHead.DPPM != "NaN"){
+            var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+            var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
+            var Larc = ((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
+            if(!isNaN(n)){
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
+                gp1 += "LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
                 gp1 += "DPPM: "+MushRoomHead.DPPM+" &emsp;";
                 gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")</a>";
             }
@@ -895,7 +899,7 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
             if(!isNaN(n)){
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
                 gp1 += "LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
-                gp1 += "DPPM: "+(MushRoomHead.poop/MushRoomHead.shit)*1000000+" &emsp;";
+                gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
                 gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")</a>";
             }
             else{
@@ -928,8 +932,8 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                     var Larc = ((acc/req[x][y].length)*100).toFixed(2);
                     if(!isNaN(n)){
                         gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                        gp1 += "LAR : "+Larc+"% ("+acc+"/"+req[x][y].length+") &emsp;"
-                        gp1 += "DPPM: "+n+" &emsp;";
+                        gp1 += "LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
+                        gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
                         gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")</a>";
                     }
                     else{
