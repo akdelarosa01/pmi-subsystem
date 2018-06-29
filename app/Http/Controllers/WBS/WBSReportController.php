@@ -852,26 +852,38 @@ class WBSReportController extends Controller
 
         $data = DB::connection($this->wbs)
                 ->select("select d.transno transno,
-                                d.whstransno whstransno,
-                                rs.pono pono,
-                                d.`code` as code,
-                                d.`name` as name,
-                                ifnull(s.request_qty,d.requestqty) as requestqty,
-                                ifnull(s.issued_qty_t,0) as servedqty,
-                                d.classification classification,
-                                d.requestedby requestedby,
-                                d.request_date request_date,
-                                ifnull(s.`status`,rs.`status`) as `status`,
-                                d.remarks as remarks
-                            from tbl_request_detail as d
-                            left join tbl_wbs_warehouse_mat_issuance_details as s
-                            on s.request_no = d.transno 
-                            and s.item = d.`code` 
-                            and s.request_qty = d.requestqty
-                            left join tbl_request_summary as rs
-                            on rs.transno = d.transno
-                            where 1=1 ".$pono_cond.$issno_cond.$item_cond.$from_cond."
-                            group by d.code,d.lot_no"); //GROUP BY d.whstransno,d.code,d.lot_no
+                            d.whstransno whstransno,
+                            rs.pono pono,
+                            d.`code` as code,
+                            d.`name` as name,
+                            ifnull(s.request_qty,d.requestqty) as requestqty,
+                            ifnull(d.servedqty,0) as servedqty,
+                            d.classification classification,
+                            d.requestedby requestedby,
+                            d.request_date request_date,
+                            ifnull(s.`status`,rs.`status`) as `status`,
+                            d.remarks as remarks
+                        from tbl_request_detail as d
+                        left join tbl_wbs_warehouse_mat_issuance_details as s
+                        on s.request_no = d.transno 
+                        and s.item = d.`code` 
+                        and s.request_qty = d.requestqty
+                        left join tbl_request_summary as rs
+                        on rs.transno = d.transno
+                        where 1=1 ".$pono_cond.$issno_cond.$item_cond.$from_cond."
+                        group by d.transno,
+                                d.whstransno,
+                                rs.pono,
+                                d.`code`,
+                                d.`name`,
+                                d.requestqty,
+                                d.servedqty,
+                                d.classification,
+                                d.requestedby,
+                                d.request_date,
+                                s.`status`,
+                                rs.`status`,
+                                d.remarks"); //GROUP BY d.whstransno,d.code,d.lot_no
 
         
         $this->production_request($data);
