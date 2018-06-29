@@ -781,11 +781,20 @@ class WBSReportController extends Controller
                                 po1.pono as po,
                                 w.status as status,
                                 w.update_user
-                        FROM tbl_wbs_warehouse_mat_issuance_details as w
-                            LEFT JOIN tbl_request_summary as po1
+                        FROM pmi_wbs_ts.tbl_wbs_warehouse_mat_issuance_details as w
+                            LEFT JOIN pmi_wbs_ts.tbl_request_summary as po1
                             ON w.request_no = po1.transno
                         WHERE w.issued_qty_t <> 0 ".$pono_cond.$issno_cond.$item_cond.$from_cond."
-                            GROUP BY w.item,w.lot_no
+                            GROUP BY w.issuance_no, 
+                                    w.request_no,
+                                    w.item, 
+                                    w.item_desc, 
+                                    w.lot_no,
+                                    w.issued_date,
+                                    w.request_qty,
+                                    po1.pono,
+                                    w.`status`,
+                                    w.update_user
                             ORDER BY w.request_no");
 
         
