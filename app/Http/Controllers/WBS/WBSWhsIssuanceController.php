@@ -15,6 +15,7 @@ use Excel;
 use Datatables;
 use Event;
 use App\Events\WHSCheckRequest;
+use File;
 
 class WBSWhsIssuanceController extends Controller
 {
@@ -1048,5 +1049,75 @@ class WBSWhsIssuanceController extends Controller
     	];
 
     	return dd($data);
+    }
+
+    public function printBarcode(Request $req)
+    {
+    	$path = storage_path().'/brcodekitting';
+
+        if (!File::exists($path)) {
+            File::makeDirectory($path,777, true, true);
+        }
+
+        $filename = $req->issuance_no.'_'.$req->item.'.prn';
+
+        $content = 'CLIP ON'."\r\n";
+        $content .= 'CLIP BARCODE ON'."\r\n";
+        $content .= 'DIR2'."\r\n";
+        $content .= 'PP310,766:AN7'."\r\n";
+        $content .= 'DIR2'."\r\n";
+        $content .= 'FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 10'."\r\n";
+        $content .= 'PP60,776:FT "Swiss 721 Bold BT",20,0,78'."\r\n";
+        $content .= 'PP290,450:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 8'."\r\n";
+        $content .= 'PT "'.$req->create_user.'"'."\r\n";
+        $content .= 'PP290,200:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 8'."\r\n";
+        $content .= 'PT "'.$req->created_at.'"'."\r\n";
+        $content .= 'PP260,480:BARSET "CODE128",2,1,3,30'."\r\n";
+        $content .= 'PB "'.$req->issuance_no.'"'."\r\n";
+        $content .= 'PP220,350:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 6'."\r\n";
+        $content .= 'PT "'.$req->issuance_no.'"'."\r\n";
+        $content .= 'PP200,520:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 6'."\r\n";
+        $content .= 'PT "Qty.:"'."\r\n";
+        $content .= 'PP200,440:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 8'."\r\n";
+        $content .= 'PT "'.$req->issued_qty_t.'"'."\r\n";
+        $content .= 'PP200,360:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 8'."\r\n";
+        $content .= 'PT "pc(s)"'."\r\n";
+        $content .= 'PP160,400:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 6'."\r\n";
+        $content .= 'PT "LOT:"'."\r\n";
+        $content .= 'PP160,480:BARSET "CODE128",2,1,3,30'."\r\n";
+        $content .= 'PB "'.$req->lot_no.'"'."\r\n";
+        $content .= 'PP120,350:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 6'."\r\n";
+        $content .= 'PT "'.$req->lot_no.'"'."\r\n";
+        $content .= 'PP100,350:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 6'."\r\n";
+        $content .= 'PT "'.$req->item_desc.'"'."\r\n";
+        $content .= 'PP80,480:BARSET "CODE128",2,1,3,30'."\r\n";
+        $content .= 'PB "'.$req->item.'"'."\r\n";
+        $content .= 'PP40,350:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'FONTSIZE 6'."\r\n";
+        $content .= 'PT "'.$req->item.'"'."\r\n";
+        $content .= 'PP150,779:AN7'."\r\n";
+        $content .= 'PF'."\r\n";
+
+
+        $myfile = fopen($path."/".$filename, "w") or die("Unable to open file!");
+        fwrite($myfile, $content);
+        fclose($myfile);
+
+        $headers = [
+                        'Content-type'=>'text/plain', 
+                        'Content-Disposition'=>sprintf('attachment; filename="%s"', $filename)
+                    ];
+    
+        return \Response::download($path.'/'.$filename, $filename, $headers);
     }
 }

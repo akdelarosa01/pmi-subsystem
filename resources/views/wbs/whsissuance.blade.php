@@ -178,15 +178,16 @@
 									<table class="table table-bordered table-striped" style="font-size:10px" id="tbl_issuance">
 										<thead>
 											<tr>
-												<td width="4.11%"></td>
-												<td width="5.11%"></td>
-												<td width="4.11%">Detail ID</td>
-												<td width="11.11%">Item/Part No.</td>
-												<td width="25.11%">Item Description</td>
-												<td width="11.11%">Issued Qty.(Others)</td>
-												<td width="11.11%">Issued Qty.(This)</td>
-												<td width="11.11%">Lot No.</td>
-												<td width="17.11%">Location</td>
+												<td></td>
+												<td></td>
+												<td>Detail ID</td>
+												<td>Item/Part No.</td>
+												<td>Item Description</td>
+												<td>Issued Qty.(Others)</td>
+												<td>Issued Qty.(This)</td>
+												<td>Lot No.</td>
+												<td>Location</td>
+												<td></td>
 											</tr>
 										</thead>
 										<tbody id="tbl_issuance_body"></tbody>
@@ -247,6 +248,7 @@
 	var getDataURL = "{{ url('/whs-issuance/get-data') }}";
 	var excelPDF = "{{ url('/whs-issuance/get-excel') }}";
 	var pdfURL = "{{ url('/whs-issuance/get-pdf') }}";
+	var printBarCodeURL = "{{ url('/whs-issuance/print-barcode') }}";
 </script>
 <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
 <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/whsissuance.js') }}" type="text/javascript"></script>

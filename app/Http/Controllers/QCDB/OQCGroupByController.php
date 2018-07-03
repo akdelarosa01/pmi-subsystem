@@ -1509,7 +1509,6 @@ class OQCGroupByController extends Controller
         })->download('xls');
     }
 
-
     private function insertToReportsv2($details,$type)
     {
         $fields = [];
