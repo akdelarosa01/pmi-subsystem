@@ -34,7 +34,7 @@ class IQCGroupByController extends Controller
 
     public function CalculateDPPM(Request $req)
     {
-        DB::connection($this->mysql)->table('oqc_inspection_excel')->truncate();
+        DB::connection($this->mysql)->table('iqc_inspection_excel')->truncate();
         $data =  $this->DPPMTablesv2($req);
         return response()->json($data);
     }

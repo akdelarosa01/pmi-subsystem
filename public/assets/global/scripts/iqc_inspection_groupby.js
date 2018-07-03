@@ -1,5 +1,4 @@
 $( function() {
-    disabledContent();
     $('#field1').on('change',function(){
         GroupByValues($(this).val(),$('#content1'));
     });
@@ -344,7 +343,6 @@ $( function() {
 
     $('#btn_clear_grpby').on('click', function() {
         clearGrpByFields();
-        disabledContent2();
     });
 
     $('#btn_pdf_groupby').on('click', function() {
@@ -355,36 +353,6 @@ $( function() {
         window.location.href= excelURL;
     });
 });
-
-function disabledContent(){
-    $("#field1").prop('disabled', true);
-    $("#field1").val('');
-    $("#field2").prop('disabled', true);
-    $("#field2").val('');
-    $("#field3").prop('disabled', true);
-    $("#field3").val('');
-    $("#content1").prop('disabled', true);
-    $("#content1").val('');
-    $("#content2").prop('disabled', true);
-    $("#content2").val('');
-    $("#content3").prop('disabled', true);
-    $("#content3").val('');
-    $("#calID").prop('disabled', true);
-}
-
-function disabledContent2(){
-    $("#field2").prop('disabled', true);
-    $("#field2").val('');
-    $("#field3").prop('disabled', true);
-    $("#field3").val('');
-    $("#content1").prop('disabled', true);
-    $("#content1").val('');
-    $("#content2").prop('disabled', true);
-    $("#content2").val('');
-    $("#content3").prop('disabled', true);
-    $("#content3").val('');
-    $("#calID").prop('disabled', true);
-}
 
 function deparam(query) {
     var pairs, i, keyValuePair, key, value, map = {};
@@ -466,8 +434,8 @@ function FirstTable(req,datas,details,LAR,REJ,DPPM){
                                         gp1 += '<td><strong>Lot Accepted</strong></td>';
                                         gp1 += '<td><strong>Sample Size</strong></td>';
                                         gp1 += '<td><strong>No. of Defects</strong></td>';
-                                        gp1 += '<td><strong>Remarks</strong></td>';
                                         gp1 += '<td><strong>Classification</strong></td>';
+                                        gp1 += '<td><strong>Remarks</strong></td>';
                                     gp1 += "</tr>";
                                 gp1 += "</thead>";
                                 gp1 += "<tbody id='details_tbody'>";
@@ -742,8 +710,8 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
                                                                 gp1 += '<td><strong>Lot Accepted</strong></td>';
                                                                 gp1 += '<td><strong>Sample Size</strong></td>';
                                                                 gp1 += '<td><strong>No. of Defects</strong></td>';
-                                                                gp1 += '<td><strong>Remarks</strong></td>';
                                                                 gp1 += '<td><strong>Classification</strong></td>';
+                                                                gp1 += '<td><strong>Remarks</strong></td>';
                                                             gp1 += "</tr>";
                                                         gp1 += "</thead>";
                                                         gp1 += "<tbody>";
@@ -955,8 +923,8 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                                                                                     gp1 += '<td><strong>Lot Accepted</strong></td>';
                                                                                     gp1 += '<td><strong>Sample Size</strong></td>';
                                                                                     gp1 += '<td><strong>No. of Defects</strong></td>';
-                                                                                    gp1 += '<td><strong>Remarks</strong></td>';
                                                                                     gp1 += '<td><strong>Classification</strong></td>';
+                                                                                    gp1 += '<td><strong>Remarks</strong></td>';
                                                                                 gp1 += "</tr>";
                                                                             gp1 += "</thead>";
                                                                             gp1 += "<tbody>";
