@@ -477,17 +477,20 @@ function FirstTable(req,datas,details,LAR,REJ,DPPM){
                 gp1 += "<div class='panel panel-info'>";
                     gp1 += "<div class='panel-heading'>";
                         gp1 += "<h4 class='panel-title'>";
+                        //var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+                        var acc = (details[x].length == 1)?1:details[x].length - REJ[x]["0"].rejects;
+                        var Larc = ((acc/details[x].length)*100).toFixed(2);
                         if(DPPM[x]["0"].DPPM != null){
                             gp1 += "<a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false' style='background-color:red;'>";
                             gp1 += d.field1 + ": "+req[x].chosenfield+"  &emsp;"
-                            gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+REJ[x]["0"].rejects+"/"+details[x].length+") &emsp;"
+                            gp1 += "LAR : "+Larc+"% ("+acc+"/"+details[x].length+") &emsp;"
                             gp1 += "DPPM: "+DPPM[x]["0"].DPPM+" &emsp;";
                             gp1 += "("+DPPM[x]["0"].num_of_defects+"/"+DPPM[x]["0"].sample_size+")</a>";
                         }
                         else{
                             gp1 += "<a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+" 'href='#grp_val"+x+"' aria-expanded='false'>";
                             gp1 += d.field1 + ": "+req[x].chosenfield+"  &emsp;"
-                            gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+REJ[x]["0"].rejects+"/"+details[x].length+") &emsp;"
+                            gp1 += "LAR : "+LAR[x]["0"].LAR+"% ("+acc+"/"+details[x].length+") &emsp;"
                             gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                         }
                         gp1 += "</h4>";
@@ -627,22 +630,112 @@ function FirstTable(req,datas,details,LAR,REJ,DPPM){
     closeloading();
 }
 
+
+var JonnySins = 0;
+var MariaOzawa = 0;
+function GETDPPMsecond(req,DPPM,REJ,xvideos){
+    var poop = 0;
+    var shit = 0;
+    for(var x=xvideos;x<req.length;x++){
+        for(y=0;y<req[x].length;y++){
+            poo = (DPPM[x][y]["0"].num_of_defects == null)?0:DPPM[x][y]["0"].num_of_defects;
+            poop += parseInt(poo);
+            scat = (DPPM[x][y]["0"].sample_size == null)?0:DPPM[x][y]["0"].sample_size;
+            shit += parseInt(scat);
+            var acc = req[x][y].length - REJ[x][y]["0"].rejects;
+            JonnySins += acc;
+            MariaOzawa += req[x][y].length;
+        }
+        break;
+    }
+    var n = (((poop/shit) * 1000000) != "NaN")?(poop/shit) * 1000000:0;
+    if(isNaN(n)){
+        n = 0;
+    }
+    var DeepPePeNice = n.toFixed(2);
+    return {
+        poop: poop,
+        shit: shit,
+        DPPM:DeepPePeNice,
+        accepted: JonnySins,
+        total: MariaOzawa
+    };
+}
+
+
+function GETDPPMthird(req,DPPM,REJ,xvideos,youporn,stage){
+    var poop = 0;
+    var shit = 0;
+    if(stage == 2)
+    {
+        for(var x1=xvideos;x1<req.length;x1++){
+                JonnySins =0;
+                MariaOzawa =0;
+                for(var y1=youporn;y1<req[x1].length;y1++){
+                        poo = (DPPM[x1][y1]["0"].num_of_defects == null)?0:DPPM[x1][y1]["0"].num_of_defects;
+                        poop += parseInt(poo);
+                        scat = (DPPM[x1][y1]["0"].sample_size == null)?0:DPPM[x1][y1]["0"].sample_size;
+                        shit += parseInt(scat);
+                        var acc =(req[x1][y1].length == 1)?1:req[x1][y1].length - REJ[x1][y1]["0"].rejects;
+                     //(req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
+                        JonnySins += acc;
+                        MariaOzawa += req[x1][y1].length;
+                      break;
+                }
+                break;
+        }
+    }
+    else{
+        for(var x1=xvideos;x1<req.length;x1++){
+                JonnySins =0;
+                MariaOzawa =0;
+                for(var y1=0;y1<req[x1].length;y1++){
+                        poo = (DPPM[x1][y1]["0"].num_of_defects == null)?0:DPPM[x1][y1]["0"].num_of_defects;
+                        poop += parseInt(poo);
+                        scat = (DPPM[x1][y1]["0"].sample_size == null)?0:DPPM[x1][y1]["0"].sample_size;
+                        shit += parseInt(scat);
+                        var acc =(req[x1][y1].length == 1)?1:req[x1][y1].length - REJ[x1][y1]["0"].rejects;
+                     //(req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
+                        JonnySins += acc;
+                        MariaOzawa += req[x1][y1].length;
+                     
+                }
+                break;
+        }
+    }
+    var n = (((poop/shit) * 1000000) != "NaN")?(poop/shit) * 1000000:0;
+    if(isNaN(n)){
+        n = 0;
+    }
+    var DeepPePeNice = n.toFixed(2);
+    return {
+        poop: poop,
+        shit: shit,
+        DPPM:DeepPePeNice,
+        accepted: JonnySins,
+        total: MariaOzawa
+    };
+}
+
 function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
     for(var x=0;x<req.length;x++){
+        var MushRoomHead = GETDPPMsecond(req,DPPM,REJ,x);
         var gp1 = "";
             gp1 += "<div class='panel-group accordion scrollable' id='grp"+x+"'>";
             gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
             gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+"' href='#grp_val"+x+"' aria-expanded='false'>";
-            // gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"</a>";
-            if(DPPMg1[x]["0"].DPPM != null){
+           
+            var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+            var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
+            var Larc = ((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
+            if(!isNaN(n)){
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
-                var acc = req[x].length - REJg1[x]["0"].rejects;
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
-                gp1 += "DPPM: "+DPPMg1[x]["0"].DPPM+" &emsp;";
-                gp1 += "("+DPPMg1[x]["0"].num_of_defects+"/"+DPPMg1[x]["0"].sample_size+")</a>";
+                gp1 += "LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
+                gp1 += "DPPM: "+MushRoomHead.DPPM+" &emsp;";
+                gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")</a>";
             }
             else{
-                var acc = req[x].length - REJg1[x]["0"].rejects;
+                var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"].chosenfield+"  &emsp;"
                 gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
                 gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
@@ -656,13 +749,11 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
             
             gp1 += "</thead>";
             gp1 += "<tbody id='details_tbody'>";
-
             for(y=0;y<req[x].length;y++){
-               
-                    
+                    JonnySins = 0;
+                    MariaOzawa = 0;
                     var num = y+1;
                     var idc = guidGenerator();
-
                     gp1 += "<tr>";
                     gp1 += "<td>";
                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc+"'>";
@@ -672,11 +763,11 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
                     if(DPPM[x][y]["0"].DPPM != null){
                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc+"' href='#grp_val"+idc+"' aria-expanded='false' style='background-color:red;'>";
                         gp1 += datas.field2 + ": "+req[x][y]["0"].chosenfield2+"  &emsp;"
-                        
-
                         var acc = req[x][y].length - REJ[x][y]["0"].rejects;
                         gp1 += "LAR : "+LAR[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
                         gp1 += "DPPM: "+DPPM[x][y]["0"].DPPM+" &emsp;";
+                        var nd = DPPM[x][y]["0"].num_of_defects;
+                        var ss = DPPM[x][y]["0"].sample_size;
                         gp1 += "("+DPPM[x][y]["0"].num_of_defects+"/"+DPPM[x][y]["0"].sample_size+")</a>";
                     }
                     else{
@@ -688,10 +779,8 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
                     }
                     gp1 += "</h4>";
                     gp1 += "</div>";
-
                     gp1 += "<div id='grp_val"+idc+"' class='panel-collapse collapse in' aria-expanded='false'>";
                     gp1 += "<div class='panel-body table-responsive' id='child"+idc+"'>";
-                  
                     gp1 += "<table style='width:100%'>";
                     gp1 += "<tbody>";
                     gp1 += "<tr>";
@@ -795,24 +884,27 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
  closeloading();
 }
 
+
 function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3rd,REJ_3rd,DPPM_3rd){
     for(var x=0;x<req.length;x++){
+        //var MushRoomHead = GETDPPMthird(req,DPPM_3rd,REJ_3rd,x,0,1);
+        var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,0,1);
         var gp1 = "";
             gp1 += "<div class='panel-group accordion scrollable' id='grp"+x+"'>";
             gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
             gp1 += "<h4 class='panel-title'><a class='accordion-toggle collapsed' data-toggle='collapse' data-parent='#grp"+x+"' href='#grp_val"+x+"' aria-expanded='false'>";
-            //gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"</a>";
-            if(DPPMg1[x]["0"].DPPM != null){
+            var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+            var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
+            var Larc = ((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
+            if(!isNaN(n)){
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
-                var acc = req[x].length - REJg1[x]["0"].rejects;
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
-                gp1 += "DPPM: "+DPPMg1[x]["0"].DPPM+" &emsp;";
-                gp1 += "("+DPPMg1[x]["0"].num_of_defects+"/"+DPPMg1[x]["0"].sample_size+")</a>";
+                gp1 += "LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
+                gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
+                gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")</a>";
             }
             else{
-                var acc = req[x].length - REJg1[x]["0"].rejects;
                 gp1 += datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield+"  &emsp;"
-                gp1 += "LAR : "+LARg1[x]["0"].LAR+"% ("+acc+"/"+req[x].length+") &emsp;"
+                gp1 += "LAR : "+Larc+"% ("+acc+"/"+req[x].length+") &emsp;"
                 gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
             }
             gp1 += "</h4>";
@@ -824,27 +916,29 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
             
             gp1 += "</thead>";
             gp1 += "<tbody id='details_tbody'>";
-
+         
             for(y=0;y<req[x].length;y++){
-                var ss = req[x].length;
+                JonnySins =0;
+                MariaOzawa =0;
+                var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,y,2);
                     var idc = guidGenerator();
                     gp1 += "<tr>";
                     gp1 += "<td>";
                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc+"'>";
                     gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
                     gp1 += "<h4 class='panel-title'><a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc+"' href='#grp_val"+idc+"' aria-expanded='true'>";
-                    //gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"</a>";
-                    if(DPPM_2nd[x][y]["0"].DPPM != null){
+                    var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+                    var acc = (req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
+                    var Larc = ((acc/req[x][y].length)*100).toFixed(2);
+                    if(!isNaN(n)){
                         gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                        var acc = req[x][y].length - REJ_2nd[x][y]["0"].rejects;
-                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
-                        gp1 += "DPPM: "+DPPM_2nd[x][y]["0"].DPPM+" &emsp;";
-                        gp1 += "("+DPPM_2nd[x][y]["0"].num_of_defects+"/"+DPPM_2nd[x][y]["0"].sample_size+")</a>";
+                        gp1 += "LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;"
+                        gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
+                        gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")</a>";
                     }
                     else{
-                        var acc = req[x][y].length - REJ_2nd[x][y]["0"].rejects;
                         gp1 += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                        gp1 += "LAR : "+LAR_2nd[x][y]["0"].LAR+"% ("+acc+"/"+req[x][y].length+") &emsp;"
+                        gp1 += "LAR : "+Larc+"% ("+acc+"/"+req[x][y].length+") &emsp;"
                         gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                     }
                     gp1 += "</h4>";
@@ -861,11 +955,10 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                                     gp1 += "<div class='panel-group accordion scrollable' id='grp"+idc2+"'>";
                                     gp1 += "<div class='panel panel-info'><div class='panel-heading'>";
                                     gp1 += "<h4 class='panel-title'>";
-                                    //gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"</a>";
                                     if(DPPM_3rd[x][y][z]["0"].DPPM != null){
                                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true' style='background-color:red;'>";
                                         gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;"
-                                        var acc = req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
+                                        var acc =(req[x][y][z].length == 1)?1:req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
                                         gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
                                         gp1 += "DPPM: "+DPPM_3rd[x][y][z]["0"].DPPM+" &emsp;";
                                         gp1 += "("+DPPM_3rd[x][y][z]["0"].num_of_defects+"/"+DPPM_3rd[x][y][z]["0"].sample_size+")</a>";
@@ -873,7 +966,7 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                                     else{
                                         gp1 += "<a class='accordion-toggle' data-toggle='collapse' data-parent='#grp"+idc2+"' href='#grp_val"+idc2+"' aria-expanded='true'>";
                                         gp1 += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;"
-                                        var acc = req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
+                                        var acc =(req[x][y][z].length == 1)?1:req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
                                         gp1 += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
                                         gp1 += "DPPM: 0.00 &emsp;(0/0)</a>";
                                     }
@@ -882,7 +975,6 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
 
                                     gp1 += "<div id='grp_val"+idc2+"' class='panel-collapse collapse in' aria-expanded='true' >";
                                     gp1 += "<div class='panel-body table-responsive' id='child"+idc2+"'>";
-
                                             gp1 += "<table style='width:100%'>";
                                             gp1 += "<tbody>";
                                             gp1 += "<tr>";

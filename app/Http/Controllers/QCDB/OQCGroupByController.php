@@ -90,11 +90,11 @@ class OQCGroupByController extends Controller
                                 ->select("SELECT COUNT(*) AS rejects
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
-                                        AND judgement = 'Accept'
+                                        AND judgement = 'Reject'
                                         AND ".$req->firstData." = '".$chosen."'"
                                     );
                 $DPPM = DB::connection($this->mysql)
-                                ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
@@ -181,7 +181,7 @@ class OQCGroupByController extends Controller
                                         AND ".$req->firstData." = '".$req->content1[$x]."'"
                                     );
                 $DPPMG1 = DB::connection($this->mysql)
-                                ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
@@ -243,7 +243,7 @@ class OQCGroupByController extends Controller
                                 );
 
                         $DPPM = DB::connection($this->mysql)
-                            ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                            ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
                                     AND judgement = 'Reject'
@@ -315,7 +315,7 @@ class OQCGroupByController extends Controller
                                         AND ".$req->firstData." = '".$req->content1[$x]."'"
                                     );
                 $DPPMG1 = DB::connection($this->mysql)
-                                ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
@@ -377,7 +377,7 @@ class OQCGroupByController extends Controller
                                 );
 
                         $DPPM = DB::connection($this->mysql)
-                            ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                            ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
                                     AND judgement = 'Reject'
@@ -464,7 +464,7 @@ class OQCGroupByController extends Controller
                                                 );
 
                             $DPPM = DB::connection($this->mysql)
-                                            ->select("SELECT (num_of_defects/sample_size) * 1000000 AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
+                                            ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                                     FROM pmi_ts.oqc_inspections
                                                     WHERE 1=1 ".$sub_date_inspected."
                                                     AND judgement = 'Reject'
