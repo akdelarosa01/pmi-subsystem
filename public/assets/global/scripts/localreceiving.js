@@ -632,7 +632,24 @@ function makeSearchTable(arr) {
 			{ data: 'item' },
 			{ data: 'lot_no' },
 			{ data: 'qty' },
-			{ data: 'iqc_status' },
+			{ data: function(x) {
+				if (x.iqc_status == 1) {
+					return 'Accepted';
+				}
+
+				if (x.iqc_status == 0) {
+					return 'Pending';
+				}
+
+				if (x.iqc_status == 2) {
+					return 'Rejected'
+				}
+
+				if (x.iqc_status == 3) {
+					return 'On-going'
+				}
+
+			} },
 			{ data: 'create_user' },
 			{ data: 'created_at' },
 			{ data: 'update_user' },
