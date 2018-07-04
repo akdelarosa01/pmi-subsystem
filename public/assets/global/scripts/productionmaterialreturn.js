@@ -371,7 +371,6 @@ function makeReturnTable(arr) {
         bLengthChange : false,
         scrollY: "200px",
 	    paging: false,
-	    searchable: false,
         columns: [
         	{ data: function(x) {
         		return '<input type="checkbox" class="checkboxes" name="check_id[]" data-qty="'+x.actual_returned_qty+'" value="'+x.id+'">';
