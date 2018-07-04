@@ -313,12 +313,12 @@ class WBSProdMatReturnController extends Controller
                     }
                 }
             } else {
-                foreach ($req->detail_id as $key => $id) {
+                foreach ($req->issuanceno as $key => $issuance) {
                     DB::connection($this->mysql)->table('tbl_wbs_material_return_details')
                         ->insert([
                             'controlno' => $req->controlno,
                             'po' => $req->po,
-                            'issuanceno' => $req->issuanceno[$key],
+                            'issuanceno' => $issuance,
                             'item' => $req->item[$key],
                             'item_desc' => $req->item_desc[$key],
                             'lot_no' => $req->lot_no[$key],

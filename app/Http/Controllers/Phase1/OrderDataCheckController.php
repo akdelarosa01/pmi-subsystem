@@ -4056,24 +4056,24 @@ class OrderDataCheckController extends Controller
                 ]);
             }
 
-            // array_push($xhikiArray,[
-            //     'po' => $xhiki->PMISEIBAN, //ypics
-            //     'code' => $xhiki->OYACODE, //ypics
-            //     'prodname' =>$xhiki->PARTNAME, //ypics
-            //     'kcode' => $xhiki->CODE, //ypics
-            //     'lvl' => 'N/A',
-            //     'vendor' => $xhiki->VENDOR, //ypics
-            //     'usage' => 'N/A',
-            //     'qty' => 'N/A',
-            //     'siyou' => $xhiki->usage, //ypics
-            //     'ypics_qty' => $xhiki->KVOL, //ypics
-            //     'diff1' => 'N/A',
-            //     'moms' => 'N/A',
-            //     'withdrawal_qty' => $xhiki->KVOL, //ypics
-            //     'diff2' => 'N/A',
-            //     'created_at' => date('Y-m-d H:i:s'),
-            //     'updated_at' => date('Y-m-d H:i:s')
-            // ]);
+            array_push($xhikiArray,[
+                'po' => $xhiki->PMISEIBAN, //ypics
+                'code' => $xhiki->OYACODE, //ypics
+                'prodname' =>$xhiki->PARTNAME, //ypics
+                'kcode' => $xhiki->CODE, //ypics
+                'lvl' => 'N/A',
+                'vendor' => $xhiki->VENDOR, //ypics
+                'usage' => 'N/A',
+                'qty' => 'N/A',
+                'siyou' => $xhiki->usage, //ypics
+                'ypics_qty' => $xhiki->KVOL, //ypics
+                'diff1' => 'N/A',
+                'moms' => 'N/A',
+                'withdrawal_qty' => $xhiki->KVOL, //ypics
+                'diff2' => 'N/A',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
         }
 
         DB::connection($this->mysql)->table('momscheck2')->truncate();

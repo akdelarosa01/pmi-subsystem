@@ -58,6 +58,7 @@ $(function() {
 			msg("Actual quantity already exceeded from return quantity.",'failed');
 		} else {
 			returns.push({
+				id: '',
 				issuanceno: $('#issuance_no').val(),
 				item: $('#item').val(),
 				item_desc: $('#item_desc').val(),
@@ -68,43 +69,9 @@ $(function() {
 				actual_returned_qty: $('#actual_returned_qty').val(),
 				remarks: $('#detail_remarks').val(),
 			});
-			
-			var tbl_details_body = '';
-			tbl_details_body = '<tr>'+
-									'<td width="4.09%"></td>'+
-	            					'<td width="9.09%">'+$('#issuance_no').val()+
-	            						'<input type="hidden" name="details_issuanceno[]" value="'+$('#issuance_no').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="9.09%">'+$('#item').val()+
-	            						'<input type="hidden" name="details_item[]" value="'+$('#item').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="16.09%">'+$('#item_desc').val()+
-	            						'<input type="hidden" name="details_item_desc[]" value="'+$('#item_desc').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="9.09%">'+$('#lot_no').val()+
-	            						'<input type="hidden" name="details_lot_no[]" value="'+$('#lot_no').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="7.09%">'+$('#issued_qty').val()+
-	            						'<input type="hidden" name="details_issued_qty[]" value="'+$('#issued_qty').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="7.09%">'+$('#required_qty').val()+
-	            						'<input type="hidden" name="details_required_qty[]" value="'+$('#required_qty').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="7.09%">'+$('#return_qty').val()+
-	            						'<input type="hidden" name="details_return_qty[]" value="'+$('#return_qty').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="9.09%">'+$('#actual_returned_qty').val()+
-	            						'<input type="hidden" name="details_actual_qty[]" value="'+$('#actual_returned_qty').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="15.09%">'+$('#detail_remarks').val()+
-	            						'<input type="hidden" name="details_remarks[]" value="'+$('#detail_remarks').val()+'"/>'+
-	            					'</td>'+
-	            					'<td width="7.09%">'+
-										'<input type="hidden" name="details_id[]" value="'+$('#detail_id').val()+'"//>'+
-									'</td>'+
-	            				'</tr>';
-	       	$('#tbl_details_body').append(tbl_details_body);
-	       	$('#DetailsModal').modal('hide');
+
+			makeReturnTable(returns);
+			$('#DetailsModal').modal('hide');
 		}
 	});
 
@@ -189,7 +156,11 @@ function getDataDetails(data) {
 	var tbl_details_body = "";
 	var total_returned_qty = 0;
 
-	makeReturnTable(data);
+	returns = [];
+
+	returns = data;
+
+	makeReturnTable(returns);
 	
 	$.each(data, function(i, x) {
       	total_returned_qty += x.actual_returned_qty;
@@ -371,9 +342,14 @@ function makeReturnTable(arr) {
         bLengthChange : false,
         scrollY: "200px",
 	    paging: false,
+	    searching: false,
         columns: [
         	{ data: function(x) {
-        		return '<input type="checkbox" class="checkboxes" name="check_id[]" data-qty="'+x.actual_returned_qty+'" value="'+x.id+'">';
+        		if (x.id != '') {
+        			return '<input type="checkbox" class="checkboxes" name="check_id[]" data-qty="'+x.actual_returned_qty+'" value="'+x.id+'">';
+        		} else {
+        			return '';
+        		}
         	} },
 	        { data: function(x) {
 	        	return x.issuanceno + '<input type="hidden" name="details_issuanceno[]" value="'+x.issuanceno+'">';
@@ -403,9 +379,15 @@ function makeReturnTable(arr) {
 				return x.remarks + '<input type="hidden" name="details_remarks[]" value="'+x.remarks+'">';
 			} },
 			{ data: function(x) {
-				return '<button type="button" class="btn btn-link grey-gallery brcodebtn" data-id="'+x.id+'">'+
-							'<i class="fa fa-barcode"></i>'+
-						'</button>';
+				if (x.id != '') {
+					return '<button type="button" class="btn btn-link grey-gallery brcodebtn" data-id="'+x.id+'">'+
+								'<i class="fa fa-barcode"></i>'+
+							'</button>'+
+							'<input type="hidden" name="details_id[]" value="'+x.id+'">';
+				} else {
+					return '';
+				}
+				
 			} },
         ],
         columnDefs: [

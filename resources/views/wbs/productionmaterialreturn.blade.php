@@ -243,7 +243,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Actual Returned Qty.</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" id="actual_returned_qty">
+                                        <input type="number" class="form-control input-sm" id="actual_returned_qty">
                                     </div>
                                 </div>
                                 
