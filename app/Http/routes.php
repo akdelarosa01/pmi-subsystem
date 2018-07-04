@@ -275,8 +275,6 @@ Route::group(['middleware' => 'web'], function () {
             // ]);
 
         /*Material Kitting*/
-
-
             Route::group(['prefix' => 'material-kitting'], function() {
                 Route::get('/','WBS\WBSMaterialKittingController@index')->middleware('auth','revalidate');
 
@@ -406,11 +404,7 @@ Route::group(['middleware' => 'web'], function () {
                 ]);
             });
 
-
-
-
         /*Prod Material Request*/
-
             Route::group(['prefix' => 'wbsprodmatrequest'], function() {
                 Route::get('/', [
                     'uses' => 'WBS\WBSProductionMaterialRequestController@index',
@@ -464,7 +458,6 @@ Route::group(['middleware' => 'web'], function () {
             });
 
         /*Sakidashi Issuance*/
-
             Route::group(['prefix' => 'sakidashi-issuance'], function() {
                 Route::get('/', 'WBS\WBSSakidashiIssuanceController@index')->middleware('auth','revalidate');
 
@@ -658,7 +651,6 @@ Route::group(['middleware' => 'web'], function () {
             ]);
 
         /* Parts Receiving*/
-
             Route::get('/wbspartsreceiving', [
                 'uses' => 'WBS\WBSPartsReceivingController@getWBSPartsReceiving',
                 'name' => 'wbspartsreceiving'
@@ -771,8 +763,15 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'delete-item-return'
             ]);
 
+            Route::post('/search-return', [
+                'uses' => 'WBS\WBSProdMatReturnController@searchReturns',
+                'name' => 'search-return'
+            ]);
 
-
+            Route::get('/excel-return', [
+                'uses' => 'WBS\WBSProdMatReturnController@printExcel',
+                'name' => 'excel-return'
+            ]);
 
         /* WBS Report */
             Route::get('/wbsreports', [

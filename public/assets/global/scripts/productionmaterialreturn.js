@@ -84,12 +84,8 @@ $(function() {
 		getItemDetails($(this).val());
 	});
 
-	$('#btn_search').on('click', function() {
-		
-	});
-
 	$('#btn_excel').on('click', function() {
-		
+		$('#reportModal').modal('show');
 	});
 
 	$('#tbl_details_body').on('click', '.brcodebtn', function() {
@@ -109,6 +105,32 @@ $(function() {
 
 	$('#btn_confirm_delete').on('click', function() {
 		delete_items('.checkboxes',deleteDetailsURL);
+	});
+
+	$('#btn_search').on('click', function() {
+		$('#searchModal').modal('show');
+	});
+
+	$('#frm_search').on('submit', function(e) {
+		e.preventDefault();
+		$('#loading').modal('show');
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'POST',
+			dataType: 'JSON',
+			data: $(this).serialize(),
+		}).done(function(data, textStatus, xhr) {
+			makeSearchTable(data)
+		}).fail(function(xhr, textStatus, errorThrown) {
+			console.log("error");
+		}).always(function() {
+			$('#loading').modal('hide');
+		});
+	});
+
+	$('#tbl_search_body').on('click', '.btn_search_detail', function(e) {
+		getMaterialReturnData('',$(this).attr('data-controlno'));
+		$('#searchModal').modal('hide');
 	});
 
 });
@@ -404,4 +426,37 @@ function makeReturnTable(arr) {
 			{ width: "7.09%", targets: 10 },
         ]
     });
+}
+
+function makeSearchTable(arr) {
+	$('#tbl_search').dataTable().fnClearTable();
+    $('#tbl_search').dataTable().fnDestroy();
+    $('#tbl_search').dataTable({
+        data: arr,
+        bLengthChange : false,
+        scrollY: "250px",
+        searching: false,
+	    paging: false,
+        columns: [
+            { data: function(x) {
+                return "<button type='button' class='btn btn-sm btn-primary btn_search_detail' "+
+                				"data-controlno='"+x.controlno+"'>"+
+                			"<i class='fa fa-eye'></i>"+
+                		"</button>";
+            }, searchable: false, orderable: false },
+
+            { data: 'controlno' },
+            { data: 'po' },
+            { data: 'issuanceno' },
+            { data: 'item' },
+            { data: 'create_user' },
+            { data: 'created_at' },
+            { data: 'update_user' },
+            { data: 'updated_at' },
+        ]
+    });
+}
+
+function summaryReport() {
+	window.location.href = excelURL + '?from=' + $('#from').val() + '&&to=' + $('#to').val();
 }

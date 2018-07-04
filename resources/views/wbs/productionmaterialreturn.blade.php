@@ -170,7 +170,7 @@
 									<i class="fa fa-search"></i> Search
 								</button>
 								<button type="button" class="btn btn-sm green-jungle" id="btn_excel">
-									<i class="fa fa-file-excel-o"></i> Export To Excel
+									<i class="fa fa-file-excel-o"></i> Summary Report
 								</button>
 
 							</div>
@@ -184,95 +184,7 @@
 		<!-- END PAGE CONTENT-->
 	</div>
 
-
-
-    <div id="DetailsModal" class="modal fade" role="dialog" data-backdrop="static">
-        <div class="modal-dialog gray-gallery">
-            <div class="modal-content ">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Details</h4>
-                </div>
-                <form method="POST" action="{{url('/editdetailpmr')}}" class="form-horizontal" id="editpodetailfrm">
-                    {{ csrf_field() }}
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3">Issuance No.</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" id="issuance_no">
-                                        <input type="hidden" class="form-control input-sm" id="detail_id">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                        			<label for="" class="control-label col-sm-3">Item Code</label>
-                        			<div class="col-sm-9">
-                        				<input type="text" class="form-control input-sm" id="item" name="item" readonly>
-                        			</div>
-                        		</div>
-
-                        		<div class="form-group">
-                                    <label class="control-label col-sm-3">Item Name</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control input-sm" id="item_desc" name="item_desc" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3">Issued Qty.</label>
-                                    <div class="col-sm-9">
-                                    	<input type="text" class="form-control input-sm" id="issued_qty" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3">Required Qty.</label>
-                                    <div class="col-sm-9">
-                                    	<input type="text" class="form-control input-sm" id="required_qty" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3">Return Qty.</label>
-                                    <div class="col-sm-9">
-                                    	<input type="text" class="form-control input-sm" id="return_qty" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3">Actual Returned Qty.</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control input-sm" id="actual_returned_qty">
-                                    </div>
-                                </div>
-                                
-                        		<div class="form-group">
-                        			<label for="" class="control-label col-sm-3">Lot no</label>
-                        			<div class="col-sm-9">
-                        				<input type="text" class="form-control input-sm" id="lot_no" name="lot_no" readonly>
-                        			</div>
-                        		</div>
-
-                        		<div class="form-group">
-                        			<label for="" class="control-label col-sm-3">Remarks</label>
-                        			<div class="col-sm-9">
-                        				<input type="text" class="form-control input-sm" id="detail_remarks" name="detail_remarks">
-                        			</div>
-                        		</div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="btn_save_details" class="btn btn-success">Save</button>
-                        <button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    @include('includes.productreturn-modal')
     @include('includes.modals')
 
 @endsection
@@ -286,6 +198,7 @@
         var getItemDetailsURL = "{{ url('/get-item-details') }}";
         var barcodeURL = "{{ url('/wbsreturn-brprint?id=') }}";
         var deleteDetailsURL = "{{ url('/delete-item-return') }}";
+        var excelURL = "{{ url('/excel-return') }}";
 	</script>
     <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
     <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/productionmaterialreturn.js') }}" type="text/javascript"></script>

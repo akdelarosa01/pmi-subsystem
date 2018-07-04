@@ -648,4 +648,203 @@ class WBSProdMatReturnController extends Controller
         return $data;
     }
 
+    public function searchReturns(Request $req)
+    {
+        $ctr = 0;
+        $value = null;
+        $result = null;
+
+        $item_cond = '';
+        $issuance_cond = '';
+        $po_cond = '';
+        $control_cond = '';
+
+        try
+        {
+            if(empty($req->srch_control_no))
+            {
+                $control_cond ='';
+            }
+            else
+            {
+                $control_cond = " AND controlno like '%" . $req->srch_control_no . "%'";
+            }
+
+            if(empty($req->srch_po))
+            {
+                $po_cond ='';
+            }
+            else
+            {
+                $po_cond = " AND po like '%" . $req->srch_po . "%'";
+            }
+
+            if(empty($req->srch_issuance))
+            {
+                $issuance_cond ='';
+            }
+            else
+            {
+                $issuance_cond = " AND issuanceno like '%" . $req->srch_issuance . "%'";
+            }
+
+            if(empty($req->srch_item))
+            {
+                $item_cond = '';
+            }
+            else
+            {
+                $item_cond = "AND item like '%" . $req->srch_item . "%'";
+            }
+
+            $details = DB::connection($this->mysql)->table('tbl_wbs_material_return_details')
+                        ->select( 'id',
+                                'controlno',
+                                'po',
+                                'issuanceno',
+                                'item',
+                                'item_desc',
+                                'lot_no',
+                                'issued_qty',
+                                'required_qty',
+                                'return_qty',
+                                'actual_returned_qty',
+                                'remarks',
+                                'create_user',
+                                DB::raw("(CASE created_at
+                                            WHEN '0000-00-00' THEN NULL
+                                            ELSE DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p')
+                                        END) AS created_at"),
+                                'update_user',
+                                DB::raw("(CASE updated_at
+                                            WHEN '0000-00-00' THEN NULL
+                                            ELSE DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p')
+                                        END) AS updated_at"))
+                        ->whereRaw(" 1=1 "
+                            . $po_cond
+                            . $issuance_cond
+                            . $item_cond
+                            . $control_cond)
+                        ->get();
+        }
+        catch (Exception $e)
+        {
+            Log::error($e->getMessage());
+        }
+
+        return $details;
+    }
+
+    public function printExcel(Request $req)
+    {
+        $dt = Carbon::now();
+        $date = $dt->format('m-d-y');
+
+        $com_info = $this->com->getCompanyInfo();
+
+        $from_cond = '';
+        $to_cond = '';
+
+        if (!empty($req->from) && !empty($req->to)) {
+            $from_cond = "AND r.date_returned BETWEEN '" . $req->from . "' AND '" . $req->to . "'";
+        } else {
+            $from_cond = '';
+            $to_cond = '';
+        }
+
+        $data = DB::connection($this->mysql)->table('tbl_wbs_material_return_details as d')
+                    ->leftJoin('tbl_wbs_material_return as r','d.controlno','=','r.controlno')
+                    ->select( DB::raw('d.id as id'),
+                            DB::raw('d.controlno as controlno'),
+                            DB::raw('d.po as po'),
+                            DB::raw('d.issuanceno as issuanceno'),
+                            DB::raw('d.item as item'),
+                            DB::raw('d.item_desc as item_desc'),
+                            DB::raw('d.lot_no as lot_no'),
+                            DB::raw('d.issued_qty as issued_qty'),
+                            DB::raw('d.required_qty as required_qty'),
+                            DB::raw('d.return_qty as return_qty'),
+                            DB::raw('d.actual_returned_qty as actual_returned_qty'),
+                            DB::raw('d.remarks as remarks'),
+                            DB::raw('r.returned_by as returned_by'),
+                            DB::raw('r.date_returned as date_returned'))
+                    ->whereRaw(" 1=1 "
+                        . $from_cond)
+                    ->get();
+        
+        Excel::create('Material_Return_'.$date, function($excel) use($data,$com_info)
+        {
+            $excel->sheet('Report', function($sheet) use($data,$com_info)
+            {
+                $sheet->setHeight(1, 15);
+                $sheet->mergeCells('A1:J1');
+                $sheet->cells('A1:J1', function($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell('A1',$com_info['name']);
+
+                $sheet->setHeight(2, 15);
+                $sheet->mergeCells('A2:J2');
+                $sheet->cells('A2:J2', function($cells) {
+                    $cells->setAlignment('center');
+                });
+                $sheet->cell('A2',$com_info['address']);
+
+                $sheet->setHeight(4, 20);
+                $sheet->mergeCells('A4:J4');
+                $sheet->cells('A4:J4', function($cells) {
+                    $cells->setAlignment('center');
+                    $cells->setFont([
+                        'family'     => 'Calibri',
+                        'size'       => '14',
+                        'bold'       =>  true,
+                        'underline'  =>  true
+                    ]);
+                });
+                $sheet->cell('A4',"PRODUCTION MATERIAL RETURN");
+
+                $sheet->setHeight(6, 15);
+                $sheet->cells('A6:J6', function($cells) {
+                    $cells->setFont([
+                        'family'     => 'Calibri',
+                        'size'       => '11',
+                        'bold'       =>  true,
+                    ]);
+                    // Set all borders (top, right, bottom, left)
+                    $cells->setBorder('solid', 'solid', 'solid', 'solid');
+                });
+                $sheet->cell('A6', "Issuance No.");
+                $sheet->cell('B6', "Item Code");
+                $sheet->cell('C6', "Description");
+                $sheet->cell('D6', "Lot No.");
+                $sheet->cell('E6', "Issued Qty.");
+                $sheet->cell('F6', "Required Qty.");
+                $sheet->cell('G6', "Return Qty.");
+                $sheet->cell('H6', "Actual Return Qty.");
+                $sheet->cell('I6', "Remarks");
+                $sheet->cell('J6', "Returned By");
+
+                $row = 7;
+
+                foreach ($data as $key => $mk) {
+                    $sheet->setHeight($row, 15);
+                    $sheet->cell('A'.$row, $mk->issuanceno);
+                    $sheet->cell('B'.$row, $mk->item);
+                    $sheet->cell('C'.$row, $mk->item_desc);
+                    $sheet->cell('D'.$row, $mk->lot_no);
+                    $sheet->cell('E'.$row, $mk->issued_qty);
+                    $sheet->cell('F'.$row, $mk->required_qty);
+                    $sheet->cell('G'.$row, $mk->return_qty);
+                    $sheet->cell('H'.$row, $mk->actual_returned_qty);
+                    $sheet->cell('I'.$row, $mk->remarks);
+                    $sheet->cell('J'.$row, $mk->returned_by);
+                    $row++;
+                }
+
+                $sheet->cells('A6:J'.$row, function($cells) {
+                    $cells->setBorder('solid', 'solid', 'solid', 'solid');
+                });
+            });
+        })->download('xls');
+    }
 }
