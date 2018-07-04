@@ -4,55 +4,6 @@
 	WBS | Pricon Microelectronics, Inc.
 @endsection
 
-@push('css')
-	<style type="text/css">
-        table.table-fixedheader {
-            width: 100%;
-        }
-        table.table-fixedheader, table.table-fixedheader>thead, table.table-fixedheader>tbody, table.table-fixedheader>thead>tr, table.table-fixedheader>tbody>tr, table.table-fixedheader>thead>tr>td, table.table-fixedheader>tbody>td {
-            display: block;
-        }
-        table.table-fixedheader>thead>tr:after, table.table-fixedheader>tbody>tr:after {
-            content:' ';
-            display: block;
-            visibility: hidden;
-            clear: both;
-        }
-        table.table-fixedheader>tbody {
-            overflow-y: scroll;
-            height: 200px;
-        }
-        table.table-fixedheader>thead {
-            overflow-y: scroll;
-        }
-        table.table-fixedheader>thead::-webkit-scrollbar {
-            background-color: inherit;
-        }
-
-        table.table-fixedheader>thead>tr>td:after, table.table-fixedheader>tbody>tr>td:after {
-            content:' ';
-            display: table-cell;
-            visibility: hidden;
-            clear: both;
-        }
-
-        table.table-fixedheader>thead tr td, table.table-fixedheader>tbody tr td {
-            float: left;
-            word-wrap:break-word;
-            height: 40px;
-        }
-
-        table.table-fifo>tbody {
-            overflow-y: scroll;
-            height: 375px;
-        }
-       /* #hd_barcode {
-        	position: absolute;
-		    z-index: -1;
-        }*/
-    </style>
-@endpush
-
 @section('content')
 
 	<?php $state = ""; $readonly = ""; ?>
@@ -164,7 +115,7 @@
                     				<div class="portlet-body">
                     					<div class="row">
                     						<div class="col-md-12">
-	                                			<table class="table table-bordered table-hover table-striped table-fixedheader" id="tbl_details" style="font-size: 10px;margin-top: 20px;">
+	                                			<table class="table table-bordered table-hover table-striped" id="tbl_details" style="font-size: 10px;margin-top: 20px;">
 	                                    			<thead>
 	                                    				<tr>
                                                             <td class="table-checkbox" width="4.09%">

@@ -1,3 +1,4 @@
+var returns = [];
 $(function() {
 	getMaterialReturnData();
 	checkAllCheckboxesInTable('.group-checkable','.checkboxes');
@@ -56,6 +57,18 @@ $(function() {
 		if (total_returned_qty > $('#return_qty').val()) {
 			msg("Actual quantity already exceeded from return quantity.",'failed');
 		} else {
+			returns.push({
+				issuanceno: $('#issuance_no').val(),
+				item: $('#item').val(),
+				item_desc: $('#item_desc').val(),
+				lot_no: $('#lot_no').val(),
+				issued_qty: $('#issued_qty').val(),
+				required_qty: $('#required_qty').val(),
+				return_qty: $('#return_qty').val(),
+				actual_returned_qty: $('#actual_returned_qty').val(),
+				remarks: $('#detail_remarks').val(),
+			});
+			
 			var tbl_details_body = '';
 			tbl_details_body = '<tr>'+
 									'<td width="4.09%"></td>'+
@@ -175,31 +188,13 @@ function getDataInfo(data) {
 function getDataDetails(data) {
 	var tbl_details_body = "";
 	var total_returned_qty = 0;
-	$('#tbl_details_body').html(tbl_details_body);
+
+	makeReturnTable(data);
+	
 	$.each(data, function(i, x) {
-		tbl_details_body = '<tr>'+
-								'<td width="4.09%">'+
-									'<input type="checkbox" class="checkboxes" name="check_id[]" data-qty="'+x.actual_returned_qty+'" value="'+x.id+'"/>'+
-								'</td>'+
-            					'<td width="9.09%">'+x.issuanceno+'<input type="hidden" name="details_issuanceno[]" value="'+x.issuanceno+'"/></td>'+
-            					'<td width="9.09%">'+x.item+'<input type="hidden" name="details_item[]" value="'+x.item+'"/></td>'+
-            					'<td width="16.09%">'+x.item_desc+'<input type="hidden" name="details_item_desc[]" value="'+x.item_desc+'"/></td>'+
-            					'<td width="9.09%">'+x.lot_no+'<input type="hidden" name="details_lot_no[]" value="'+x.lot_no+'"/></td>'+
-            					'<td width="7.09%">'+x.issued_qty+'<input type="hidden" name="details_issued_qty[]" value="'+x.issued_qty+'"/></td>'+
-            					'<td width="7.09%">'+x.required_qty+'<input type="hidden" name="details_required_qty[]" value="'+x.required_qty+'"/></td>'+
-            					'<td width="7.09%">'+x.return_qty+'<input type="hidden" name="details_return_qty[]" value="'+x.return_qty+'"/></td>'+
-            					'<td width="9.09%">'+x.actual_returned_qty+'<input type="hidden" name="details_actual_qty[]" value="'+x.actual_returned_qty+'"/></td>'+
-            					'<td width="15.09%">'+x.remarks+'<input type="hidden" name="details_remarks[]" value="'+x.remarks+'"/></td>'+
-            					'<td width="7.09%">'+
-									'<a href="javascript:;" class="btn btn-link grey-gallery brcodebtn" data-id="'+x.id+'">'+
-										'<i class="fa fa-barcode"></i>'+
-									'</a>'+
-									'<input type="hidden" name="details_id[]" value="'+x.id+'"/>'+
-								'</td>'+
-            				'</tr>';
-       	$('#tbl_details_body').append(tbl_details_body);
       	total_returned_qty += x.actual_returned_qty;
 	});
+
 	$('#total_returned_qty').val(total_returned_qty);
 }
 
@@ -366,4 +361,66 @@ function delete_now(url,data) {
 	}).fail(function(data,textStatus,jqXHR) {
 		msg("There's an error occurred while processing.",'error');
 	});
+}
+
+function makeReturnTable(arr) {
+	$('#tbl_details').dataTable().fnClearTable();
+    $('#tbl_details').dataTable().fnDestroy();
+    $('#tbl_details').dataTable({
+        data: arr,
+        bLengthChange : false,
+        scrollY: "200px",
+	    paging: false,
+	    searchable: false,
+        columns: [
+        	{ data: function(x) {
+        		return '<input type="checkbox" class="checkboxes" name="check_id[]" data-qty="'+x.actual_returned_qty+'" value="'+x.id+'">';
+        	} },
+	        { data: function(x) {
+	        	return x.issuanceno + '<input type="hidden" name="details_issuanceno[]" value="'+x.issuanceno+'">';
+	        } },
+			{ data: function(x) {
+				return x.item + '<input type="hidden" name="details_item[]" value="'+x.item+'">';
+			} },
+			{ data: function(x) {
+				return x.item_desc + '<input type="hidden" name="details_item_desc[]" value="'+x.item_desc+'">';
+			} },
+			{ data: function(x) {
+				return x.lot_no + '<input type="hidden" name="details_lot_no[]" value="'+x.lot_no+'">';
+			} },
+			{ data: function(x) {
+				return x.issued_qty + '<input type="hidden" name="details_issued_qty[]" value="'+x.issued_qty+'">';
+			} },
+			{ data: function(x) {
+				return x.required_qty + '<input type="hidden" name="details_required_qty[]" value="'+x.required_qty+'">';
+			} },
+			{ data: function(x) {
+				return x.return_qty + '<input type="hidden" name="details_return_qty[]" value="'+x.return_qty+'">';
+			} },
+			{ data: function(x) {
+				return x.actual_returned_qty + '<input type="hidden" name="details_actual_qty[]" value="'+x.actual_returned_qty+'">';
+			} },
+			{ data: function(x) {
+				return x.remarks + '<input type="hidden" name="details_remarks[]" value="'+x.remarks+'">';
+			} },
+			{ data: function(x) {
+				return '<button type="button" class="btn btn-link grey-gallery brcodebtn" data-id="'+x.id+'">'+
+							'<i class="fa fa-barcode"></i>'+
+						'</button>';
+			} },
+        ],
+        columnDefs: [
+        	{ width: "4.09%", targets: 0 },
+			{ width: "9.09%", targets: 1 },
+			{ width: "9.09%", targets: 2 },
+			{ width: "16.09%", targets: 3 },
+			{ width: "9.09%", targets: 4 },
+			{ width: "7.09%", targets: 5 },
+			{ width: "7.09%", targets: 6 },
+			{ width: "7.09%", targets: 7 },
+			{ width: "9.09%", targets: 8 },
+			{ width: "15.09%", targets: 9 },
+			{ width: "7.09%", targets: 10 },
+        ]
+    });
 }

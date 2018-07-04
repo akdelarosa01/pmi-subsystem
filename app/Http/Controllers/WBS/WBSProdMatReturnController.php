@@ -621,7 +621,7 @@ class WBSProdMatReturnController extends Controller
 
     public function deleteItem(Request $req)
     {
-         $data = [
+        $data = [
             'msg' => "Deleting failed.",
             'status' => 'failed'
         ];
