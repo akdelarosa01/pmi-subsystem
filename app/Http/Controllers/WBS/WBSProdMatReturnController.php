@@ -746,7 +746,7 @@ class WBSProdMatReturnController extends Controller
         $to_cond = '';
 
         if (!empty($req->from) && !empty($req->to)) {
-            $from_cond = "AND r.date_returned BETWEEN '" . $req->from . "' AND '" . $req->to . "'";
+            $from_cond = "AND r.date_returned BETWEEN '" . $this->com->convertDate($req->from,'Y-m-d') . "' AND '" . $this->com->convertDate($req->to,'Y-m-d') . "'";
         } else {
             $from_cond = '';
             $to_cond = '';
