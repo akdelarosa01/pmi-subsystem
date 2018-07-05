@@ -4294,7 +4294,13 @@ class OrderDataCheckController extends Controller
                         $sheet->cell('H'.$row, $moms->vendor);
                         $sheet->cell('I'.$row, $moms->siyou);
                         $sheet->cell('J'.$row, $moms->ypics_qty);
-                        $sheet->cell('K'.$row, ($moms->diff1==0)?"0.0":$moms->diff1);
+
+                        if ($moms->ypics_qty == 'N/A') {
+                            $sheet->cell('K'.$row, 'N/A');
+                        } else {
+                            $sheet->cell('K'.$row, ($moms->diff1==0)?"0.0":$moms->diff1);
+                        }
+                        
                         $sheet->cell('L'.$row, "");
                         $sheet->cell('M'.$row, $moms->moms);
                         $sheet->cell('N'.$row, $moms->withdrawal_qty);
@@ -4391,7 +4397,7 @@ class OrderDataCheckController extends Controller
                         $sheet->cell('B'.$row, $data->code); //ypics
                         $sheet->cell('C'.$row, $data->kcode); //ypics
                         $sheet->cell('D'.$row, $data->prodname); //ypics
-                        $sheet->cell('E'.$row, $this->xhikiLVL($data->po)); //ypics
+                        $sheet->cell('E'.$row, $this->xhikiLVL($data->kcode)); //ypics
                         $sheet->cell('F'.$row, $data->siyou); //ypics
                         $sheet->cell('G'.$row, $data->ypics_qty); //ypics
                         $sheet->cell('H'.$row, $data->vendor); //r3
@@ -4451,11 +4457,11 @@ class OrderDataCheckController extends Controller
         return preg_replace('/[^A-Za-z0-9\-]/', '', $dots); // Removes special chars.
     }
 
-    private function xhikiLVL($xhikipo)
+    private function xhikiLVL($item)
     {
         $db = DB::connection($this->mysql)->table('momscheck')
                 ->select('lvl')
-                ->where('po',$xhikipo)
+                ->where('kcode',$item)
                 ->first();
         if (count((array)$db) > 0) {
             return $db->lvl;

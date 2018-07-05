@@ -1097,6 +1097,7 @@ class OQCInspectionController extends Controller
     {
         $data = DB::connection($this->mysql)->table('oqc_inspections')
                 ->select($req->field.' as field')
+                ->orderBy($req->field)
                 ->distinct()
                 ->get();
 
@@ -1336,7 +1337,7 @@ class OQCInspectionController extends Controller
             ];
         }
 
-        if ($req->lot_qty >= 51 && $req->lot_qty <= 99) {
+        if ($req->lot_qty >= 51) {
             $data = [
                 'ins_lvl' => 'II',
                 'size' => 13,

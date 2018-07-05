@@ -99,7 +99,7 @@
                                 <div class="form-group" id="series_name_div">
                                     <label class="control-label col-sm-3">Device Name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control enter input-sm validate clear" id="series_name" name="series_name">
+                                        <input type="text" class="form-control enter input-sm validate clear" id="series_name" name="series_name" readonly>
                                         <input type="hidden" class="form-control enter input-sm validate clear" id="series_code" name="series_code">
                                         <span class="help-block">
                                             <strong id="series_name_msg"></strong>
@@ -109,7 +109,7 @@
                                 <div class="form-group" id="customer_div">
                                     <label class="control-label col-sm-3">Customer</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control enter input-sm validate clear" id="customer" name="customer">
+                                        <input type="text" class="form-control enter input-sm validate clear" id="customer" name="customer" readonly>
                                         <input type="hidden" class="form-control enter input-sm validate clear" id="customer_code" name="customer_code">
                                         <span class="help-block">
                                             <strong id="customer_msg"></strong>
@@ -177,6 +177,15 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="form-group" id="lot_qty_div">
+                                    <label class="control-label col-sm-3">Lot Quantity</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control enter input-sm validate clear" id="lot_qty" name="lot_qty">
+                                        <span class="help-block">
+                                            <strong id="lot_qty_msg"></strong>
+                                        </span>
+                                    </div>
+                                </div>
                             </td>
 
                             <td width="50%">
@@ -191,16 +200,25 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="form-group" id="sample_size_div">
+                                    <label class="control-label col-sm-3">Sample Size</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control enter input-sm validate clear" id="sample_size" name="sample_size">
+                                        <span class="help-block">
+                                            <strong id="sample_size_msg"></strong>
+                                        </span>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Accept</label>
                                     <div class="col-sm-9">
-                                        <input type="number" min="0" max="1" class="form-control enter input-sm" id="accept" name="accept">
+                                        <input type="number" min="0" max="1" class="form-control enter input-sm" id="accept" name="accept" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Reject</label>
                                     <div class="col-sm-9">
-                                        <input type="number" min="0" max="1" class="form-control enter input-sm" id="reject" name="reject">
+                                        <input type="number" min="0" max="1" class="form-control enter input-sm" id="reject" name="reject" readonly>
                                     </div>
                                 </div>
                             </td>
@@ -293,7 +311,7 @@
                                 <div class="form-group" id="judgement_div">
                                     <label class="control-label col-sm-3">Judgement</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control enter input-sm validate clear" id="judgement" name="judgement">
+                                        <input type="text" class="form-control enter input-sm validate clear" id="judgement" name="judgement" readonly>
                                         <span class="help-block">
                                             <strong id="judgement_div"></strong>
                                         </span>
@@ -302,24 +320,6 @@
                             </td>
 
                             <td width="50%">
-                                <div class="form-group" id="lot_qty_div">
-                                    <label class="control-label col-sm-3">Lot Quantity</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control enter input-sm validate clear" id="lot_qty" name="lot_qty">
-                                        <span class="help-block">
-                                            <strong id="lot_qty_msg"></strong>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="sample_size_div">
-                                    <label class="control-label col-sm-3">Sample Size</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control enter input-sm validate clear" id="sample_size" name="sample_size">
-                                        <span class="help-block">
-                                            <strong id="sample_size_msg"></strong>
-                                        </span>
-                                    </div>
-                                </div>
                                 <div class="form-group" id="lot_inspected_div">
                                     <label class="control-label col-sm-3">Lot Inspected</label>
                                     <div class="col-sm-9">

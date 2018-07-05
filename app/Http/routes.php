@@ -212,6 +212,11 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'wbslocaldeletebatchitem'
             ]);
 
+            Route::post('/local-receiving-search', [
+                'uses' => 'WBS\WBSLocalMaterialReceivingController@Search',
+                'name' => 'local-receiving-search'
+            ]);
+
             Route::get('/wbslocgettotal', [
                 'uses' => 'WBS\WBSLocalMaterialReceivingController@getTotal',
                 'name' => 'wbslocgettotal'
@@ -270,8 +275,6 @@ Route::group(['middleware' => 'web'], function () {
             // ]);
 
         /*Material Kitting*/
-
-
             Route::group(['prefix' => 'material-kitting'], function() {
                 Route::get('/','WBS\WBSMaterialKittingController@index')->middleware('auth','revalidate');
 
@@ -401,11 +404,7 @@ Route::group(['middleware' => 'web'], function () {
                 ]);
             });
 
-
-
-
         /*Prod Material Request*/
-
             Route::group(['prefix' => 'wbsprodmatrequest'], function() {
                 Route::get('/', [
                     'uses' => 'WBS\WBSProductionMaterialRequestController@index',
@@ -459,7 +458,6 @@ Route::group(['middleware' => 'web'], function () {
             });
 
         /*Sakidashi Issuance*/
-
             Route::group(['prefix' => 'sakidashi-issuance'], function() {
                 Route::get('/', 'WBS\WBSSakidashiIssuanceController@index')->middleware('auth','revalidate');
 
@@ -600,116 +598,12 @@ Route::group(['middleware' => 'web'], function () {
                     'uses' => 'WBS\WBSWhsIssuanceController@cancelIssuance',
                     'name' => 'cancel-issuance'
                 ]);
+
+                Route::get('/print-barcode', [
+                    'uses' => 'WBS\WBSWhsIssuanceController@printBarcode',
+                    'name' => 'print-barcode'
+                ]);
             });
-            
-
-            Route::post('/wbswhsmatissuance', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getWarehouse',
-                'name' => 'wbswhsmatissuance'
-            ]);
-            Route::get('/getmassalert', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getMassAlert',
-                'name' => 'getmassalert'
-            ]);
-
-            Route::post('/viewdetails', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@viewDetails',
-                'name' => 'viewdetails'
-            ]);
-
-            Route::post('/wbswmi-save', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@postSaveRequest',
-                'name' => 'wbswmi-save'
-            ]);
-
-            Route::post('/wbswmi-update', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@postSaveRequest',
-                'name' => 'wbswmi-save'
-            ]);
-
-            Route::post('/wbswmi-cancel', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@postCancelRequest',
-                'name' => 'wbswmi-cancel'
-            ]);
-
-            Route::post('/wbswmi-search', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@postSearchRequest',
-                'name' => 'wbswmi-search'
-            ]);
-
-            Route::get('/wbswmi-report', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getPrintRequest',
-                'name' => 'wbswmi-report'
-            ]);
-
-            //* latest routes*//
-            Route::post('/savewhsissuance', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@postSaveIssuance',
-                'name' => 'savewhsissuance'
-            ]);
-
-            Route::get('/whsissuancenav', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getWBSMKLNavigate',
-                'name' => 'whsissuancenav'
-            ]);
-
-            Route::get('/whslatestissuance', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getLatest',
-                'name' => 'whslatestissuance'
-            ]);
-
-            Route::post('/whsissuancecancel', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@postCancelIssuance',
-                'name' => 'whsissuancecancel'
-            ]);
-
-            Route::get('/wbswhsissuancefifotbl', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getFifoTable',
-                'name' => 'wbswhsissuancefifotbl'
-            ]);
-            Route::get('/wbswhsissuancefifotblbc', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getFifoTablebc',
-                'name' => 'wbswhsissuancefifotblbc'
-            ]);
-
-            Route::get('/wbswhscheckifnotclose', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getIfNotClose',
-                'name' => 'wbswhscheckifnotclose'
-            ]);
-
-            Route::get('/wbswhsserving', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getWhsServing',
-                'name' => 'wbswhsserving'
-            ]);
-            Route::get('/wbsWhsReport_Excel', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@wbsWhsReport_Excel',
-                'name' => 'wbsWhsReport_Excel'
-            ]);
-            Route::get('/gettotalbalanceqty', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getBalance',
-                'name' => 'gettotalbalanceqty'
-            ]);
-            Route::get('/getsearch_viewDetails', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getsearch_viewDetails',
-                'name' => 'getsearch_viewDetails'
-            ]);
-            Route::get('/getmatbarcode', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getmatbarcode',
-                'name' => 'getmatbarcode'
-            ]);
-            Route::get('/getmatlotno', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@getmatlotno',
-                'name' => 'getmatlotno'
-            ]);
-            Route::get('/whs-material-request-pdf', [
-                'uses' => 'WBS\WBSWhsMatIssueanceController@materialRequestPDF',
-                'name' => 'whs-material-request-pdf'
-            ]);
-
-            // Route::get('/whscheckrequest', [
-            //     'uses' => 'WBS\WBSWhsMatIssueanceController@checkRequest',
-            //     'name' => 'whscheckrequest'
-            // ]);
 
         /* Physical Inventory*/
             Route::get('/wbsphysicalinventory', [
@@ -757,7 +651,6 @@ Route::group(['middleware' => 'web'], function () {
             ]);
 
         /* Parts Receiving*/
-
             Route::get('/wbspartsreceiving', [
                 'uses' => 'WBS\WBSPartsReceivingController@getWBSPartsReceiving',
                 'name' => 'wbspartsreceiving'
@@ -870,8 +763,15 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'delete-item-return'
             ]);
 
+            Route::post('/search-return', [
+                'uses' => 'WBS\WBSProdMatReturnController@searchReturns',
+                'name' => 'search-return'
+            ]);
 
-
+            Route::get('/excel-return', [
+                'uses' => 'WBS\WBSProdMatReturnController@printExcel',
+                'name' => 'excel-return'
+            ]);
 
         /* WBS Report */
             Route::get('/wbsreports', [
@@ -1499,6 +1399,32 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'iqc-num-of-defects'
             ]);
 
+
+
+            Route::get('/iqc-groupby-dppmgroup1', [
+                'uses' => 'QCDB\IQCGroupByController@dppmgroup1',
+                'name' => 'iqc-groupby-dppmgroup1'
+            ]);
+
+            Route::get('/iqc-groupby-dppmgroup2', [
+                'uses' => 'QCDB\IQCGroupByController@dppmgroup2',
+                'name' => 'iqc-groupby-dppmgroup2'
+            ]);
+
+            Route::get('/iqc-groupby-dppmgroup3', [
+                'uses' => 'QCDB\IQCGroupByController@dppmgroup3',
+                'name' => 'iqc-groupby-dppmgroup3'
+            ]);
+
+            Route::get('/iqc-groupby-dppmgroup2_Details', [
+                'uses' => 'QCDB\IQCGroupByController@dppmgroup2_Details',
+                'name' => 'iqc-groupby-dppmgroup2_Details'
+            ]);
+
+            Route::get('/iqc-groupby-dppmgroup3_Details', [
+                'uses' => 'QCDB\IQCGroupByController@dppmgroup3_Details',
+                'name' => 'iqc-groupby-dppmgroup3_Details'
+            ]);
 
 
         /* OQC Inspection */
