@@ -580,7 +580,7 @@ function getSelections() {
 	});
 }
 
-function getData(req_no='',to = '') {
+function getData(req_no,to) {
 	$.ajax({
 		url: getDataURL,
 		type: 'GET',

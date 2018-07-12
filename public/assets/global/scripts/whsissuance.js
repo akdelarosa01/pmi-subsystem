@@ -599,7 +599,7 @@ function navigate(to) {
 	getData($('#issuance_no').val(),to);
 }
 
-function getData(issuance_no='',to = '') {
+function getData(issuance_no,to) {
 	$.ajax({
 		url: getDataURL,
 		type: 'GET',

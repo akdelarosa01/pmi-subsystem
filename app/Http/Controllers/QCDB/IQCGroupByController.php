@@ -118,6 +118,7 @@ class IQCGroupByController extends Controller
 
     public function dppmgroup3(Request $req)
     {
+        $sub_date_ispected = '';
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_ispected = " AND date_ispected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
@@ -268,10 +269,13 @@ class IQCGroupByController extends Controller
 
     public function dppmgroup3_Details(Request $req)
     {
+        //return $req->all();
+        $sub_date_ispected = '';
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_ispected = " AND date_ispected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
         }
+
         $insG1="";
         $listG1 = array();
         $LARresultG1;
@@ -282,7 +286,9 @@ class IQCGroupByController extends Controller
         $rejectednumListG1 = array();
         $DPPMG1;
         $DPPMListG1 = array();
+
         for($x=0;$x<count($req->content1);$x++){
+            if (isset($req->firstData)) {
                 $insG1 = DB::connection($this->mysql)
                                 ->select("SELECT *,".$req->firstData." as group_one
                                         FROM iqc_inspections
@@ -315,6 +321,8 @@ class IQCGroupByController extends Controller
                 array_push($LARListG1, $LARresultG1);
                 array_push($rejectednumListG1, $rejectednumG1);
                 array_push($DPPMListG1, $DPPMG1);
+            }
+                
         }
 
         $ins="";
