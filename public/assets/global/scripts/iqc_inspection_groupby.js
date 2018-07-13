@@ -42,6 +42,7 @@ $( function() {
                     if(returnData.length > 0){
                         var form = returnData;
                         var desFirst = deparam(datas);
+                        console.log(desFirst);
                         $.ajax({
                                 url: GetSingleGroupByURL,
                                 type: 'GET',
@@ -178,6 +179,9 @@ $( function() {
                     if(returnData.length > 0){
                         var form = returnData;
                         var desFirst = deparam(datas);
+
+                        //console.log(desFirst);
+
                         $.ajax({
                                 url: GettripleGroupByURL,
                                 type: 'GET',
@@ -226,35 +230,37 @@ $( function() {
                                                 }
                                                 g3 = uniqueField2;
                                         }
+                                            var data = {
+                                                _token:token,
+                                                content1:g1,
+                                                content2:g2,
+                                                content3:g3,
+                                                firstData:desFirst.field1,
+                                                secondData:desFirst.field2,
+                                                thirdData:desFirst.field3,
+                                                gto:desFirst.gto,
+                                                gfrom:desFirst.gfrom,
+                                            };
                                                         $.ajax({
-                                                        url: GettripleGroupByURLdetails,
-                                                        type: 'GET',
-                                                        dataType: 'JSON',
-                                                        data:{ _token:token,
-                                                                content1:g1,
-                                                                content2:g2,
-                                                                content3:g3,
-                                                                firstData:desFirst.field1,
-                                                                secondData:desFirst.field2,
-                                                                thirdData:desFirst.field3,
-                                                                gto:desFirst.gto,
-                                                                gfrom:desFirst.gfrom,
-                                                        },
-                                                        success:function(returDetails){
-                                                            thirdTable(returDetails.returnData,
-                                                                desFirst,
-                                                                returDetails.LARListG1,
-                                                                returDetails.rejectednumListG1,
-                                                                returDetails.DPPMListG1,
-                                                                returDetails.LARList_2nd,
-                                                                returDetails.rejectednumList_2nd,
-                                                                returDetails.DPPMList_2nd,
-                                                                returDetails.LARList_3rd,
-                                                                returDetails.rejectednumList_3rd,
-                                                                returDetails.DPPMList_3rd
-                                                                );
-                                                        },
-                                                        error: function (xhr, ajaxOptions, thrownError) {
+                                                            url: GettripleGroupByURLdetails,
+                                                            type: 'GET',
+                                                            dataType: 'JSON',
+                                                            data: data,
+                                                            success:function(returDetails){
+                                                                thirdTable(returDetails.returnData,
+                                                                    desFirst,
+                                                                    returDetails.LARListG1,
+                                                                    returDetails.rejectednumListG1,
+                                                                    returDetails.DPPMListG1,
+                                                                    returDetails.LARList_2nd,
+                                                                    returDetails.rejectednumList_2nd,
+                                                                    returDetails.DPPMList_2nd,
+                                                                    returDetails.LARList_3rd,
+                                                                    returDetails.rejectednumList_3rd,
+                                                                    returDetails.DPPMList_3rd
+                                                                    );
+                                                            },
+                                                            error: function (xhr, ajaxOptions, thrownError) {
                                                                 alert(xhr.status);
                                                                 alert(thrownError);
                                                             }

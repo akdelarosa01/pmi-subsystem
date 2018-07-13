@@ -1,8 +1,5 @@
 /config
-<<<<<<< HEAD
 /config/database.php
-=======
->>>>>>> a0c6cd0b9832ab1bbb4f6fb54a8d5ba02443f059
 /node_modules
 .env
 /public/storage

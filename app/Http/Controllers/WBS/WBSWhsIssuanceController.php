@@ -1067,14 +1067,18 @@ class WBSWhsIssuanceController extends Controller
         $content .= 'PP310,766:AN7'."\r\n";
         $content .= 'DIR2'."\r\n";
         $content .= 'FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 10'."\r\n";
         $content .= 'PP60,776:FT "Swiss 721 Bold BT",20,0,78'."\r\n";
         $content .= 'PP290,450:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 8'."\r\n";
-        $content .= 'PT "'.$req->create_user.'"'."\r\n";
+        $content .= 'PT ""'."\r\n";
         $content .= 'PP290,200:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 8'."\r\n";
         $content .= 'PT "'.$req->created_at.'"'."\r\n";
+
         $content .= 'PP260,480:BARSET "CODE128",2,1,3,30'."\r\n";
         $content .= 'PB "'.$req->issuance_no.'"'."\r\n";
         $content .= 'PP220,350:FT "Swiss 721 BT"'."\r\n";

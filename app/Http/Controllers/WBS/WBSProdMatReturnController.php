@@ -777,22 +777,22 @@ class WBSProdMatReturnController extends Controller
             $excel->sheet('Report', function($sheet) use($data,$com_info)
             {
                 $sheet->setHeight(1, 15);
-                $sheet->mergeCells('A1:J1');
-                $sheet->cells('A1:J1', function($cells) {
+                $sheet->mergeCells('A1:L1');
+                $sheet->cells('A1:L1', function($cells) {
                     $cells->setAlignment('center');
                 });
                 $sheet->cell('A1',$com_info['name']);
 
                 $sheet->setHeight(2, 15);
-                $sheet->mergeCells('A2:J2');
-                $sheet->cells('A2:J2', function($cells) {
+                $sheet->mergeCells('A2:L2');
+                $sheet->cells('A2:L2', function($cells) {
                     $cells->setAlignment('center');
                 });
                 $sheet->cell('A2',$com_info['address']);
 
                 $sheet->setHeight(4, 20);
-                $sheet->mergeCells('A4:J4');
-                $sheet->cells('A4:J4', function($cells) {
+                $sheet->mergeCells('A4:L4');
+                $sheet->cells('A4:L4', function($cells) {
                     $cells->setAlignment('center');
                     $cells->setFont([
                         'family'     => 'Calibri',
@@ -804,7 +804,7 @@ class WBSProdMatReturnController extends Controller
                 $sheet->cell('A4',"PRODUCTION MATERIAL RETURN");
 
                 $sheet->setHeight(6, 15);
-                $sheet->cells('A6:J6', function($cells) {
+                $sheet->cells('A6:L6', function($cells) {
                     $cells->setFont([
                         'family'     => 'Calibri',
                         'size'       => '11',
@@ -814,37 +814,54 @@ class WBSProdMatReturnController extends Controller
                     $cells->setBorder('solid', 'solid', 'solid', 'solid');
                 });
                 $sheet->cell('A6', "Issuance No.");
-                $sheet->cell('B6', "Item Code");
-                $sheet->cell('C6', "Description");
-                $sheet->cell('D6', "Lot No.");
-                $sheet->cell('E6', "Issued Qty.");
-                $sheet->cell('F6', "Required Qty.");
-                $sheet->cell('G6', "Return Qty.");
-                $sheet->cell('H6', "Actual Return Qty.");
-                $sheet->cell('I6', "Remarks");
-                $sheet->cell('J6', "Returned By");
+                $sheet->cell('B6', 'P.O.');
+                $sheet->cell('C6', "Item Code");
+                $sheet->cell('D6', "Description");
+                $sheet->cell('E6', "Lot No.");
+                $sheet->cell('F6', "Issued Qty.");
+                $sheet->cell('G6', "Required Qty.");
+                $sheet->cell('H6', "Return Qty.");
+                $sheet->cell('I6', "Actual Return Qty.");
+                $sheet->cell('J6', "Pair No.");
+                $sheet->cell('K6', "Remarks");
+                $sheet->cell('L6', "Returned By");
 
                 $row = 7;
 
                 foreach ($data as $key => $mk) {
                     $sheet->setHeight($row, 15);
                     $sheet->cell('A'.$row, $mk->issuanceno);
-                    $sheet->cell('B'.$row, $mk->item);
-                    $sheet->cell('C'.$row, $mk->item_desc);
-                    $sheet->cell('D'.$row, $mk->lot_no);
-                    $sheet->cell('E'.$row, $mk->issued_qty);
-                    $sheet->cell('F'.$row, $mk->required_qty);
-                    $sheet->cell('G'.$row, $mk->return_qty);
-                    $sheet->cell('H'.$row, $mk->actual_returned_qty);
-                    $sheet->cell('I'.$row, $mk->remarks);
-                    $sheet->cell('J'.$row, $mk->returned_by);
+                    $sheet->cell('B'.$row, $mk->po);
+                    $sheet->cell('C'.$row, $mk->item);
+                    $sheet->cell('D'.$row, $mk->item_desc);
+                    $sheet->cell('E'.$row, $mk->lot_no);
+                    $sheet->cell('F'.$row, $mk->issued_qty);
+                    $sheet->cell('G'.$row, $mk->required_qty);
+                    $sheet->cell('H'.$row, $mk->return_qty);
+                    $sheet->cell('I'.$row, $mk->actual_returned_qty);
+                    $sheet->cell('J'.$row, $this->getPairNo($mk->issuanceno));
+                    $sheet->cell('K'.$row, $mk->remarks);
+                    $sheet->cell('L'.$row, $mk->returned_by);
                     $row++;
                 }
 
-                $sheet->cells('A6:J'.$row, function($cells) {
+                $sheet->cells('A6:L'.$row, function($cells) {
                     $cells->setBorder('solid', 'solid', 'solid', 'solid');
                 });
             });
         })->download('xls');
+    }
+
+    public function getPairNo($issuance_no)
+    {
+        $saki = DB::connection($this->mysql)->table('tbl_wbs_sakidashi_issuance_item')
+                    ->where('issuance_no',$issuance_no)
+                    ->select('pair_no')
+                    ->first();
+        if (count((array)$saki) > 0) {
+            return $saki->pair_no;
+        }
+
+        return '';
     }
 }
