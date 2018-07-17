@@ -232,14 +232,14 @@ $( function() {
                                         }
                                             var data = {
                                                 _token:token,
-                                                content1:g1,
-                                                content2:g2,
-                                                content3:g3,
                                                 firstData:desFirst.field1,
                                                 secondData:desFirst.field2,
                                                 thirdData:desFirst.field3,
                                                 gto:desFirst.gto,
                                                 gfrom:desFirst.gfrom,
+                                                content1:JSON.stringify(g1),
+                                                content2:JSON.stringify(g2),
+                                                content3:JSON.stringify(g3),
                                             };
                                                         $.ajax({
                                                             url: GettripleGroupByURLdetails,
@@ -285,6 +285,8 @@ $( function() {
             });
         }
     });
+
+
 
     $('.view_inspection').live('click', function(e) {
 
@@ -359,6 +361,13 @@ $( function() {
         window.location.href= excelURL;
     });
 });
+
+function toObject(arr) {
+    var rv = {};
+    for (var i = 0; i < arr.length; ++i)
+        rv[i] = arr[i];
+    return rv;
+}
 
 function deparam(query) {
     var pairs, i, keyValuePair, key, value, map = {};
