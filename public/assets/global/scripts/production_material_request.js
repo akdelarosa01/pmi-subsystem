@@ -653,10 +653,11 @@ function save() {
 		dataType: 'JSON',
 		data: data,
 	}).done(function(data, textStatus, xhr) {
+		console.log(data);
 		getData(data.req_no);
 		msg(data.msg,data.status);
 	}).fail(function(xhr, textStatus, errorThrown) {
-		console.log("error");
+		msg(errorThrown,textStatus);
 	}).always(function() {
 		$('#loading').modal('hide');
 	});
