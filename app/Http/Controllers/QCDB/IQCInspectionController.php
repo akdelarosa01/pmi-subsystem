@@ -489,7 +489,7 @@ class IQCInspectionController extends Controller
                 }
 
                 if ($req->aql == 1.00) {
-                    if ($req->lot_qty < 13) {
+                    if ($req->lot_qty <= 13) {
                         $size = $req->lot_qty;
                     }
 
