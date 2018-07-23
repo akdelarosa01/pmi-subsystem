@@ -31,52 +31,52 @@
 
                               <div class="row">
                                    <div class="col-sm-3">
-                                        <div class="form-group row" style="margin-top:60px;;margin-left:20px;">
-                                             <div class="col-sm-10" >
-                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 btn-success" id="btnaddnew">
+                                        <div class="form-group row">
+                                             <div class="col-sm-12" >
+                                                  <button type="button" style="font-size:10px;" class="btn btn-success btn-block" id="btnaddnew">
                                                        <i class="fa fa-plus"></i> New Transaction
                                                   </button>
                                              </div>
                                         </div>
-                                        <div class="form-group row" style="margin-left:20px;">
-                                             <div class="col-sm-10" >
-                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_poreg" >
+                                        <div class="form-group row">
+                                             <div class="col-sm-12" >
+                                                  <button type="button" style="font-size:10px;" class="btn blue-soft btn-block" id="btn_poreg" >
                                                   <i class="fa fa-save"></i>PO Registration
                                                   </button>
                                              </div>
                                         </div>
-                                       {{--  <div class="form-group row" style="margin-left:20px;">
-                                             <div class="col-sm-10">
-                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_devicereg" ><i class="fa fa-desktop"></i>Device Registration</button>
+                                       {{--  <div class="form-group row">
+                                             <div class="col-sm-12">
+                                                  <button type="button" style="font-size:10px;" class="btn blue-soft" id="btn_devicereg" ><i class="fa fa-desktop"></i>Device Registration</button>
                                              </div>
                                         </div> --}}
-                                        <div class="form-group row" style="margin-left:20px;">
-                                             <div class="col-sm-10">
-                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_seriesreg" ><i class="fa fa-list-alt"></i>Series Registration</button>
+                                        <div class="form-group row">
+                                             <div class="col-sm-12">
+                                                  <button type="button" style="font-size:10px;" class="btn blue-soft btn-block" id="btn_seriesreg" ><i class="fa fa-list-alt"></i>Series Registration</button>
                                              </div>
                                         </div>
-                                        <div class="form-group row" style="margin-left:20px;">
-                                             <div class="col-sm-10">
-                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_modreg" ><i class="fa fa-chain-broken"></i>Mode of Defect<br /> Registration</button>
+                                        <div class="form-group row">
+                                             <div class="col-sm-12">
+                                                  <button type="button" style="font-size:10px;" class="btn blue-soft btn-block" id="btn_modreg" ><i class="fa fa-chain-broken"></i>Mode of Defect<br /> Registration</button>
                                              </div>
                                         </div>
-                                        <div class="form-group row" style="margin-left:20px;">
-                                             <div class="col-sm-10">
-                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_target" ><i class="fa fa-line-chart"></i>Target Yield</button>
+                                        <div class="form-group row">
+                                             <div class="col-sm-12">
+                                                  <button type="button" style="font-size:10px;" class="btn blue-soft btn-block" id="btn_target" ><i class="fa fa-line-chart"></i>Target Yield</button>
                                              </div>
                                         </div>
-                                        <div class="form-group row" style="margin-left:20px;">
-                                             <div class="col-sm-10">
-                                              {{--     <button type="button" style="font-size:10px;" onclick="javascript:deleteAllcheckeditems();" class="btn  red col-sm-8 remove-task" id="btnremove_detail"> --}}
-                                                  <button type="button" style="font-size:10px;" onclick="javascript:removeYIELD();" class="btn  red col-sm-8 remove-task" id="btnremove_detail">
+                                        <div class="form-group row">
+                                             <div class="col-sm-12">
+                                              {{--     <button type="button" style="font-size:10px;" onclick="javascript:deleteAllcheckeditems();" class="btn  red remove-task" id="btnremove_detail"> --}}
+                                                  <button type="button" style="font-size:10px;" onclick="javascript:removeYIELD();" class="btn red remove-task btn-block" id="btnremove_detail">
                                                        <i class="fa fa-trash remove-task"></i> Remove
                                                   </button>
                                              </div>
                                         </div>
                                    </div>
 
-                                   <div class="col-xs-9 col-md-pull-1"">
-                                        <table class="table table-striped table-bordered table-hover" id="tbl_yield" style="font-size:13px">
+                                   <div class="col-sm-9">
+                                        <table class="table table-striped table-bordered table-hover" id="tbl_yield" style="font-size:10px">
                                              <thead >
                                                   <tr>
                                                        <td class="table-checkbox" style="width: 5%">
@@ -196,8 +196,16 @@
                                         {!! csrf_field() !!}
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">PO Number</label>
+
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="pono" name="pono">
+                                                  <div class="input-group">
+                                                      <input type="text" class="form-control input-sm" id="pono" name="pono" maxlength="15">
+                                                      <span class="input-group-btn">
+                                                          <button type="button" class="btn input-sm green" id="btn_getpodetails">
+                                                              <i class="fa fa-search"></i>
+                                                          </button>
+                                                      </span>
+                                                  </div>
                                                   <div id="er_pono"></div>
                                              </div>     
                                         </div>
