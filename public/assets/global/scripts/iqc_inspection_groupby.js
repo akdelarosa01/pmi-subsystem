@@ -20,13 +20,13 @@ $( function() {
         e.preventDefault();
         openloading();
         $('#group_by_pane').html('<div class="btn-group pull-right">'+
-                                '<button class="btn btn-danger btn-sm" id="btn_close_groupby">'+
+                                '<button type="button" class="btn btn-danger btn-sm" id="btn_close_groupby">'+
                                     '<i class="fa fa-times"></i> Close'+
                                 '</button>'+
-                                '<button class="btn btn-info btn-sm" id="btn_pdf_groupby">'+
+                                '<button type="button" class="btn btn-info btn-sm btn_pdf_groupby" id="btn_pdf_groupby">'+
                                     '<i class="fa fa-file-pdf-o"></i> PDF'+
                                 '</button>'+
-                                '<button class="btn btn-success btn-sm" id="btn_excel_groupby">'+
+                                '<button type="button" class="btn btn-success btn-sm btn_excel_groupby" id="btn_excel_groupby">'+
                                     '<i class="fa fa-file-excel-o"></i> Excel'+
                                 '</button></div><br><br>');
 
@@ -127,8 +127,8 @@ $( function() {
                                                             type: 'GET',
                                                             dataType: 'JSON',
                                                             data:{ _token:token,
-                                                                    content1:g1,
-                                                                    content2:g2,
+                                                                    content1:JSON.stringify(g1),
+                                                                    content2:JSON.stringify(g2),
                                                                     firstData:desFirst.field1,
                                                                     secondData:desFirst.field2,
                                                                     gto:desFirst.gto,
@@ -353,11 +353,11 @@ $( function() {
         clearGrpByFields();
     });
 
-    $('#btn_pdf_groupby').on('click', function() {
+    $('#btn_pdf_groupby').live('click', function() {
         window.location.href= pdfURL;
     });
 
-    $('#btn_excel_groupby').on('click', function() {
+    $('#btn_excel_groupby').live('click', function() {
         window.location.href= excelURL;
     });
 });
