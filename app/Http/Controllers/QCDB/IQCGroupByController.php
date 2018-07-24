@@ -134,6 +134,9 @@ class IQCGroupByController extends Controller
 
     public function dppmgroup2_Details(Request $req)
     {
+        $content1 = json_decode($req->content1);
+        $content2 = json_decode($req->content2);
+
         $sub_date_ispected = '';
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_ispected = " AND date_ispected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
@@ -149,33 +152,33 @@ class IQCGroupByController extends Controller
         $rejectednumListG1 = array();
         $DPPMG1;
         $DPPMListG1 = array();
-        for($x=0;$x<count($req->content1);$x++){
+        for($x=0;$x<count($content1);$x++){
                 $insG1 = DB::connection($this->mysql)
                                 ->select("SELECT *,".$req->firstData." as group_one
                                         FROM iqc_inspections
                                         WHERE 1=1 ".$sub_date_ispected."
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
 
                 $LARresultG1 = DB::connection($this->mysql)
                                 ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                         FROM iqc_inspections
                                         WHERE 1=1 ".$sub_date_ispected."
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 $rejectednumG1 = DB::connection($this->mysql)
                                 ->select("SELECT COUNT(*) AS rejects
                                         FROM iqc_inspections
                                         WHERE 1=1 ".$sub_date_ispected."
                                         AND judgement = 'Reject'
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 $DPPMG1 = DB::connection($this->mysql)
                                 ->select("SELECT ROUND((SUM(no_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(no_of_defects) as no_of_defects ,SUM(sample_size) as sample_size
                                         FROM iqc_inspections
                                         WHERE 1=1 ".$sub_date_ispected."
                                         AND judgement = 'Reject'
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 
                 array_push($listG1, $insG1);
@@ -200,27 +203,27 @@ class IQCGroupByController extends Controller
         $rejectednumList = array();
         $rejectednumList2 = array();
 
-        for($x=0;$x<count($req->content1);$x++){
+        for($x=0;$x<count($content1);$x++){
             $list = array();
             $LARList = array();
             $DPPMList = array();
             $rejectednumList = array();
-                for($y=0;$y<count($req->content2);$y++)
+                for($y=0;$y<count($content2);$y++)
                 {
                         $ins = DB::connection($this->mysql)
                                         ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
                                                 FROM iqc_inspections
                                                 WHERE 1=1 ".$sub_date_ispected."
-                                                AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                                AND ".$req->firstData." = '".$content1[$x]."'
+                                                AND ".$req->secondData." = '".$content2[$y]."'"
                                             );
 
                         $LARresult = DB::connection($this->mysql)
                             ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                     FROM iqc_inspections
                                     WHERE 1=1 ".$sub_date_ispected."
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         $rejectednum = DB::connection($this->mysql)
@@ -228,8 +231,8 @@ class IQCGroupByController extends Controller
                                     FROM iqc_inspections
                                     WHERE 1=1 ".$sub_date_ispected."
                                     AND judgement = 'Reject'
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         $DPPM = DB::connection($this->mysql)
@@ -237,8 +240,8 @@ class IQCGroupByController extends Controller
                                     FROM iqc_inspections
                                     WHERE 1=1 ".$sub_date_ispected."
                                     AND judgement = 'Reject'
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         if(count($ins) > 0){
