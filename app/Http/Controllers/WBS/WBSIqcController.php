@@ -495,7 +495,8 @@ class WBSIqcController extends Controller
 
         $iqc = DB::connection($this->wbs)->table('tbl_wbs_inventory as i')
                     ->leftJoin('tbl_wbs_material_receiving_batch as b','i.mat_batch_id','=','b.id')
-                    ->whereRaw("b.qty > 0"
+                    ->leftJoin('tbl_wbs_local_receiving_batch as l','i.loc_batch_id','=','l.id')
+                    ->whereRaw("1=1"
                             . $receivedate_cond
                             . $item_cond
                             . $status_cond
