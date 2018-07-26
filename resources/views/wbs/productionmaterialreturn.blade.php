@@ -163,6 +163,9 @@
 								<button type="button" class="btn btn-sm green" id="btn_save">
 									<i class="fa fa-floppy-o"></i> Save
 								</button>
+                                <button type="button" class="btn btn-sm grey-gallery" id="btn_delete_control">
+                                    <i class="fa fa-trash"></i> Delete Control
+                                </button>
 								<button type="button" class="btn btn-sm red" id="btn_back">
 									<i class="fa fa-times"></i> Back
 								</button>
@@ -199,6 +202,7 @@
         var barcodeURL = "{{ url('/wbsreturn-brprint?id=') }}";
         var deleteDetailsURL = "{{ url('/delete-item-return') }}";
         var excelURL = "{{ url('/excel-return') }}";
+        var deleteControlNoURL = "{{ url('/delete-control-return') }}";
 	</script>
     <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
     <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/productionmaterialreturn.js') }}" type="text/javascript"></script>
