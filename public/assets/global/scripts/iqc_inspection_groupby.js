@@ -818,11 +818,11 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
             gp1 += "</div>";
         $('#group_by_pane').append(gp1);
 
-        var pahabolbol = datas.field1 + ": "+req[x]["0"]["0"].chosenfield;
-        pahabolbol += "  LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;";
-        pahabolbol += "DPPM: "+MushRoomHead.DPPM+" &emsp;";
-        pahabolbol += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
-        document.getElementById("butthead"+x).innerHTML = pahabolbol;
+        // var pahabolbol = datas.field1 + ": "+req[x]["0"]["0"].chosenfield;
+        // pahabolbol += "  LAR : "+Larc+"% ("+MushRoomHead.accepted+"/"+MushRoomHead.total+") &emsp;";
+        // pahabolbol += "DPPM: "+MushRoomHead.DPPM+" &emsp;";
+        // pahabolbol += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
+        // document.getElementById("butthead"+x).innerHTML = pahabolbol;
 
     }
     closeloading();
@@ -1041,71 +1041,71 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
             gp1 += "</div>";
         $('#group_by_pane').append(gp1);
 
-        for(var x=0;x<req.length;x++){
-            var maintotal = 0, mainreject=0;
-            for(y=0;y<req[x].length;y++){
-                var twoaccepted=0, twotal = 0, tworeject=0;
-                for(z=0;z<req[x][y].length;z++){
-                        var kup="";
+        // for(var x=0;x<req.length;x++){
+        //     var maintotal = 0, mainreject=0;
+        //     for(y=0;y<req[x].length;y++){
+        //         var twoaccepted=0, twotal = 0, tworeject=0;
+        //         for(z=0;z<req[x][y].length;z++){
+        //                 var kup="";
                         
-                        if(DPPM_3rd[x][y][z]["0"].DPPM != null){
-                            kup = datas.field3 + ": "+req[x][y][z]["0"].chosenfield3;
-                            var acc =(req[x][y][z].length == 1)?1:req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
-                            kup += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
-                            kup += "DPPM: "+DPPM_3rd[x][y][z]["0"].DPPM+" &emsp;";
-                            kup += "("+DPPM_3rd[x][y][z]["0"].num_of_defects+"/"+DPPM_3rd[x][y][z]["0"].sample_size+")";
-                            document.getElementById("kups"+x+y+z).innerHTML = kup;
+        //                 if(DPPM_3rd[x][y][z]["0"].DPPM != null){
+        //                     kup = datas.field3 + ": "+req[x][y][z]["0"].chosenfield3;
+        //                     var acc =(req[x][y][z].length == 1)?1:req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
+        //                     kup += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
+        //                     kup += "DPPM: "+DPPM_3rd[x][y][z]["0"].DPPM+" &emsp;";
+        //                     kup += "("+DPPM_3rd[x][y][z]["0"].num_of_defects+"/"+DPPM_3rd[x][y][z]["0"].sample_size+")";
+        //                     document.getElementById("kups"+x+y+z).innerHTML = kup;
                       
-                        }
-                        else{
-                            kup += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;";
-                            var acc =(req[x][y][z].length == 1)?1:req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
-                            kup += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
-                            kup += "DPPM: 0.00 &emsp;(0/0)</a>";
-                            document.getElementById("kups"+x+y+z).innerHTML = kup;
+        //                 }
+        //                 else{
+        //                     kup += datas.field3 + ": "+req[x][y][z]["0"].chosenfield3+"  &emsp;";
+        //                     var acc =(req[x][y][z].length == 1)?1:req[x][y][z].length - REJ_3rd[x][y][z]["0"].rejects;
+        //                     kup += "LAR : "+LAR_3rd[x][y][z]["0"].LAR+"% ("+acc+"/"+req[x][y][z].length+") &emsp;"
+        //                     kup += "DPPM: 0.00 &emsp;(0/0)</a>";
+        //                     document.getElementById("kups"+x+y+z).innerHTML = kup;
                           
-                        }
-                        twotal+=req[x][y][z].length;
-                }
-                var kupy = "";
-                var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,y,2);
-                var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
-                var acc = (req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
-                var Larc = ((acc/req[x][y].length)*100).toFixed(2);
-                if(!isNaN(n)){
-                    kupy = datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;";
-                    kupy += "LAR : "+Larc+"% ("+twotal+"/"+twotal+") &emsp;"
-                    kupy += "DPPM: "+n.toFixed(2)+" &emsp;";
-                    kupy += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
-                }
-                else{
-                    kupy += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                    kupy += "LAR : "+Larc+"% ("+twotal+"/"+twotal+") &emsp;"
-                    kupy += "DPPM: 0.00 &emsp;(0/0)";
-                }
-                maintotal += twotal;
+        //                 }
+        //                 twotal+=req[x][y][z].length;
+        //         }
+        //         var kupy = "";
+        //         var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,y,2);
+        //         var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+        //         var acc = (req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
+        //         var Larc = ((acc/req[x][y].length)*100).toFixed(2);
+        //         if(!isNaN(n)){
+        //             kupy = datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;";
+        //             kupy += "LAR : "+Larc+"% ("+twotal+"/"+twotal+") &emsp;"
+        //             kupy += "DPPM: "+n.toFixed(2)+" &emsp;";
+        //             kupy += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
+        //         }
+        //         else{
+        //             kupy += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
+        //             kupy += "LAR : "+Larc+"% ("+twotal+"/"+twotal+") &emsp;"
+        //             kupy += "DPPM: 0.00 &emsp;(0/0)";
+        //         }
+        //         maintotal += twotal;
 
-                document.getElementById("kups"+x+y).innerHTML = kupy;
-            }
+        //         document.getElementById("kups"+x+y).innerHTML = kupy;
+        //     }
 
-            var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,0,1);
-            var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
-            var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
-            var Larc = ((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
-            var gp1="";
-            if(!isNaN(n)){
-                gp1 = datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield;
-                gp1 += "LAR : "+Larc+"% ("+maintotal+"/"+maintotal+") &emsp;"
-                gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
-                gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
-            }
-            else{
-                gp1 = datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield;
-                gp1 += "LAR : "+Larc+"% ("+maintotal+"/"+maintotal+") &emsp;"
-                gp1 += "DPPM: 0.00 &emsp;(0/0)";
-            }
-            document.getElementById("kups"+x).innerHTML = gp1;
-        }
+        //     var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,0,1);
+        //     var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
+        //     var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
+        //     var Larc = ((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
+        //     var gp1="";
+        //     if(!isNaN(n)){
+        //         gp1 = datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield;
+        //         gp1 += "LAR : "+Larc+"% ("+maintotal+"/"+maintotal+") &emsp;"
+        //         gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
+        //         gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
+        //     }
+        //     else{
+        //         gp1 = datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield;
+        //         gp1 += "LAR : "+Larc+"% ("+maintotal+"/"+maintotal+") &emsp;"
+        //         gp1 += "DPPM: 0.00 &emsp;(0/0)";
+        //     }
+        //     document.getElementById("kups"+x).innerHTML = gp1;
+        // }
     }
     closeloading();
 }
