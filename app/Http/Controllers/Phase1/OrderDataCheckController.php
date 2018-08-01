@@ -3994,6 +3994,7 @@ class OrderDataCheckController extends Controller
                             LEFT JOIN XPRTS b on k.OYACODE = b.CODE AND k.CODE = b.KCODE
                             WHERE (( (k.IDATE=N'' OR k.IDATE is null)  OR (k.IDATE<>N'--Remote-' OR k.IDATE is null))
                             AND (k.KVOL>k.TJITU) AND ((k.PSUMI in ('P','T','M','W','H') AND ((k.PSUMI<>N'N' OR k.PSUMI is null))) OR se.GKU=1 ))
+                            AND k.INPUTDATE like '".date('ymd')."%'
                             GROUP BY h.NAME,
                                     ho.NAME,
                                     cb.BNAME,

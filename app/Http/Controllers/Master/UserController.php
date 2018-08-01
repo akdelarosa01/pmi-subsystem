@@ -160,10 +160,13 @@ class UserController extends Controller
 
         #instantiate query
         $user = User::find($id);
+        $user->user_id = $req->user_id;
         $user->lastname = $req->lname;
         $user->firstname = $req->fname;
         $user->middlename = $req->mname;
+        $user->password = bcrypt($req->pword);
         $user->productline = $req->productline;
+        $user->actual_password = $req->pword;
         $user->locked = $req->locked;
         $user->create_pg = $pg_code;
         $user->create_user = Auth::user()->user_id;
