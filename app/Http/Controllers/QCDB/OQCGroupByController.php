@@ -563,8 +563,7 @@ class OQCGroupByController extends Controller
         return $ins;
     }
 
-    private function DPPMTables($req,$join)
-    {
+    private function DPPMTables($req,$join){
         $g1 = ''; $g2 = ''; $g3 = '';
         $g1c = ''; $g2c = ''; $g3c = '';
         $date_inspected = ''; $sub_date_inspected = '';

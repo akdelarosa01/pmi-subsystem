@@ -16,7 +16,6 @@
     @endforeach
 
     <div class="page-content">
-
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group pull-right">
