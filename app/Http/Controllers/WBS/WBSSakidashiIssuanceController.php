@@ -1067,7 +1067,7 @@ class WBSSakidashiIssuanceController extends Controller
                                         <div class="rTable">
                                             <div class="rTableBody">
                                                 <div class="rTableRow">
-                                                    <div class="rTableCell right mediumText">Date:______________</div>
+                                                    <div class="rTableCell right mediumText"></div>
                                                 </div>
                                             </div>
                                         </div>

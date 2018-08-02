@@ -799,22 +799,22 @@ class WBSProdMatReturnController extends Controller
             $excel->sheet('Report', function($sheet) use($data,$com_info)
             {
                 $sheet->setHeight(1, 15);
-                $sheet->mergeCells('A1:M1');
-                $sheet->cells('A1:M1', function($cells) {
+                $sheet->mergeCells('A1:N1');
+                $sheet->cells('A1:N1', function($cells) {
                     $cells->setAlignment('center');
                 });
                 $sheet->cell('A1',$com_info['name']);
 
                 $sheet->setHeight(2, 15);
-                $sheet->mergeCells('A2:M2');
-                $sheet->cells('A2:M2', function($cells) {
+                $sheet->mergeCells('A2:N2');
+                $sheet->cells('A2:N2', function($cells) {
                     $cells->setAlignment('center');
                 });
                 $sheet->cell('A2',$com_info['address']);
 
                 $sheet->setHeight(4, 20);
-                $sheet->mergeCells('A4:M4');
-                $sheet->cells('A4:M4', function($cells) {
+                $sheet->mergeCells('A4:N4');
+                $sheet->cells('A4:N4', function($cells) {
                     $cells->setAlignment('center');
                     $cells->setFont([
                         'family'     => 'Calibri',
@@ -826,7 +826,7 @@ class WBSProdMatReturnController extends Controller
                 $sheet->cell('A4',"PRODUCTION MATERIAL RETURN");
 
                 $sheet->setHeight(6, 15);
-                $sheet->cells('A6:M6', function($cells) {
+                $sheet->cells('A6:N6', function($cells) {
                     $cells->setFont([
                         'family'     => 'Calibri',
                         'size'       => '11',
@@ -847,7 +847,8 @@ class WBSProdMatReturnController extends Controller
                 $sheet->cell('J6', "Pair No.");
                 $sheet->cell('K6', "Remarks");
                 $sheet->cell('L6', "Returned By");
-                $sheet->cell('M6', "Status");
+                $sheet->cell('M6', "Date Returned");
+                $sheet->cell('N6', "Status");
 
                 $row = 7;
 
@@ -865,11 +866,12 @@ class WBSProdMatReturnController extends Controller
                     $sheet->cell('J'.$row, $this->getPairNo($mk->issuanceno));
                     $sheet->cell('K'.$row, $mk->remarks);
                     $sheet->cell('L'.$row, $mk->returned_by);
-                    $sheet->cell('M'.$row, ($mk->deleted > 0)? 'Deleted' : '');
+                    $sheet->cell('M'.$row, $mk->date_returned);
+                    $sheet->cell('N'.$row, ($mk->deleted > 0)? 'Deleted' : '');
                     $row++;
                 }
 
-                $sheet->cells('A6:M'.$row, function($cells) {
+                $sheet->cells('A6:N'.$row, function($cells) {
                     $cells->setBorder('solid', 'solid', 'solid', 'solid');
                 });
             });

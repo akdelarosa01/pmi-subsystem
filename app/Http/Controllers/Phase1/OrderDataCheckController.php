@@ -4356,7 +4356,7 @@ class OrderDataCheckController extends Controller
                                     ->first();
                         $dif1 = 0;
                         $dif2 = 0;
-                        $withdrawalqty = ($this->withdrawalQty($data->po,$data->kcode) == '')?$data->withdrawal_qty : $this->withdrawalQty($data->po,$data->kcode)
+                        $withdrawalqty = ($this->withdrawalQty($data->po,$data->kcode) == '')?$data->withdrawal_qty : $this->withdrawalQty($data->po,$data->kcode);
 
                         if ($data->qty == 'N/A') {
                             $dif1 = 'N/A';
