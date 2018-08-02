@@ -4356,7 +4356,10 @@ class OrderDataCheckController extends Controller
                                     ->where('ypics_qty',$moms->ypics_qty)
                                     ->where('vendor',$moms->vendor)
                                     ->first();
-                        $dif1 = '';
+                                    
+                        $dif1 = 0;
+                        $dif2 = 0;
+                        $withdrawalqty = ($this->withdrawalQty($data->po,$data->kcode) == '')?$data->withdrawal_qty : $this->withdrawalQty($data->po,$data->kcode);
 
                         if ($data->diff1==0) {
                             $dif1 = '0.0';
