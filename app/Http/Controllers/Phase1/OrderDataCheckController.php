@@ -369,7 +369,7 @@ class OrderDataCheckController extends Controller
 
     private function partStartEnd($files1)
     {
-    	$start = str_split(reset($files1), 16);//this is an array
+        $start = str_split(reset($files1), 16);//this is an array
         $end = str_split(end($files1), 16);//this is an array
 
         $partStart = trim($start[0],'"');
@@ -387,7 +387,7 @@ class OrderDataCheckController extends Controller
 
     private function prodStartEnd($files2)
     {
-    	$start = str_split(reset($files2), 16);//this is an array
+        $start = str_split(reset($files2), 16);//this is an array
         $end = str_split(end($files2), 16);//this is an array
         $prodStart = trim($start[0],'"');
         $prodEnd = trim($end[0],'"');
@@ -403,41 +403,41 @@ class OrderDataCheckController extends Controller
     }
 
     /*PARTS FILES DATA*/
-		private function PartsPO($files1)
-		{
-			$PO = [];
-	    	$keys = array_keys($files1);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files1[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+        private function PartsPO($files1)
+        {
+            $PO = [];
+            $keys = array_keys($files1);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files1[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$PO[] = (isset($data[0]) === TRUE ? trim($data[0],'"') : "");
-	            }
-	        }
-	        return $PO;
-		}
+                if (isset($data[0]))
+                {
+                    $PO[] = (isset($data[0]) === TRUE ? trim($data[0],'"') : "");
+                }
+            }
+            return $PO;
+        }
 
-	    private function PartsItemName($files1)
-	    {
-	    	$ItemName = [];
-	    	$keys = array_keys($files1);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files1[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+        private function PartsItemName($files1)
+        {
+            $ItemName = [];
+            $keys = array_keys($files1);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files1[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$ItemName[] = (isset($data[2]) === TRUE ? trim($data[2],'"') : "");
-	            }
-	        }
-	        return $ItemName;
-	    }
+                if (isset($data[0]))
+                {
+                    $ItemName[] = (isset($data[2]) === TRUE ? trim($data[2],'"') : "");
+                }
+            }
+            return $ItemName;
+        }
 
         private function PartsDivUsage($files1)
         {
@@ -457,23 +457,23 @@ class OrderDataCheckController extends Controller
             return $divUsage;
         }
 
-	    private function PartsItemCode($files1)
-	    {
-	    	$ItemCode = [];
-	    	$keys = array_keys($files1);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files1[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+        private function PartsItemCode($files1)
+        {
+            $ItemCode = [];
+            $keys = array_keys($files1);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files1[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$ItemCode[] = (isset($data[4]) === TRUE ? trim($data[4],'"') : "");
-	            }
-	        }
-	        return $ItemCode;
-	    }
+                if (isset($data[0]))
+                {
+                    $ItemCode[] = (isset($data[4]) === TRUE ? trim($data[4],'"') : "");
+                }
+            }
+            return $ItemCode;
+        }
 
         private function PartsUsage($files1)
         {
@@ -511,41 +511,41 @@ class OrderDataCheckController extends Controller
             return $qty;
         }
 
-	    private function PartsVendor($files1)
-	    {
-	    	$vendor = [];
-	    	$keys = array_keys($files1);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files1[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+        private function PartsVendor($files1)
+        {
+            $vendor = [];
+            $keys = array_keys($files1);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files1[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$vendor[] = (isset($data[7]) === TRUE ? trim($data[7],'"') : "");
-	            }
-	        }
-	        return $vendor;
-	    }
+                if (isset($data[0]))
+                {
+                    $vendor[] = (isset($data[7]) === TRUE ? trim($data[7],'"') : "");
+                }
+            }
+            return $vendor;
+        }
 
-	    private function PartsDrawingNum($files1)
-	    {
-	    	$drawNum = [];
-	    	$keys = array_keys($files1);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files1[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+        private function PartsDrawingNum($files1)
+        {
+            $drawNum = [];
+            $keys = array_keys($files1);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files1[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$drawNum[] = (isset($data[9]) === TRUE ? trim($data[9],'"') : "");
-	            }
-	        }
-	        return $drawNum;
-	    }
+                if (isset($data[0]))
+                {
+                    $drawNum[] = (isset($data[9]) === TRUE ? trim($data[9],'"') : "");
+                }
+            }
+            return $drawNum;
+        }
 
         private function PartsJdate($files1)
         {
@@ -565,177 +565,177 @@ class OrderDataCheckController extends Controller
             return $jDate;
         }
 
-	    private function PartsUnit($files1)
-	    {
-	    	$units = [];
-	    	$keys = array_keys($files1);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files1[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+        private function PartsUnit($files1)
+        {
+            $units = [];
+            $keys = array_keys($files1);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files1[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$units[] = (isset($data[14]) === TRUE ? trim($data[14],'"') : "");
-	            }
-	        }
-	        return $units;
-	    }
+                if (isset($data[0]))
+                {
+                    $units[] = (isset($data[14]) === TRUE ? trim($data[14],'"') : "");
+                }
+            }
+            return $units;
+        }
 
-	/*PROD FILES DATA*/
-		private function ProdPO($files2)
-		{
-			$PO = [];
-	    	$keys = array_keys($files2);
-	        for ($i=0; $i < count($keys); $i++)
-	        {
-	            $key = $keys[$i];
-	            $content = $files2[$key];
-	            $data = array_filter(array_map("trim", explode(";", $content)));
+    /*PROD FILES DATA*/
+        private function ProdPO($files2)
+        {
+            $PO = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++)
+            {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
 
-	            if (isset($data[0]))
-	            {
-	            	$PO[] = (isset($data[0]) === TRUE ? trim($data[0],'"') : "");
-	            }
-	        }
-	        return $PO;
-		}
+                if (isset($data[0]))
+                {
+                    $PO[] = (isset($data[0]) === TRUE ? trim($data[0],'"') : "");
+                }
+            }
+            return $PO;
+        }
 
-		private function ProdItemName($files2)
-	    {
-	    	$ItemName = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $ItemName[] = (isset($data[1]) === TRUE ? trim($data[1],'"') : "");
-		        }
-		    }
-		    return $ItemName;
-	    }
+        private function ProdItemName($files2)
+        {
+            $ItemName = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $ItemName[] = (isset($data[1]) === TRUE ? trim($data[1],'"') : "");
+                }
+            }
+            return $ItemName;
+        }
 
-	    private function ProdItemCode($files2)
-	    {
-	    	$ItemCode = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $ItemCode[] = (isset($data[2]) === TRUE ? trim($data[2],'"') : "");
-		        }
-		    }
-		    return $ItemCode;
-	    }
+        private function ProdItemCode($files2)
+        {
+            $ItemCode = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $ItemCode[] = (isset($data[2]) === TRUE ? trim($data[2],'"') : "");
+                }
+            }
+            return $ItemCode;
+        }
 
-	    private function ProdQTY($files2)
-	    {
-	    	$qty = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $qty[] = (isset($data[3]) === TRUE ? trim($data[3],'"') : "");
-		        }
-		    }
-		    return $qty;
-	    }
+        private function ProdQTY($files2)
+        {
+            $qty = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $qty[] = (isset($data[3]) === TRUE ? trim($data[3],'"') : "");
+                }
+            }
+            return $qty;
+        }
 
-	    private function ProdCdate($files2)
-	    {
-	    	$cdate = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $cdate[] = (isset($data[4]) === TRUE ? trim($data[4],'"') : "");
-		        }
-		    }
-		    return $cdate;
-	    }
+        private function ProdCdate($files2)
+        {
+            $cdate = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $cdate[] = (isset($data[4]) === TRUE ? trim($data[4],'"') : "");
+                }
+            }
+            return $cdate;
+        }
 
-	    private function ProdCust($files2)
-	    {
-	    	$cust = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $cust[] = (isset($data[6]) === TRUE ? trim($data[6],'"') : "");
-		        }
-		    }
-		    return $cust;
-	    }
+        private function ProdCust($files2)
+        {
+            $cust = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $cust[] = (isset($data[6]) === TRUE ? trim($data[6],'"') : "");
+                }
+            }
+            return $cust;
+        }
 
-	    private function ProdCustName($files2)
-	    {
-	    	$custname = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $custname[] = (isset($data[7]) === TRUE ? trim($data[7],'"') : "");
-		        }
-		    }
-		    return $custname;
-	    }
+        private function ProdCustName($files2)
+        {
+            $custname = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $custname[] = (isset($data[7]) === TRUE ? trim($data[7],'"') : "");
+                }
+            }
+            return $custname;
+        }
 
-	    private function ProdPrice($files2)
-	    {
-	    	$price = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $price[] = (isset($data[8]) === TRUE ? trim($data[8],'"') : "");
-		        }
-		    }
-		    return $price;
-	    }
+        private function ProdPrice($files2)
+        {
+            $price = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $price[] = (isset($data[8]) === TRUE ? trim($data[8],'"') : "");
+                }
+            }
+            return $price;
+        }
 
-	    private function ProdDrawNum($files2)
-	    {
-	    	$drawNum = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $drawNum[] = (isset($data[9]) === TRUE ? trim($data[9],'"') : "");
-		        }
-		    }
-		    return $drawNum;
-	    }
+        private function ProdDrawNum($files2)
+        {
+            $drawNum = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $drawNum[] = (isset($data[9]) === TRUE ? trim($data[9],'"') : "");
+                }
+            }
+            return $drawNum;
+        }
 
-	    private function ProdBuyers($files2)
-	    {
-	    	$buyers = [];
-	    	$keys = array_keys($files2);
-	    	for ($i=0; $i < count($keys); $i++) {
-		        $key = $keys[$i];
-		        $content = $files2[$key];
-		        $data = array_filter(array_map("trim", explode(";", $content)));
-		        if (isset($data[0])) {
-		            $buyers[] = (isset($data[12]) === TRUE ? trim($data[12],'"') : "");
-		        }
-		    }
-		    return $buyers;
-	    }
+        private function ProdBuyers($files2)
+        {
+            $buyers = [];
+            $keys = array_keys($files2);
+            for ($i=0; $i < count($keys); $i++) {
+                $key = $keys[$i];
+                $content = $files2[$key];
+                $data = array_filter(array_map("trim", explode(";", $content)));
+                if (isset($data[0])) {
+                    $buyers[] = (isset($data[12]) === TRUE ? trim($data[12],'"') : "");
+                }
+            }
+            return $buyers;
+        }
 
         private function con($files2)
         {
@@ -752,18 +752,18 @@ class OrderDataCheckController extends Controller
             return $con;
         }
 
-	/*CHECK IF EXIST*/
-		private function check_itemCode($code,$table,$db)
-		{
-			$count = DB::connection($this->mssql)->table($table)->where('CODE',$code)->distinct()->count();
-        	return $count;
-		}
+    /*CHECK IF EXIST*/
+        private function check_itemCode($code,$table,$db)
+        {
+            $count = DB::connection($this->mssql)->table($table)->where('CODE',$code)->distinct()->count();
+            return $count;
+        }
 
-	    private function check_kcode($code,$db)
-		{
-			$count = DB::connection($this->mssql)->table("XPRTS")->where('KCODE',$code)->distinct()->count();
-        	return $count;
-		}
+        private function check_kcode($code,$db)
+        {
+            $count = DB::connection($this->mssql)->table("XPRTS")->where('KCODE',$code)->distinct()->count();
+            return $count;
+        }
 
         private function check_vcode($code,$db)
         {
@@ -783,7 +783,7 @@ class OrderDataCheckController extends Controller
         }
 
 
-	private function getSupplier($cust,$db)
+    private function getSupplier($cust,$db)
     {
         $count = DB::connection($this->mssql)
                     ->table('XCUST')
@@ -3992,7 +3992,9 @@ class OrderDataCheckController extends Controller
                             LEFT JOIN VATOK vtk on k.PORDER = vtk.PORDER
                             LEFT JOIN XITEM i on k.CODE = i.CODE
                             LEFT JOIN XPRTS b on k.OYACODE = b.CODE AND k.CODE = b.KCODE
-                            WHERE k.INPUTDATE like '".date('ymd')."%'
+                            WHERE (( (k.IDATE=N'' OR k.IDATE is null)  OR (k.IDATE<>N'--Remote-' OR k.IDATE is null))
+                            AND (k.KVOL>k.TJITU) AND ((k.PSUMI in ('P','T','M','W','H') AND ((k.PSUMI<>N'N' OR k.PSUMI is null))) OR se.GKU=1 ))
+                            AND k.INPUTDATE like '".date('ymd')."%'
                             GROUP BY h.NAME,
                                     ho.NAME,
                                     cb.BNAME,
@@ -4354,44 +4356,33 @@ class OrderDataCheckController extends Controller
                                     ->where('ypics_qty',$moms->ypics_qty)
                                     ->where('vendor',$moms->vendor)
                                     ->first();
-                        $dif1 = 0;
-                        $dif2 = 0;
-                        $withdrawalqty = ($this->withdrawalQty($data->po,$data->kcode) == '')?$data->withdrawal_qty : $this->withdrawalQty($data->po,$data->kcode)
+                        $dif1 = '';
 
-                        if ($data->qty == 'N/A') {
+                        if ($data->diff1==0) {
+                            $dif1 = '0.0';
+                        } else {
+                            $dif1 = $data->diff1;
+                        }
+
+                        if ($data->diff1 == 'N/A') {
                             $dif1 = 'N/A';
+                        } else {
+                            $dif1 = $data->diff1;
                         }
 
-                        if ($withdrawalqty == 'N/A') {
+                        $dif2 = '';
+
+                        if ($data->diff2==0) {
+                            $dif2 = '0.0';
+                        } else {
+                            $dif2 = $data->diff2;
+                        }
+
+                        if ($data->diff2 == 'N/A') {
                             $dif2 = 'N/A';
+                        } else {
+                            $dif2 = $data->diff2;
                         }
-
-
-                        // if ($data->diff1==0) {
-                        //     $dif1 = '0.0';
-                        // } else {
-                        //     $dif1 = $data->diff1;
-                        // }
-
-                        // if ($data->diff1 == 'N/A') {
-                        //     $dif1 = 'N/A';
-                        // } else {
-                        //     $dif1 = $data->diff1;
-                        // }
-
-                        // $dif2 = '';
-
-                        // if ($data->diff2==0) {
-                        //     $dif2 = '0.0';
-                        // } else {
-                        //     $dif2 = $data->diff2;
-                        // }
-
-                        // if ($data->diff2 == 'N/A') {
-                        //     $dif2 = 'N/A';
-                        // } else {
-                        //     $dif2 = $data->diff2;
-                        // }
 
                         $sheet->cell('A'.$row, $data->po); //ypics
                         $sheet->cell('B'.$row, $data->code); //ypics
@@ -4406,7 +4397,9 @@ class OrderDataCheckController extends Controller
                         $sheet->cell('K'.$row, $dif1);
                         $sheet->cell('L'.$row, "");
                         $sheet->cell('M'.$row, $data->moms);
-                        $sheet->cell('N'.$row, $withdrawalqty);
+                        $sheet->cell('N'.$row, (
+                            $this->withdrawalQty($data->po,$data->kcode) == '')?$data->withdrawal_qty : $this->withdrawalQty($data->po,$data->kcode)
+                        );
                         $sheet->cell('O'.$row, $dif2);
 
                         if ($data->usage == 'N/A') {
@@ -4476,5 +4469,565 @@ class OrderDataCheckController extends Controller
 
         return $this->MomsCheckExcel();
     }
+
+
+
+
+
+
+
+    // private function momsCheck()
+    // {
+    //     DB::connection($this->mysql)->table('momscheck')->truncate();
+    //     $po = DB::connection($this->mysql)->table('tbl_orderdatacheck2 as pd')
+    //                 ->join('tbl_orderdatacheck1 as pt','pd.po','=','pt.po')
+    //                 ->select('pd.po as po',
+    //                         'pd.code as prodcode',
+    //                         'pd.name as prodname',
+    //                         'pt.kcode as partcode',
+    //                         'pt.partsname as partsname',
+    //                         'pt.vendor as vendor',
+    //                         'pt.usage as usage',
+    //                         'pt.div_usage as div_usage',
+    //                         'pt.qty as qty',
+    //                         'pd.con as db')
+    //                 ->get();
+
+    //     // $po = DB::connection($this->mysql)->table('tbl_orderdatacheck2')
+    //     //         ->select('po')->get();
+
+
+
+    //     foreach ($po as $key => $data) {
+    //         $this->checkMomsCheck($key,$data);
+    //         // echo "<pre>",print_r($data),"</pre>";
+    //     }
+    // }
+
+    // private function momscheck2()
+    // {
+    //     $xhikiArray = [];
+    //     $txhiki = DB::connection($this->mssql)
+    //                 ->select("SELECT k.CODE,
+    //                                 k.OYACODE,
+    //                                 k.BUMO,
+    //                                 k.HOKAN,
+    //                                 k.NEXTBUMO,
+    //                                 k.IDATE,
+    //                                 k.KVOL,
+    //                                 k.TJITU,
+    //                                 k.PSUMI,
+    //                                 k.PORDER,
+    //                                 k.PEDA,
+    //                                 h.NAME as PARTNAME,
+    //                                 ho.NAME as OYANAME,
+    //                                 cb.BNAME as BUMONAME,
+    //                                 ch.BNAME as HOKANNAME,
+    //                                 cn.BNAME as NEXTBUMONAME,
+    //                                 vtk.SEIBAN as PMISEIBAN,
+    //                                 i.VENDOR,
+    //                                 b.SIYOU as usage,
+    //                                 b.SIYOUW as div_usage
+    //                         FROM XHIKI k
+    //                         left join XHEAD h on h.CODE=k.CODE
+    //                         left join XHEAD ho on ho.CODE=k.OYACODE
+    //                         left join XSECT cb on cb.BUMO=k.BUMO
+    //                         left join XSECT ch on ch.BUMO=k.HOKAN
+    //                         left join XSECT cn on cn.BUMO=k.NEXTBUMO
+    //                         left join XSLIP sl on k.PORDER = sl.PORDER AND k.PEDA = sl.PEDA AND sl.KBAN=0
+    //                         left join XSECT se on se.BUMO = sl.VENDOR
+                            
+    //                         LEFT JOIN VATOK vtk on k.PORDER = vtk.PORDER
+    //                         LEFT JOIN XITEM i on k.CODE = i.CODE
+    //                         LEFT JOIN XPRTS b on k.OYACODE = b.CODE AND k.CODE = b.KCODE
+    //                         WHERE (( (k.IDATE=N'' OR k.IDATE is null)  OR (k.IDATE<>N'--Remote-' OR k.IDATE is null))
+    //                         AND (k.KVOL>k.TJITU) AND ((k.PSUMI in ('P','T','M','W','H') AND ((k.PSUMI<>N'N' OR k.PSUMI is null))) OR se.GKU=1 ))
+    //                         GROUP BY h.NAME,
+    //                                 ho.NAME,
+    //                                 cb.BNAME,
+    //                                 ch.BNAME,
+    //                                 cn.BNAME,
+    //                                 vtk.SEIBAN,
+    //                                 i.VENDOR,
+    //                                 b.SIYOU,
+    //                                 b.SIYOUW,
+    //                                 k.CODE,
+    //                                 k.OYACODE,
+    //                                 k.BUMO,
+    //                                 k.HOKAN,
+    //                                 k.NEXTBUMO,
+    //                                 k.IDATE,
+    //                                 k.KVOL,
+    //                                 k.TJITU,
+    //                                 k.PSUMI,
+    //                                 k.PORDER,
+    //                                 k.PEDA
+    //                         ORDER BY k.PORDER,k.PEDA,k.CODE");//left join XLNKP lnk on k.PORDER=lnk.PORDER
+    //     //return dd($txhiki);
+
+    //     foreach ($txhiki as $key => $xhiki) {
+    //         $diff = 0;
+    //         $momsfile = DB::connection($this->mysql)->table('tbl_orderdatacheck2 as pd')
+    //                         ->join('tbl_orderdatacheck1 as pt','pd.po','=','pt.po')
+    //                         ->select('pd.po as po',
+    //                                 'pd.code as prodcode',
+    //                                 'pd.name as prodname',
+    //                                 'pt.kcode as partcode',
+    //                                 'pt.partsname as partsname',
+    //                                 'pt.vendor as vendor',
+    //                                 'pt.usage as usage',
+    //                                 'pt.div_usage as div_usage',
+    //                                 'pt.qty as qty',
+    //                                 'pd.con as db')
+    //                         ->where('pd.po', $xhiki->PMISEIBAN)
+    //                         ->where('pd.code', $xhiki->OYACODE)
+    //                         ->where('pt.kcode', $xhiki->CODE)
+    //                         ->first();
+
+    //         if (count((array)$momsfile) > 0) {
+    //             $diff = $xhiki->KVOL - $momsfile->qty;
+    //             array_push($xhikiArray,[
+    //                 'po' => $xhiki->PMISEIBAN, // ypics
+    //                 'code' => $xhiki->OYACODE, // ypics
+    //                 'prodname' =>$xhiki->PARTNAME, // ypics
+    //                 'kcode' => $xhiki->CODE, // ypics
+    //                 'lvl' => $momsfile->div_usage,
+    //                 'vendor' => $xhiki->VENDOR, // ypics
+    //                 'usage' => $momsfile->usage,
+    //                 'qty' => $momsfile->qty,
+    //                 'siyou' => $xhiki->usage, // ypics
+    //                 'ypics_qty' => $xhiki->KVOL, // ypics
+    //                 'diff1' => $diff,
+    //                 'moms' => $momsfile->qty,
+    //                 'withdrawal_qty' => $xhiki->KVOL, // ypics
+    //                 'diff2' => $diff,
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'updated_at' => date('Y-m-d H:i:s')
+    //             ]);
+    //         }
+
+    //         array_push($xhikiArray,[
+    //             'po' => $xhiki->PMISEIBAN, //ypics
+    //             'code' => $xhiki->OYACODE, //ypics
+    //             'prodname' =>$xhiki->PARTNAME, //ypics
+    //             'kcode' => $xhiki->CODE, //ypics
+    //             'lvl' => 'N/A',
+    //             'vendor' => $xhiki->VENDOR, //ypics
+    //             'usage' => 'N/A',
+    //             'qty' => 'N/A',
+    //             'siyou' => $xhiki->usage, //ypics
+    //             'ypics_qty' => $xhiki->KVOL, //ypics
+    //             'diff1' => 'N/A',
+    //             'moms' => 'N/A',
+    //             'withdrawal_qty' => $xhiki->KVOL, //ypics
+    //             'diff2' => 'N/A',
+    //             'created_at' => date('Y-m-d H:i:s'),
+    //             'updated_at' => date('Y-m-d H:i:s')
+    //         ]);
+    //     }
+
+    //     DB::connection($this->mysql)->table('momscheck2')->truncate();
+
+    //     $insertBatchs = array_chunk($xhikiArray, 2000);
+    //     foreach ($insertBatchs as $batch) {
+    //         DB::connection($this->mysql)->table('momscheck2')->insert($batch);
+    //     }
+    // }
+
+    // private function checkMomsCheck($keymom,$data)
+    // {
+    //     $arr = [];
+    //     $checked = DB::connection($this->mssql)
+    //                     ->table('XHIKI as h')
+    //                     // ->join('XPRTS as b','h.CODE','=','b.KCODE'
+    //                     ->join('XPRTS as b', function($join)
+    //                         {
+    //                             $join->on('h.CODE','=','b.KCODE');
+    //                             $join->on('h.OYACODE','=','b.CODE');
+    //                         })
+    //                     ->join('XRECE as r','b.CODE','=','r.CODE')
+    //                     ->join('XSLIP as s','h.PORDER','=','s.PORDER')
+    //                     ->where('b.CODE',$data->prodcode)
+    //                     ->where('b.KCODE',$data->partcode)
+    //                     ->where('h.OYACODE',$data->prodcode)
+    //                     ->where('h.CODE',$data->partcode)
+    //                     ->where('r.CODE',$data->prodcode)
+    //                     ->where('r.SORDER',$data->po)
+    //                     ->where('s.SEIBAN',$data->po)
+    //                     ->select('b.CODE as prodcode',
+    //                             'b.KCODE as partcode',
+    //                             'h.KVOL as qty',
+    //                             'b.SIYOU as usage',
+    //                             'h.INPUTDATE')
+    //                     ->orderBy('h.INPUTDATE','desc')
+    //                     ->distinct()
+    //                     ->get();
+
+    //     if (count((array)$checked) > 0) {
+    //         $ypics = DB::connection($this->mssql)
+    //                     ->table('XHIKI as h')
+    //                     // ->join('XPRTS as b','h.CODE','=','b.KCODE'
+    //                     ->join('XPRTS as b', function($join)
+    //                         {
+    //                             $join->on('h.CODE','=','b.KCODE');
+    //                             $join->on('h.OYACODE','=','b.CODE');
+    //                         })
+    //                     ->join('XRECE as r','b.CODE','=','r.CODE')
+    //                     ->join('XSLIP as s','h.PORDER','=','s.PORDER')
+    //                     ->where('b.CODE',$data->prodcode)
+    //                     ->where('b.KCODE',$data->partcode)
+    //                     ->where('h.OYACODE',$data->prodcode)
+    //                     ->where('h.CODE',$data->partcode)
+    //                     ->where('r.CODE',$data->prodcode)
+    //                     ->where('r.SORDER',$data->po)
+    //                     ->where('s.SEIBAN',$data->po)
+    //                     ->select('b.CODE as prodcode',
+    //                             'b.KCODE as partcode',
+    //                             'h.KVOL as qty',
+    //                             'b.SIYOU as siyou',
+    //                             'h.INPUTDATE')
+    //                     ->orderBy('h.INPUTDATE','desc')
+    //                     ->distinct()
+    //                     ->first();
+    //         //echo "<pre>",print_r($ypics),"</pre>";
+
+    //         $this->insertMomsCheckReport($data->po,$data->partsname,$data->prodcode,$ypics->partcode,$data->div_usage,$data->vendor,$data->usage,$data->qty,$ypics->siyou,$ypics->qty);
+    //     } else {
+    //         $this->insertMomsCheckReport($data->po,$data->partsname,$data->prodcode,$data->partcode,$data->div_usage,$data->vendor,$data->usage,$data->qty,"N/A","N/A");
+    //     }
+    // }
+
+    // private function insertMomsCheckReport($po,$partname,$prodcode,$kcode,$lvl,$vendor,$usage,$qty,$siyou,$ypics_qty)
+    // {
+    //     // $diff2 = 0;
+    //     // if ($this->checkIfSameData($po,$prodcode,$kcode,$lvl,$vendor)) {
+    //     //     $moms = $this->sumQTY($po,$prodcode,$kcode,$lvl,$vendor);
+    //     //     $diff2 = $ypics_qty - $moms;
+    //     //     $this->updateQTY($po,$prodcode,$kcode,$lvl,$vendor,$usage,$qty,$moms,$diff2);
+    //     // } else {
+    //     //     $moms = $qty;
+    //     // }
+
+    //     if ($ypics_qty !== "N/A") {
+    //         $diff = $ypics_qty - $qty;
+    //     }
+
+    //     if ($ypics_qty == "N/A") {
+    //         $diff = "N/A";
+    //     }
+
+    //     $this->insertToMOMsCheck($po,$partname,$prodcode,$kcode,$lvl,$vendor,$usage,$qty,$siyou,$ypics_qty,$diff);
+
+    //     $moms = $this->sumQTY($po,$prodcode,$kcode,$lvl,$vendor);
+
+    //     if ($ypics_qty !== "N/A") {
+    //         $diff2 = $ypics_qty - $moms;
+    //     }
+
+    //     if ($ypics_qty == "N/A") {
+    //         $diff2 = "N/A";//0 - $moms;
+    //     }
+
+    //     $this->updateQTY($po,$prodcode,$kcode,$lvl,$vendor,$usage,$qty,$moms,$ypics_qty,$diff2);
+    // }
+
+    // private function insertToMOMsCheck($po,$partname,$prodcode,$kcode,$lvl,$vendor,$usage,$qty,$siyou,$ypics_qty,$diff)
+    // {
+    //      DB::connection($this->mysql)->table('momscheck')
+    //         ->insert([
+    //             'po' => $po,
+    //             'prodname' => mb_convert_encoding($partname,'UTF-8','SJIS'),
+    //             'code' => $prodcode,
+    //             'kcode' => $kcode,
+    //             'lvl' => $lvl,
+    //             'vendor' => $vendor,
+    //             'usage' => $usage,
+    //             'qty' => $qty,
+    //             'siyou' => $siyou,
+    //             'ypics_qty' => $ypics_qty,
+    //             'diff1' => $diff,
+    //             // 'moms' => $moms,
+    //             // 'withdrawal_qty' => $ypics_qty,
+    //             // 'diff2' => $diff2,
+    //             'created_at' => Carbon::now(),
+    //             'updated_at' => Carbon::now()
+    //         ]);
+    // }
+
+    // private function checkIfSameData($po,$prodcode,$kcode,$lvl,$vendor)
+    // {
+    //     $cnt = DB::connection($this->mysql)->table('momscheck')
+    //                 ->where('po',$po)
+    //                 ->where('code',$prodcode)
+    //                 ->where('kcode',$kcode)
+    //                 ->where('lvl',$lvl)
+    //                 ->where('vendor',$vendor)
+    //                 ->count();
+    //     if ($cnt > 0) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    // private function sumQTY($po,$prodcode,$kcode,$lvl,$vendor)
+    // {
+    //     $data = DB::connection($this->mysql)->table('tbl_orderdatacheck2 as pd')
+    //                 ->join('tbl_orderdatacheck1 as pt','pd.po','=','pt.po')
+    //                 ->where('pd.po',$po)
+    //                 ->where('pd.code',$prodcode)
+    //                 ->where('pt.kcode',$kcode)
+    //                 ->where('pt.vendor',$vendor)
+    //                 ->where('pt.div_usage',$lvl)
+    //                 ->select(DB::raw('SUM(pt.qty) as qty'))
+    //                 ->groupBy('pd.po','pd.code','pt.kcode','pt.vendor','pt.div_usage')
+    //                 ->first();
+    //     if ($data != null) {
+    //         return $data->qty;
+    //     }
+    //     return "0.0";
+    // }
+
+    // private function updateQTY($po,$prodcode,$kcode,$lvl,$vendor,$usage,$qty,$newqty,$ypics_qty,$diff)
+    // {
+    //     DB::connection($this->mysql)->table('momscheck')
+    //         ->where('po',$po)
+    //         ->where('code',$prodcode)
+    //         ->where('kcode',$kcode)
+    //         ->where('lvl',$lvl)
+    //         ->where('vendor',$vendor)
+    //         ->where('usage',$usage)
+    //         ->where('qty',$qty)
+    //         ->update(['moms' => $newqty,'withdrawal_qty' => $ypics_qty,'diff2' => $diff]);
+    // }
+
+    // public function MomsCheckExcel()
+    // {
+    //     try
+    //     {
+    //         $dt = Carbon::now();
+    //         $date = substr($dt->format('Ymd'), 2);
+    //         $path = storage_path().'/Order_Data_Check/unmatch';
+    //         Excel::create('MOMS_Check_'.$date, function($excel)
+    //         {
+    //             $excel->sheet('MOMs', function($sheet)
+    //             {
+    //                 $sheet->cell('A1', "PO");
+    //                 $sheet->cell('B1', "Code");
+    //                 $sheet->cell('C1', "Part Code");
+    //                 $sheet->cell('D1', "Part Name");
+    //                 $sheet->cell('E1', "Lvl");
+    //                 $sheet->cell('F1', "R3 Usage");
+    //                 $sheet->cell('G1', "R3 Qty");
+    //                 $sheet->cell('H1', "Supplier");
+    //                 $sheet->cell('I1', "YPICS Usage");
+    //                 $sheet->cell('J1', "YPICS Qty");
+    //                 $sheet->cell('K1', "Difference");
+    //                 $sheet->cell('L1', "");
+    //                 $sheet->cell('M1', "MOMS");
+    //                 $sheet->cell('N1', "Withdrawal Qty");
+    //                 $sheet->cell('O1', "Qty. Difference");
+    //                 $sheet->cell('P1', "Usage Difference");
+
+    //                 $row = 2;
+    //                 $data = DB::connection($this->mysql)->table('momscheck')->get();
+    //                 $usage_diff = 'N/A';
+    //                 foreach ($data as $key => $moms) {
+    //                     $sheet->setHeight($row, 20);
+    //                     $sheet->cell('A'.$row, $moms->po);
+    //                     $sheet->cell('B'.$row, $moms->code);
+    //                     $sheet->cell('C'.$row, $moms->kcode);
+    //                     $sheet->cell('D'.$row, $moms->prodname);
+    //                     $sheet->cell('E'.$row, $moms->lvl);
+    //                     $sheet->cell('F'.$row, $moms->usage);
+    //                     $sheet->cell('G'.$row, $moms->qty);
+    //                     $sheet->cell('H'.$row, $moms->vendor);
+    //                     $sheet->cell('I'.$row, $moms->siyou);
+    //                     $sheet->cell('J'.$row, $moms->ypics_qty);
+
+    //                     if ($moms->ypics_qty == 'N/A') {
+    //                         $sheet->cell('K'.$row, 'N/A');
+    //                     } else {
+    //                         $sheet->cell('K'.$row, ($moms->diff1==0)?"0.0":$moms->diff1);
+    //                     }
+                        
+    //                     $sheet->cell('L'.$row, "");
+    //                     $sheet->cell('M'.$row, $moms->moms);
+    //                     $sheet->cell('N'.$row, $moms->withdrawal_qty);
+
+    //                     if ($moms->withdrawal_qty == 'N/A') {
+    //                         $sheet->cell('O'.$row, 'N/A');
+    //                     } else {
+    //                         $sheet->cell('O'.$row, ($moms->diff2==0)?"0.0":$moms->diff2);
+    //                     }
+                        
+
+    //                     if ($moms->siyou == 'N/A') {
+    //                         $usage_diff = 'N/A';
+    //                     } else {
+    //                         $usage_diff = $moms->siyou - $moms->usage;
+    //                     }
+
+    //                     $sheet->cell('P'.$row, ($usage_diff == 0)? "0.0": $usage_diff);
+    //                     $row++;
+    //                 }
+
+    //             });
+
+    //             $excel->sheet('XHIKI', function($sheet)
+    //             {
+    //                 $sheet->cell('A1', "PO");
+    //                 $sheet->cell('B1', "Code");
+    //                 $sheet->cell('C1', "Part Code");
+    //                 $sheet->cell('D1', "Part Name");
+    //                 $sheet->cell('E1', "Lvl");
+    //                 $sheet->cell('F1', "YPICS Usage");
+    //                 $sheet->cell('G1', "YPICS Qty");
+    //                 $sheet->cell('H1', "Supplier");
+    //                 $sheet->cell('I1', "R3 Usage");
+    //                 $sheet->cell('J1', "R3 Qty");
+    //                 $sheet->cell('K1', "Difference");
+    //                 $sheet->cell('L1', "");
+    //                 $sheet->cell('M1', "MOMS");
+    //                 $sheet->cell('N1', "Withdrawal Qty");
+    //                 $sheet->cell('O1', "Difference");
+    //                 $sheet->cell('P1', "Usage Difference");
+
+    //                 $row = 2;
+    //                 $check = DB::connection($this->mysql)->table('momscheck2')
+    //                             ->select('po',
+    //                                     'code',
+    //                                     'kcode',
+    //                                     'prodname',
+    //                                     'siyou',
+    //                                     'ypics_qty',
+    //                                     'vendor')
+    //                             ->distinct()->get();
+                    
+    //                 $usage_diff = 'N/A';
+    //                 foreach ($check as $key => $moms) {
+    //                     $data = DB::connection($this->mysql)->table('momscheck2')
+    //                                 ->where('po',$moms->po)
+    //                                 ->where('code',$moms->code)
+    //                                 ->where('kcode',$moms->kcode)
+    //                                 ->where('prodname',$moms->prodname)
+    //                                 ->where('siyou',$moms->siyou)
+    //                                 ->where('ypics_qty',$moms->ypics_qty)
+    //                                 ->where('vendor',$moms->vendor)
+    //                                 ->first();
+    //                     $dif1 = '';
+
+    //                     if ($data->diff1==0) {
+    //                         $dif1 = '0.0';
+    //                     } else {
+    //                         $dif1 = $data->diff1;
+    //                     }
+
+    //                     if ($data->diff1 == 'N/A') {
+    //                         $dif1 = 'N/A';
+    //                     } else {
+    //                         $dif1 = $data->diff1;
+    //                     }
+
+    //                     $dif2 = '';
+
+    //                     if ($data->diff2==0) {
+    //                         $dif2 = '0.0';
+    //                     } else {
+    //                         $dif2 = $data->diff2;
+    //                     }
+
+    //                     if ($data->diff2 == 'N/A') {
+    //                         $dif2 = 'N/A';
+    //                     } else {
+    //                         $dif2 = $data->diff2;
+    //                     }
+
+    //                     $sheet->cell('A'.$row, $data->po); //ypics
+    //                     $sheet->cell('B'.$row, $data->code); //ypics
+    //                     $sheet->cell('C'.$row, $data->kcode); //ypics
+    //                     $sheet->cell('D'.$row, $data->prodname); //ypics
+    //                     $sheet->cell('E'.$row, $this->xhikiLVL($data->kcode)); //ypics
+    //                     $sheet->cell('F'.$row, $data->siyou); //ypics
+    //                     $sheet->cell('G'.$row, $data->ypics_qty); //ypics
+    //                     $sheet->cell('H'.$row, $data->vendor); //r3
+    //                     $sheet->cell('I'.$row, $data->usage); //r3
+    //                     $sheet->cell('J'.$row, $data->qty); //r3
+    //                     $sheet->cell('K'.$row, $dif1);
+    //                     $sheet->cell('L'.$row, "");
+    //                     $sheet->cell('M'.$row, $data->moms);
+    //                     $sheet->cell('N'.$row, (
+    //                         $this->withdrawalQty($data->po,$data->kcode) == '')?$data->withdrawal_qty : $this->withdrawalQty($data->po,$data->kcode)
+    //                     );
+    //                     $sheet->cell('O'.$row, $dif2);
+
+    //                     if ($data->usage == 'N/A') {
+    //                         $usage_diff = 'N/A';
+    //                     } else {
+    //                         $usage_diff = $data->usage - $data->siyou;
+    //                     }
+    //                     $sheet->cell('P'.$row, ($usage_diff == 0)?"0.0":$usage_diff);
+
+    //                     $row++;
+    //                 }
+    //             });
+
+    //         })->download('xls');
+    //     } catch (Exception $e) {
+    //         return redirect(url('/orderdatacheck'))->with(['err_message' => $e]);
+    //     }
+    // }
+
+    // private function withdrawalQty($po,$item)
+    // {
+    //     $db = DB::connection($this->mysql)->table('momscheck2')
+    //             ->select(
+    //                 DB::raw("po as po"),
+    //                 DB::raw("kcode as kcode"),
+    //                 DB::raw("sum(ypics_qty) as ypics_qty")
+    //             )
+    //             ->where('po',$po)
+    //             ->where('kcode',$item)
+    //             ->groupBy('po','kcode')
+    //             ->HavingRaw("count(*) > 1")
+    //             ->first();
+    //     if (count((array)$db) > 0) {
+    //         return $db->ypics_qty;
+    //     } else {
+    //         return '';
+    //     }
+    // }
+
+    // private function clean($string)
+    // {
+    //     $spaces = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+    //     $dashes = str_replace('-', '', $spaces); // Replaces all hypens with none.
+    //     $dots = str_replace('.', '', $dashes); // Replaces all dots with none.
+
+    //     return preg_replace('/[^A-Za-z0-9\-]/', '', $dots); // Removes special chars.
+    // }
+
+    // private function xhikiLVL($item)
+    // {
+    //     $db = DB::connection($this->mysql)->table('momscheck')
+    //             ->select('lvl')
+    //             ->where('kcode',$item)
+    //             ->first();
+    //     if (count((array)$db) > 0) {
+    //         return $db->lvl;
+    //     } else {
+    //         return 'N/A';
+    //     }
+    // }
+
+    // public function getMomsCheckExcel()
+    // {
+    //     // MOMs Check Report
+    //     $this->momsCheck();
+    //     $this->momscheck2();
+
+    //     return $this->MomsCheckExcel();
+    // }
+
 
 }
