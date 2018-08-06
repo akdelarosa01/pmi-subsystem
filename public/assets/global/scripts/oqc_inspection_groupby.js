@@ -1146,11 +1146,25 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
 
         
         for(var x=0;x<req.length;x++){
-            var maintotal = 0, mainreject=0;
+            var maintotal = 0, mainreject=0, mainAccept=0;
             for(y=0;y<req[x].length;y++){
                 var twoaccepted=0, twotal = 0, tworeject=0;
                 for(z=0;z<req[x][y].length;z++){
                         var kup="";
+                        twotal+=req[x][y][z].length;
+
+                        for(var a=0;a<req[x][y][z].length;a++)
+                        {
+                           if(req[x][y][z][0].judgement == "Accept")
+                            {
+                                    twoaccepted++;
+                                    mainAccept++;
+                            }
+                            else{
+                                    tworeject++;
+                                    mainreject++;
+                            } 
+                        }
                         
                         if(DPPM_3rd[x][y][z]["0"].DPPM != null){
                             kup = datas.field3 + ": "+req[x][y][z]["0"].chosenfield3;
@@ -1169,22 +1183,23 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
                             document.getElementById("kups"+x+y+z).innerHTML = kup;
                           
                         }
-                        twotal+=req[x][y][z].length;
+                       
                 }
                 var kupy = "";
                 var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,y,2);
                 var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
-                var acc = (req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
-                var Larc = ((acc/req[x][y].length)*100).toFixed(2);
+                var acc = (twoaccepted-tworeject);//(req[x][y].length == 1)?1:req[x][y].length - REJ_2nd[x][y]["0"].rejects;
+                //var Larc = ((acc/req[x][y].length)*100).toFixed(2);
+                var Larc = ((acc/twotal) * 100).toFixed(2);
                 if(!isNaN(n)){
                     kupy = datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;";
-                    kupy += "LAR : "+Larc+"% ("+twotal+"/"+twotal+") &emsp;"
+                    kupy += "LAR : "+Larc+"% ("+(twoaccepted-tworeject)+"/"+twotal+") &emsp;"
                     kupy += "DPPM: "+n.toFixed(2)+" &emsp;";
                     kupy += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
                 }
                 else{
                     kupy += datas.field2 + ": "+req[x][y]["0"]["0"].chosenfield2+"  &emsp;"
-                    kupy += "LAR : "+Larc+"% ("+twotal+"/"+twotal+") &emsp;"
+                    kupy += "LAR : "+Larc+"% ("+(twoaccepted-tworeject)+"/"+twotal+") &emsp;"
                     kupy += "DPPM: 0.00 &emsp;(0/0)";
                 }
                 maintotal += twotal;
@@ -1194,18 +1209,18 @@ function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3r
 
             var MushRoomHead = GETDPPMthird(req,DPPM_2nd,REJ_2nd,x,0,1);
             var n = ((MushRoomHead.poop/MushRoomHead.shit)*1000000 != "NaN")?(MushRoomHead.poop/MushRoomHead.shit)*1000000:0;
-            var acc = (req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
-            var Larc = ((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
+            var acc = (mainAccept-mainreject);//(req[x].length == 1)?1:req[x].length - REJg1[x]["0"].rejects;
+            var Larc = ((mainAccept/maintotal)*100).toFixed(2);//((MushRoomHead.accepted/MushRoomHead.total)*100).toFixed(2);
             var gp1="";
             if(!isNaN(n)){
                 gp1 = datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield;
-                gp1 += "LAR : "+Larc+"% ("+maintotal+"/"+maintotal+") &emsp;"
-                gp1 += "DPPM: "+n.toFixed(2)+" &emsp;";
+                gp1 += " LAR : "+Larc+"% ("+(mainAccept-mainreject)+"/"+maintotal+") &emsp;"
+                gp1 += " DPPM: "+n.toFixed(2)+" &emsp;";
                 gp1 += "("+MushRoomHead.poop+"/"+MushRoomHead.shit+")";
             }
             else{
                 gp1 = datas.field1 + ": "+req[x]["0"]["0"]["0"].chosenfield;
-                gp1 += "LAR : "+Larc+"% ("+maintotal+"/"+maintotal+") &emsp;"
+                gp1 += " LAR : "+Larc+"% ("+(mainAccept-mainreject)+"/"+maintotal+") &emsp;"
                 gp1 += "DPPM: 0.00 &emsp;(0/0)";
             }
             document.getElementById("kups"+x).innerHTML = gp1;
