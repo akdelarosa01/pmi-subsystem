@@ -1403,11 +1403,36 @@ class IQCInspectionController extends Controller
         $dt = Carbon::now();
         $company_info = $this->com->getCompanyInfo();
         $date = substr($dt->format('  M j, Y  h:i A '), 2);
+        $header = DB::connection($this->mysql)->table('iqc_inspection_excel')
+                    ->select('invoice_no',
+                            'supplier',
+                            'app_no',
+                            'app_date',
+                            'app_time',
+                            'severity_of_inspection',
+                            'inspection_lvl',
+                            'type_of_inspection',
+                            'aql',
+                            'accept',
+                            'reject')
+                    ->groupBy('invoice_no',
+                            'supplier',
+                            'app_no',
+                            'app_date',
+                            'app_time',
+                            'severity_of_inspection',
+                            'inspection_lvl',
+                            'type_of_inspection',
+                            'aql',
+                            'accept',
+                            'reject')
+                    ->get();
 
         $details = DB::connection($this->mysql)->table('iqc_inspection_excel')->get();
 
         $data = [
             'company_info' => $company_info,
+            'header' => $header,
             'details' => $details,
             'date' => $date,
         ];

@@ -48,7 +48,7 @@ $( function() {
                                 type: 'GET',
                                 dataType: 'JSON',
                                 data:{ _token:token,
-                                        data:form,
+                                        data: JSON.stringify(form),
                                         firstData:desFirst.field1,
                                         gto:desFirst.gto,
                                         gfrom:desFirst.gfrom
@@ -96,7 +96,7 @@ $( function() {
                                 type: 'GET',
                                 dataType: 'JSON',
                                 data:{ _token:token,
-                                        data:form,
+                                        data: form,
                                         firstData:desFirst.field1,
                                         secondData:desFirst.field2,
                                         gto:desFirst.gto,
