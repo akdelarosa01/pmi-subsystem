@@ -657,7 +657,6 @@ function GETDPPMsecond(req,DPPM,REJ,xvideos){
     };
 }
 
-
 function GETDPPMthird(req,DPPM,REJ,xvideos,youporn,stage){
     var poop = 0;
     var shit = 0;
@@ -918,10 +917,7 @@ function secondTable(req,datas,LAR,REJ,DPPM,LARg1,REJg1,DPPMg1){
         document.getElementById("butthead"+x).innerHTML = pahabolbol;
     }
     closeloading();
- 
-    
 }
-
 
 function thirdTable(req,datas,LARg1,REJg1,DPPMg1,LAR_2nd,REJ_2nd,DPPM_2nd,LAR_3rd,REJ_3rd,DPPM_3rd){
     for(var x=0;x<req.length;x++){
