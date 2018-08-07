@@ -1730,6 +1730,10 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' =>'QCDB\PackingInspectionController@packingdbgroupby',
                 'name' => 'packingdbgroupby'
             ]);
+            Route::get('/stamp-code', [
+                'uses' => 'QCDB\PackingInspectionController@getStampCode',
+                'name' => 'stamp-code'
+            ]);
 
         /*PACKING MOLDING*/
             Route::get('/packingmolding', [

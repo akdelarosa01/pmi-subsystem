@@ -1314,5 +1314,15 @@ class PackingInspectionController extends Controller
         return $newdate;
     }
 
+    public function getStampCode()
+    {
+        $stamps = DB::connection($this->common)->table('tbl_mdropdowns')
+                    ->select('description')
+                    ->where('category',42)
+                    ->where('description','like',Auth::user()->firstname.' '.Auth::user()->Lastname.'%')
+                    ->first();
+        $stamp = explode('/',$stamps->description);
 
+        return $stamp;
+    }
 }

@@ -632,6 +632,14 @@
 @push('script')
 <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
+    var getStampCodeURL = "{{ url('/stamp-code') }}";
+    var token = "{{Session::token()}}";
+    var _stamp = getStampCode();
+    var _packcodeperseries = '';
+    var date = new Date();
+    var _month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var _carton = '';
+    var _packingcode = '';
     var dataColumn = [
         { data: function(data) {
             return '<input type="checkbox" class="input-sm checkboxes" value="'+data.id+'" name="checkitem" id="checkitem"></input>';
@@ -773,6 +781,12 @@ $(function() {
         $('#judgement').val("");
         $('#total_qty').val("");
         $('#no_of_defects').val("");
+    });
+
+    $('#pack_code_per_series').on('change', function() {
+        _packcodeperseries = $(this).val();
+        _packingcode = _packcodeperseries+'-'+_month+'-'+_carton+_stamp;
+        $('#pack_code').val(_packingcode);
     });
 
     $('#btn_groupby').on('click', function() {
@@ -1047,9 +1061,16 @@ $(function() {
         });
     });
 
+    $('#carton_no').on('keyup', function() {
+        _carton = $(this).val();
+        _packingcode = _packcodeperseries+'-'+_month+'-'+_carton+_stamp;
+        $('#pack_code').val(_packingcode);
+    });
+
     $('#carton_no').focusout(function(){
         var pono = $('#po_no').val();
-        var cartonno = $('#carton_no').val();
+        var cartonno = $(this).val();
+
         $.ajax({
             url:"{{ url('/getTotalruncard') }}",
             method:'get',
@@ -1976,6 +1997,22 @@ function initData() {
             $('#mod_inspection').append('<option value="'+x.description+'">'+x.description+'</option>');
         });
     }).fail(function(data,textStatus,jqXHR) {
+        console.log("error");
+    });
+}
+
+function getStampCode() {
+    $.ajax({
+        url: getStampCodeURL,
+        type: 'GET',
+        dataType: 'JSON',
+        data: {_token: token},
+    }).done(function(data, textStatus, xhr) {
+        var x = data[1];
+        _stamp = x.replace('OQC','');
+        return _stamp;
+        // $('#pack_code').val(_packingcode);
+    }).fail(function(xhr, textStatus, errorThrown) {
         console.log("error");
     });
 }
