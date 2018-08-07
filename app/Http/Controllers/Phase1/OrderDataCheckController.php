@@ -4363,10 +4363,22 @@ class OrderDataCheckController extends Controller
 
                         if ($data->qty == 'N/A') {
                             $dif1 = 'N/A';
+                        } else {
+                            if ($data->diff1==0) {
+                                $dif1 = '0.0';
+                            } else {
+                                $dif1 = $data->diff1;
+                            }
                         }
 
                         if ($withdrawalqty == 'N/A') {
                             $dif2 = 'N/A';
+                        } else {
+                            if ($data->diff2==0) {
+                                $dif2 = '0.0';
+                            } else {
+                                $dif2 = $data->diff2;
+                            }
                         }
 
                         // if ($data->diff1==0) {
