@@ -1218,7 +1218,7 @@ class OQCGroupByController extends Controller
                         ->groupBy('po_no','device_name','date_inspected','submission','judgement',
                                 'prod_category','customer','severity_of_inspection',
                                 'inspection_lvl','aql','accept','reject','coc_req',
-                                'type_of_inspection','submission')
+                                'type_of_inspection','po_qty')
                         ->select('fy',
                                 'ww',
                                 'date_inspected',
@@ -1259,15 +1259,15 @@ class OQCGroupByController extends Controller
             foreach ($infos as $key => $info) {
                 $excel->sheet($info->po_no, function($sheet) use($com_info,$date,$info)
                 {
-                    $sheet->setFreeze('A12');
+                    $sheet->setFreeze('A13');
                     $date = '';
                     $po = '';
 
                     $details = DB::connection($this->mysql)->table('oqc_inspection_excel')
                                 ->groupBy('po_no','device_name','date_inspected','submission','judgement',
-                                        'prod_category','customer','severity_of_inspection',
-                                        'inspection_lvl','aql','accept','reject','coc_req',
-                                        'type_of_inspection','submission')
+                                            'prod_category','customer','severity_of_inspection',
+                                            'inspection_lvl','aql','accept','reject','coc_req',
+                                            'type_of_inspection','po_qty')
                                 ->where('po_no',$info->po_no)
                                 ->select('fy',
                                     'ww',
@@ -1307,22 +1307,22 @@ class OQCGroupByController extends Controller
                                 ->get();
 
                     $sheet->setHeight(1, 15);
-                    $sheet->mergeCells('A1:U1');
-                    $sheet->cells('A1:U1', function($cells) {
+                    $sheet->mergeCells('A1:O1');
+                    $sheet->cells('A1:O1', function($cells) {
                         $cells->setAlignment('center');
                     });
                     $sheet->cell('A1',$com_info['name']);
 
                     $sheet->setHeight(2, 15);
-                    $sheet->mergeCells('A2:U2');
-                    $sheet->cells('A2:U2', function($cells) {
+                    $sheet->mergeCells('A2:O2');
+                    $sheet->cells('A2:O2', function($cells) {
                         $cells->setAlignment('center');
                     });
                     $sheet->cell('A2',$com_info['address']);
 
                     $sheet->setHeight(4, 20);
-                    $sheet->mergeCells('A4:U4');
-                    $sheet->cells('A4:U4', function($cells) {
+                    $sheet->mergeCells('A4:O4');
+                    $sheet->cells('A4:O4', function($cells) {
                         $cells->setAlignment('center');
                         $cells->setFont([
                             'family'     => 'Calibri',
@@ -1334,17 +1334,17 @@ class OQCGroupByController extends Controller
                     $sheet->cell('A4',"OQC INSPECTION RESULT");
 
                     $sheet->setHeight(11, 15);
-                    $sheet->cells('A11:U11', function($cells) {
+                    $sheet->cells('A12:O12', function($cells) {
                         $cells->setBorder('thin','thin','thin','thin');
                         $cells->setFont([
                             'family'     => 'Calibri',
-                            'size'       => '11',
+                            'size'       => '12',
                             'bold'       =>  true,
                         ]);
                     });
 
                     $sheet->cell('B6', function($cell) {
-                        $cell->setValue('Category');
+                        $cell->setValue('Series Name');
                         $cell->setFont([
                             'family'     => 'Calibri',
                             'size'       => '11',
@@ -1353,79 +1353,15 @@ class OQCGroupByController extends Controller
                     });
 
                     $sheet->cell('B7', function($cell) {
-                        $cell->setValue('Customer Name');
+                        $cell->setValue('Category');
                         $cell->setFont([
                             'family'     => 'Calibri',
                             'size'       => '11',
                             'bold'       =>  true,
                         ]);
-                    });
+                    });                    
 
                     $sheet->cell('B8', function($cell) {
-                        $cell->setValue('COC Requirements');
-                        $cell->setFont([
-                            'family'     => 'Calibri',
-                            'size'       => '11',
-                            'bold'       =>  true,
-                        ]);
-                    });
-
-                    $sheet->cell('B9', function($cell) {
-                        $cell->setValue('Severity of Inspection');
-                        $cell->setFont([
-                            'family'     => 'Calibri',
-                            'size'       => '11',
-                            'bold'       =>  true,
-                        ]);
-                    });
-
-                    $sheet->cell('C6',$info->prod_category);
-                    $sheet->cell('C7',$info->customer);
-                    $sheet->cell('C8',$info->coc_req);
-                    $sheet->cell('C9',$info->severity_of_inspection);
-
-                    $sheet->cell('E6', function($cell) {
-                        $cell->setValue('Inspection Level');
-                        $cell->setFont([
-                            'family'     => 'Calibri',
-                            'size'       => '11',
-                            'bold'       =>  true,
-                        ]);
-                    });
-
-                    $sheet->cell('E7', function($cell) {
-                        $cell->setValue('AQL');
-                        $cell->setFont([
-                            'family'     => 'Calibri',
-                            'size'       => '11',
-                            'bold'       =>  true,
-                        ]);
-                    });
-
-                    $sheet->cell('E8', function($cell) {
-                        $cell->setValue('Ac');
-                        $cell->setFont([
-                            'family'     => 'Calibri',
-                            'size'       => '11',
-                            'bold'       =>  true,
-                        ]);
-                    });
-
-                    $sheet->cell('E9', function($cell) {
-                        $cell->setValue('Re');
-                        $cell->setFont([
-                            'family'     => 'Calibri',
-                            'size'       => '11',
-                            'bold'       =>  true,
-                        ]);
-                    });
-
-                    $sheet->cell('F6',$info->inspection_lvl);
-                    $sheet->cell('F7',$info->aql);
-                    $sheet->cell('F8',($info->accept < 1)? '0.00': $info->accept);
-                    $sheet->cell('F9',($info->reject < 1)? '0.00': $info->reject);
-
-                    $sheet->cell('H6', function($cell) {
                         $cell->setValue('P.O.');
                         $cell->setFont([
                             'family'     => 'Calibri',
@@ -1434,8 +1370,8 @@ class OQCGroupByController extends Controller
                         ]);
                     });
 
-                    $sheet->cell('H7', function($cell) {
-                        $cell->setValue('Device Name');
+                    $sheet->cell('B9', function($cell) {
+                        $cell->setValue('P.O. Qty.');
                         $cell->setFont([
                             'family'     => 'Calibri',
                             'size'       => '11',
@@ -1443,7 +1379,30 @@ class OQCGroupByController extends Controller
                         ]);
                     });
 
-                    $sheet->cell('H8', function($cell) {
+                    $sheet->cell('C6',$info->device_name);
+                    $sheet->cell('C7',$info->prod_category);
+                    $sheet->cell('C8',$info->po_no);
+                    $sheet->cell('C9',$info->po_qty);
+
+                    $sheet->cell('E6', function($cell) {
+                        $cell->setValue('Customer Name');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('E7', function($cell) {
+                        $cell->setValue('COC Requirements');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('E8', function($cell) {
                         $cell->setValue('Type of Inspection');
                         $cell->setFont([
                             'family'     => 'Calibri',
@@ -1452,8 +1411,8 @@ class OQCGroupByController extends Controller
                         ]);
                     });
 
-                    $sheet->cell('H9', function($cell) {
-                        $cell->setValue('Submission');
+                    $sheet->cell('E9', function($cell) {
+                        $cell->setValue('Severity of Inspection');
                         $cell->setFont([
                             'family'     => 'Calibri',
                             'size'       => '11',
@@ -1461,31 +1420,74 @@ class OQCGroupByController extends Controller
                         ]);
                     });
 
-                    $sheet->cell('I6',$info->po_no);
-                    $sheet->cell('I7',$info->device_name);
-                    $sheet->cell('I8',$info->type_of_inspection);
-                    $sheet->cell('I9',$info->submission);
+                    $sheet->cell('E10', function($cell) {
+                        $cell->setValue('Inspection Level');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
 
-                    $sheet->cell('B11',"P.O. Qty.");
-                    $sheet->cell('C11',"Family");
-                    $sheet->cell('D11',"Assembly Line");
-                    $sheet->cell('E11',"Lot No.");
-                    $sheet->cell('F11',"App. date");
-                    $sheet->cell('G11',"App. time");
-                    $sheet->cell('H11',"Date Inspected");
-                    $sheet->cell('I11',"Time Inspected");
-                    $sheet->cell('J11',"FY-WW");
-                    $sheet->cell('K11',"Shift");
-                    $sheet->cell('L11',"Inspector");
-                    $sheet->cell('M11',"Judgement");
-                    $sheet->cell('N11',"Lot Qty.");
-                    $sheet->cell('O11',"Sample_size");
-                    $sheet->cell('P11',"Lot Inspected");
-                    $sheet->cell('Q11',"Lot Accepted");
-                    $sheet->cell('R11',"No. of Defects");
-                    $sheet->cell('S11',"Remarks");
+                    $sheet->cell('F6',$info->customer);
+                    $sheet->cell('F7',$info->coc_req);
+                    $sheet->cell('F8',$info->type_of_inspection);
+                    $sheet->cell('F9',$info->severity_of_inspection);
+                    $sheet->cell('F10',$info->inspection_lvl);
+                    
+                    $sheet->cell('H7', function($cell) {
+                        $cell->setValue('AQL');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
 
-                    $row = 12;
+                    $sheet->cell('H8', function($cell) {
+                        $cell->setValue('Ac');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('H9', function($cell) {
+                        $cell->setValue('Re');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+                    
+                    $sheet->cell('I7',$info->aql);
+                    $sheet->cell('I8',($info->accept < 1)? '0.00': $info->accept);
+                    $sheet->cell('I9',($info->reject < 1)? '0.00': $info->reject);
+
+                    $sheet->setHeight(6, 15);
+                    $sheet->setHeight(7, 15);
+                    $sheet->setHeight(8, 15);
+                    $sheet->setHeight(9, 15);
+                    $sheet->setHeight(10, 15);
+
+                    $sheet->cell('B12',"FY-WW");
+                    $sheet->cell('C12',"Date Inspected");
+                    $sheet->cell('D12',"Shift");
+                    $sheet->cell('E12',"Time Inspected");
+                    $sheet->cell('F12',"# of Sub");
+                    $sheet->cell('G12',"Lot Size");
+                    $sheet->cell('H12',"Sample Size");
+                    $sheet->cell('I12',"No. of Defective");
+                    $sheet->cell('J12',"Lot No.");
+                    $sheet->cell('K12',"Mode of Defects");
+                    $sheet->cell('L12',"Qty");
+                    $sheet->cell('M12',"Judgement");
+                    $sheet->cell('N12',"Inspector");
+                    $sheet->cell('O12',"Remarks");
+
+                    $row = 13;
 
                     $sheet->setHeight(12, 15);
 
@@ -1497,7 +1499,7 @@ class OQCGroupByController extends Controller
                         $lot_qty += $qc->lot_qty;
                         $po_qty += $qc->po_qty;
 
-                        $sheet->cells('B'.$row.':U'.$row, function($cells) {
+                        $sheet->cells('B'.$row.':O'.$row, function($cells) {
                             // Set all borders (top, right, bottom, left)
                             $cells->setBorder(array(
                                 'top'   => array(
@@ -1511,57 +1513,56 @@ class OQCGroupByController extends Controller
                         });
 
                         $sheet->cell('B'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->po_qty);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('C'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->family);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('D'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->assembly_line);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('E'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_no);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('F'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->app_date);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('G'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->app_time);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('H'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->date_inspected);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('I'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->time_ins_from.'-'.$qc->time_ins_to);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('J'.$row, function($cell) use($qc) {
                             $cell->setValue($qc->fy.'-'.$qc->ww);
                             $cell->setBorder('thin','thin','thin','thin');
                         });
 
-                        $sheet->cell('K'.$row, function($cell) use($qc) {
+                        $sheet->cell('C'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->date_inspected);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
+                        $sheet->cell('D'.$row, function($cell) use($qc) {
                             $cell->setValue($qc->shift);
                             $cell->setBorder('thin','thin','thin','thin');
                         });
 
+                        $sheet->cell('E'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->time_ins_from.'-'.$qc->time_ins_to);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+                        $sheet->cell('F'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->submission);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
+                        $sheet->cell('G'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->lot_qty);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
+                        $sheet->cell('H'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->sample_size);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
+                        $sheet->cell('I'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->num_of_defects);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
+                        $sheet->cell('J'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->lot_no);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
+                        $sheet->cell('K'.$row, function($cell) use($qc) {
+                            $cell->setValue($qc->modid);
+                            $cell->setBorder('thin','thin','thin','thin');
+                        });
+
                         $sheet->cell('L'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->inspector);
+                            $cell->setValue($qc->num_of_defects);
                             $cell->setBorder('thin','thin','thin','thin');
                         });
 
@@ -1571,31 +1572,11 @@ class OQCGroupByController extends Controller
                         });
 
                         $sheet->cell('N'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_qty);
+                            $cell->setValue($qc->inspector);
                             $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('O'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->sample_size);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('P'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_inspected);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('Q'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_accepted);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('R'.$row, function($cell) use($qc) {
-                            $cell->setValue(($qc->num_of_defects == 0)? '0.0':$qc->num_of_defects);
-                            $cell->setBorder('thin','thin','thin','thin');
-                        });
-
-                        $sheet->cell('S'.$row, function($cell) use($qc) {
                             $cell->setValue($qc->remarks);
                             $cell->setBorder('thin','thin','thin','thin');
                         });

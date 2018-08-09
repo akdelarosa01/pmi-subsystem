@@ -7878,7 +7878,7 @@
 </head>
 <body>
 	<?php
-		if(count($header) > 0) {
+		if(count((array)$header) > 0) {
 			foreach ($header as $key => $x) {
 	?>
 		    	<div class="container page">

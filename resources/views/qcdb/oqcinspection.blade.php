@@ -31,9 +31,9 @@
                     <a href="javascript:;" class="btn purple" id="btn_search" onclick="javascript:Search();">
                         <i class="fa fa-search"></i> Search
                     </a>
-                    <a href="javascript:;" class="btn yellow-gold" id="btn_report" onclick="javascript:Report();">
+                    {{-- <a href="javascript:;" class="btn yellow-gold" id="btn_report" onclick="javascript:Report();">
                         <i class="fa fa-file-text-o"></i> Reports
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>

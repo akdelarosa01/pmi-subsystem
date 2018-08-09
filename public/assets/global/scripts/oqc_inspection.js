@@ -835,23 +835,23 @@ function checkAuhtor(inspector) {
 }
 
 function PDFReport() {
-	var oqcSearchURL = oqcDataTableURL+'?type=search&search_po='+$('#rpt_po').val()+
-						'&search_from='+$('#rpt_from').val()+
-						'&search_to='+$('#rpt_to').val();
+	var oqcSearchURL = oqcDataTableURL+'?type=search&search_po='+$('#search_po').val()+
+						'&search_from='+$('#search_from').val()+
+						'&search_to='+$('#search_to').val();
 	getDatatable('tbl_oqc',oqcSearchURL,dataColumn,[],0);
 
-	window.location.href = PDFReportURL+"?po="+$('#rpt_po').val()+"&&from="+$('#rpt_from').val()+
-	"&&to="+$('#rpt_to').val()+"&&submission="+$('#rpt_submission').val();
+	window.location.href = PDFReportURL+"?po="+$('#search_po').val()+"&&from="+$('#search_from').val()+
+	"&&to="+$('#search_to').val();
 }
 
 function ExcelReport() {
-	var oqcSearchURL = oqcDataTableURL+'?type=search&search_po='+$('#rpt_po').val()+
-						'&search_from='+$('#rpt_from').val()+
-						'&search_to='+$('#rpt_to').val();
+	var oqcSearchURL = oqcDataTableURL+'?type=search&search_po='+$('#search_po').val()+
+						'&search_from='+$('#search_from').val()+
+						'&search_to='+$('#search_to').val();
 	getDatatable('tbl_oqc',oqcSearchURL,dataColumn,[],0);
 
-	window.location.href = ExcelReportURL+"?po="+$('#rpt_po').val()+"&&from="+$('#rpt_from').val()+
-	"&&to="+$('#rpt_to').val()+"&&submission="+$('#rpt_submission').val();
+	window.location.href = ExcelReportURL+"?po="+$('#search_po').val()+"&&from="+$('#search_from').val()+
+	"&&to="+$('#search_to').val();
 }
 
 function getProbeProduct(code) {

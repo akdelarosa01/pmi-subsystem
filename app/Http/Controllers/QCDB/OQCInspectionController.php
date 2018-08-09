@@ -647,7 +647,7 @@ class OQCInspectionController extends Controller
                             'a.aql',
                             'a.accept',
                             'a.reject',
-                            'a.coc_req')->first();
+                            'a.coc_req')->get();
 
         $details = DB::connection($this->mysql)->table('oqc_inspections as a')
                 ->leftJoin('oqc_inspections_mod as b', function ($join) {
@@ -737,12 +737,12 @@ class OQCInspectionController extends Controller
         $dt = Carbon::now();
         $dates = substr($dt->format('Ymd'), 2);
 
-        Excel::create('OQC_Inspection_Report'.$dates, function($excel) use($req)
+        Excel::create('OQC_Inspection_Report'.$dates, function($excel) use($dt,$req)
         {
-            $dt = Carbon::now();
             $com_info = $this->com->getCompanyInfo();
-            $date = substr($dt->format('  M j, Y  h:i A '), 2);
+            $date_today = substr($dt->format('  M j, Y  h:i A '), 2);
 
+            $date = '';
             if ($req->from !== '' || !empty($req->from)) {
                 $date = " AND a.date_inspected BETWEEN '".$this->com->convertDate($req->from,'Y-m-d').
                 "' AND '".$this->com->convertDate($req->to,'Y-m-d')."'";
@@ -758,12 +758,11 @@ class OQCInspectionController extends Controller
                             $join->on('a.submission','=','b.submission');
                         })
                         ->whereRaw("1=1".$po.$date)
-                        ->groupBy('a.date_inspected','a.submission','a.judgement',
-                                    'a.prod_category','a.customer','a.severity_of_inspection',
-                                    'a.inspection_lvl','a.aql','a.accept','a.reject','a.coc_req')
-                        ->orderBy('id','desc')
-                        ->select('a.id'
-                            ,DB::raw('a.fy as fy')
+                        ->groupBy('a.po_no','a.device_name','a.date_inspected','a.submission','a.judgement',
+                                'a.prod_category','a.customer','a.severity_of_inspection',
+                                'a.inspection_lvl','a.aql','a.accept','a.reject','a.coc_req',
+                                'a.type_of_inspection','a.po_qty')
+                        ->select(DB::raw('a.fy as fy')
                             ,DB::raw('a.ww as ww')
                             ,DB::raw('a.date_inspected as date_inspected')
                             ,DB::raw('a.shift as shift')
@@ -803,30 +802,78 @@ class OQCInspectionController extends Controller
                         ->get();
 
             foreach ($infos as $key => $info) {
-                $excel->sheet($info->date_inspected, function($sheet) use($req,$info,$com_info,$date)
+                $excel->sheet($info->po_no, function($sheet) use($com_info,$date,$info,$date_today)
                 {
-                    $sheet->setFreeze('A12');
+                    $sheet->setFreeze('A13');
                     $date = '';
                     $po = '';
-                    $sums = [];
+
+                    $details = DB::connection($this->mysql)->table('oqc_inspections as a')
+                                    ->leftJoin('oqc_inspections_mod as b', function ($join) {
+                                        $join->on('a.po_no','=','b.pono');
+                                        $join->on('a.submission','=','b.submission');
+                                    })
+                                    ->where('po_no',$info->po_no)
+                                    ->groupBy('a.po_no','a.device_name','a.date_inspected','a.submission','a.judgement',
+                                            'a.prod_category','a.customer','a.severity_of_inspection',
+                                            'a.inspection_lvl','a.aql','a.accept','a.reject','a.coc_req',
+                                            'a.type_of_inspection','a.po_qty')
+                                    ->select(DB::raw('a.fy as fy')
+                                        ,DB::raw('a.ww as ww')
+                                        ,DB::raw('a.date_inspected as date_inspected')
+                                        ,DB::raw('a.shift as shift')
+                                        ,DB::raw('a.time_ins_from as time_ins_from')
+                                        ,DB::raw('a.time_ins_to as time_ins_to')
+                                        ,DB::raw('a.submission as submission')
+                                        ,DB::raw('a.lot_qty as lot_qty')
+                                        ,DB::raw('a.sample_size as sample_size')
+                                        ,DB::raw('a.num_of_defects as num_of_defects')
+                                        ,DB::raw('a.lot_no as lot_no')
+                                        ,DB::raw('b.mod1 as mod1')
+                                        ,DB::raw("IFNULL(SUM(b.qty),0) as qty")
+                                        ,DB::raw('a.judgement as judgement')
+                                        ,DB::raw('a.inspector as inspector')
+                                        ,DB::raw('a.remarks as remarks')
+                                        ,DB::raw('a.assembly_line as assembly_line')
+                                        ,DB::raw('a.app_date as app_date')
+                                        ,DB::raw('a.app_time as app_time')
+                                        ,DB::raw('a.prod_category as prod_category')
+                                        ,DB::raw('a.po_no as po_no')
+                                        ,DB::raw('a.device_name as device_name')
+                                        ,DB::raw('a.customer as customer')
+                                        ,DB::raw('a.po_qty as po_qty')
+                                        ,DB::raw('a.family as family')
+                                        ,DB::raw('a.type_of_inspection as type_of_inspection')
+                                        ,DB::raw('a.severity_of_inspection as severity_of_inspection')
+                                        ,DB::raw('a.inspection_lvl as inspection_lvl')
+                                        ,DB::raw('a.aql as aql')
+                                        ,DB::raw('a.accept as accept')
+                                        ,DB::raw('a.reject as reject')
+                                        ,DB::raw('a.coc_req as coc_req')
+                                        ,DB::raw('a.lot_inspected as lot_inspected')
+                                        ,DB::raw('a.lot_accepted as lot_accepted')
+                                        ,DB::raw('a.dbcon as dbcon')
+                                        ,DB::raw("IF(judgement = 'Accept','NDF',a.modid) as modid")
+                                        ,DB::raw('a.type as type'))
+                                    ->get();
 
                     $sheet->setHeight(1, 15);
-                    $sheet->mergeCells('A1:W1');
-                    $sheet->cells('A1:W1', function($cells) {
+                    $sheet->mergeCells('A1:O1');
+                    $sheet->cells('A1:O1', function($cells) {
                         $cells->setAlignment('center');
                     });
                     $sheet->cell('A1',$com_info['name']);
 
                     $sheet->setHeight(2, 15);
-                    $sheet->mergeCells('A2:W2');
-                    $sheet->cells('A2:W2', function($cells) {
+                    $sheet->mergeCells('A2:O2');
+                    $sheet->cells('A2:O2', function($cells) {
                         $cells->setAlignment('center');
                     });
                     $sheet->cell('A2',$com_info['address']);
 
                     $sheet->setHeight(4, 20);
-                    $sheet->mergeCells('A4:W4');
-                    $sheet->cells('A4:W4', function($cells) {
+                    $sheet->mergeCells('A4:O4');
+                    $sheet->cells('A4:O4', function($cells) {
                         $cells->setAlignment('center');
                         $cells->setFont([
                             'family'     => 'Calibri',
@@ -837,126 +884,177 @@ class OQCInspectionController extends Controller
                     });
                     $sheet->cell('A4',"OQC INSPECTION RESULT");
 
-                    $sheet->setHeight(6, 15);
-                    $sheet->cells('A11:W11', function($cells) {
-                        $cells->setBorder('thick','thick','thick','thick');
+                    $sheet->setHeight(11, 15);
+                    $sheet->cells('A12:O12', function($cells) {
+                        $cells->setBorder('thin','thin','thin','thin');
                         $cells->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '12',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('B6', function($cell) {
+                        $cell->setValue('Series Name');
+                        $cell->setFont([
                             'family'     => 'Calibri',
                             'size'       => '11',
                             'bold'       =>  true,
                         ]);
                     });
 
-                    $details = DB::connection($this->mysql)->table('oqc_inspections as a')
-                                ->leftJoin('oqc_inspections_mod as b', function ($join) {
-                                    $join->on('a.po_no','=','b.pono');
-                                    $join->on('a.submission','=','b.submission');
-                                })
-                                ->where('a.date_inspected',$info->date_inspected)
-                                ->groupBy('a.date_inspected','a.submission','a.judgement',
-                                            'a.prod_category','a.customer','a.severity_of_inspection',
-                                            'a.inspection_lvl','a.aql','a.accept','a.reject','a.coc_req')
-                                ->orderBy('id','desc')
-                                ->select('a.id'
-                                    ,DB::raw('a.fy as fy')
-                                    ,DB::raw('a.ww as ww')
-                                    ,DB::raw('a.date_inspected as date_inspected')
-                                    ,DB::raw('a.shift as shift')
-                                    ,DB::raw('a.time_ins_from as time_ins_from')
-                                    ,DB::raw('a.time_ins_to as time_ins_to')
-                                    ,DB::raw('a.submission as submission')
-                                    ,DB::raw('a.lot_qty as lot_qty')
-                                    ,DB::raw('a.sample_size as sample_size')
-                                    ,DB::raw('a.num_of_defects as num_of_defects')
-                                    ,DB::raw('a.lot_no as lot_no')
-                                    ,DB::raw('b.mod1 as mod1')
-                                    ,DB::raw("IFNULL(SUM(b.qty),0) as qty")
-                                    ,DB::raw('a.judgement as judgement')
-                                    ,DB::raw('a.inspector as inspector')
-                                    ,DB::raw('a.remarks as remarks')
-                                    ,DB::raw('a.assembly_line as assembly_line')
-                                    ,DB::raw('a.app_date as app_date')
-                                    ,DB::raw('a.app_time as app_time')
-                                    ,DB::raw('a.prod_category as prod_category')
-                                    ,DB::raw('a.po_no as po_no')
-                                    ,DB::raw('a.device_name as device_name')
-                                    ,DB::raw('a.customer as customer')
-                                    ,DB::raw('a.po_qty as po_qty')
-                                    ,DB::raw('a.family as family')
-                                    ,DB::raw('a.type_of_inspection as type_of_inspection')
-                                    ,DB::raw('a.severity_of_inspection as severity_of_inspection')
-                                    ,DB::raw('a.inspection_lvl as inspection_lvl')
-                                    ,DB::raw('a.aql as aql')
-                                    ,DB::raw('a.accept as accept')
-                                    ,DB::raw('a.reject as reject')
-                                    ,DB::raw('a.coc_req as coc_req')
-                                    ,DB::raw('a.lot_inspected as lot_inspected')
-                                    ,DB::raw('a.lot_accepted as lot_accepted')
-                                    ,DB::raw('a.dbcon as dbcon')
-                                    ,DB::raw("IF(judgement = 'Accept','NDF',a.modid) as modid")
-                                    ,DB::raw('a.type as type'))
-                                ->get();
+                    $sheet->cell('B7', function($cell) {
+                        $cell->setValue('Category');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });                    
 
-                    $sheet->cell('B6','Category');
-                    $sheet->cell('B7','Customer Name');
-                    $sheet->cell('B8','COC Requirements');
-                    $sheet->cell('B9','Severity of Inspection');
+                    $sheet->cell('B8', function($cell) {
+                        $cell->setValue('P.O.');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
 
-                    $sheet->cell('C6',$info->prod_category);
-                    $sheet->cell('C7',$info->customer);
-                    $sheet->cell('C8',$info->coc_req);
-                    $sheet->cell('C9',$info->severity_of_inspection);
+                    $sheet->cell('B9', function($cell) {
+                        $cell->setValue('P.O. Qty.');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
 
-                    $sheet->cell('E6','Inspection Level');
-                    $sheet->cell('E7','AQL');
-                    $sheet->cell('E8','Ac');
-                    $sheet->cell('E9','Re');
+                    $sheet->cell('C6',$info->device_name);
+                    $sheet->cell('C7',$info->prod_category);
+                    $sheet->cell('C8',$info->po_no);
+                    $sheet->cell('C9',$info->po_qty);
 
-                    $sheet->cell('F6',$info->inspection_lvl);
-                    $sheet->cell('F7',$info->aql);
-                    $sheet->cell('F8',$info->accept);
-                    $sheet->cell('F9',$info->reject);
+                    $sheet->cell('E6', function($cell) {
+                        $cell->setValue('Customer Name');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
 
-                    $sheet->cell('B11',"P.O.");
-                    $sheet->cell('C11',"Device Name");
-                    $sheet->cell('D11',"P.O. Qty.");
-                    $sheet->cell('E11',"Family");
-                    $sheet->cell('F11',"Assembly Line");
-                    $sheet->cell('G11',"Lot No.");
-                    $sheet->cell('H11',"App. date");
-                    $sheet->cell('I11',"App. time");
-                    $sheet->cell('J11',"Type of Inspection");
-                    $sheet->cell('K11',"Date Inspected");
-                    $sheet->cell('L11',"Time Inspected");
-                    $sheet->cell('M11',"FY-WW");
-                    $sheet->cell('N11',"Shift");
-                    $sheet->cell('O11',"Inspector");
-                    $sheet->cell('P11',"Submission");
-                    $sheet->cell('Q11',"Judgement");
-                    $sheet->cell('R11',"Lot Qty.");
-                    $sheet->cell('S11',"Sample_size");
-                    $sheet->cell('T11',"Lot Inspected");
-                    $sheet->cell('U11',"Lot Accepted");
-                    $sheet->cell('V11',"No. of Defects");
-                    $sheet->cell('W11',"Remarks");
+                    $sheet->cell('E7', function($cell) {
+                        $cell->setValue('COC Requirements');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
 
-                    $row = 12;
+                    $sheet->cell('E8', function($cell) {
+                        $cell->setValue('Type of Inspection');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('E9', function($cell) {
+                        $cell->setValue('Severity of Inspection');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('E10', function($cell) {
+                        $cell->setValue('Inspection Level');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('F6',$info->customer);
+                    $sheet->cell('F7',$info->coc_req);
+                    $sheet->cell('F8',$info->type_of_inspection);
+                    $sheet->cell('F9',$info->severity_of_inspection);
+                    $sheet->cell('F10',$info->inspection_lvl);
+                    
+                    $sheet->cell('H7', function($cell) {
+                        $cell->setValue('AQL');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('H8', function($cell) {
+                        $cell->setValue('Ac');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+
+                    $sheet->cell('H9', function($cell) {
+                        $cell->setValue('Re');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                    });
+                    
+                    $sheet->cell('I7',$info->aql);
+                    $sheet->cell('I8',($info->accept < 1)? '0.00': $info->accept);
+                    $sheet->cell('I9',($info->reject < 1)? '0.00': $info->reject);
+
+                    $sheet->setHeight(6, 15);
+                    $sheet->setHeight(7, 15);
+                    $sheet->setHeight(8, 15);
+                    $sheet->setHeight(9, 15);
+                    $sheet->setHeight(10, 15);
+
+                    $sheet->cell('B12',"FY-WW");
+                    $sheet->cell('C12',"Date Inspected");
+                    $sheet->cell('D12',"Shift");
+                    $sheet->cell('E12',"Time Inspected");
+                    $sheet->cell('F12',"# of Sub");
+                    $sheet->cell('G12',"Lot Size");
+                    $sheet->cell('H12',"Sample Size");
+                    $sheet->cell('I12',"No. of Defective");
+                    $sheet->cell('J12',"Lot No.");
+                    $sheet->cell('K12',"Mode of Defects");
+                    $sheet->cell('L12',"Qty");
+                    $sheet->cell('M12',"Judgement");
+                    $sheet->cell('N12',"Inspector");
+                    $sheet->cell('O12',"Remarks");
+
+                    $row = 13;
 
                     $sheet->setHeight(12, 15);
 
                     $lot_qty = 0;
                     $po_qty = 0;
                     $balance = 0;
-                    
+
                     foreach ($details as $key => $qc) {
                         $lot_qty += $qc->lot_qty;
                         $po_qty += $qc->po_qty;
 
-                        $sheet->cells('B'.$row.':W'.$row, function($cells) {
+                        $sheet->cells('B'.$row.':O'.$row, function($cells) {
                             // Set all borders (top, right, bottom, left)
                             $cells->setBorder(array(
                                 'top'   => array(
-                                    'style' => 'thick'
+                                    'style' => 'thin'
                                 ),
                             ));
                             $cells->setFont([
@@ -966,113 +1064,72 @@ class OQCInspectionController extends Controller
                         });
 
                         $sheet->cell('B'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->po_no);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->fy.'-'.$qc->ww);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('C'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->device_name);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->date_inspected);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('D'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->po_qty);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->shift);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('E'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->family);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->time_ins_from.'-'.$qc->time_ins_to);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
-
                         $sheet->cell('F'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->assembly_line);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->submission);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('G'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_no);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->lot_qty);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('H'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->app_date);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->sample_size);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('I'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->app_time);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->num_of_defects);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('J'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->type_of_inspection);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->lot_no);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('K'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->date_inspected);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->modid);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('L'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->time_ins_from.'-'.$qc->time_ins_to);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->num_of_defects);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('M'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->fy.'-'.$qc->ww);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->judgement);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('N'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->shift);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setValue($qc->inspector);
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
 
                         $sheet->cell('O'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->inspector);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('P'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->submission);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('Q'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->judgement);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('R'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_qty);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('S'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->sample_size);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('T'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_inspected);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('U'.$row, function($cell) use($qc) {
-                            $cell->setValue($qc->lot_accepted);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('V'.$row, function($cell) use($qc) {
-                            $cell->setValue(($qc->num_of_defects == 0)? '0.0':$qc->num_of_defects);
-                            $cell->setBorder('thin','thin','thick','thin');
-                        });
-
-                        $sheet->cell('W'.$row, function($cell) use($qc) {
                             $cell->setValue($qc->remarks);
-                            $cell->setBorder('thin','thin','thick','thin');
+                            $cell->setBorder('thin','thin','thin','thin');
                         });
                         
                         $sheet->row($row, function ($row) {
@@ -1094,7 +1151,7 @@ class OQCInspectionController extends Controller
                     $sheet->setHeight($row,20);
                     $row++;
                     $sheet->cell('B'.$row, "Date:");
-                    $sheet->cell('C'.$row, $date);
+                    $sheet->cell('C'.$row, $date_today);
                     $sheet->setHeight($row,20);
                 });
             }
