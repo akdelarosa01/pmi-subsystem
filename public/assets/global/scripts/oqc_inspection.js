@@ -840,8 +840,10 @@ function PDFReport() {
 						'&search_to='+$('#search_to').val();
 	getDatatable('tbl_oqc',oqcSearchURL,dataColumn,[],0);
 
-	window.location.href = PDFReportURL+"?po="+$('#search_po').val()+"&&from="+$('#search_from').val()+
+	var link = PDFReportURL+"?po="+$('#search_po').val()+"&&from="+$('#search_from').val()+
 	"&&to="+$('#search_to').val();
+
+	window.open(link,'_tab');
 }
 
 function ExcelReport() {

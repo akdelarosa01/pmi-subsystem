@@ -90,9 +90,9 @@ $( function() {
                                 '<button class="btn btn-danger btn-sm" id="btn_close_groupby">'+
                                     '<i class="fa fa-times"></i> Close'+
                                 '</button>'+
-                                '<button class="btn btn-info btn-sm" id="btn_pdf_groupby">'+
+                                '<a href="'+PDFGroupByReportURL+'" class="btn btn-info btn-sm" id="btn_pdf_groupby" target="_tab">'+
                                     '<i class="fa fa-file-pdf-o"></i> PDF'+
-                                '</button>'+
+                                '</a>'+
                                 '<button class="btn btn-success btn-sm" id="btn_excel_groupby">'+
                                     '<i class="fa fa-file-excel-o"></i> Excel'+
                                 '</button></div><br><br>');
@@ -404,9 +404,9 @@ $( function() {
         disabledContent2();
     });
 
-    $('#btn_pdf_groupby').live('click', function() {
-        window.location.href=PDFGroupByReportURL;
-    });
+    // $('#btn_pdf_groupby').live('click', function() {
+    //     window.location.href=PDFGroupByReportURL;
+    // });
 
     $('#btn_excel_groupby').live('click', function() {
         window.location.href=ExcelGroupByReportURL;

@@ -490,7 +490,7 @@
                     {{-- <button type="button" class="btn btn-success" onclick="javascript:searchInspection();">
                         <i class="fa fa-search"></i> Search
                     </button> --}}
-                    <a href="javascript:PDFReport();" class="btn btn-primary" target="_blank">
+                    <a href="javascript:PDFReport();" class="btn btn-primary" target="_tab">
                         <i class="fa fa-file-pdf-o"></i> PDF
                     </a>
                     <a href="javascript:ExcelReport();" class="btn btn-success">
