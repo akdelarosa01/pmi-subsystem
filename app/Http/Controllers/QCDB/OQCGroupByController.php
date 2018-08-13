@@ -56,6 +56,7 @@ class OQCGroupByController extends Controller
     }
 
     public function dppmgroup1(Request $req){
+        $sub_date_inspected = '';
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_inspected =   " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                                     "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
@@ -70,8 +71,11 @@ class OQCGroupByController extends Controller
         $rejectednumList = array();
         $DPPM;
         $DPPMList = array();
-        for($x=0;$x<count($req->data);$x++){
-             $chosen = $req->data[$x]['chosenfield'];
+
+        $data = json_decode($req->data);
+
+        for($x=0;$x<count($data);$x++){
+             $chosen = $data[$x]->chosenfield;//$data[$x]['chosenfield'];
                 $ins = DB::connection($this->mysql)
                                 ->select("SELECT *,".$req->firstData." as group_one
                                         FROM oqc_inspections
@@ -115,6 +119,7 @@ class OQCGroupByController extends Controller
     }
 
     public function dppmgroup2(Request $req){
+        $sub_date_inspected = '';
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
@@ -131,6 +136,7 @@ class OQCGroupByController extends Controller
     }
 
     public function dppmgroup3(Request $req){
+        $sub_date_inspected = '';
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
@@ -145,6 +151,10 @@ class OQCGroupByController extends Controller
     }
 
     public function dppmgroup2_Details(Request $req){
+
+        $content1 = json_decode($req->content1);
+        $content2 = json_decode($req->content2);
+
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
@@ -159,33 +169,33 @@ class OQCGroupByController extends Controller
         $rejectednumListG1 = array();
         $DPPMG1;
         $DPPMListG1 = array();
-        for($x=0;$x<count($req->content1);$x++){
+        for($x=0;$x<count($content1);$x++){
                 $insG1 = DB::connection($this->mysql)
                                 ->select("SELECT *,".$req->firstData." as group_one
                                         FROM oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
 
                 $LARresultG1 = DB::connection($this->mysql)
                                 ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 $rejectednumG1 = DB::connection($this->mysql)
                                 ->select("SELECT COUNT(*) AS rejects
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 $DPPMG1 = DB::connection($this->mysql)
                                 ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 
                 array_push($listG1, $insG1);
@@ -210,27 +220,27 @@ class OQCGroupByController extends Controller
         $rejectednumList = array();
         $rejectednumList2 = array();
 
-        for($x=0;$x<count($req->content1);$x++){
+        for($x=0;$x<count($content1);$x++){
             $list = array();
             $LARList = array();
             $DPPMList = array();
             $rejectednumList = array();
-                for($y=0;$y<count($req->content2);$y++)
+                for($y=0;$y<count($content2);$y++)
                 {
                         $ins = DB::connection($this->mysql)
                                         ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
                                                 FROM oqc_inspections
                                                 WHERE 1=1 ".$sub_date_inspected."
-                                                AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                                AND ".$req->firstData." = '".$content1[$x]."'
+                                                AND ".$req->secondData." = '".$content2[$y]."'"
                                             );
 
                         $LARresult = DB::connection($this->mysql)
                             ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         $rejectednum = DB::connection($this->mysql)
@@ -238,8 +248,8 @@ class OQCGroupByController extends Controller
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
                                     AND judgement = 'Reject'
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         $DPPM = DB::connection($this->mysql)
@@ -247,8 +257,8 @@ class OQCGroupByController extends Controller
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
                                     AND judgement = 'Reject'
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         if(count($ins) > 0){
@@ -279,6 +289,11 @@ class OQCGroupByController extends Controller
     }
 
     public function dppmgroup3_Details(Request $req){
+
+        $content1 = json_decode($req->content1);
+        $content2 = json_decode($req->content2);
+        $content3 = json_decode($req->content3);
+
         if (!empty($req->gfrom) && !empty($req->gto)) {
             $sub_date_inspected = " AND date_inspected BETWEEN '".$this->com->convertDate($req->gfrom,'Y-m-d').
                             "' AND '".$this->com->convertDate($req->gto,'Y-m-d')."'";
@@ -293,33 +308,33 @@ class OQCGroupByController extends Controller
         $rejectednumListG1 = array();
         $DPPMG1;
         $DPPMListG1 = array();
-        for($x=0;$x<count($req->content1);$x++){
+        for($x=0;$x<count($content1);$x++){
                 $insG1 = DB::connection($this->mysql)
                                 ->select("SELECT *,".$req->firstData." as group_one
                                         FROM oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
 
                 $LARresultG1 = DB::connection($this->mysql)
                                 ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 $rejectednumG1 = DB::connection($this->mysql)
                                 ->select("SELECT COUNT(*) AS rejects
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 $DPPMG1 = DB::connection($this->mysql)
                                 ->select("SELECT ROUND((SUM(num_of_defects)/SUM(sample_size)) * 1000000,2) AS DPPM, SUM(num_of_defects) as num_of_defects ,SUM(sample_size) as sample_size
                                         FROM pmi_ts.oqc_inspections
                                         WHERE 1=1 ".$sub_date_inspected."
                                         AND judgement = 'Reject'
-                                        AND ".$req->firstData." = '".$req->content1[$x]."'"
+                                        AND ".$req->firstData." = '".$content1[$x]."'"
                                     );
                 
                 array_push($listG1, $insG1);
@@ -344,27 +359,27 @@ class OQCGroupByController extends Controller
         $rejectednumList = array();
         $rejectednumList_2nd = array();
 
-        for($x=0;$x<count($req->content1);$x++){
+        for($x=0;$x<count($content1);$x++){
             $list = array();
             $LARList = array();
             $DPPMList = array();
             $rejectednumList = array();
-                for($y=0;$y<count($req->content2);$y++)
+                for($y=0;$y<count($content2);$y++)
                 {
                         $ins = DB::connection($this->mysql)
                                         ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2 
                                                 FROM oqc_inspections
                                                 WHERE 1=1 ".$sub_date_inspected."
-                                                AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                                AND ".$req->firstData." = '".$content1[$x]."'
+                                                AND ".$req->secondData." = '".$content2[$y]."'"
                                             );
 
                         $LARresult = DB::connection($this->mysql)
                             ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         $rejectednum = DB::connection($this->mysql)
@@ -372,8 +387,8 @@ class OQCGroupByController extends Controller
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
                                     AND judgement = 'Reject'
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         $DPPM = DB::connection($this->mysql)
@@ -381,8 +396,8 @@ class OQCGroupByController extends Controller
                                     FROM pmi_ts.oqc_inspections
                                     WHERE 1=1 ".$sub_date_inspected."
                                     AND judgement = 'Reject'
-                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                    AND ".$req->secondData." = '".$req->content2[$y]."'"
+                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                    AND ".$req->secondData." = '".$content2[$y]."'"
                                 );
 
                         if(count($ins) > 0){
@@ -422,35 +437,35 @@ class OQCGroupByController extends Controller
         $rejectednumList2 = array();
         $rejectednumList3 = array();
 
-            for($x=0;$x<count($req->content1);$x++){
+            for($x=0;$x<count($content1);$x++){
                 $list2_3rd = array();
                 $LARList2 = array();
                 $DPPMList2 = array();
                 $rejectednumList2 = array();
-                    for($y=0;$y<count($req->content2);$y++)
+                    for($y=0;$y<count($content2);$y++)
                     {
                         $list_3rd = array();
                         $LARList = array();
                         $DPPMList = array();
                         $rejectednumList = array();
-                        for($z=0;$z<count($req->content3);$z++)
+                        for($z=0;$z<count($content3);$z++)
                         {
                             $ins_3rd = DB::connection($this->mysql)
                                             ->select("SELECT *,".$req->firstData." as chosenfield ,".$req->secondData." as chosenfield2,".$req->thirdData." as chosenfield3 
                                                     FROM oqc_inspections
                                                     WHERE 1=1 ".$sub_date_inspected."
-                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
-                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                                    AND ".$req->secondData." = '".$content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$content3[$z]."'"
                                                     // GROUP BY ".$req->thirdData.""
                                                 );
                             $LARresult = DB::connection($this->mysql)
                                             ->select("SELECT ROUND((SUM(lot_accepted)/COUNT(*))*(100),2) AS LAR
                                                     FROM pmi_ts.oqc_inspections
                                                     WHERE 1=1 ".$sub_date_inspected."
-                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
-                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                                    AND ".$req->secondData." = '".$content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$content3[$z]."'"
                                                 );
 
                             $rejectednum = DB::connection($this->mysql)
@@ -458,9 +473,9 @@ class OQCGroupByController extends Controller
                                                     FROM pmi_ts.oqc_inspections
                                                     WHERE 1=1 ".$sub_date_inspected."
                                                     AND judgement = 'Reject'
-                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
-                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                                    AND ".$req->secondData." = '".$content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$content3[$z]."'"
                                                 );
 
                             $DPPM = DB::connection($this->mysql)
@@ -468,9 +483,9 @@ class OQCGroupByController extends Controller
                                                     FROM pmi_ts.oqc_inspections
                                                     WHERE 1=1 ".$sub_date_inspected."
                                                     AND judgement = 'Reject'
-                                                    AND ".$req->firstData." = '".$req->content1[$x]."'
-                                                    AND ".$req->secondData." = '".$req->content2[$y]."'
-                                                    AND ".$req->thirdData." = '".$req->content3[$z]."'"
+                                                    AND ".$req->firstData." = '".$content1[$x]."'
+                                                    AND ".$req->secondData." = '".$content2[$y]."'
+                                                    AND ".$req->thirdData." = '".$content3[$z]."'"
                                                 );
                         if(count($ins_3rd) > 0){
                             $this->insertToReportsv2($ins_3rd,"group3");
@@ -1260,8 +1275,6 @@ class OQCGroupByController extends Controller
                 $excel->sheet($info->po_no, function($sheet) use($com_info,$date,$info)
                 {
                     $sheet->setFreeze('A13');
-                    $date = '';
-                    $po = '';
 
                     $details = DB::connection($this->mysql)->table('oqc_inspection_excel')
                                 ->groupBy('po_no','device_name','date_inspected','submission','judgement',
