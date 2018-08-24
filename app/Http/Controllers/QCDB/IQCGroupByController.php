@@ -1118,7 +1118,7 @@ class IQCGroupByController extends Controller
             ]);
         }
 
-        $insertBatchs = array_chunk($fields, 2000);
+        $insertBatchs = array_chunk($fields, 5000);
         foreach ($insertBatchs as $batch) {
         	DB::connection($this->mysql)->table('iqc_inspection_excel')->insert($batch);
         }
@@ -1253,7 +1253,7 @@ class IQCGroupByController extends Controller
             }
         }
 
-        $insertBatchs = array_chunk($fields, 2000);
+        $insertBatchs = array_chunk($fields, 10000);
         foreach ($insertBatchs as $batch) {
             DB::connection($this->mysql)->table('iqc_inspection_excel')->insert($batch);
         }
