@@ -67,6 +67,10 @@ class IQCGroupByController extends Controller
                                         WHERE 1=1 ".$sub_date_ispected."
                                         AND ".$req->firstData." = '".$chosen."'"
                                     );
+                                $stringvalue = "SELECT *,".$req->firstData." as group_one
+                                        FROM iqc_inspections
+                                        WHERE 1=1 ".$sub_date_ispected."
+                                        AND ".$req->firstData." = '".$chosen."'";
                 $this->insertToReportsv2($ins,"group1");    //FOR REPORTS
 
                 $LARresult = DB::connection($this->mysql)
@@ -100,6 +104,7 @@ class IQCGroupByController extends Controller
             'LARList' => $LARList,
             'rejectednumList' => $rejectednumList,
             'DPPMList' => $DPPMList,
+            'stringvalue' => $stringvalue
          ]);
     }
 
@@ -482,7 +487,7 @@ class IQCGroupByController extends Controller
                                                     AND ".$req->thirdData." = '".$content3[$z]."'"
                                                 );
                         if(count($ins_3rd) > 0){
-                            $this->insertToReportsv2($ins_3rd,"group3");
+                            //$this->insertToReportsv2($ins_3rd,"group3");
                             array_push($list_3rd, $ins_3rd);
                             array_push($LARList , $LARresult);
                             array_push($DPPMList , $DPPM);
@@ -1252,10 +1257,16 @@ class IQCGroupByController extends Controller
                 ]);
             }
         }
+                            foreach (array_chunk($fields,1000) as $t) {
 
-        $insertBatchs = array_chunk($fields, 10000);
-        foreach ($insertBatchs as $batch) {
-            DB::connection($this->mysql)->table('iqc_inspection_excel')->insert($batch);
-        }
+                               DB::connection($this->mysql)->table('iqc_inspection_excel')->insert($t);
+
+
+                            }
+
+        // $insertBatchs = array_chunk($fields, 10000);
+        // foreach ($insertBatchs as $batch) {
+        //     DB::connection($this->mysql)->table('iqc_inspection_excel')->insert($batch);
+        // }
     }
 }
