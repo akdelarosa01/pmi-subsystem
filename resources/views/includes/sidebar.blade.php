@@ -392,6 +392,45 @@
                         </ul>
                     </li>
                 @endif
+
+                @if (in_array("Engineering Yielding Performance",$progclass))
+                    <li>
+                        <a href="javascript:;" ><i class="fa fa-road" ></i> <span class="title">Engineering Yielding Performance</span><span class="arrow "></span></a>
+                        <ul class="sub-menu">
+                        @foreach ($userProgramAccess as $access)
+                            @if ($access->program_code == "6001")
+                                <?php $url = "/addnewYieldperformance"; $icon = "fa fa-pencil-square-o";?>
+                                @if ($access->read_write != "0")
+                                    <li>
+                                        <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
+                                    </li>
+                                @endif
+                            @elseif ($access->program_code == "6002")
+                                <?php $url = "/poregistration"; $icon = "fa fa-cube"; ?>
+                                @if ($access->read_write != "0")
+                                    <li>
+                                        <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
+                                    </li>
+                                @endif
+                            @elseif ($access->program_code == "6003")
+                                <?php $url = "/targetyield"; $icon = "fa fa-bullseye"; ?>
+                                @if ($access->read_write != "0")
+                                    <li>
+                                        <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
+                                    </li>
+                                @endif
+                            @elseif ($access->program_code == "6004")
+                                <?php $url = "/yieldperformance"; $icon = "fa fa-area-chart"; ?>
+                                @if ($access->read_write != "0")
+                                    <li>
+                                        <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
+                                    </li>
+                                @endif
+                            @endif
+                        @endforeach
+                        </ul>
+                    </li>
+                @endif
                 
                 @if (in_array("QCMLD",$progclass))
                     <li>

@@ -1951,398 +1951,488 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'invoicestatus'
             ]);
 
-        /*YIELD PERFORMANCE*/
-            Route::get('/deleteYIELD', [
-                'uses' => 'Phase3\YieldPerformanceController@deleteYIELD',
-                'name' => 'deleteYIELD'
+        /* PO Registration */
+            Route::post('/poregistration' ,[
+                'uses' => 'Yielding\PORegistrationController@getPORegistration',
+                'name' => 'poregistration'
             ]);
-
-            Route::get('/getYieldPerformanceDT', [
-                'uses' => 'Phase3\YieldPerformanceController@getYieldPerformanceDT',
-                'name' => 'getYieldPerformanceDT'
+            Route::get('/poregistration' ,[
+                'uses' => 'Yielding\PORegistrationController@getPORegistration',
+                'name' => 'poregistration'
             ]);
-            
-            Route::get('/yieldperformance', [
-                'uses' => 'Phase3\YieldPerformanceController@getYieldPerformance',
-                'name' => 'yieldperformance'
+            Route::get('/displayItem' ,[
+                'uses' => 'Yielding\PORegistrationController@displayListItem',
+                'name' => 'displayItem'
             ]);
-            Route::post('/yieldperformance', [
-                'uses' => 'Phase3\YieldPerformanceController@getYieldPerformance',
-                'name' => 'yieldperformance'
-            ]);
-
-            Route::get('/get-poregistration' ,[
-                'uses' => 'Phase3\YieldPerformanceController@getporeg',
+            Route::post('/get-poregistration' ,[
+                'uses' => 'Yielding\PORegistrationController@getporeg',
                 'name' => 'get-poregistration'
             ]);
+            Route::post('/add-poregistration', [
+                'uses' => 'Yielding\PORegistrationController@poregistration',
+                'name' => 'add-poregistration'
+            ]);
+            Route::post('/savedevicedetails' ,[
+                'uses' => 'Yielding\PORegistrationController@savedevicedetails',
+                'name' => 'savedevicedetails'
+            ]);
+            Route::get('/yielddropdowns', [
+                'uses' => 'Yielding\PORegistrationController@getDropdowns',
+                'name' => 'yielddropdowns'
+            ]);
+            Route::get('/getFamilyDropDown', [
+                'uses' => 'Yielding\PORegistrationController@getFamilyDropDown',
+                'name' => '/getFamilyDropDown'
+            ]);
+            Route::get('/getSeriesDropdown', [
+                'uses' => 'Yielding\PORegistrationController@getSeriesDropdown',
+                'name' => '/getSeriesDropdown'
+            ]);
+            Route::get('/getProdtypeDropdown', [
+                'uses' => 'Yielding\PORegistrationController@getProdtypeDropdown',
+                'name' => '/getProdtypeDropdown'
+            ]);
             Route::get('/get-deviceregistration' ,[
-                'uses' => 'Phase3\YieldPerformanceController@getdevicereg',
+                'uses' => 'Yielding\PORegistrationController@getdevicereg',
                 'name' => 'get-deviceregistration'
             ]);
             Route::get('/get-seriesregistration' ,[
-                'uses' => 'Phase3\YieldPerformanceController@getseriesreg',
+                'uses' => 'Yielding\PORegistrationController@getseriesreg',
                 'name' => 'get-seriesregistration'
             ]);
             Route::get('/getModofDef' ,[
-                'uses' => 'Phase3\YieldPerformanceController@getModofDef',
+                'uses' => 'Yielding\PORegistrationController@getModofDef',
                 'name' => 'getModofDef'
             ]);
             Route::get('/displayporeg', [
-                'uses' => 'Phase3\YieldPerformanceController@displayporeg',
+                'uses' => 'Yielding\PORegistrationController@displayporeg',
                 'name' => 'displayporeg'
             ]);
-
             Route::get('/displayporeg', [
-                'uses' => 'Phase3\YieldPerformanceController@displayporeg',
+                'uses' => 'Yielding\PORegistrationController@displayporeg',
                 'name' => 'displayporeg'
             ]);
             Route::get('/displaydevicereg', [
-                'uses' => 'Phase3\YieldPerformanceController@displaydevicereg',
+                'uses' => 'Yielding\PORegistrationController@displaydevicereg',
                 'name' => 'displaydevicereg'
             ]);
             Route::get('/displayseriesreg', [
-                'uses' => 'Phase3\YieldPerformanceController@displayseriesreg',
+                'uses' => 'Yielding\PORegistrationController@displayseriesreg',
                 'name' => 'displayseriesreg'
             ]);
             Route::get('/displaymodreg', [
-                'uses' => 'Phase3\YieldPerformanceController@displaymodreg',
+                'uses' => 'Yielding\PORegistrationController@displaymodreg',
+                'name' => 'displaymodreg'
+            ]);
+             Route::get('/CheckYpicsPO', [
+                'uses' => 'Yielding\PORegistrationController@CheckYpicsPO',
+                'name' => 'CheckYpicsPO'
+            ]);
+            Route::get('/getdevice', [
+                'uses' => 'Yielding\PORegistrationController@getLoadDevice',
+                'name' => 'getdevice'
+            ]);
+            Route::post('/updatedevice', [
+                'uses' => 'Yielding\PORegistrationController@postUpdatebtn',
+                'name' => 'updatedevice'
+            ]);
+        /* MODE OF DEFECTS */
+            Route::post('/modregistration' ,[
+                'uses' => 'Yielding\MODefectsController@getMODefects',
+                'name' => 'modregistration'
+            ]);
+            Route::get('/modregistration' ,[
+                'uses' => 'Yielding\MODefectsController@getMODefects',
+                'name' => 'modregistration'
+            ]);
+            Route::get('/getProdtypeDropdown', [
+                'uses' => 'Yielding\MODefectsController@getProdtypeDropdown',
+                'name' => '/getProdtypeDropdown'
+            ]);
+            Route::get('/getModofDef' ,[
+                'uses' => 'Yielding\MODefectsController@getModofDef',
+                'name' => 'getModofDef'
+            ]);
+            Route::get('/displaymodreg', [
+                'uses' => 'Yielding\MODefectsController@displaymodreg',
+                'name' => 'displaymodreg'
+            ]);
+          
+       /* YIELD TARGET */
+            Route::post('/targetyield' ,[
+                'uses' => 'Yielding\YieldPerformanceYieldTargetController@getYieldTarget',
+                'name' => 'targetyield'
+            ]);
+            Route::get('/targetyield' ,[
+                'uses' => 'Yielding\YieldPerformanceYieldTargetController@getYieldTarget',
+                'name' => 'targetyield'
+            ]);
+            Route::get('/getProdtypeDropdown', [
+                'uses' => 'Yielding\MODefectsController@getProdtypeDropdown',
+                'name' => '/getProdtypeDropdown'
+            ]);
+            
+
+        /*YIELD PERFORMANCE*/
+            Route::get('/deleteYIELD', [
+                'uses' => 'Yielding\YieldPerformanceController@deleteYIELD',
+                'name' => 'deleteYIELD'
+            ]);
+            Route::get('/getYieldPerformanceDT', [
+                'uses' => 'Yielding\YieldPerformanceController@getYieldPerformanceDT',
+                'name' => 'getYieldPerformanceDT'
+            ]);
+            Route::post('/yieldperformance', [
+                'uses' => 'Yielding\YieldPerformanceController@getYieldPerformance',
+                'name' => 'yieldperformance'
+            ]);
+            Route::get('/get-deviceregistration' ,[
+                'uses' => 'Yielding\YieldPerformanceController@getdevicereg',
+                'name' => 'get-deviceregistration'
+            ]);
+            Route::get('/get-seriesregistration' ,[
+                'uses' => 'Yielding\YieldPerformanceController@getseriesreg',
+                'name' => 'get-seriesregistration'
+            ]);
+            Route::get('/getModofDef' ,[
+                'uses' => 'Yielding\YieldPerformanceController@getModofDef',
+                'name' => 'getModofDef'
+            ]);
+            Route::get('/displayporeg', [
+                'uses' => 'Yielding\YieldPerformanceController@displayporeg',
+                'name' => 'displayporeg'
+            ]);
+            Route::get('/displayporeg', [
+                'uses' => 'Yielding\YieldPerformanceController@displayporeg',
+                'name' => 'displayporeg'
+            ]);
+            Route::get('/displaydevicereg', [
+                'uses' => 'Yielding\YieldPerformanceController@displaydevicereg',
+                'name' => 'displaydevicereg'
+            ]);
+            Route::get('/displayseriesreg', [
+                'uses' => 'Yielding\YieldPerformanceController@displayseriesreg',
+                'name' => 'displayseriesreg'
+            ]);
+            Route::get('/displaymodreg', [
+                'uses' => 'Yielding\YieldPerformanceController@displaymodreg',
                 'name' => 'displaymodreg'
             ]);
             Route::get('/deleteAll-yieldperformance', [
-                'uses' => 'Phase3\YieldPerformanceController@deleteAll',
+                'uses' => 'Yielding\YieldPerformanceController@deleteAll',
                 'name' => 'deleteAll-yieldperformance'
             ]);
             Route::get('/deleteporeg', [
-                'uses' => 'Phase3\YieldPerformanceController@deleteporeg',
+                'uses' => 'Yielding\YieldPerformanceController@deleteporeg',
                 'name' => 'deleteporeg'
             ]);
             Route::get('/deleteAlldevicereg', [
-                'uses' => 'Phase3\YieldPerformanceController@deletedevicereg',
+                'uses' => 'Yielding\YieldPerformanceController@deletedevicereg',
                 'name' => 'deleteAlldevicereg'
             ]);
             Route::get('/deleteAllseriesreg', [
-                'uses' => 'Phase3\YieldPerformanceController@deleteseriesreg',
+                'uses' => 'Yielding\YieldPerformanceController@deleteseriesreg',
                 'name' => 'deleteAllseriesreg'
             ]);
             Route::get('/deleteAllmodreg', [
-                'uses' => 'Phase3\YieldPerformanceController@deletemodreg',
+                'uses' => 'Yielding\YieldPerformanceController@deletemodreg',
                 'name' => 'deleteAllmodreg'
             ]);
 
             Route::get('/deleteAlltargetreg', [
-                'uses' => 'Phase3\YieldPerformanceController@deletetargetreg',
+                'uses' => 'Yielding\YieldPerformanceController@deletetargetreg',
                 'name' => 'deleteAlltargetreg'
             ]);
             Route::get('/deleteyieldingsummary' ,[
-                'uses' => 'Phase3\YieldPerformanceController@deleteAllPost',
+                'uses' => 'Yielding\YieldPerformanceController@deleteAllPost',
                 'name' => 'deleteyieldingsummary'
             ]);
             Route::post('/update-yieldsummary' ,[
-                'uses' => 'Phase3\YieldPerformanceController@udpateyieldsummary',
+                'uses' => 'Yielding\YieldPerformanceController@udpateyieldsummary',
                 'name' => 'update-yieldsummary'
             ]);
-
-            Route::post('/add-poregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@poregistration',
-                'name' => 'add-poregistration'
-            ]);
             Route::post('/display-poregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@displayporegistration',
+                'uses' => 'Yielding\YieldPerformanceController@displayporegistration',
                 'name' => 'display-poregistration'
             ]);
             Route::post('/add-deviceregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@deviceregistration',
+                'uses' => 'Yielding\YieldPerformanceController@deviceregistration',
                 'name' => 'add-deviceregistration'
             ]);
             Route::post('/display-deviceregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@displaydeviceregistration',
+                'uses' => 'Yielding\YieldPerformanceController@displaydeviceregistration',
                 'name' => 'display-deviceregistration'
             ]);
 
             Route::post('/add-seriesregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@seriesregistration',
+                'uses' => 'Yielding\YieldPerformanceController@seriesregistration',
                 'name' => 'add-seriesregistration'
             ]);
 
             Route::post('/add-modregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@modregistration',
+                'uses' => 'Yielding\YieldPerformanceController@modregistration',
                 'name' => 'add-modregistration'
             ]);
             Route::post('/add-targetreg', [
-                'uses' => 'Phase3\YieldPerformanceController@targetregistration',
+                'uses' => 'Yielding\YieldPerformanceController@targetregistration',
                 'name' => 'add-targetreg'
             ]);
             
             Route::get('/GetYieldPerformanceMain', [
-                'uses' => 'Phase3\YieldPerformanceController@GetYieldPerformanceMain',
+                'uses' => 'Yielding\YieldPerformanceController@GetYieldPerformanceMain',
                 'name' => 'GetYieldPerformanceMain'
             ]);
             Route::get('/getTargetYield', [
-                'uses' => 'Phase3\YieldPerformanceController@getTargetYield',
+                'uses' => 'Yielding\YieldPerformanceController@getTargetYield',
                 'name' => 'getTargetYield'
             ]);
 
             Route::get('/editporeg' ,[
-                'uses' => 'Phase3\YieldPerformanceController@editporeg',
+                'uses' => 'Yielding\YieldPerformanceController@editporeg',
                 'name' => 'editporeg'
             ]);
             Route::get('/editdevicereg' ,[
-                'uses' => 'Phase3\YieldPerformanceController@editdevicereg',
+                'uses' => 'Yielding\YieldPerformanceController@editdevicereg',
                 'name' => 'editdevicereg'
             ]);
             Route::get('/editseriesreg' ,[
-                'uses' => 'Phase3\YieldPerformanceController@editseriesreg',
+                'uses' => 'Yielding\YieldPerformanceController@editseriesreg',
                 'name' => 'editseriesreg'
             ]);
             Route::get('/editmodreg' ,[
-                'uses' => 'Phase3\YieldPerformanceController@editmodreg',
+                'uses' => 'Yielding\YieldPerformanceController@editmodreg',
                 'name' => 'editmodreg'
             ]);
             Route::get('/edittargetreg' ,[
-                'uses' => 'Phase3\YieldPerformanceController@edittargetreg',
+                'uses' => 'Yielding\YieldPerformanceController@edittargetreg',
                 'name' => 'edittargetreg'
             ]);
             Route::post('/update-poregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@updateporegistration',
+                'uses' => 'Yielding\YieldPerformanceController@updateporegistration',
                 'name' => 'update-poregistration'
             ]);
             Route::post('/update-deviceregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@updatedeviceregistration',
+                'uses' => 'Yielding\YieldPerformanceController@updatedeviceregistration',
                 'name' => 'update-deviceregistration'
             ]);
             Route::post('/update-seriesregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@updateseriesregistration',
+                'uses' => 'Yielding\YieldPerformanceController@updateseriesregistration',
                 'name' => 'update-seriesregistration'
             ]);
             Route::post('/update-modregistration', [
-                'uses' => 'Phase3\YieldPerformanceController@updatemodregistration',
+                'uses' => 'Yielding\YieldPerformanceController@updatemodregistration',
                 'name' => 'update-modregistration'
             ]);
             Route::get('/export-to-excel', [
-                'uses' => 'Phase3\YieldPerformanceController@exportToexcel',
+                'uses' => 'Yielding\YieldPerformanceController@exportToexcel',
                 'name' => 'export-to-excel'
             ]);
             Route::get('/export-to-pdf', [
-                'uses' => 'Phase3\YieldPerformanceController@exportTopdf',
+                'uses' => 'Yielding\YieldPerformanceController@exportTopdf',
                 'name' => '/export-to-pdf'
             ]);
             Route::get('/summarychart', [
-                'uses' => 'Phase3\YieldPerformanceController@summarychart',
+                'uses' => 'Yielding\YieldPerformanceController@summarychart',
                 'name' => '/summarychart'
             ]);
             Route::get('/summaryRpt', [
-                'uses' => 'Phase3\YieldPerformanceController@summaryRpt',
+                'uses' => 'Yielding\YieldPerformanceController@summaryRpt',
                 'name' => '/summaryRpt'
             ]);
              Route::get('/summaryREpt', [
-                'uses' => 'Phase3\YPSummaryReportController@summaryREpt',
+                'uses' => 'Yielding\YPSummaryReportController@summaryREpt',
                 'name' => '/summaryREpt'
             ]);
           
             Route::get('/defectsummaryRpt', [
-                'uses' => 'Phase3\YPSummaryDefectController@defectsummaryRpt',
+                'uses' => 'Yielding\YPSummaryDefectController@defectsummaryRpt',
                 'name' => '/defectsummaryRpt'
             ]);
             
             Route::get('/yieldsumRpt', [
-                'uses' => 'Phase3\YPYieldPerformanceSummaryController@yieldsumRpt',
+                'uses' => 'Yielding\YPYieldPerformanceSummaryController@yieldsumRpt',
                 'name' => '/yieldsumRpt'
             ]);
             Route::get('/yieldsumRptpdf', [
-                'uses' => 'Phase3\YPYieldPerformanceSummaryController@yieldsumRptpdf',
+                'uses' => 'Yielding\YPYieldPerformanceSummaryController@yieldsumRptpdf',
                 'name' => '/yieldsumRptpdf'
             ]);
             Route::get('/yieldsumfamRpt', [
-                'uses' => 'Phase3\YPSummaryFamilyReportController@yieldsumfamRpt',
+                'uses' => 'Yielding\YPSummaryFamilyReportController@yieldsumfamRpt',
                 'name' => '/yieldsumfamRpt'
             ]);
             Route::get('/yieldsumfamRptpdf', [
-                'uses' => 'Phase3\YPSummaryFamilyReportController@yieldsumfamRptpdf',
+                'uses' => 'Yielding\YPSummaryFamilyReportController@yieldsumfamRptpdf',
                 'name' => '/yieldsumfamRptpdf'
             ]);
             Route::get('/summaryRptPdf', [
-                'uses' => 'Phase3\YieldPerformanceController@summaryRptPdf',
+                'uses' => 'Yielding\YieldPerformanceController@summaryRptPdf',
                 'name' => '/summaryRptPdf'
             ]);
             Route::post('/loadchart', [
-                'uses' => 'Phase3\YieldPerformanceController@loadchart',
+                'uses' => 'Yielding\YieldPerformanceController@loadchart',
                 'name' => '/loadchart'
             ]);
             Route::get('/getponoreg', [
-                'uses' => 'Phase3\YieldPerformanceController@getponoreg',
+                'uses' => 'Yielding\YieldPerformanceController@getponoreg',
                 'name' => '/getponoreg'
             ]);
             Route::post('/devreg_get_series', [
-                'uses' => 'Phase3\YieldPerformanceController@devreg_get_series',
+                'uses' => 'Yielding\YieldPerformanceController@devreg_get_series',
                 'name' => '/devreg_get_series'
             ]);
-            Route::get('/getFamilyDropDown', [
-                'uses' => 'Phase3\YieldPerformanceController@getFamilyDropDown',
-                'name' => '/getFamilyDropDown'
-            ]);
-            Route::get('/getSeriesDropdown', [
-                'uses' => 'Phase3\YieldPerformanceController@getSeriesDropdown',
-                'name' => '/getSeriesDropdown'
-            ]);
-            Route::get('/getProdtypeDropdown', [
-                'uses' => 'Phase3\YieldPerformanceController@getProdtypeDropdown',
-                'name' => '/getProdtypeDropdown'
-            ]);
+
 
 
         // yieldperformance2---------------------------------------------
             Route::get('/addnewYieldperformance', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@getYieldPerformance',
-                'name' => 'addnewYieldperformance'
-            ]);
-            Route::post('/addnewYieldperformance', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@getYieldPerformance',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@getYieldPerformance',
                 'name' => 'addnewYieldperformance'
             ]);
             Route::get('/displaypya', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@displaypya',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@displaypya',
                 'name' => 'displaypya'
             ]);
             Route::get('/searchdisplaypya', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaypya',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaypya',
                 'name' => 'searchdisplaypya'
             ]);
             Route::post('/displaypya', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@displaypya',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@displaypya',
                 'name' => 'displaypya'
             ]);
             Route::get('/displaycmq', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@displaycmq',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@displaycmq',
                 'name' => 'displaycmq'
             ]);
             Route::get('/searchdisplaycmq', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaycmq',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaycmq',
                 'name' => 'searchdisplaycmq'
             ]);
             Route::post('/displaycmq', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@displaycmq',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@displaycmq',
                 'name' => 'displaycmq'
             ]);
             Route::get('/searchdisplaydetails', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaydetails',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaydetails',
                 'name' => 'searchdisplaydetails'
             ]);
             Route::get('/searchdisplaysummary', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaydetails',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaydetails',
                 'name' => 'searchdisplaysummary'
             ]);
             Route::post('/add-yieldperformance2', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@addYieldperformance',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@addYieldperformance',
                 'name' => 'add-yieldperformance2'
             ]);
 
             Route::post('/search-pono2' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchPO',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchPO',
                 'name' => 'search-pono2'
             ]);
             Route::post('/search-yieldperformance2' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@search',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@search',
                 'name' => 'search-yieldperformance2'
             ]);
             Route::post('/multisearch-yieldperformance2' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@multiSearch',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@multiSearch',
                 'name' => 'multisearch-yieldperformance2'
             ]);
             Route::get('/deleteAll-pono2' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@deleteAllPost',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@deleteAllPost',
                 'name' => 'deleteAll-pono2'
             ]);
             Route::post('/update-yieldperformance2' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@updateYieldperformance',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@updateYieldperformance',
                 'name' => 'update-yieldperformance2'
             ]);
             Route::post('/multiSearchDisplay2' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@multiSearchDisplay',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@multiSearchDisplay',
                 'name' => 'multiSearchDisplay2'
             ]);
 
             Route::get('/get-summarylist' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@summarylist',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@summarylist',
                 'name' => 'get-summarylist'
             ]);
             Route::get('/searchdisplayMNG',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplayMNG',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplayMNG',
                 'name' => 'searchdisplayMNG'
             ]);
             Route::get('/searchdisplayPNG',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplayPNG',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplayPNG',
                 'name' => 'searchdisplayPNG'
             ]);
             Route::get('/searchdisplaytoutput',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaytoutput',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaytoutput',
                 'name' => 'searchdisplaytoutput'
             ]);
             Route::get('/searchdisplaytreject',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaytreject',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaytreject',
                 'name' => 'searchdisplaytreject'
             ]);
             Route::get('/searchdisplayYWOMNG',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplayYWOMNG',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplayYWOMNG',
                 'name' => 'searchdisplayYWOMNG'
             ]);
             Route::get('/searchdisplayTYIELD',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplayTYIELD',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplayTYIELD',
                 'name' => 'searchdisplayTYIELD'
             ]);
             Route::get('/searchdisplaydppm',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@searchdisplaydppm',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@searchdisplaydppm',
                 'name' => 'searchdisplaydppm'
             ]);
             Route::get('/getautovalue',[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@getautovalue',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@getautovalue',
                 'name' => 'getautovalue'
             ]);
             Route::post('/dev_get_series', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@devreg_get_series',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@devreg_get_series',
                 'name' => '/dev_get_series'
             ]);
             Route::post('/get_mod', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@get_mod',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@get_mod',
                 'name' => '/get_mod'
             ]);
             Route::get('/checkdetails', [
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@checkdetails',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@checkdetails',
                 'name' => '/checkdetails'
             ]);
              Route::get('/deletecmq' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@deletecmq',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@deletecmq',
                 'name' => 'deletecmq'
             ]);
             Route::get('/deletepya' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@deletepya',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@deletepya',
                 'name' => 'deletepya'
             ]);
             Route::get('/getpng' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@getpng',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@getpng',
                 'name' => 'getpng'
             ]);
             Route::get('/getmng' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@getmng',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@getmng',
                 'name' => 'getmng'
             ]);
 
             Route::get('/GetPONumberDetails' ,[
-                'uses' => 'Phase3\AddnewYieldingPerformanceController@GetPONumberDetails',
+                'uses' => 'Yielding\AddnewYieldingPerformanceController@GetPONumberDetails',
                 'name' => 'GetPONumberDetails'
             ]);
 
             Route::get('/getRelatedseries' ,[
-            'uses' => 'Phase3\AddnewYieldingPerformanceController@getRelatedseries',
+            'uses' => 'Yielding\AddnewYieldingPerformanceController@getRelatedseries',
             'name' => 'getRelatedseries'
             ]);
 
             //CER
             
 
-           Route::get('/CheckYpicsPO', [
-                'uses' => 'Phase3\YieldPerformanceController@CheckYpicsPO',
-                'name' => 'CheckYpicsPO'
-            ]);
+           // Route::get('/CheckYpicsPO', [
+           //      'uses' => 'Yielding\YieldPerformanceController@CheckYpicsPO',
+           //      'name' => 'CheckYpicsPO'
+           //  ]);
         
            //CER
 

@@ -252,6 +252,7 @@ class UserController extends Controller
             $security = mProgram::where('program_class','Security Management')->orderBy('id','asc')->get();
             $wbsprog = mProgram::where('program_class','WBS')->orderBy('id','asc')->get();
             $qcdbprog = mProgram::where('program_class','QCDB')->orderBy('id','asc')->get();
+            $eypprog = mProgram::where('program_class','Engineering Yielding Performance')->orderBy('id','asc')->get();
             $qcmldprog = mProgram::where('program_class','QCMLD')->orderBy('id','asc')->get();
             $ypics = mProgram::where('program_class','YPICS')->orderBy('id','asc')->get();
 
@@ -262,6 +263,7 @@ class UserController extends Controller
                 'sssprog' => $sssprog,
                 'wbsprog' => $wbsprog,
                 'qcdbprog' => $qcdbprog,
+                'eypprog' => $eypprog,
                 'qcmldprog' => $qcmldprog,
                 'userProgramAccess' => $userProgramAccess,
                 'security' => $security,
@@ -287,6 +289,7 @@ class UserController extends Controller
             $sssprog = mProgram::where('program_class','SSS')->orderBy('id','asc')->get();
             $wbsprog = mProgram::where('program_class','WBS')->orderBy('id','asc')->get();
             $qcdbprog = mProgram::where('program_class','QCDB')->orderBy('id','asc')->get();
+            $eypprog = mProgram::where('program_class','Engineering Yielding Performance')->orderBy('id','asc')->get();
             $qcmldprog = mProgram::where('program_class','QCMLD')->orderBy('id','asc')->get();
             $ypics = mProgram::where('program_class','YPICS')->orderBy('id','asc')->get();
 
@@ -297,6 +300,7 @@ class UserController extends Controller
                 'sssprog' => $sssprog,
                 'wbsprog' => $wbsprog,
                 'qcdbprog' => $qcdbprog,
+                'eypprog' => $eypprog,
                 'qcmldprog' => $qcmldprog,
                 'userProgramAccess' => $userProgramAccess,
                 'security' => $security,
@@ -321,6 +325,7 @@ class UserController extends Controller
             $sssprog = mProgram::where('program_class','SSS')->orderBy('id','asc')->get();
             $wbsprog = mProgram::where('program_class','WBS')->orderBy('id','asc')->get();
             $qcdbprog = mProgram::where('program_class','QCDB')->orderBy('id','asc')->get();
+            $eypprog = mProgram::where('program_class','Engineering Yielding Performance')->orderBy('id','asc')->get();
             $qcmldprog = mProgram::where('program_class','QCMLD')->orderBy('id','asc')->get();
             $ypics = mProgram::where('program_class','YPICS')->orderBy('id','asc')->get();
             $userprogs = DB::connection($this->common)->table('muserprograms')->where('id_tblusers',$id)->get();
@@ -336,6 +341,7 @@ class UserController extends Controller
                 'sssprog' => $sssprog,
                 'wbsprog' => $wbsprog,
                 'qcdbprog' => $qcdbprog,
+                'eypprog' => $eypprog,
                 'qcmldprog' => $qcmldprog,
                 'userProgramAccess' => $userProgramAccess,
                 'security' => $security,

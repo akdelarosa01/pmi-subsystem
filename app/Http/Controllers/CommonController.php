@@ -426,6 +426,26 @@ class  CommonController extends Controller
                 }
             break;
 
+            case 'yielding':
+                switch ($db) {
+                    case 'TS':
+                        return "mysqlyieldts";
+                        break;
+
+                    case 'CN':
+                        return "mysqlyieldcn";
+                        break;
+
+                    case 'YF':
+                        return "mysqlyieldyf";
+                        break;
+
+                    default:
+                        return "mysqlyieldts";
+                        break;
+                }
+            break;
+
             case 'mrp':
                 switch ($db) {
                     case 'TS':

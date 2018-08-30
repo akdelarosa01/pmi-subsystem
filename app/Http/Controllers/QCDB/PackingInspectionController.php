@@ -337,6 +337,13 @@ class PackingInspectionController extends Controller
         return Datatables::of($data)->make(true);
     }
 
+    private function convertDate($date,$format)
+    {
+        $time = strtotime($date);
+        $newdate = date($format,$time);
+        return $newdate;
+    }
+
     public function packingSave(Request $request){
         $f =  $request->data;
         $status = $f['status'];
@@ -344,8 +351,8 @@ class PackingInspectionController extends Controller
             DB::connection($this->mysql)->table('packing_inspections')
             ->insert([
                     'po_num' => $f['pono'],
-                    'date_inspected' => $f['inspdate'],
-                    'shipment_date' => $f['shipdate'],
+                    'date_inspected' => $this->convertDate($f['inspdate'],'Y-m-d'),
+                    'shipment_date' => $this->convertDate($f['shipdate'],'Y-m-d'),
                     'device_name' => $f['seriesname'],
                     'inspector' => $f['inspector'],
                     'packing_type' => $f['packingtype'],
@@ -366,8 +373,8 @@ class PackingInspectionController extends Controller
             ->where('id','=',$f['id'])
             ->update(array(
                     'po_num' => $f['pono'],
-                    'date_inspected' => $f['inspdate'],
-                    'shipment_date' => $f['shipdate'],
+                    'date_inspected' => $this->convertDate($f['inspdate'],'Y-m-d'),
+                    'shipment_date' => $this->convertDate($f['shipdate'],'Y-m-d'),
                     'device_name' => $f['seriesname'],
                     'inspector' => $f['inspector'],
                     'packing_type' => $f['packingtype'],

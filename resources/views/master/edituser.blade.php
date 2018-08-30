@@ -358,6 +358,46 @@
 														</div>
 													</div>
 												</div>
+
+												<div class="panel panel-info">
+													<div class="panel-heading">
+														<h4 class="panel-title">
+															<a class="accordion-toggle" data-toggle="collapse" data-parent="#subsystems" href="#eyp">
+															Engineering Yielding Performance </a>
+														</h4>
+													</div>
+													<div id="eyp" class="panel-collapse collapse">
+														<div class="panel-body">
+															<table class="table table-striped table-hover table-bordered" id="tbl_eyp">
+																<thead>
+																	<tr>
+																		<td>Subsystem</td>
+																		<td>Read / Write</td>
+																		<td>Read Only</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	@foreach ($eypprog as $eypprg)
+																		<tr>
+																			<td>
+																				{{$eypprg->program_name}}
+																				<input type="hidden" name="prog_code[]" value="{{ $eypprg->program_code }}">
+																				<input type="hidden" name="prog_name[]" value="{{ $eypprg->program_name }}">
+																			</td>
+																			<td>
+																				<input type="checkbox" class="checkboxes rw EYPrw" name="rw[]" value="{{$eypprg->program_code}}" <?php echo($state); ?> />
+																			</td>
+																			<td>
+																				<input type="checkbox" class="checkboxes r EYPr" name="r[]" value="{{$eypprg->program_code}}" <?php echo($state); ?> />
+																			</td>
+																		</tr>
+																	@endforeach
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+
 												<div class="panel panel-primary">
 													<div class="panel-heading">
 														<h4 class="panel-title">
