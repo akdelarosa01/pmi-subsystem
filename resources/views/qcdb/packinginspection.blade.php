@@ -948,9 +948,9 @@ $(function() {
         $('#dbcon').val(edittext[15]);
 
         if (edittext[4] !== "{{Auth::user()->user_id}}" || edittext[4] !== "{{Auth::user()->firstname}}") {
-            $('#btn_save').prop('disabled',true);
-            $('#btn_runcard').prop('readonly',true);
-            $('#btn_packmod').prop('disabled',true);
+            // $('#btn_save').prop('disabled',true);
+            // $('#btn_runcard').prop('readonly',true);
+            // $('#btn_packmod').prop('disabled',true);
         }
     });
 

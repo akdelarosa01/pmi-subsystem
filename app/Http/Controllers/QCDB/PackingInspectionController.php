@@ -1314,13 +1314,6 @@ class PackingInspectionController extends Controller
         return $table;
     }
 
-    private function convertDate($date,$format)
-    {
-        $time = strtotime($date);
-        $newdate = date($format,$time);
-        return $newdate;
-    }
-
     public function getStampCode()
     {
         $stamps = DB::connection($this->common)->table('tbl_mdropdowns')
