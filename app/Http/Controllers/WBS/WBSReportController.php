@@ -232,6 +232,7 @@ class WBSReportController extends Controller
                             'i.po as po',
                             DB::raw('SUM(i.issued_qty) as qty'),
                             'i.lot_no as lot_no',
+                            'i.updated_at as updated_at',
                             'k.created_at as fdate',
                             'i.item_desc as item_desc',
                             'k.kit_no as kit_no',
@@ -280,6 +281,8 @@ class WBSReportController extends Controller
                 $sheet->cell('I1', "LOTNAME");
                 $sheet->cell('J1', "TSLIP_NUM");
                 $sheet->cell('K1', "NOTE");
+                $sheet->cell('N1', "create date");
+                $sheet->cell('O1', "update date");
 
                 $sheet->setColumnFormat([
                     'G' => '0.0000',
@@ -314,6 +317,8 @@ class WBSReportController extends Controller
                     $sheet->cell('K'.$row, $mk->kit_no.'/'.$mk->prepared_by);
                     $sheet->cell('L'.$row, $mk->item_desc);
                     $sheet->cell('M'.$row, $status);
+                    $sheet->cell('N'.$row, $this->convertDate($mk->fdate,'m/d/Y h:i A'));
+                    $sheet->cell('O'.$row, $this->convertDate($mk->updated_at,'m/d/Y h:i A'));
                     $row++;
                 }
             });
@@ -377,8 +382,9 @@ class WBSReportController extends Controller
                 $sheet->cell('E6', "Kit No.");
                 $sheet->cell('F6', "Prepared By");
                 $sheet->cell('G6', "Created Date");
-                $sheet->cell('H6', "Transaction No.");
-                $sheet->cell('I6', "Item Description");
+                $sheet->cell('H6', "Update Date");
+                $sheet->cell('I6', "Transaction No.");
+                $sheet->cell('J6', "Item Description");
 
                 $row = 7;
 
@@ -391,8 +397,9 @@ class WBSReportController extends Controller
                     $sheet->cell('E'.$row, $mk->kit_no);
                     $sheet->cell('F'.$row, $mk->prepared_by);
                     $sheet->cell('G'.$row, $this->convertDate($mk->fdate,'m/d/Y h:i A'));
-                    $sheet->cell('H'.$row, substr($mk->issue_no,4));
-                    $sheet->cell('I'.$row, $mk->item_desc);
+                    $sheet->cell('H'.$row, $this->convertDate($mk->updated_at,'m/d/Y h:i A'));
+                    $sheet->cell('I'.$row, substr($mk->issue_no,4));
+                    $sheet->cell('J'.$row, $mk->item_desc);
                     $row++;
                 }
                 
@@ -463,6 +470,7 @@ class WBSReportController extends Controller
                             'k.issued_qty as qty',
                             'k.lot_no as lot_no',
                             'k.created_at as fdate',
+                            'k.updated_at as updated_at',
                             'k.item_desc as item_desc',
                             'k.pair_no as pair_no',
                             'i.incharge as incharge',
@@ -500,6 +508,8 @@ class WBSReportController extends Controller
                 $sheet->cell('I1', "LOTNAME");
                 $sheet->cell('J1', "TSLIP_NUM");
                 $sheet->cell('K1', "NOTE");
+                $sheet->cell('N1', "create date");
+                $sheet->cell('O1', "update date");
 
                 $sheet->setColumnFormat([
                     'G' => '0.0000',
@@ -521,6 +531,8 @@ class WBSReportController extends Controller
                     $sheet->cell('K'.$row, $sk->pair_no." / ".$sk->incharge);
                     $sheet->cell('L'.$row, $sk->item_desc);
                     $sheet->cell('M'.$row, $sk->status);
+                    $sheet->cell('N'.$row, $this->convertDate($sk->fdate,'m/d/Y h:i A'));
+                    $sheet->cell('O'.$row, $this->convertDate($sk->updated_at,'m/d/Y h:i A'));
                     $row++;
                 }
             });
@@ -585,6 +597,7 @@ class WBSReportController extends Controller
                 $sheet->cell('F6', "Issued Qty.");
                 $sheet->cell('G6', "LOT No.");
                 $sheet->cell('H6', "Pair No.");
+                $sheet->cell('I6', "Update Date");
 
                 $row = 7;
 
@@ -598,6 +611,7 @@ class WBSReportController extends Controller
                     $sheet->cell('F'.$row, $sk->qty);
                     $sheet->cell('G'.$row, $sk->lot_no);
                     $sheet->cell('H'.$row, $sk->pair_no);
+                    $sheet->cell('I'.$row, $this->convertDate($sk->updated_at,'m/d/Y h:i A'));
                     $row++;
                 }
                 
