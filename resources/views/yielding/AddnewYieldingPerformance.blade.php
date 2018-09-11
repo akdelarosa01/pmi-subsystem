@@ -94,11 +94,12 @@
                                                                     <div class="form-group">
                                                                         <label class="control-label col-sm-3">Family</label>
                                                                         <div class="col-sm-6">
-                                                                            <Select class="form-control input-sm" id="family" name="family">
+                                                                            <Select class="form-control input-sm" id="family" name="family" required>
                                                                                 <option value=""></option>
-                                                                              {{--   @foreach ($family as $fam)
-                                                                                    <option value="{{$fam->family}}">{{$fam->family}}</option>
-                                                                                @endforeach --}}
+                                                                              @foreach($family as $family)
+                                                                                    <option value="{{$family->description}}">{{$family->description}}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </Select>
                                                                             <div id="er2"></div>
                                                                         </div>
@@ -109,9 +110,9 @@
                                                                         <div class="col-sm-6">
                                                                             <Select class="form-control input-sm" id="series" name="series" required>
                                                                                 <option value=""></option>
-                                                                                @foreach ($devreg as $serie)
-                                                                                   <option value="{{$serie->series}}">{{$serie->series}}
-                                                                                   </option>
+                                                                                @foreach($series as $series)
+                                                                                    <option value="{{$series->description}}">{{$series->description}}
+                                                                                    </option>
                                                                                 @endforeach
                                                                             </Select>
                                                                             <div id="er3"></div>
@@ -121,9 +122,9 @@
                                                                         <label class="control-label col-sm-3">Product Type</label>
                                                                         <div class="col-sm-6">
                                                                             <Select class="form-control input-sm" id="prodtype" name="prodtype" required>
-                                                                               {{--  <option value=""></option>
+                                                                               {<option value=""></option>
                                                                                 <option value="Test Socket">Test Socket</option>
-                                                                                <option value="Burn In">Burn In</option> --}}
+                                                                                <option value="Burn In">Burn In</option> 
                                                                             </Select>
                                                                             <div id="erprodtype"></div>
                                                                         </div>
@@ -183,7 +184,11 @@
                                                                         <label class="control-label col-sm-4">Mode of Defect</label>
                                                                         <div class="col-sm-6">
                                                                             <Select class="form-control input-sm mod" id="mod" name="mod">
-                                                                                
+                                                                            <option value=""></option>
+                                                                                @foreach($modefect as $modefect)
+                                                                                    <option value="{{$modefect->description}}">{{$modefect->description}}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </Select>
                                                                             <div id="er5"></div>
                                                                         </div>   
@@ -617,7 +622,7 @@ $( document ).ready(function(e) {
     getFamilyList();
     getProductList();
   
-//-------------------------------------------------------------------------------------multisearching---------------
+    //-------------------------------------------------------------------------------------multisearching---------------
     // $('#mSearchtype1').change(function(e){
     //     var mSearchtype1 = $('#mSearchtype1').val();
     //     var mSearchval1 = $('#mSearchval1').val();
@@ -741,69 +746,69 @@ $( document ).ready(function(e) {
 
     //magbabago yung mga value ng mode of defects depende sa selected product type-------------------------
     // $('#prodtype').on('change',function(){
-        $('#mod').select2('val',"");
-        var prodtype = $('select[name=prodtype]').val();
-        $('#mod').html("");
+     //    $('#mod').select2('val',"");
+     //    var prodtype = $('select[name=prodtype]').val();
+     //    $('#mod').html("");
 
-        $.post("{{ url('/get_mod') }}",
-        {
-            _token:$('meta[name=csrf-token]').attr('content'),
-            prodtype:prodtype 
-        }).done(function(data, textStatus, jqXHR){
-            console.log(data);
-            $.each(data,function(i,val){
-                var sup = '';
-                switch(prodtype) {
-                    case "Test Socket":
-                        var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-                        break;
-                    case "Burn In":
-                        var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-                        break;
-                    default:
-                        var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-                        break;
-                }       
+     //    $.post("{{ url('/get_mod') }}",
+     //    {
+     //        _token:$('meta[name=csrf-token]').attr('content'),
+     //        prodtype:prodtype 
+     //    }).done(function(data, textStatus, jqXHR){
+     //        console.log(data);
+     //        $.each(data,function(i,val){
+     //            var sup = '';
+     //            switch(prodtype) {
+     //                case "Test Socket":
+     //                    var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
+     //                    break;
+     //                case "Burn In":
+     //                    var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
+     //                    break;
+     //                default:
+     //                    var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
+     //                    break;
+     //            }       
                          
-                var option = sup;
-                $('#mod').append(option);
-            });
+     //            var option = sup;
+     //            $('#mod').append(option);
+     //        });
           
-        }).fail(function(jqXHR, textStatus, errorThrown){
-            console.log(errorThrown+'|'+textStatus);
+     //    }).fail(function(jqXHR, textStatus, errorThrown){
+     //        console.log(errorThrown+'|'+textStatus);
+     //    });
+     // });
+
+
+    // $('#family').on('change',function(){
+    //     $ss = $('#family').val();
+    //      $.ajax({
+    //           url: "{{ url('/getRelatedseries') }}",
+    //           type: "get",
+    //           dataType: "json",
+    //           data:{
+    //             Family:$('#family').val(),
+    //           },
+    //           success: function (returndata) {
+    //                  var select = $('#series');
+    //                  select.empty();
+    //                  select.append($('<option></option>').val(0).html("- SELECT -"));
+    //                     if (returndata.length > 0) {
+    //                       for(var x=0;x<returndata.length;x++){
+    //                              select.append($('<option></option>').val(returndata[x].series).html(returndata[x].series));
+    //                       }
+    //                    }
+
+    //           }
+    //    });
+    // });
+     
+    //---------------------------------------------------------------------------------
+        $('#modaldelete').click(function() {
+            deleteAllcheckeditems();
         });
-     });
 
-
-// $('#family').on('change',function(){
-//     $ss = $('#family').val();
-//      $.ajax({
-//           url: "{{ url('/getRelatedseries') }}",
-//           type: "get",
-//           dataType: "json",
-//           data:{
-//             Family:$('#family').val(),
-//           },
-//           success: function (returndata) {
-//                  var select = $('#series');
-//                  select.empty();
-//                  select.append($('<option></option>').val(0).html("- SELECT -"));
-//                     if (returndata.length > 0) {
-//                       for(var x=0;x<returndata.length;x++){
-//                              select.append($('<option></option>').val(returndata[x].series).html(returndata[x].series));
-//                       }
-//                    }
-
-//           }
-//    });
-// });
- 
-//---------------------------------------------------------------------------------
-    $('#modaldelete').click(function() {
-        deleteAllcheckeditems();
-    });
-
-//---------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------
     //delete all field value ---------------------------
     $('#btndiscard').click(function(){
         $('#btnsearch').removeClass("disabled");
@@ -911,7 +916,7 @@ $( document ).ready(function(e) {
         $('input[name=treject]').attr('disabled',true);
     });
 
-//--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
     //adding of records-------------------------------
     $('#btnadd').click(function(){
         $('#btnsearch').addClass("disabled");
@@ -953,7 +958,7 @@ $( document ).ready(function(e) {
         $('input[name=twoyield]').val("");  
         $('input[name=accumulatedoutput]').val("");   
     });
-//------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------
     $('#btnload').click(function(){
      /*   $('#delete-taskCMQ').addClass("disabled");
         $('#delete-taskPYA').addClass("disabled");*/
@@ -988,8 +993,8 @@ $( document ).ready(function(e) {
          GETPoDetails();
        
     });
-//---------------------------------------------------------------------------------------------    
-//Details table Checkboxes------------------------------------------------ 
+    //---------------------------------------------------------------------------------------------    
+    //Details table Checkboxes------------------------------------------------ 
     $('.checkAllitems').change(function(){
         if($('.checkAllitems').is(':checked')){           
             $('input[name=checkitem]').parents('span').addClass("checked");
@@ -1002,7 +1007,7 @@ $( document ).ready(function(e) {
             $('.edit-task').removeClass("disabled");                 
         }         
     });
-//-----------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------
     $('.checkboxes').change(function(){
         $('input[name=checkAllitem]').parents('span').removeClass("checked");
         $('input[name=checkAllitem]').prop('checked',false);
@@ -1018,8 +1023,8 @@ $( document ).ready(function(e) {
 
         } 
     });
-//---------------------------------------------------------------------------------------------    
-//production Date, Yielding Performance and Accumulated Output Checkboxes---------------------------------- 
+    //---------------------------------------------------------------------------------------------    
+    //production Date, Yielding Performance and Accumulated Output Checkboxes---------------------------------- 
     $('.checkAllitemsPYA').change(function(){
         if($('.checkAllitemsPYA').is(':checked')){           
             $('input[name=checkitemPYA]').parents('span').addClass("checked");
@@ -1048,7 +1053,7 @@ $( document ).ready(function(e) {
             $('#btnremove_detail').addClass("disabled");
         }
     });
-//---------------------------------------------------------------------------------------------     
+    //---------------------------------------------------------------------------------------------     
     $('.checkAllitemsCMQ').change(function(){
         if($('.checkAllitemsCMQ').is(':checked')){           
             $('input[name=checkitemCMQ]').parents('span').addClass("checked");
@@ -1058,8 +1063,8 @@ $( document ).ready(function(e) {
             $('input[name=checkitemCMQ]').prop('checked',this.checked);      
         }         
     });
-//-----------------------------------------------------------------------------------------------
-//Classification,Mode of Defects and Quantity Checkboxes----------------------------------
+    //-----------------------------------------------------------------------------------------------
+    //Classification,Mode of Defects and Quantity Checkboxes----------------------------------
     $('.checkboxesCMQ').change(function(){
         $('input[name=checkAllitemCMQ]').parents('span').removeClass("checked");
         $('input[name=checkAllitemCMQ]').prop('checked',false);
@@ -1077,12 +1082,12 @@ $( document ).ready(function(e) {
         } 
     });
 
-//---------------------------------------------------------------------------------------------------          
+    //---------------------------------------------------------------------------------------------------          
     $('.remove-task').on('click', function() {
         $('#deleteAllModal').modal('show');
     });
 
-//----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------
     //Accumulated Output computation based on Yielding Station--
     $('#yieldingstation').change(function(){
         if($(this).val() == "Machine"){
@@ -1118,7 +1123,7 @@ $( document ).ready(function(e) {
     
     
 
-// });//end of script-------------------------------------------------------------------------------------
+});//end of script-------------------------------------------------------------------------------------
 
 // if Button Addnew is clicked-----------------------------------
 function addnew(){
@@ -2184,11 +2189,12 @@ function pyafieldcomputation(){
 function GETPoDetails(){
     pono = $('#pono').val();
     jQuery.ajax({
-              url: "{{ url('/GetPONumberDetails') }}",
+              url: "{{ url('/GetPONumberDetails')}}",
               type: 'GET',
               dataType: 'json',
               data: {_token: "{{Session::token()}}", po: $('#pono').val()},
               success: function(returnData) {
+                console.log(returnData.po_details);
                    if(returnData.po_details != null && returnData.effect == "0")
                    {
                         var details = returnData.po_details;
@@ -2200,7 +2206,7 @@ function GETPoDetails(){
                         $('#prodtype').val(details.prodtype);
                    }
                    else if(returnData.effect == "1")
-                   {
+                   {    var details = returnData.po_details;
                         $('#device').val(details.device_name);
                         $('#poqty').val(details.po_qty);
                         $('#family').val(details.family);
