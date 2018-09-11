@@ -87,8 +87,11 @@ $( function() {
             dataType: 'JSON',
             data: $(this).serialize(),
         }).done(function(data, textStatus, xhr) {
-            console.log(data);
-            show_LAR_DPPM_data(data)
+            if (data.msg !== undefined) {
+                msg(data.msg,data.status);
+            } else {
+                show_LAR_DPPM_data(data);
+            }
         }).fail(function(xhr, textStatus, errorThrown) {
             console.log("error");
         }).always(function() {

@@ -53,24 +53,24 @@ class OQCGroupByController extends Controller
         $g1 = (!isset($req->field1) || $req->field1 == '' || $req->field1 == null)? '': $req->field1;
         $g2 = (!isset($req->field2) || $req->field2 == '' || $req->field2 == null)? '': $req->field2;
         $g3 = (!isset($req->field3) || $req->field3 == '' || $req->field3 == null)? '': $req->field3;
-        $content1 = (isset($req->content1) || $req->content1 == '' || $req->content1 == null)? '%': $req->content1;
-        $content2 = (isset($req->content2) || $req->content2 == '' || $req->content2 == null)? '%': $req->content2;
-        $content3 = (isset($req->content3) || $req->content3 == '' || $req->content3 == null)? '%': $req->content3;
+        $content1 = (!isset($req->content1) || $req->content1 == '' || $req->content1 == null)? '%': $req->content1;
+        $content2 = (!isset($req->content2) || $req->content2 == '' || $req->content2 == null)? '%': $req->content2;
+        $content3 = (!isset($req->content3) || $req->content3 == '' || $req->content3 == null)? '%': $req->content3;
 
-        $groupby = DB::connection($this->mysql)
-                ->select(
-                    DB::raw(
-                        "CALL GetOQCGroupBy(
-                        '".$this->com->convertDate($req->gfrom,'Y-m-d')."',
-                        '".$this->com->convertDate($req->gto,'Y-m-d')."',
-                        '".$g1."',
-                        '".$content1."',
-                        '".$g2."',
-                        '".$content2."',
-                        '".$g3."',
-                        '".$content3."')"
-                    )
-                );
+        DB::connection($this->mysql)
+            ->select(
+                DB::raw(
+                    "CALL GetOQCGroupBy(
+                    '".$this->com->convertDate($req->gfrom,'Y-m-d')."',
+                    '".$this->com->convertDate($req->gto,'Y-m-d')."',
+                    '".$g1."',
+                    '".$content1."',
+                    '".$g2."',
+                    '".$content2."',
+                    '".$g3."',
+                    '".$content3."')"
+                )
+            );
 
         $data = [];
         $node1 = [];
@@ -78,128 +78,74 @@ class OQCGroupByController extends Controller
         $node3 = [];
         $details = [];
 
-        if ($g1 !== '') {
-            $grp1_query = DB::connection($this->mysql)->table('oqc_inspection_group')
-                            ->select('g1','L1','DPPM1')
-                            ->groupBy($g1)
-                            ->orderBy('g1')
-                            ->get();
-            
-            foreach ($grp1_query as $key => $gr1) {
-                if ($g2 == '') {
-                    $details_query = DB::connection($this->mysql)->table('oqc_inspection_group')
-                                    ->select('assembly_line',
-                                            'lot_no',
-                                            'app_date',
-                                            'app_time',
-                                            'prod_category',
-                                            'po_no',
-                                            'device_name',
-                                            'customer',
-                                            'po_qty',
-                                            'family',
-                                            'type_of_inspection',
-                                            'severity_of_inspection',
-                                            'inspection_lvl',
-                                            'aql',
-                                            'accept',
-                                            'reject',
-                                            'date_inspected',
-                                            'ww',
-                                            'fy',
-                                            'time_ins_from',
-                                            'time_ins_to',
-                                            'shift',
-                                            'inspector',
-                                            'submission',
-                                            'coc_req',
-                                            'judgement',
-                                            'lot_qty',
-                                            'sample_size',
-                                            'lot_inspected',
-                                            'lot_accepted',
-                                            'num_of_defects',
-                                            'remarks',
-                                            'type',
-                                            'modid')
-                                    ->where('g1',$gr1->g1)
-                                    ->get();
+        $check = DB::connection($this->mysql)->table('oqc_inspection_group')->count();
 
-                    array_push($node1, [
-                        'group' => $gr1->g1,
-                        'LAR' => $gr1->L1,
-                        'DPPM' => $gr1->DPPM1,
-                        'field' => $g1,
-                        'details' => $details_query
-                    ]);
-                } else {
+        if ($check > 0) {
+            if ($g1 !== '') {
+                $grp1_query = DB::connection($this->mysql)->table('oqc_inspection_group')
+                                ->select('g1','L1','DPPM1')
+                                ->groupBy($g1)
+                                ->orderBy('g1')
+                                ->get();
+                
+                foreach ($grp1_query as $key => $gr1) {
+                    if ($g2 == '') {
+                        $details_query = DB::connection($this->mysql)->table('oqc_inspection_group')
+                                        ->select('assembly_line',
+                                                'lot_no',
+                                                'app_date',
+                                                'app_time',
+                                                'prod_category',
+                                                'po_no',
+                                                'device_name',
+                                                'customer',
+                                                'po_qty',
+                                                'family',
+                                                'type_of_inspection',
+                                                'severity_of_inspection',
+                                                'inspection_lvl',
+                                                'aql',
+                                                'accept',
+                                                'reject',
+                                                'date_inspected',
+                                                'ww',
+                                                'fy',
+                                                'time_ins_from',
+                                                'time_ins_to',
+                                                'shift',
+                                                'inspector',
+                                                'submission',
+                                                'coc_req',
+                                                'judgement',
+                                                'lot_qty',
+                                                'sample_size',
+                                                'lot_inspected',
+                                                'lot_accepted',
+                                                'num_of_defects',
+                                                'remarks',
+                                                'type',
+                                                'modid')
+                                        ->where('g1',$gr1->g1)
+                                        ->get();
 
-                    $grp2_query = DB::connection($this->mysql)->table('oqc_inspection_group')
-                                    ->select('g1','g2','L2','DPPM2')
-                                    ->where('g1',$gr1->g1)
-                                    ->groupBy($g2)
-                                    ->orderBy('g2')
-                                    ->get();
+                        array_push($node1, [
+                            'group' => $gr1->g1,
+                            'LAR' => $gr1->L1,
+                            'DPPM' => $gr1->DPPM1,
+                            'field' => $g1,
+                            'details' => $details_query
+                        ]);
+                    } else {
 
-                    foreach ($grp2_query as $key => $gr2) {
-                        if ($g3 == '') {
-                            $details_query = DB::connection($this->mysql)->table('oqc_inspection_group')
-                                                ->select('assembly_line',
-                                                        'lot_no',
-                                                        'app_date',
-                                                        'app_time',
-                                                        'prod_category',
-                                                        'po_no',
-                                                        'device_name',
-                                                        'customer',
-                                                        'po_qty',
-                                                        'family',
-                                                        'type_of_inspection',
-                                                        'severity_of_inspection',
-                                                        'inspection_lvl',
-                                                        'aql',
-                                                        'accept',
-                                                        'reject',
-                                                        'date_inspected',
-                                                        'ww',
-                                                        'fy',
-                                                        'time_ins_from',
-                                                        'time_ins_to',
-                                                        'shift',
-                                                        'inspector',
-                                                        'submission',
-                                                        'coc_req',
-                                                        'judgement',
-                                                        'lot_qty',
-                                                        'sample_size',
-                                                        'lot_inspected',
-                                                        'lot_accepted',
-                                                        'num_of_defects',
-                                                        'remarks',
-                                                        'type',
-                                                        'modid')
-                                                ->where('g1',$gr1->g1)
-                                                ->where('g2',$gr2->g2)
-                                                ->get();
-                            array_push($node2, [
-                                'g1' => $gr1->g1,
-                                'group' => $gr2->g2,
-                                'LAR' => $gr2->L2,
-                                'DPPM' => $gr2->DPPM2,
-                                'field' => $g2,
-                                'details' => $details_query
-                            ]);
-                        } else {
+                        $grp2_query = DB::connection($this->mysql)->table('oqc_inspection_group')
+                                        ->select('g1','g2','L2','DPPM2')
+                                        ->where('g1',$gr1->g1)
+                                        ->groupBy($g2)
+                                        ->orderBy('g2')
+                                        ->get();
 
-                           $grp3_query = DB::connection($this->mysql)->table('oqc_inspection_group')
-                                            ->select('g1','g2','g3','L3','DPPM3')
-                                            ->where('g1',$gr1->g1)
-                                            ->where('g2',$gr2->g2)
-                                            ->groupBy($g3)
-                                            ->orderBy('g3')
-                                            ->get();
-
-                            foreach ($grp3_query as $key => $gr3) {
+                        foreach ($grp2_query as $key => $gr2) {
+                            if ($g3 == '') {
                                 $details_query = DB::connection($this->mysql)->table('oqc_inspection_group')
                                                     ->select('assembly_line',
                                                             'lot_no',
@@ -237,46 +183,111 @@ class OQCGroupByController extends Controller
                                                             'modid')
                                                     ->where('g1',$gr1->g1)
                                                     ->where('g2',$gr2->g2)
-                                                    ->where('g3',$gr3->g3)
                                                     ->get();
-                                array_push($node3, [
+                                array_push($node2, [
                                     'g1' => $gr1->g1,
-                                    'g2' => $gr2->g2,
-                                    'group' => $gr3->g3,
-                                    'LAR' => $gr3->L3,
-                                    'DPPM' => $gr3->DPPM3,
-                                    'field' => $g3,
+                                    'group' => $gr2->g2,
+                                    'LAR' => $gr2->L2,
+                                    'DPPM' => $gr2->DPPM2,
+                                    'field' => $g2,
                                     'details' => $details_query
                                 ]);
+                            } else {
+
+                               $grp3_query = DB::connection($this->mysql)->table('oqc_inspection_group')
+                                                ->select('g1','g2','g3','L3','DPPM3')
+                                                ->where('g1',$gr1->g1)
+                                                ->where('g2',$gr2->g2)
+                                                ->groupBy($g3)
+                                                ->orderBy('g3')
+                                                ->get();
+
+                                foreach ($grp3_query as $key => $gr3) {
+                                    $details_query = DB::connection($this->mysql)->table('oqc_inspection_group')
+                                                        ->select('assembly_line',
+                                                                'lot_no',
+                                                                'app_date',
+                                                                'app_time',
+                                                                'prod_category',
+                                                                'po_no',
+                                                                'device_name',
+                                                                'customer',
+                                                                'po_qty',
+                                                                'family',
+                                                                'type_of_inspection',
+                                                                'severity_of_inspection',
+                                                                'inspection_lvl',
+                                                                'aql',
+                                                                'accept',
+                                                                'reject',
+                                                                'date_inspected',
+                                                                'ww',
+                                                                'fy',
+                                                                'time_ins_from',
+                                                                'time_ins_to',
+                                                                'shift',
+                                                                'inspector',
+                                                                'submission',
+                                                                'coc_req',
+                                                                'judgement',
+                                                                'lot_qty',
+                                                                'sample_size',
+                                                                'lot_inspected',
+                                                                'lot_accepted',
+                                                                'num_of_defects',
+                                                                'remarks',
+                                                                'type',
+                                                                'modid')
+                                                        ->where('g1',$gr1->g1)
+                                                        ->where('g2',$gr2->g2)
+                                                        ->where('g3',$gr3->g3)
+                                                        ->get();
+                                    array_push($node3, [
+                                        'g1' => $gr1->g1,
+                                        'g2' => $gr2->g2,
+                                        'group' => $gr3->g3,
+                                        'LAR' => $gr3->L3,
+                                        'DPPM' => $gr3->DPPM3,
+                                        'field' => $g3,
+                                        'details' => $details_query
+                                    ]);
+                                }
+
+                                array_push($node2, [
+                                    'g1' => $gr1->g1,
+                                    'group' => $gr2->g2,
+                                    'LAR' => $gr2->L2,
+                                    'DPPM' => $gr2->DPPM2,
+                                    'field' => $g2,
+                                    'details' => []
+                                ]);
                             }
-
-                            array_push($node2, [
-                                'g1' => $gr1->g1,
-                                'group' => $gr2->g2,
-                                'LAR' => $gr2->L2,
-                                'DPPM' => $gr2->DPPM2,
-                                'field' => $g2,
-                                'details' => []
-                            ]);
                         }
-                    }
 
-                    array_push($node1, [
-                        'group' => $gr1->g1,
-                        'LAR' => $gr1->L1,
-                        'DPPM' => $gr1->DPPM1,
-                        'field' => $g1,
-                        'details' => []
-                    ]);
+                        array_push($node1, [
+                            'group' => $gr1->g1,
+                            'LAR' => $gr1->L1,
+                            'DPPM' => $gr1->DPPM1,
+                            'field' => $g1,
+                            'details' => []
+                        ]);
+                    }
                 }
             }
+
+            $data = [
+                'node1' => $node1,
+                'node2' => $node2,
+                'node3' => $node3
+            ];
+        } else {
+            $data = [
+                'msg' => "No data generated.",
+                'status' => 'failed'
+            ];
         }
 
-        $data = [
-            'node1' => $node1,
-            'node2' => $node2,
-            'node3' => $node3
-        ];
+            
         
         
         return response()->json($data);

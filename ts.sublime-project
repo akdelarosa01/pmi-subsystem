@@ -1,0 +1,18 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		},
+		{
+			"path": "/var/www/html/en-pms"
+		}
+	],
+	"settings":
+	{
+		"xdebug":
+		{
+			"url": "http://localhost/pmi-subsystem/oqcinspection"
+		}
+	}
+}

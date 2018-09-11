@@ -37,9 +37,9 @@ class IQCGroupByController extends Controller
         $g1 = (!isset($req->field1) || $req->field1 == '' || $req->field1 == null)? '': $req->field1;
         $g2 = (!isset($req->field2) || $req->field2 == '' || $req->field2 == null)? '': $req->field2;
         $g3 = (!isset($req->field3) || $req->field3 == '' || $req->field3 == null)? '': $req->field3;
-        $content1 = (isset($req->content1) || $req->content1 == '' || $req->content1 == null)? '%': $req->content1;
-        $content2 = (isset($req->content2) || $req->content2 == '' || $req->content2 == null)? '%': $req->content2;
-        $content3 = (isset($req->content3) || $req->content3 == '' || $req->content3 == null)? '%': $req->content3;
+        $content1 = (!isset($req->content1) || $req->content1 == '' || $req->content1 == null)? '%': $req->content1;
+        $content2 = (!isset($req->content2) || $req->content2 == '' || $req->content2 == null)? '%': $req->content2;
+        $content3 = (!isset($req->content3) || $req->content3 == '' || $req->content3 == null)? '%': $req->content3;
 
         $groupby = DB::connection($this->mysql)
                 ->select(
