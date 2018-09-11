@@ -216,9 +216,11 @@ $( function() {
     });
 
     $('#pdf_search').on('click', function() {
-    	window.location.href = searchPdfURL+'?search_po='+$('#search_po').val()+'&&'+
+    	var link = searchPdfURL+'?search_po='+$('#search_po').val()+'&&'+
     	'search_from='+$('#search_from').val()+'&&search_to='+$('#search_to').val()+'&&'+
     	'_token='+token;
+
+    	window.open(link,'_tab');
     });
 
     $('#excel_search').on('click', function() {
