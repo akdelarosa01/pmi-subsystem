@@ -1346,7 +1346,8 @@ class WBSSakidashiIssuanceController extends Controller
                             DB::raw('qty as qty'),
                             DB::raw("IFNULL(lot_no,'') as lot_no"),
                             DB::raw('location as location'),
-                            DB::raw("DATE_FORMAT(received_date, '%m/%d/%Y') as received_date")
+                            DB::raw('received_date as received_date')
+                            //DB::raw("DATE_FORMAT(received_date, '%m/%d/%Y') as received_date")
                         ]);
         if (count((array)$data) < 1) {
             $data = DB::connection($this->mysql)->table(DB::raw('tbl_wbs_inventory, (SELECT @rownum := 0) i'))
@@ -1361,7 +1362,8 @@ class WBSSakidashiIssuanceController extends Controller
                             DB::raw('qty as qty'),
                             DB::raw("IFNULL(lot_no,'') as lot_no"),
                             DB::raw('location as location'),
-                            DB::raw("DATE_FORMAT(received_date, '%m/%d/%Y') as received_date")
+                            DB::raw('received_date as received_date')
+                            //DB::raw("DATE_FORMAT(received_date, '%m/%d/%Y') as received_date")
                         ]);
         }
 

@@ -1744,7 +1744,8 @@ class WBSMaterialKittingController extends Controller
                             DB::raw('i.qty as qty'),
                             DB::raw("IFNULL(i.lot_no,'') as lot_no"),
                             DB::raw('i.location as location'),
-                            DB::raw("DATE_FORMAT(i.received_date, '%m/%d/%Y') as receive_date"),
+                            DB::raw("i.received_date as receive_date"),
+                            //DB::raw("DATE_FORMAT(i.received_date, '%m/%d/%Y') as receive_date"),
                             DB::raw('k.kit_qty as kit_qty'))
 		                ->orderBy('i.received_date','asc')
 		                ->get();
@@ -1778,9 +1779,10 @@ class WBSMaterialKittingController extends Controller
                             DB::raw('i.qty as qty'),
                             DB::raw("IFNULL(i.lot_no,'') as lot_no"),
                             DB::raw('i.location as location'),
-                            DB::raw("DATE_FORMAT(i.received_date, '%m/%d/%Y') as receive_date"),
+                            DB::raw("i.received_date as receive_date"),
+                            //DB::raw("DATE_FORMAT(i.received_date, '%m/%d/%Y') as receive_date"),
                             DB::raw('k.kit_qty as kit_qty'))
-		                ->orderBy('i.id','asc')
+		                ->orderBy('i.received_date','asc')
 		                ->get();
             // if (count((array)$data) < 1) {
             //     $data = DB::connection($this->mysql)->table('tbl_wbs_inventory as i')

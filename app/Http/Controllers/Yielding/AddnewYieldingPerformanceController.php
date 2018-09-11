@@ -71,13 +71,14 @@ class AddnewYieldingPerformanceController extends Controller
 
             $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->count(); 
             $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->count(); 
-            $family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
+            //$family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
             $modefect = $this->com->getDropdownByName('Mode of Defect - Yield Performance');
-            /*$series = $this->com->getDropdownByName('series');*/
-            $devreg = DB::connection($this->mysql)->table('tbl_deviceregistration')->get();
+            $family = $this->com->getDropdownByName('Family');
+            $series = $this->com->getDropdownByName('Series');
+            //$devreg = DB::connection($this->mysql)->table('tbl_deviceregistration')->get();
             $ys = $this->com->getDropdownByName('Yielding Station');
 
-            return view('yielding.AddnewYieldingPerformance',['userProgramAccess' => $userProgramAccess,'family' => $family,'modefect' => $modefect,'yieldstation' => $ys,'yieldingno'=>$count,'devreg'=>$devreg, 'msrecords'=>$msrecords, 'count'=>$count,'countpya'=> $countpya,'countcmq'=> $countcmq]); 
+            return view('yielding.AddnewYieldingPerformance',['userProgramAccess' => $userProgramAccess,'family' => $family,'modefect' => $modefect,'yieldstation' => $ys,'yieldingno'=>$count,'series'=>$series, 'msrecords'=>$msrecords, 'count'=>$count,'countpya'=> $countpya,'countcmq'=> $countcmq]); 
         }
     }
     public function checkdetails(Request $request){
@@ -527,11 +528,11 @@ class AddnewYieldingPerformanceController extends Controller
         $table = DB::connection($this->mysql)->table('tbl_dropdown_series')->select($data['family'])->get();
         return $table;
     }
-    public function get_mod(Request $request){
-        $prodtype = $request->prodtype;
-        $table = DB::connection($this->mysql)->table('tbl_modregistration')->select('mod')->where('family',$prodtype)->get();
-        return $table;
-    }
+    // public function get_mod(Request $request){
+    //     $prodtype = $request->prodtype;
+    //     $table = DB::connection($this->mysql)->table('tbl_modregistration')->select('mod')->where('family',$prodtype)->get();
+    //     return $table;
+    // }
 
     //CER
     public function GetPONumberDetails(Request $req){
@@ -552,18 +553,16 @@ class AddnewYieldingPerformanceController extends Controller
          //                    ->groupBy('r.SORDER', 'r.CODE', 'h.NAME', 'h.NOTE','i.BUNR')
          //                    ->get();  
          $podetails  = DB::connection($this->mssql)
-                            ->SELECT("SELECT r.SORDER, hk.OYACODE as device_code, h.NAME as device_name, r.KVOL as po_qty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series, UPPER(i.BUNR) as prodtype, h.NOTE as family 
+                            ->SELECT("SELECT r.SORDER as pono, r.CODE as device_code, h.NAME as device_name, r.KVOL as po_qty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series,
+                                UPPER(i.BUNR) as prodtype, h.NOTE as family 
                                 FROM XRECE r 
-                                       LEFT JOIN XSLIP s ON r.SORDER = s.SEIBAN
-                                       LEFT JOIN XHIKI hk ON s.PORDER = hk.PORDER
-                                       LEFT JOIN XITEM i ON i.CODE = hk.OYACODE
-                                       LEFT JOIN XHEAD h ON h.CODE = hk.OYACODE
+                                     LEFT JOIN XITEM i ON i.CODE = r.CODE
+                                     LEFT JOIN XHEAD h ON h.CODE = r.CODE
                                 WHERE i.BUNR IN('Burn-In','Test Sockets') AND r.SORDER = '$req->po'
-                                GROUP BY r.SORDER, hk.OYACODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
-                                ORDER BY i.BUNR, hk.OYACODE");
+                                GROUP BY r.SORDER, r.CODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
+                                ORDER BY i.BUNR, r.CODE");
         $effect ="1";
              
-            
         if(count($podetails) == 0)
         {
             $effect = "0";
@@ -580,7 +579,7 @@ class AddnewYieldingPerformanceController extends Controller
           
         }
         $result = [
-            'po_details' => $podetails,
+            'po_details' => $podetails[0],
             'effect' => $effect
         ];
         //array_push($result,$podetails,$effect);

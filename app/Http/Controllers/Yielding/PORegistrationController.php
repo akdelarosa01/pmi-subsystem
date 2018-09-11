@@ -239,16 +239,14 @@ class PORegistrationController extends Controller
 
         $dbs = DB::connection($this->mssql)
                     ->select(DB::raw("
-                        SELECT r.SORDER as pono, hk.OYACODE as device_code, h.NAME as device_name, r.KVOL as poqty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series,
-                               UPPER(i.BUNR) as prod_type, h.NOTE as family 
-                        FROM XRECE r 
-                             LEFT JOIN XSLIP s ON r.SORDER = s.SEIBAN
-                             LEFT JOIN XHIKI hk ON s.PORDER = hk.PORDER
-                             LEFT JOIN XITEM i ON i.CODE = hk.OYACODE
-                             LEFT JOIN XHEAD h ON h.CODE = hk.OYACODE
-                        WHERE i.BUNR IN('Burn-In','Test Sockets') 
-                        GROUP BY r.SORDER, hk.OYACODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
-                        ORDER BY i.BUNR, hk.OYACODE
+                        SELECT r.SORDER as pono, r.CODE as device_code, h.NAME as device_name, r.KVOL as poqty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series,
+                                UPPER(i.BUNR) as prod_type, h.NOTE as family 
+                                FROM XRECE r 
+                                     LEFT JOIN XITEM i ON i.CODE = r.CODE
+                                     LEFT JOIN XHEAD h ON h.CODE = r.CODE
+                                WHERE i.BUNR IN('Burn-In','Test Sockets')
+                                GROUP BY r.SORDER, r.CODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
+                                ORDER BY i.BUNR, r.CODE
                         "));
         
         foreach ($dbs as $key => $db) {
