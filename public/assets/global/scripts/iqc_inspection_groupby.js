@@ -1,8 +1,4 @@
 $( function() {
-$('#gfrom').val("06/01/2018");
-$('#gto').val("06/30/2018");
-
-
     $('#field1').on('change',function(){
         GroupByValues($(this).val(),$('#content1'));
     });
