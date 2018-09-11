@@ -1,6 +1,6 @@
 <html>
 <head>
-    <style>
+    <style type="text/css">
         /*!
          * Bootstrap v3.3.4 (http://getbootstrap.com)
          * Copyright 2011-2015 Twitter, Inc.
@@ -7845,7 +7845,7 @@
 		    }
 		}
     </style>
-    <style>
+    <style type="text/css">
         .header, .footer {
             width: 100%;
             text-align: center;
@@ -7890,7 +7890,7 @@
 					                <h4>{{ $company_info['name'] }}</h4>
 					                <p style="line-height: 1.8px; font-size:12px; ">{{ $company_info['address'] }}</p>
 					                <p style="line-height: 1.8px; font-size:12px; "> {{ $company_info['tel1'] . ' ' . $company_info['tel2'] }}</p>
-					                <h3><ins>OQC INSPECTION RESULT</ins></h3>
+					                <h3><ins>PACKING INSPECTION RESULT</ins></h3>
 					                </td>
 					            </tr>
 					        </tbody>
@@ -7902,36 +7902,19 @@
 		    				<table class="table" style="font-size: 10px">
 		    					<tr>
 		                            <th class="align-left">Series Name</td>
-		                            <td>{{ $x->device_name }}</td>
-		                            <th class="align-left">Customer Name</td>
-		                            <td>{{ $x->customer }}</td>
-		                            <th class="align-left">AQL</td>
-		                            <td>{{ $x->aql }}</td>
-		                            
+		                            <td>{{ $x['device_name'] }}</td>
+		                            <th class="align-left">Packing Type</td>
+		                            <td>{{ $x['packing_type'] }}</td>
 		                        </tr>
 		                        <tr>
-		                            <th class="align-left">Category</td>
-		                            <td class="align-left">{{ $x->prod_category }}</td>
-		                            <th class="align-left">COC Requirements</td>
-		                            <td>{{ $x->coc_req }}</td>
-		                            <th class="align-left">Ac</td>
-		                            <td>{{ $x->accept }}</td>
-		                        </tr>
-		                        <tr>
-		                            <th class="align-left">P.O Number</td>
-		                            <td>{{ $x->po_no }}</td>
-		                            <th class="align-left">Severity of Inspection</td>
-		                            <td>{{ $x->severity_of_inspection }}</td>
-		                            <th class="align-left">Re</td>
-		                            <td>{{ $x->reject }}</td>
+		                            <th class="align-left">P.O. Number</td>
+		                            <td class="align-left">{{ $x['po_num'] }}</td>
+		                            <th class="align-left">Unit Condition</td>
+		                            <td>{{ $x['unit_condition'] }}</td>
 		                        </tr>
 		                        <tr>
 		                            <th class="align-left">P.O Quantity</td>
-		                            <td>{{ $x->po_qty }}</td>
-		                            <th class="align-left">Inspection Level</td>
-		                            <td>{{ $x->inspection_lvl }}</td>
-		                            <td></td>
-		                            <td></td>
+		                            <td>{{ $x['po_qty'] }}</td>
 		                        </tr>
 		    				</table>
 		    			</div>
@@ -7943,58 +7926,49 @@
 		    				<table class="table table-striped table-bordered table-condensed" style="font-size: 10px">
 		    					<thead>
 		                            <tr>
-		                                <td>FY-WW</td>
 		                                <td>Date Inspected</td>
-		                                <td>Device Name</td>
-		                                <td>From</td>
-		                                <td>To</td>
-		                                <td># of Sub</td>
-		                                <td>Lot Size</td>
-		                                <td>Sample Size</td>
-		                                <td>No of Defective</td>
-		                                <td>Lot No</td>
-		                                <td>Mode of Defects</td>
-		                                <td>Qty</td>
-		                                <td>Judgement</td>
+		                                <td>Shipment Date</td>
+		                                <td>Packing Code</td>
+		                                <td>Lot Number</td>
+		                                <td>Quantity</td>
+		                                <td>Mode of Defect</td>
 		                                <td>Inspector</td>
 		                                <td>Remarks</td>
 		                            </tr>
 		                        </thead>
 		                        <tbody>
 		                        	<?php
-			                        	$lot_qty = 0;
-			                        	$po_qty = $x->po_qty;
+			                        	$quantity = 0;
+			                        	$po_qty = $x['po_qty'];
 			                        	$balance = 0;
+			                        	$mod = '';
 			                        ?>
 
 		                        	@foreach ($details as $dt)
 		                        		<?php
-			                        		if ($dt->po_no == $x->po_no) {
-			                        			$lot_qty += $dt->lot_qty;
+		                        			
 
-			                        			$modid = $dt->modid;
+			                        		if ($dt->po_num == $x['po_num'] && $dt->inspector == $x['inspector']) {
+			                        			if (is_numeric($dt->quantity)) {
+			                        				$quantity += $dt->quantity;
+			                        			}
 
-			                        			if ($dt->modid == null || $dt->modid == '' || $dt->modid == 0) {
-			                        				$modid = 'NDF';
+			                        			if ($dt->mode_of_defects == '' || $dt->mode_of_defects == null) {
+			                        				$mod = 'NDF';
+			                        			} else {
+			                        				$mod = $dt->mode_of_defects;
 			                        			}
 		                        		?>
-				                        		<tr>
-								                    <td>{{ $dt->fy.' - '.$dt->ww }}</td>
-								                    <td>{{ $dt->date_inspected }}</td>
-								                    <td>{{ $dt->device_name }}</td>
-								                    <td>{{ $dt->time_ins_from }}</td>
-								                    <td>{{ $dt->time_ins_to }}</td>
-								                    <td>{{ $dt->submission }}</td>
-								                    <td>{{ $dt->lot_qty }}</td>
-								                    <td>{{ $dt->sample_size }}</td>
-								                    <td>{{ $dt->num_of_defects }}</td>
-								                    <td>{{ $dt->lot_no }}</td>
-								                    <td>{{ $modid }}</td>
-								                    <td>{{ $dt->num_of_defects }}</td>
-								                    <td>{{ $dt->judgement }}</td>
-								                    <td>{{ $dt->inspector }}</td>
-								                    <td>{{ $dt->remarks }}</td>
-								                </tr>
+			                        		<tr>
+			                        			<td>{{ $dt->date_inspected }}</td>
+			                        			<td>{{ $dt->shipment_date }}</td>
+			                        			<td>{{ $dt->packing_code }}</td>
+			                        			<td>{{ $dt->lot_no }}</td>
+			                        			<td>{{ $dt->quantity }}</td>
+			                        			<td>{{ $mod }}</td>
+			                        			<td>{{ $dt->inspector }}</td>
+			                        			<td>{{ $dt->remarks }}</td>
+			                        		</tr>
 						                <?php
 						                	}
 						                ?>
@@ -8007,13 +7981,13 @@
 		    		<div class="row">
 		    			<div class="col-xs-12">
 		    				<?php
-		    					$balance = $po_qty - $lot_qty;
+		    					$balance = $po_qty - $quantity;
 		    				?>
 		    				<table class="table" style="font-size: 10px">
 		                        <tbody>
 		                        	<tr>
 				                        <td width="10%">Total Qty:</td>
-				                        <td width="20%" style="border-bottom: 1px solid;" class="text-left">{{ $lot_qty }}</td>
+				                        <td width="20%" style="border-bottom: 1px solid;" class="text-left">{{ $quantity }}</td>
 				                        <td width="5%"></td>
 				                        <td width="10%">Balance:</td>
 				                        <td width="20%" style="border-bottom: 1px solid;" class="text-left">{{ $balance }}</td>

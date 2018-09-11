@@ -1387,7 +1387,7 @@ Route::group(['middleware' => 'web'], function () {
             ]);
 
 
-            Route::post('/iqc-calculate-dppm', [
+            Route::get('/iqc-calculate-dppm', [
                 'uses' => 'QCDB\IQCGroupByController@CalculateDPPM',
                 'name' => 'iqc-calculate-dppm'
             ]);
@@ -1620,120 +1620,203 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'fgsdbgroupby'
             ]);
 
+
+
         /* Packing Inspection*/
-            Route::get('/packinginspection', [
-                'uses' => 'QCDB\PackingInspectionController@getPackingInspection',
-                'name' => 'packinginspection'
-            ]);
-            Route::get('/packgetrows', [
-                'uses' => 'QCDB\PackingInspectionController@packgetrows',
-                'name' => 'packgetrows'
-            ]);
+            Route::group(['prefix' => 'packinginspection'], function() {
+                Route::get('/', [
+                    'uses' => 'QCDB\PackingInspectionController@index',
+                    'name' => 'packinginspection'
+                ]);
 
-            Route::get('/packinginspection-initdata', [
-                'uses' => 'QCDB\PackingInspectionController@initData',
-                'name' => 'packinginspection-initdata'
-            ]);
+                Route::get('/get-data-inspected', [
+                    'uses' => 'QCDB\PackingInspectionController@getDataInspected',
+                    'name' => 'get-data-inspected'
+                ]);
 
-            Route::get('/packinginspectiondata', [
-                'uses' => 'QCDB\PackingInspectionController@getPackingInspectionData',
-                'name' => 'packinginspectiondata'
-            ]);
-            Route::post('/packingSave', [
-                'uses' => 'QCDB\PackingInspectionController@packingSave',
-                'name' => 'packingSave'
-            ]);
-            Route::post('/packing_runcard_Save', [
-                'uses' => 'QCDB\PackingInspectionController@packing_runcard_Save',
-                'name' => 'packing_runcard_Save'
-            ]);
-            Route::get('/packing_runcard_edit', [
-                'uses' => 'QCDB\PackingInspectionController@packing_runcard_edit',
-                'name' => 'packing_runcard_edit'
-            ]);
+                Route::post('/save-inspection', [
+                    'uses' => 'QCDB\PackingInspectionController@save_inspection',
+                    'name' => 'save-inspection'
+                ]);
 
-            Route::get('/packingDelete', [
-                'uses' => 'QCDB\PackingInspectionController@packingDelete',
-                'name' => 'packingDelete'
-            ]);
-            Route::get('/rcpackingDelete', [
-                'uses' => 'QCDB\PackingInspectionController@rcpackingDelete',
-                'name' => 'rcpackingDelete'
-            ]);
-            Route::get('/rcpackingEdit', [
-                'uses' => 'QCDB\PackingInspectionController@rcpackingEdit',
-                'name' => 'rcpackingEdit'
-            ]);
+                Route::post('/save-runcard', [
+                    'uses' => 'QCDB\PackingInspectionController@save_runcard',
+                    'name' => 'save-runcard'
+                ]);
 
-            Route::get('/displayruncard', [
-                'uses' => 'QCDB\PackingInspectionController@displayruncard',
-                'name' => 'displayruncard'
-            ]);
-            Route::get('/display_runcard', [
-                'uses' => 'QCDB\PackingInspectionController@display_runcard',
-                'name' => 'display_runcard'
-            ]);
-            Route::get('/getpackingYPICSrecords', [
-                'uses' => 'QCDB\PackingInspectionController@getpackingYPICSrecords',
-                'name' => 'getpackingYPICSrecords'
-            ]);
-            Route::get('/getlot', [
-                'uses' => 'QCDB\PackingInspectionController@getlot',
-                'name' => 'getlot'
-            ]);
-            Route::get('/getmod', [
-                'uses' => 'QCDB\PackingInspectionController@getmod',
-                'name' => 'getmod'
-            ]);
-            Route::get('/packingsearchby', [
-                'uses' => 'QCDB\PackingInspectionController@searchby',
-                'name' => 'packingsearchby'
-            ]);
-            Route::get('/packingprintreport', [
-                'uses' => 'QCDB\PackingInspectionController@getPACKINGreport',
-                'name' => 'packingprintreport'
-            ]);
-            Route::get('/packingprintreportexcel', [
-                'uses' => 'QCDB\PackingInspectionController@getPACKINGreportexcel',
-                'name' => 'packingprintreportexcel'
-            ]);
+                Route::post('/save-mod', [
+                    'uses' => 'QCDB\PackingInspectionController@save_mod',
+                    'name' => 'save-mod'
+                ]);
 
-            Route::get('/displaypackmod', [
-                'uses' => 'QCDB\PackingInspectionController@displaypackmod',
-                'name' => 'displaypackmod'
-            ]);
-            Route::post('/packmod_save', [
-                'uses' => 'QCDB\PackingInspectionController@packmod_save',
-                'name' => 'packmod_save'
-            ]);
-            Route::get('/packmod_edit', [
-                'uses' => 'QCDB\PackingInspectionController@packmod_edit',
-                'name' => 'packmod_edit'
-            ]);
-            Route::get('/packmod_delete', [
-                'uses' => 'QCDB\PackingInspectionController@packmod_delete',
-                'name' => 'packmod_delete'
-            ]);
-            Route::get('/getTotalmod', [
-                'uses' => 'QCDB\PackingInspectionController@getTotalmod',
-                'name' => 'getTotalmod'
-            ]);
-            Route::get('/getTotalruncard', [
-                'uses' => 'QCDB\PackingInspectionController@getTotalruncard',
-                'name' => 'getTotalruncard'
-            ]);
-            Route::post('/packingselectgroupby1', [
-                'uses' => 'QCDB\PackingInspectionController@packingselectgroupby1',
-                'name' => 'packingselectgroupby1'
-            ]);
-            Route::post('/packingdbgroupby', [
-                'uses' =>'QCDB\PackingInspectionController@packingdbgroupby',
-                'name' => 'packingdbgroupby'
-            ]);
-            Route::get('/stamp-code', [
-                'uses' => 'QCDB\PackingInspectionController@getStampCode',
-                'name' => 'stamp-code'
-            ]);
+                Route::get('/stamp-code', [
+                    'uses' => 'QCDB\PackingInspectionController@getStampCode',
+                    'name' => 'stamp-code'
+                ]);
+
+                Route::get('/initdata', [
+                    'uses' => 'QCDB\PackingInspectionController@initData',
+                    'name' => 'initdata'
+                ]);
+
+                Route::get('/get-runcard', [
+                    'uses' => 'QCDB\PackingInspectionController@getRuncard',
+                    'name' => 'get-runcard'
+                ]);
+
+                Route::get('/get-mod', [
+                    'uses' => 'QCDB\PackingInspectionController@getMOD',
+                    'name' => 'get-mod'
+                ]);
+
+                Route::post('/delete-inspection', [
+                    'uses' => 'QCDB\PackingInspectionController@delete_inspection',
+                    'name' => 'delete-inspection'
+                ]);
+
+                Route::post('/delete-runcard', [
+                    'uses' => 'QCDB\PackingInspectionController@delete_runcard',
+                    'name' => 'delete-runcard'
+                ]);
+
+                Route::post('/delete-mod', [
+                    'uses' => 'QCDB\PackingInspectionController@delete_mod',
+                    'name' => 'delete-mod'
+                ]);
+
+                Route::get('/po-details', [
+                    'uses' => 'QCDB\PackingInspectionController@poDetails',
+                    'name' => 'po-details'
+                ]);
+
+                Route::get('/search-pdf', [
+                    'uses' => 'QCDB\PackingInspectionController@search_pdf',
+                    'name' => 'search-pdf'
+                ]);
+
+                Route::get('/search-excel', [
+                    'uses' => 'QCDB\PackingInspectionController@search_excel',
+                    'name' => 'search-excel'
+                ]);
+
+                Route::get('/groupby-values', [
+                    'uses' => 'QCDB\PackingInspectionController@GroupByValues',
+                    'name' => 'groupby-values'
+                ]);
+
+                Route::post('/calculate-dppm', [
+                    'uses' => 'QCDB\PackingInspectionController@CalculateDPPM',
+                    'name' => 'calculate-dppm'
+                ]);
+            });
+
+            
+
+
+            
+
+            // Route::get('/packinginspection-initdata', [
+            //     'uses' => 'QCDB\PackingInspectionController@initData',
+            //     'name' => 'packinginspection-initdata'
+            // ]);
+
+            // Route::get('/packinginspectiondata', [
+            //     'uses' => 'QCDB\PackingInspectionController@getPackingInspectionData',
+            //     'name' => 'packinginspectiondata'
+            // ]);
+            // Route::post('/packingSave', [
+            //     'uses' => 'QCDB\PackingInspectionController@packingSave',
+            //     'name' => 'packingSave'
+            // ]);
+            // Route::post('/packing_runcard_Save', [
+            //     'uses' => 'QCDB\PackingInspectionController@packing_runcard_Save',
+            //     'name' => 'packing_runcard_Save'
+            // ]);
+            // Route::get('/packing_runcard_edit', [
+            //     'uses' => 'QCDB\PackingInspectionController@packing_runcard_edit',
+            //     'name' => 'packing_runcard_edit'
+            // ]);
+
+            // Route::get('/packingDelete', [
+            //     'uses' => 'QCDB\PackingInspectionController@packingDelete',
+            //     'name' => 'packingDelete'
+            // ]);
+            // Route::get('/rcpackingDelete', [
+            //     'uses' => 'QCDB\PackingInspectionController@rcpackingDelete',
+            //     'name' => 'rcpackingDelete'
+            // ]);
+            // Route::get('/rcpackingEdit', [
+            //     'uses' => 'QCDB\PackingInspectionController@rcpackingEdit',
+            //     'name' => 'rcpackingEdit'
+            // ]);
+
+            // Route::get('/displayruncard', [
+            //     'uses' => 'QCDB\PackingInspectionController@displayruncard',
+            //     'name' => 'displayruncard'
+            // ]);
+            // Route::get('/display_runcard', [
+            //     'uses' => 'QCDB\PackingInspectionController@display_runcard',
+            //     'name' => 'display_runcard'
+            // ]);
+            // Route::get('/getpackingYPICSrecords', [
+            //     'uses' => 'QCDB\PackingInspectionController@getpackingYPICSrecords',
+            //     'name' => 'getpackingYPICSrecords'
+            // ]);
+            // Route::get('/getlot', [
+            //     'uses' => 'QCDB\PackingInspectionController@getlot',
+            //     'name' => 'getlot'
+            // ]);
+            // Route::get('/getmod', [
+            //     'uses' => 'QCDB\PackingInspectionController@getmod',
+            //     'name' => 'getmod'
+            // ]);
+            // Route::get('/packingsearchby', [
+            //     'uses' => 'QCDB\PackingInspectionController@searchby',
+            //     'name' => 'packingsearchby'
+            // ]);
+            // Route::get('/packingprintreport', [
+            //     'uses' => 'QCDB\PackingInspectionController@getPACKINGreport',
+            //     'name' => 'packingprintreport'
+            // ]);
+            // Route::get('/packingprintreportexcel', [
+            //     'uses' => 'QCDB\PackingInspectionController@getPACKINGreportexcel',
+            //     'name' => 'packingprintreportexcel'
+            // ]);
+
+            // Route::get('/displaypackmod', [
+            //     'uses' => 'QCDB\PackingInspectionController@displaypackmod',
+            //     'name' => 'displaypackmod'
+            // ]);
+            // Route::post('/packmod_save', [
+            //     'uses' => 'QCDB\PackingInspectionController@packmod_save',
+            //     'name' => 'packmod_save'
+            // ]);
+            // Route::get('/packmod_edit', [
+            //     'uses' => 'QCDB\PackingInspectionController@packmod_edit',
+            //     'name' => 'packmod_edit'
+            // ]);
+            // Route::get('/packmod_delete', [
+            //     'uses' => 'QCDB\PackingInspectionController@packmod_delete',
+            //     'name' => 'packmod_delete'
+            // ]);
+            // Route::get('/getTotalmod', [
+            //     'uses' => 'QCDB\PackingInspectionController@getTotalmod',
+            //     'name' => 'getTotalmod'
+            // ]);
+            // Route::get('/getTotalruncard', [
+            //     'uses' => 'QCDB\PackingInspectionController@getTotalruncard',
+            //     'name' => 'getTotalruncard'
+            // ]);
+            // Route::post('/packingselectgroupby1', [
+            //     'uses' => 'QCDB\PackingInspectionController@packingselectgroupby1',
+            //     'name' => 'packingselectgroupby1'
+            // ]);
+            // Route::post('/packingdbgroupby', [
+            //     'uses' =>'QCDB\PackingInspectionController@packingdbgroupby',
+            //     'name' => 'packingdbgroupby'
+            // ]);
+
+            
 
         /*PACKING MOLDING*/
             Route::get('/packingmolding', [

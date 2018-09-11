@@ -1403,7 +1403,7 @@ class IQCInspectionController extends Controller
         $dt = Carbon::now();
         $company_info = $this->com->getCompanyInfo();
         $date = substr($dt->format('  M j, Y  h:i A '), 2);
-        $header = DB::connection($this->mysql)->table('iqc_inspection_excel')
+        $header = DB::connection($this->mysql)->table('iqc_inspection_group')
                     ->select('invoice_no',
                             'supplier',
                             'app_no',
@@ -1428,7 +1428,7 @@ class IQCInspectionController extends Controller
                             'reject')
                     ->get();
 
-        $details = DB::connection($this->mysql)->table('iqc_inspection_excel')->get();
+        $details = DB::connection($this->mysql)->table('iqc_inspection_group')->get();
 
         $data = [
             'company_info' => $company_info,
@@ -1462,7 +1462,7 @@ class IQCInspectionController extends Controller
                         $sheet->setFreeze('A7');
                         $sheet->setWidth('A', 5);
 
-                        $details = DB::connection($this->mysql)->table('iqc_inspection_excel')->get();
+                        $details = DB::connection($this->mysql)->table('iqc_inspection_group')->get();
 
                         $dt = Carbon::now();
                         $com_info = $this->com->getCompanyInfo();
@@ -1631,7 +1631,7 @@ class IQCInspectionController extends Controller
                             });
 
                             $sheet->cell('Q'.$row, function($cell) use($qc) {
-                                $cell->setValue($qc->date_inspected);
+                                $cell->setValue($qc->date_ispected);
                                 $cell->setBorder('thin','thin','thin','thin');
                             });
 

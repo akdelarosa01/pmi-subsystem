@@ -1031,7 +1031,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">Group Items By:</h4>
             </div>
-            <form method="POST" action="{{ url('/iqc-calculate-dppm') }}" id="frm_DPPM">
+            <form method="GET" action="{{ url('/iqc-calculate-dppm') }}" id="frm_DPPM">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -1153,7 +1153,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Calculate</button>
+                    <button type="button" class="btn btn-success" id="btn_calculate">Calculate</button>
                     <button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
                 </div>
             </form>

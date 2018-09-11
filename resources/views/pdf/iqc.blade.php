@@ -7980,7 +7980,7 @@
 												<td>{{ $qc->partname }}</td>
 												<td>{{ $qc->lot_no }}</td>
 												<td>{{ $qc->lot_qty }}</td>
-												<td>{{ $qc->date_inspected }}</td>
+												<td>{{ $qc->date_ispected }}</td>
 												<td>{{ $qc->shift }}</td>
 												<td>{{ $qc->time_ins_from }}</td>
 												<td>{{ $qc->time_ins_to }}</td>
