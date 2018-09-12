@@ -49,8 +49,8 @@ class ts_mrp extends Model
         'check',
         'supcode',
         'supname',
-        're'
-        'status'
+        're',
+        'status',
         'isDeleted',
     ];
 
