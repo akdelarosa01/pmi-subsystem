@@ -195,16 +195,16 @@ $( function() {
 		getPOdetails($(this).val());
 	});
 
-	$('#pack_code_per_series').on('change', function() {
+	$('#packing_code_series').on('change', function() {
         _packcodeperseries = $(this).val();
         _packingcode = _packcodeperseries+'-'+_month+'-'+_carton+_stamp;
-        $('#pack_code').val(_packingcode);
+        $('#packing_code').val(_packingcode);
     });
 
-    $('#carton_no').on('keyup', function() {
+    $('#carton_num').on('keyup', function() {
         _carton = $(this).val();
         _packingcode = _packcodeperseries+'-'+_month+'-'+_carton+_stamp;
-        $('#pack_code').val(_packingcode);
+        $('#packing_code').val(_packingcode);
     });
 
     $('#btn_search').on('click', function() {
@@ -521,6 +521,7 @@ function getStampCode() {
     }).done(function(data, textStatus, xhr) {
         var x = data[1];
         _stamp = x.replace('OQC','');
+        console.log(_stamp);
         return _stamp;
         // $('#pack_code').val(_packingcode);
     }).fail(function(xhr, textStatus, errorThrown) {
