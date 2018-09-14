@@ -431,7 +431,7 @@ class PORegistrationController extends Controller
         
         return response()->json($data);
    
-        //}
+       
     }
     //Edit records for tbl_poregistration------------------
     public function editporeg(Request $request)

@@ -69,8 +69,8 @@ class AddnewYieldingPerformanceController extends Controller
             $datenow = date('Y/m/d');
             $count = DB::connection($this->mysql)->table("tbl_yielding_pya")->select('yieldingno')->orderBy('id','desc')->first();
 
-            $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->count(); 
-            $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->count(); 
+            $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
+            $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
             //$family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
             $modefect = $this->com->getDropdownByName('Mode of Defect - Yield Performance');
             $family = $this->com->getDropdownByName('Family');
@@ -81,9 +81,11 @@ class AddnewYieldingPerformanceController extends Controller
             return view('yielding.AddnewYieldingPerformance',['userProgramAccess' => $userProgramAccess,'family' => $family,'modefect' => $modefect,'yieldstation' => $ys,'yieldingno'=>$count,'series'=>$series, 'msrecords'=>$msrecords, 'count'=>$count,'countpya'=> $countpya,'countcmq'=> $countcmq]); 
         }
     }
-    public function checkdetails(Request $request){
+
+    public function checkdetails(Request $request)
+    {
         $pono = $request->pono;
-        $tablecount = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->where('pono','=',$pono)->count();
+        $tablecount = DB::connection($this->mysql)->table('tbl_yielding_performance')->where('pono','=',$pono)->count();
 
         return $tablecount;
     }
@@ -91,7 +93,7 @@ class AddnewYieldingPerformanceController extends Controller
     //displaying the records for production date,yielding station and accumulated output
     private function displaypya($pono)
     {
-        $table = "tbl_yielding_performance_backup";
+        $table = "tbl_yielding_performance";
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
                     ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput')
@@ -105,7 +107,7 @@ class AddnewYieldingPerformanceController extends Controller
     //display records for classification, mod and quantity
     private function displaycmq($pono)
     { 
-        $table = "tbl_yielding_performance_backup";  
+        $table = "tbl_yielding_performance";  
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
                     ->select('id','pono','classification','mod','qty')
@@ -116,7 +118,7 @@ class AddnewYieldingPerformanceController extends Controller
 
     public function searchdisplaypya(Request $request)
     {
-        $table = "tbl_yielding_performance_backup";
+        $table = "tbl_yielding_performance";
         $pono = $request->pono;  
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
@@ -127,9 +129,11 @@ class AddnewYieldingPerformanceController extends Controller
                     
        return $dataexist;
     }
-    public function getautovalue(Request $request){
+
+    public function getautovalue(Request $request)
+    {
         $pono = $request->pono;
-        $table = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as y')
+        $table = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
                         ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
                         ->join('tbl_yielding_cmq as c','y.pono','=','c.pono')
                         ->select(DB::raw("SUM(distinct(p.accumulatedoutput)) AS toutput"),DB::raw("SUM(distinct(c.qty)) AS treject"))
@@ -139,18 +143,22 @@ class AddnewYieldingPerformanceController extends Controller
                         ->get();
         return $table;
     }
-    public function getpng(Request $request){
+
+    public function getpng(Request $request)
+    {
         $pono = $request->pono;
-        $table = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+        $table = DB::connection($this->mysql)->table('tbl_yielding_performance')
                         ->select(DB::raw("SUM(tpng) AS tpng"))
                         ->where('pono','=',$pono)
                         ->where('classification','=','Production NG (PNG)')
                         ->get();
         return $table;
     }
-    public function getmng(Request $request){
+
+    public function getmng(Request $request)
+    {
         $pono = $request->pono;
-        $table = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+        $table = DB::connection($this->mysql)->table('tbl_yielding_performance')
                         ->select(DB::raw("SUM(tmng) AS tmng"))
                         ->where('pono','=',$pono)
                         ->where('classification','=','Material NG (MNG)')
@@ -160,7 +168,7 @@ class AddnewYieldingPerformanceController extends Controller
 
     public function searchdisplaycmq(Request $request)
     {
-        $table = "tbl_yielding_performance_backup";
+        $table = "tbl_yielding_performance";
         $pono = $request->pono;
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
@@ -173,7 +181,7 @@ class AddnewYieldingPerformanceController extends Controller
 
     public function searchdisplaydetails(Request $request)
     {
-        $table = "tbl_yielding_performance_backup";
+        $table = "tbl_yielding_performance";
         $pono = $request->pono;
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
@@ -182,9 +190,10 @@ class AddnewYieldingPerformanceController extends Controller
 
         return $dataexist; 
     }
+
     public function searchdisplaysummary(Request $request)
     {
-        $table = "tbl_yielding_performance_backup";
+        $table = "tbl_yielding_performance";
         $pono = $request->pono;
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
@@ -193,47 +202,43 @@ class AddnewYieldingPerformanceController extends Controller
 
         return $dataexist; 
     }
-    public function addYieldperformance(Request $request)
-    {
-        $dataField = $request->data;
-        $status = $dataField['status'];
-        $classification = $dataField['classification'];
-        $x = 0;
-        foreach ($dataField['newmod'] as $key => $rec) {
-           /* if($dataField['classification']){
-                $qty = $dataField['newqty'][$key];
-                $classification = $dataField['newclassification'][$key];
-                $mod = $rec;
-            }else{
-                $qty = "NDF";
-                $classification = "NDF";
-                $mod = "NDF";
-            }*/
-            DB::connection($this->mysql)->table('tbl_yielding_cmq')
-                        ->insert([
-                            'yieldingno' => $dataField['yieldingno'],
-                            'pono' => $dataField['pono'],
-                            'productiondate' => $dataField['productiondate'],
-                            'mod' => $rec,
-                            'classification' =>$dataField['newclassification'][$key],
-                            'qty' => $dataField['newqty'][$key]
-                            ]);                                                                                                                                                                                                                         
-        }
 
-        foreach ($dataField['newyieldingstation'] as $key => $rec) {
-            DB::connection($this->mysql)->table('tbl_yielding_pya')
-                        ->insert([
-                            'yieldingno' => $dataField['yieldingno'],
-                            'pono' => $dataField['pono'],
-                            'productiondate' => $dataField['productiondate'],
-                            'yieldingstation' => $rec,
-                            'accumulatedoutput' => $dataField['accumulatedoutput']
-                            ]);
-                                                                                                                                                                                                                                         
-        }
-        
-        if($status == "ADD"){
-            foreach ($dataField['newmod'] as $key => $rec) {
+    public function addYieldperformance(Request $req)
+    {
+        $status = $req->status;
+        $classification = $req->classification;
+        $x = 0;
+
+        $data = [
+            'msg' => 'Saving Failed.',
+            'status' => 'failed'
+
+        ];
+
+        if (isset($req->id) || $req->id !== '' || !empty($req->id)) {
+            DB::connection($this->mysql)->table("tbl_yielding_performance")
+                ->where('id',$req->id)
+                ->update([
+                    'yieldingno' => $req->yieldingno,
+                    'pono' => $req->pono,
+                    'poqty' => $req->poqty,
+                    'device' => $req->device,
+                    'family' => $req->family,
+                    'series' => $req->series,
+                    'prodtype' => $req->prodtype,
+                    'toutput' => $req->toutput,
+                    'treject' => $req->treject,
+                    'tmng' => $req->tmng,
+                    'tpng' => $req->tpng,
+                    'ywomng' => $req->ywomng,
+                    'twoyield' => $req->twoyield,
+                    'updated_at' => date('Y-m-d h:i:s')
+                ]);
+
+            DB::connection($this->mysql)->table('tbl_yielding_cmq')
+                ->where('yieldingno',$req->yieldingno)
+                ->delete();
+            foreach ($req->newmod as $key => $rec) {
                /* if($dataField['classification']){
                     $qty = $dataField['newqty'][$key];
                     $classification = $dataField['newclassification'][$key];
@@ -243,73 +248,102 @@ class AddnewYieldingPerformanceController extends Controller
                     $classification = "NDF";
                     $mod = "NDF";
                 }*/
-                DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
-                        ->insert([
-                            'yieldingno' => $dataField['yieldingno'],
-                            'pono' => $dataField['pono'],
-                            'poqty' => $dataField['poqty'],
-                            'device' => $dataField['device'],
-                            'family' => $dataField['family'],
-                            'series' => $dataField['series'],
-                            'prodtype' => $dataField['prodtype'],
-                            'mod' => $rec,
-                            'classification' => $dataField['newclassification'][$key],
-                            'qty' => $dataField['newqty'][$key],
-                            'productiondate' => $dataField['productiondate'],
-                            'yieldingstation' => $dataField['yieldingstation'],
-                            'accumulatedoutput' => $dataField['accumulatedoutput'],
-                            'toutput' => $dataField['toutput'],
-                            'treject' => $dataField['treject'],
-                            'tmng' => $dataField['tmng'],
-                            'tpng' => $dataField['tpng'],
-                            'ywomng' => $dataField['ywomng'],
-                            'twoyield' => $dataField['twoyield']
-                            ]);                                         
-                                                                                                                                                                                                                                         
+                DB::connection($this->mysql)->table('tbl_yielding_cmq')
+                    ->insert([
+                        'yieldingno' => $req->yieldingno,
+                        'pono' => $req->pono,
+                        'productiondate' => $req->productiondate,
+                        'mod' => $rec,
+                        'classification' =>$req->newclassification[$key],
+                        'qty' => $req->newqty[$key],
+                        'updated_at' => date('Y-m-d h:i:s')
+                    ]);
             }
-        } 
 
-        if($status == "EDIT"){
-            $table = "tbl_yielding_performance_backup";
-            $dataField = $request->data;
-            return $dataField['productiondate'];
-
-            $ok = DB::connection($this->mysql)->table($table)
-                ->where('id',$dataField['yieldingno'])
-                ->update(array(
-                    'yieldingno' => $dataField['yieldingno'],
-                    'pono' => $dataField['pono'],
-                    'poqty' => $dataField['poqty'],
-                    'device' => $dataField['device'],
-                    'family' => $dataField['family'],
-                    'series' => $dataField['series'],
-                    'prodtype' => $dataField['prodtype'],
-                    'classification' => $dataField['classification'],
-                    'mod' => implode(",", $dataField['mod']),
-                    'qty' => $dataField['qty'],
-                    'productiondate' => $dataField['productiondate'],
-                    'yieldingstation' => $dataField['yieldingstation'],
-                    'accumulatedoutput' => $dataField['accumulatedoutput'],
-                    'toutput' => $dataField['toutput'],
-                    'treject' => $dataField['treject'],
-                    'tmng' => $dataField['tmng'],
-                    'tpng' => $dataField['tpng'],
-                    'ywomng' => $dataField['ywomng'],
-                    'twoyield' => $dataField['twoyield']
-            ));
-
-           
-            if ($ok) {
-                $msg = "Successfully saved.";
-                return redirect('/addnewYieldperformance')->with(['message'=>$msg]);
-            } else {
-                    $msg = "Saving Failed.";
-                return redirect('/addnewYieldperformance')->with(['err_message'=>$msg]);
+            DB::connection($this->mysql)->table('tbl_yielding_pya')
+                ->where('yieldingno',$req->yieldingno)
+                ->delete();
+            foreach ($req->newyieldingstation as $key => $rec) {
+                DB::connection($this->mysql)->table('tbl_yielding_pya')
+                            ->insert([
+                                'yieldingno' => $req->yieldingno,
+                                'pono' => $req->pono,
+                                'productiondate' => $req->productiondate,
+                                'yieldingstation' => $rec,
+                                'accumulatedoutput' => $req->accumulatedoutput,
+                                'updated_at' => date('Y-m-d h:i:s')
+                            ]);
             }
-              
+
+            $data = [
+                'msg' => 'Successfully saved.',
+                'status' => 'success'
+
+            ];
+        } else {
+            DB::connection($this->mysql)->table("tbl_yielding_performance")
+                ->insert([
+                    'yieldingno' => $req->yieldingno,
+                    'pono' => $req->pono,
+                    'poqty' => $req->poqty,
+                    'device' => $req->device,
+                    'family' => $req->family,
+                    'series' => $req->series,
+                    'prodtype' => $req->prodtype,
+                    'toutput' => $req->toutput,
+                    'treject' => $req->treject,
+                    'tmng' => $req->tmng,
+                    'tpng' => $req->tpng,
+                    'ywomng' => $req->ywomng,
+                    'twoyield' => $req->twoyield,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ]);
+
+            foreach ($req->newmod as $key => $rec) {
+               /* if($dataField['classification']){
+                    $qty = $dataField['newqty'][$key];
+                    $classification = $dataField['newclassification'][$key];
+                    $mod = $rec;
+                }else{
+                    $qty = "NDF";
+                    $classification = "NDF";
+                    $mod = "NDF";
+                }*/
+                DB::connection($this->mysql)->table('tbl_yielding_cmq')
+                    ->insert([
+                        'yieldingno' => $req->yieldingno,
+                        'pono' => $req->pono,
+                        'productiondate' => $req->productiondate,
+                        'mod' => $rec,
+                        'classification' =>$req->newclassification[$key],
+                        'qty' => $req->newqty[$key],
+                        'created_at' => date('Y-m-d h:i:s'),
+                        'updated_at' => date('Y-m-d h:i:s')
+                    ]);
+            }
+
+            foreach ($req->newyieldingstation as $key => $rec) {
+                DB::connection($this->mysql)->table('tbl_yielding_pya')
+                            ->insert([
+                                'yieldingno' => $req->yieldingno,
+                                'pono' => $req->pono,
+                                'productiondate' => $req->productiondate,
+                                'yieldingstation' => $rec,
+                                'accumulatedoutput' => $req->accumulatedoutput,
+                                'created_at' => date('Y-m-d h:i:s'),
+                                'updated_at' => date('Y-m-d h:i:s')
+                            ]);
+            }
+
+            $data = [
+                'msg' => 'Successfully saved.',
+                'status' => 'success'
+
+            ];
         }
-                                        
-                
+
+        return response()->json($data);
     } 
 
     public function searchPO(Request $request)
@@ -317,7 +351,7 @@ class AddnewYieldingPerformanceController extends Controller
         $search = $request->data;
         $find = $search['pono'];
         
-        $countrow = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+        $countrow = DB::connection($this->mysql)->table('tbl_yielding_performance')
                     ->where('pono',$find)->count();
      
         $table = DB::connection($this->mysql)->table('tbl_deviceregistration as d')
@@ -335,14 +369,14 @@ class AddnewYieldingPerformanceController extends Controller
         $find = $search['search'];
        /* return $find;*/
         
-        $ok =DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+        $ok =DB::connection($this->mysql)->table('tbl_yielding_performance')
         ->where('pono', $find)
         ->orWhere('yieldingno',$find)
         ->get();
 
         return $ok;
 
-        $dataexist = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+        $dataexist = DB::connection($this->mysql)->table('tbl_yielding_performance')
         ->where('pono',$find)
         ->orWhere('yieldingno',$find)
         ->count();
@@ -360,7 +394,7 @@ class AddnewYieldingPerformanceController extends Controller
 
        /* return $tray;*/
         if($traycount > 0){
-            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->wherein('id',$tray)->delete();
+            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance')->wherein('id',$tray)->delete();
         
             if ($ok) {
                 $msg = "Successfully deleted selected records.";
@@ -380,7 +414,7 @@ class AddnewYieldingPerformanceController extends Controller
         $count = DB::connection($this->mysql)->table('tbl_yielding_cmq')->where('yieldingno',$yieldingno)->count();
         
         if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->wherein('id',$tray)->delete();
+            DB::connection($this->mysql)->table('tbl_yielding_performance')->wherein('id',$tray)->delete();
             DB::connection($this->mysql)->table('tbl_yielding_cmq')->wherein('id',$tray)->delete();
         }
         if($count == 1){
@@ -389,86 +423,82 @@ class AddnewYieldingPerformanceController extends Controller
         return $count;
     }
 
-
-   
-
     public function deletepya(Request $request)
-    {      
+    {
         $tray = $request->tray;
         $traycount = $request->traycount;
         $yieldingno = $request->yieldingno;
         $table = DB::connection($this->mysql)->table("tbl_yielding_pya")->select('yieldingno')->orderBy('id','desc')->first();
 
         if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->where('yieldingno',$yieldingno)->delete();
+            DB::connection($this->mysql)->table('tbl_yielding_performance')->where('yieldingno',$yieldingno)->delete();
             DB::connection($this->mysql)->table('tbl_yielding_pya')->where('yieldingno',$yieldingno)->delete();
             DB::connection($this->mysql)->table('tbl_yielding_cmq')->where('yieldingno',$yieldingno)->delete();
         }
         return $table->yieldingno[0];
-        
     }
 
     public function multiSearch(Request $request)
-    {      
+    {
         $mSearch = $request->data;
         $mSearchtype1 = $request->data['mSearchtype1'];
         $mSearchval1 = $request->data['mSearchval1'];
-        $fixedtbl =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->get();
+        $fixedtbl =DB::connection($this->mysql)->table("tbl_yielding_performance")->get();
         if($mSearchtype1 == 1){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('yieldingno')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('yieldingno')->get();
             $field = "yieldingno";
         }
         else if($mSearchtype1 == 2){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('pono')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('pono')->get();
             $field = "pono";
         }
         else if($mSearchtype1 == 3){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('poqty')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('poqty')->get();
             $field = "poqty";
         }
         else if($mSearchtype1 == 4){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('device')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('device')->get();
             $field = "device";
         }
         else if($mSearchtype1 == 5){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('family')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('family')->get();
             $field = "family";
         }
         else if($mSearchtype1 == 6){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('series')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('series')->get();
             $field = "series";
         }
         else if($mSearchtype1 == 7){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('classification')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('classification')->get();
             $field = "classification";
         }
         else if($mSearchtype1 == 8){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('mod')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('mod')->get();
             $field = "mod";
         }
         else if($mSearchtype1 == 9){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('qty')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('qty')->get();
             $field = "qty";
         }
         else if($mSearchtype1 == 10){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('productiondate')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('productiondate')->get();
             $field = "productiondate";
         }
         else if($mSearchtype1 == 11){
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('yieldingstation')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('yieldingstation')->get();
             $field = "yieldingstation";
         }
         else {
-            $table =DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->select('accumulatedoutput')->get();
+            $table =DB::connection($this->mysql)->table("tbl_yielding_performance")->select('accumulatedoutput')->get();
             $field = "accumulatedoutput";
         }
    
 
         return $table;
-     
     }
 
-    public function multiSearchDisplay(Request $request){
+    public function multiSearchDisplay(Request $request)
+    {
         $search = $request->data;
         $columnfield = $search['mSearchtype1'];
         $columnvalue = $search['mSearchval1'];
@@ -499,11 +529,11 @@ class AddnewYieldingPerformanceController extends Controller
             $field = 'accumulatedoutput';
         }
        /* return $columnvalue;*/
-        $ok = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
+        $ok = DB::connection($this->mysql)->table("tbl_yielding_performance")
             ->where($field, 'LIKE' ,$columnvalue)
             ->get();
 
-        $count = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
+        $count = DB::connection($this->mysql)->table("tbl_yielding_performance")
             ->where($field,$columnvalue)
             ->count();
 
@@ -523,74 +553,125 @@ class AddnewYieldingPerformanceController extends Controller
         return Datatables::of($data)->make(true);
     }
 
-    public function devreg_get_series(Request $request){
+    public function devreg_get_series(Request $request)
+    {
         $data = $request->data;
         $table = DB::connection($this->mysql)->table('tbl_dropdown_series')->select($data['family'])->get();
         return $table;
     }
-    // public function get_mod(Request $request){
+    //  public function get_mod(Request $request){
     //     $prodtype = $request->prodtype;
     //     $table = DB::connection($this->mysql)->table('tbl_modregistration')->select('mod')->where('family',$prodtype)->get();
     //     return $table;
     // }
 
     //CER
-    public function GetPONumberDetails(Request $req){
-         // $podetails  = DB::connection($this->mssql)
-         //                    ->table('XRECE as r')
-         //                    ->leftJoin('XSLIP as s', 'r.SORDER', '=', 's.SEIBAN')
-         //                    ->leftjoin('XHIKI as hk', 's.PORDER', '=', 'hk.PORDER')
-         //                    ->leftjoin('XITEM as i', 'i.CODE', '=', 'hk.OYACODE')
-         //                    ->leftJoin('XHEAD as h','hk.OYACODE','=','h.CODE')
-         //                    ->where('r.SORDER',$req->po)
-         //                    ->select(DB::raw('r.SORDER as po'),
-         //                    DB::raw('r.CODE as device_code'),
-         //                    DB::raw('h.NAME as device_name'),
-         //                    DB::raw('SUM(r.KVOL) as po_qty'),
-         //                    DB::raw('SUBSTRING(h.NAME, 1, CHARINDEX('-', h.NAME) - 1) as  series'),
-         //                    DB::raw('UPPER(i.BUNR) as prodtype'),
-         //                    DB::raw('h.NOTE as family'))
-         //                    ->groupBy('r.SORDER', 'r.CODE', 'h.NAME', 'h.NOTE','i.BUNR')
-         //                    ->get();  
-         $podetails  = DB::connection($this->mssql)
-                            ->SELECT("SELECT r.SORDER as pono, r.CODE as device_code, h.NAME as device_name, r.KVOL as po_qty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series,
-                                UPPER(i.BUNR) as prodtype, h.NOTE as family 
-                                FROM XRECE r 
-                                     LEFT JOIN XITEM i ON i.CODE = r.CODE
-                                     LEFT JOIN XHEAD h ON h.CODE = r.CODE
-                                WHERE i.BUNR IN('Burn-In','Test Sockets') AND r.SORDER = '$req->po'
-                                GROUP BY r.SORDER, r.CODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
-                                ORDER BY i.BUNR, r.CODE");
-        $effect ="1";
-             
-        if(count($podetails) == 0)
-        {
-            $effect = "0";
-            $podetails = DB::connection($this->mysql)
-                            ->table('tbl_poregistration')
+    public function GetPONumberDetails(Request $req)
+    {
+        $podetails = '';
+        $pya = '';
+        $cmq = '';
+        $save_details = DB::connection($this->mysql)
+                            ->table('tbl_yielding_performance')
                             ->where('pono',$req->po)
-                            ->select(DB::raw('pono as po'),
-                                    DB::raw('device_name as device_name'),
-                                    DB::raw('SUM(poqty) as po_qty'),
-                                    DB::raw('family as family'),
-                                    DB::raw('series as series'),
-                                    DB::raw('prod_type as prodtype'))
-                            ->first();
-          
+                            ->select(
+                                'id',
+                                'yieldingno',
+                                'pono',
+                                'poqty',
+                                'device',
+                                'family',
+                                'series',
+                                'prodtype',
+                                'classification',
+                                'mod',
+                                'qty',
+                                'productiondate',
+                                'yieldingstation',
+                                'accumulatedoutput',
+                                'toutput',
+                                'treject',
+                                'tmng',
+                                'tpng',
+                                'ywomng',
+                                'twoyield',
+                                'created_at',
+                                'updated_at'
+                            )->get();
+        $effect ="2";
+
+        if (count((array)$save_details) < 1) {
+            $localpo = DB::connection($this->mysql)
+                                ->table('tbl_poregistration')
+                                ->where('pono',$req->po)
+                                ->select(DB::raw('pono as pono'),
+                                        DB::raw('device_name as device_name'),
+                                        DB::raw('poqty as po_qty'),
+                                        DB::raw('family as family'),
+                                        DB::raw('series as series'),
+                                        DB::raw('prod_type as prodtype'))
+                                ->first();
+
+            $podetails = $localpo;
+             
+            $effect ="1";
+                 
+            if(count((array)$podetails) == 0)
+            {
+                $effect = "0";
+                $ypics = DB::connection($this->mssql)
+                                ->SELECT("SELECT r.SORDER as pono, r.CODE as device_code, h.NAME as device_name, r.KVOL as po_qty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series,
+                                    UPPER(i.BUNR) as prodtype, h.NOTE as family 
+                                    FROM XRECE r 
+                                         LEFT JOIN XITEM i ON i.CODE = r.CODE
+                                         LEFT JOIN XHEAD h ON h.CODE = r.CODE
+                                    WHERE i.BUNR IN('Burn-In','Test Sockets') AND r.SORDER = '$req->po'
+                                    GROUP BY r.SORDER, r.CODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
+                                    ORDER BY i.BUNR, r.CODE");
+
+                if (count((array)$ypics) > 0) {
+                    if ($ypics[0]->pono !== null)
+                    {
+                        $podetails = $ypics[0];
+                    }
+                }
+            }
+        } else {
+            $pya = DB::connection($this->mysql)->table('tbl_yielding_pya')
+                        ->where('pono','=',$req->po)
+                        ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput')
+                        ->groupBy('yieldingno')
+                        ->orderBY('productiondate','DESC')
+                        ->get();
+
+            $cmq = DB::connection($this->mysql)->table('tbl_yielding_cmq')
+                        ->where('pono','=',$req->po)
+                        ->select('id','pono','classification','mod','qty')
+                        ->orderBY('productiondate','DESC')
+                        ->get();
         }
+
+        // if ($effect !== "2"){
+            
+
         $result = [
-            'po_details' => $podetails[0],
-            'effect' => $effect
+            'po_details' => $podetails,
+            'effect' => $effect,
+            'yield_data' => $save_details,
+            'pya' => $pya,
+            'cmq' => $cmq
         ];
-        //array_push($result,$podetails,$effect);
+
+     // }
+       
         return $result;
     }
 
-    public function getRelatedseries(Request $req){
+    public function getRelatedseries(Request $req)
+    {
             $dropdownlist = DB::connection($this->mysql)
                             ->table('tbl_seriesregistration')->where('family', '=', $req->Family)->get();
-             return $dropdownlist;
-
+            return $dropdownlist;
     }
 
     //
