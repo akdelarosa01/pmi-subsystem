@@ -30,7 +30,7 @@ class YieldPerformanceYieldTargetController extends Controller
         $com = new CommonController;
 
         if (Auth::user() != null) {
-            $this->mysql = $com->userDBcon(Auth::user()->productline,'mysql');
+            $this->mysql = $com->userDBcon(Auth::user()->productline,'yielding');
             $this->mssql = $com->userDBcon(Auth::user()->productline,'mssql');
             $this->common = $com->userDBcon(Auth::user()->productline,'common');
         } else {
@@ -38,43 +38,6 @@ class YieldPerformanceYieldTargetController extends Controller
         }
     }
 
-    // public function GetYieldPerformanceMain(){
-    //     $markup = DB::connection($this->mysql)->table('tbl_yielding_performance')
-    //                 ->orderBy('id','DESC')
-    //                 ->select([
-    //                     'id',
-    //                     'pono',
-    //                     'poqty',
-    //                     'device',
-    //                     'family',
-    //                     'series',
-    //                     'toutput',
-    //                     'treject',
-    //                     'accumulatedoutput',
-    //                 ]);
-    //     return Datatables::of($markup)
-    //                     ->editColumn('id', function($data) {
-    //                         return $data->id;
-    //                     })
-    //                     ->addColumn('action', function($data) {
-    //                         return '<button type="button" name="edit-mainEdit" class="btn btn-sm btn-primary edit-mainEdit" 
-    //                         data-id="'.$data->id.'" 
-    //                         data-pono="'.$data->pono.'" 
-    //                         data-poqty="'.$data->poqty.'"
-    //                         data-device="'.$data->device.'"
-    //                         data-family="'.$data->family.'"
-    //                         data-series="'.$data->series.'"
-    //                         data-toutput="'.$data->toutput.'"
-    //                         data-treject="'.$data->treject.'"
-    //                         data-accumulatedoutput="'.$data->accumulatedoutput.'">
-    //                                      <i class="fa fa-edit"></i> 
-    //                                 </button>';
-    //                     })
-    //                     ->make(true);
-    
-    // }
-
-    
     public function getYieldTarget(Request $request)
     {
         $common = new CommonController;
@@ -95,460 +58,20 @@ class YieldPerformanceYieldTargetController extends Controller
                 ->where('d.SORDER',$request->pono)
                 ->groupBy('d.SORDER','d.CODE','h.NAME')
                 ->get();
-            /*$msrecords = DB::connection($this->mssql)
-                ->table('XHIKI as d')
-                ->join('XHEAD as h','d.OYACODE','=','h.CODE')
-                ->select(DB::raw("d.SEIBAN as PO")
-                    , DB::raw("d.OYACODE as devicecode")
-                    , DB::raw("h.NAME as devicename")
-                    , DB::raw("SUM(d.KVOL) as POqty"))
-                ->where('d.SEIBAN',$request->pono)
-                ->groupBy('d.SEIBAN','d.OYACODE','h.NAME')
-                ->get();*/
-
-            $record = DB::connection($this->mysql)->table("tbl_yielding_performance")
-                        ->groupBy('pono')
-                        ->get();
+                       
             $targetyield = DB::connection($this->mysql)->table("tbl_targetregistration")->distinct()->get();
-           
-            $count = DB::connection($this->mysql)->table("tbl_yielding_performance")->count() + 1;
-            $tablepya = DB::connection($this->mysql)->table("tbl_yielding_pya")->get(); 
-            $tablecmq = DB::connection($this->mysql)->table("tbl_yielding_cmq")->get(); 
-            $classification = $common->getDropdownByName('Classification');
-            $family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
-            $series = $common->getDropdownByName('series');
-            $ys = $common->getDropdownByName('Yielding Station');
-            $tableporeg = DB::connection($this->mysql)->table("tbl_poregistration")->orderBy('id','DESC')->get();
-            $tabledevicereg = DB::connection($this->mysql)->table("tbl_deviceregistration")->orderBy('id','DESC')->get();
-            $tableseriesreg = DB::connection($this->mysql)->table("tbl_seriesregistration")->orderBy('family','asc')->get();
-            $tablemodreg = DB::connection($this->mysql)->table("tbl_modregistration")->orderBy('family','asc')->get();
+                       
             $target = DB::connection($this->mysql)->table("tbl_targetregistration")->orderBy('datefrom','asc')->get();
-            $ptype = $common->getDropdownByName('Product Type');
             
-            return view('Yielding.YieldPerformance',['userProgramAccess' => $userProgramAccess,'category' => $classification,'family' => $family,'series' => $series,'yieldstation' => $ys,'record'=>$record, 'yieldingno'=>$count, 'msrecords'=>$msrecords, 'count'=>$count,'fieldpya'=>$tablepya,'fieldcmq'=>$tablecmq,'tableporeg'=>$tableporeg,'tabledevicereg'=>$tabledevicereg,'tableseriesreg'=>$tableseriesreg,'tablemodreg'=>$tablemodreg,
+            
+            return view('yielding.YieldPerformanceYieldTarget',['userProgramAccess' => $userProgramAccess,
+                'msrecords'=>$msrecords, 
                 'target' => $target,
-                'ptype' => $ptype,
                 'targetyield' => $targetyield]); 
         }
     }
 
-    public function getponoreg(Request $request){
-        $pono = $request->pono;
-        /*$msrecords = DB::connection($this->mssql)
-                ->table('XHIKI as d')
-                ->join('XHEAD as h','d.OYACODE','=','h.CODE')
-                ->select(DB::raw("d.SEIBAN as PO")
-                    , DB::raw("d.OYACODE as devicecode")
-                    , DB::raw("h.NAME as devicename")
-                    , DB::raw("SUM(d.KVOL) as POqty"))
-                ->where('d.SEIBAN',$request->pono)
-                ->groupBy('d.SEIBAN','d.OYACODE','h.NAME')
-                ->get();*/
-        $msrecords = DB::connection($this->mssql)
-                ->table('XRECE as d')
-                ->join('XHEAD as h','d.CODE','=','h.CODE')
-                ->select(DB::raw("d.SORDER as PO")
-                    , DB::raw("d.CODE as devicecode")
-                    , DB::raw("h.NAME as devicename")
-                    , DB::raw("SUM(d.KVOL) as POqty"))
-                ->where('d.SORDER',$request->pono)
-                ->groupBy('d.SORDER','d.CODE','h.NAME')
-                ->get();
-        return $msrecords;
-    }
-
-    //YIELDING PER
-    public function CheckYpicsPO(Request $req)
-    {
-        $couns = DB::connection($this->mysql)
-                    ->table('tbl_poregistration')
-                    ->where('pono',$req->po)
-                    ->count();
-        return response()->json($couns);
-    }
-    
-    //
-
    
-    //displaying  tbl_poregistration records----------------
-    
-    public function getYieldPerformanceDT(){
-        $markup = DB::connection($this->mysql)->table('tbl_yielding_performance')
-                    ->orderBy('id','DESC')
-                    ->select([
-                        'id',
-                        'pono',
-                        'poqty',
-                        'device',
-                        'series',
-                        'family',
-                        'toutput',
-                        'treject',
-                        'accumulatedoutput',
-                    ]);
-        return Datatables::of($markup)
-                        ->editColumn('id', function($data) {
-                            return $data->id;
-                        })
-                        ->addColumn('action', function($data) {
-                            return '<button type="button" name="edit-yield" class="btn btn-sm btn-primary edit-yield" 
-                            data-id="'.$data->id.'" 
-                            data-pono="'.$data->pono.'" 
-                            data-poqty="'.$data->poqty.'"
-                            data-device="'.$data->device.'"
-                            data-series="'.$data->series.'"
-                            data-family="'.$data->family.'"
-                            data-toutput="'.$data->toutput.'"
-                            data-treject="'.$data->treject.'"
-                            data-accumulatedoutput="'.$data->accumulatedoutput.'">
-                                         <i class="fa fa-edit"></i> 
-                                    </button>';
-                        })
-                        ->make(true);
-    }
-
-
-    private function displayporeg(Request $request){
-         $common = new CommonController;
-        if(!$common->getAccessRights(Config::get('constants.MODULE_CODE_POREG'), $userProgramAccess))
-        {
-            return redirect('/home');
-        }
-        else
-        { 
-
-        $table = DB::connection($this->mysql)->table('tbl_poregistration')->orderBy('id','DESC')->get();
-        return $table;
-        }
-    }
-    public function getporeg(){
-        $common = new CommonController;
-         if(!$common->getAccessRights(Config::get('constants.MODULE_CODE_POREG'), $userProgramAccess))
-        {
-            return redirect('/home');
-        }
-        else
-        { 
-
-
-        $markup = DB::connection($this->mysql)->table('tbl_poregistration')
-                    ->orderBy('id','DESC')
-                    ->select([
-                        'id',
-                        'pono',
-                        'device_code',
-                        'device_name',
-                        'poqty',
-                        'Family',
-                        'Series',
-                        'Prod_type',
-                    ]);
-        return Datatables::of($markup)
-                        ->editColumn('id', function($data) {
-                            return $data->id;
-                        })
-                        ->addColumn('action', function($data) {
-                            return '<button type="button" name="edit-poreg" class="btn btn-sm btn-primary edit-poreg" 
-                            data-id="'.$data->id.'" 
-                            data-pono="'.$data->pono.'" 
-                            data-device_code="'.$data->device_code.'"
-                            data-device_name="'.$data->device_name.'" 
-                            data-poqty="'.$data->poqty.'"
-                            data-Family="'.$data->Family.'"
-                            data-Series="'.$data->Series.'"
-                            data-Prod_type="'.$data->Prod_type.'">
-                                         <i class="fa fa-edit"></i> 
-                                    </button>';
-                        })
-                        ->make(true);
-        }
-    }
-    //Add and Update PO Registration------------------------
-    public function poregistration(Request $request){
-        $status = $request->status;
-        $id = $request->id;
-        // $count = DB::connection($this->mysql)->table('tbl_poregistration')->where('pono',$request->pono)->count();
-        // if($count > 0){
-        //     return $count;
-        // }else{
-            if($status == "ADD"){
-            DB::connection($this->mysql)->table('tbl_poregistration')
-                ->insert([
-                    'pono'=>$request->pono,
-                    'device_code'=>$request->podeviceCode,
-                    'device_name'=>$request->podevice,
-                    'poqty'=>$request->poquantity,
-                    'Family'=>$request->Family,
-                    'Series'=>$request->Series,
-                    'Prod_Type'=>$request->ProdType
-                ]);   
-               
-            }
-            if($status == "EDIT"){
-                DB::connection($this->mysql)->table('tbl_poregistration')
-                    ->where('id','=',$request->id)
-                    ->update(array(
-                        'pono'=>$request->pono,
-                        'device_code'=>$request->podeviceCode,
-                        'device_name'=>$request->podevice,
-                        'poqty'=>$request->poquantity,
-                        'Family'=>$request->Family,
-                        'Series'=>$request->Series,
-                        'Prod_Type'=>$request->ProdType
-                    ));
-                    
-            }
-            $table = DB::connection($this->mysql)->table('tbl_poregistration')->orderBy('id','DESC')->get();
-             return $table;
-   
-        //}
-    }
-    //Edit records for tbl_poregistration------------------
-    public function editporeg(Request $request)
-    {    
-        $search = $request->editsearch;
-        $ok =DB::connection($this->mysql)->table('tbl_poregistration')
-        ->where('id', $search)
-        ->get();
-        return $ok;
-    }
-    
-    //Delete records for tbl_poregistration------------------
-    public function deleteporeg(Request $request){  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-      /*  return $tray;  */
-      try{
-            if($traycount > 0){
-                DB::connection($this->mysql)->table('tbl_poregistration')->wherein('id',$tray)->delete();  
-            } 
-            return 1;
-        }
-      catch(Exception $err){
-            return 2;
-        }
-    }
- 
-    //displaying  tbl_deviceregistration records----------------
-    private function displaydevreg(){
-        $table = DB::connection($this->mysql)->table('tbl_deviceregistration')->orderBy('id','DESC')->get();
-        return $table;
-    }
-    public function displaydeviceregistration(){
-        $table = DB::connection($this->mysql)->table('tbl_deviceregistration')->orderBy('id','DESC')->get();
-        return $table;
-    }
-    //Add and Update Device Registration------------------------
-    public function deviceregistration(Request $request){
-        $status = $request->status;
-        $id = $request->id;
-
-        $count = DB::connection($this->mysql)->table('tbl_deviceregistration')->where('pono',$request->pono)->count();
-        if($count > 0){
-            return $count;
-        }else{
-            if($status == "ADD"){
-               DB::connection($this->mysql)->table('tbl_deviceregistration')
-                    ->insert([
-                        'pono'=>$request->pono,
-                        'device_name'=>$request->devicename,
-                        'family'=>$request->family,
-                        'series'=>$request->series,
-                        'ptype'=>$request->ptype
-                    ]);    
-            }
-            if($status == "EDIT"){
-                DB::connection($this->mysql)->table('tbl_deviceregistration')
-                    ->where('id','=',$id)
-                    ->update(array(
-                        'pono'=>$request->pono,
-                        'device_name'=>$request->devicename,
-                        'family'=>$request->family,
-                        'series'=>$request->series,
-                        'ptype'=>$request->ptype   
-                    ));
-            }
-            return $this->displaydevreg();  
-        }
-    }
-    //Edit records for tbl_deviceregistration------------------
-    public function editdevicereg(Request $request)
-    {    
-        $search = $request->editsearch;   
-        $ok =DB::connection($this->mysql)->table('tbl_deviceregistration')
-        ->where('id', $search)
-        ->get();
-        return $ok;
-    }
-    //Delete records for tbl_deviceregistration------------------
-    public function deletedevicereg(Request $request){  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-      /*  return $tray;  */
-        if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_deviceregistration')->wherein('id',$tray)->delete();  
-        } 
-        return $this->displaydevreg();
-    }
-
-    //displaying  tbl_Series Registration records----------------
-    private function displayseriesreg(){
-        $table = DB::connection($this->mysql)->table('tbl_seriesregistration')->get();
-        return $table;
-    }
-
-    public function getseriesreg(){
-        $markup = DB::connection($this->mysql)->table('tbl_seriesregistration')
-                    ->orderBy('id','DESC')
-                    ->select([
-                        'id',
-                        'family',
-                        'series',
-                    ]);
-        return Datatables::of($markup)
-                        ->editColumn('id', function($data) {
-                            return $data->id;
-                        })
-                        ->addColumn('action', function($data) {
-                            return '<button type="button" name="edit-seriesreg" class="btn btn-sm btn-primary edit-seriesreg" 
-                            data-id="'.$data->id.'" 
-                            data-family="'.$data->family.'" 
-                            data-series="'.$data->series.'">
-                                         <i class="fa fa-edit"></i> 
-                                    </button>';
-                        })
-                        ->make(true);
-    }
-    //Add and Update PO Registration------------------------
-    public function seriesregistration(Request $request){
-        $status = $request->status;
-        $id = $request->id;
-
-        if($status == "ADD"){
-           DB::connection($this->mysql)->table('tbl_seriesregistration')
-                ->insert([
-                    'family'=>$request->family,
-                    'series'=>$request->series
-                 
-                ]);    
-        }
-        if($status == "EDIT"){
-            DB::connection($this->mysql)->table('tbl_seriesregistration')
-                ->where('id','=',$id)
-                ->update(array(
-                    'family'=>$request->family,
-                    'series'=>$request->series
-                ));
-        }
-        return $this->displayseriesreg();  
-    }
-    //Edit records for tbl_seriesregistration------------------
-    public function editseriesreg(Request $request)
-    {    
-        $search = $request->editsearch;
-        $ok =DB::connection($this->mysql)->table('tbl_seriesregistration')
-        ->where('id', $search)
-        ->get();
-        return $ok;
-    }
-    //Delete records for tbl_seriesregistration------------------
-    public function deleteseriesreg(Request $request){  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-
-        if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_seriesregistration')->wherein('id',$tray)->delete();  
-        } 
-        return $this->displayseriesreg();
-    }
-  
-    //displaying  tbl_Mod Registration records----------------
-    private function displaymodreg(){
-        $table = DB::connection($this->mysql)->table('tbl_modregistration')->get();
-        return $table;
-    }
-
-    public function getModofDef(){
-         $markup = DB::connection($this->mysql)->table('tbl_modregistration')
-                    ->orderBy('id','DESC')
-                    ->select([
-                        'id',
-                        'family',
-                        'mod',
-                    ]);
-        return Datatables::of($markup)
-                        ->editColumn('id', function($data) {
-                            return $data->id;
-                        })
-                        ->addColumn('action', function($data) {
-                            return '<button type="button" name="edit-modedit" class="btn btn-sm btn-primary edit-modedit" 
-                            data-id="'.$data->id.'" 
-                            data-family="'.$data->family.'" 
-                            data-mod="'.$data->mod.'">
-                                         <i class="fa fa-edit"></i> 
-                                    </button>';
-                        })
-                        ->make(true);
-    }
-    //Add and Update PO Registration------------------------
-    public function modregistration(Request $request){
-        $status = $request->status;
-        $id = $request->id;
-        if($status == "ADD"){
-           DB::connection($this->mysql)->table('tbl_modregistration')
-                ->insert([
-                    'mod'=>$request->mod,
-                    'family'=>$request->family
-                 
-                ]);    
-        }
-        if($status == "EDIT"){
-            DB::connection($this->mysql)->table('tbl_modregistration')
-                ->where('id','=',$id)
-                ->update(array(
-                    'mod'=>$request->mod,
-                    'family'=>$request->family
-                ));
-        }
-        return $this->displaymodreg();  
-    }
-    //Edit records for tbl_modregistration------------------
-    public function editmodreg(Request $request)
-    {    
-        $search = $request->editsearch;
-        $ok =DB::connection($this->mysql)->table('tbl_modregistration')
-        ->where('id', $search)
-        ->get();
-        return $ok;
-    }
-    //Delete records for tbl_modregistration------------------
-    public function deletemodreg(Request $request){  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-
-        if($traycount > 0){
-            DB::connection($this->mysql)->table('tbl_modregistration')->wherein('id',$tray)->delete();  
-        } 
-        return $this->displaymodreg();
-    }
-
-
-    public function deleteYIELD(Request $request){  
-        $tray = $request->tray;
-        $traycount = $request->traycount;  
-      /*  return $tray;  */
-      try{
-            if($traycount > 0){
-                DB::connection($this->mysql)->table('tbl_yielding_performance')->wherein('id',$tray)->delete();  
-            } 
-            return 1;
-        }
-      catch(Exception $err){
-            return 2;
-        }
-    }
-     //---------------------------------------------------------
-    //----------------------------------------------------------
     //displaying  tbl_target Registration records----------------
     private function displaytargetreg(){
         $table = DB::connection($this->mysql)->table('tbl_targetregistration')->get();
@@ -556,62 +79,102 @@ class YieldPerformanceYieldTargetController extends Controller
     }
 
     public function getTargetYield(){
-         $markup = DB::connection($this->mysql)->table('tbl_targetregistration')
+         $targetyield = DB::connection($this->mysql)->table('tbl_targetregistration')
                     ->orderBy('id','DESC')
-                    ->select([
+                    ->select(
                         'id',
                         'datefrom',
                         'dateto',
                         'yield',
                         'dppm',
-                        'ptype',
-                    ]);
-        return Datatables::of($markup)
-                        ->editColumn('id', function($data) {
-                            return $data->id;
-                        })
-                        ->addColumn('action', function($data) {
-                            return '<button type="button" name="edit-target" class="btn btn-sm btn-primary edit-target" 
-                            data-id="'.$data->id.'" 
-                            data-datefrom="'.$data->datefrom.'" 
-                            data-dateto="'.$data->dateto.'"
-                            data-yield="'.$data->yield.'"
-                            data-dppm="'.$data->dppm.'"
-                            data-ptype="'.$data->ptype.'">
-                                         <i class="fa fa-edit"></i> 
-                                    </button>';
-                        })
-                        ->make(true);
+                        'ptype'
+                    )->get();
+        return response()->json($targetyield);
     }
 
-    //Add and Update PO Registration------------------------
+  
     public function targetregistration(Request $request){
         $status = $request->status;
         $id = $request->id;
+
+        $data = [
+            'msg' => 'Saving failed.',
+            'status' => 'failed',
+            'target_reg' => ''
+        ];
+
+        $insert = false;
+     
         if($status == "ADD"){
-           DB::connection($this->mysql)->table('tbl_targetregistration')
-                ->insert([
-                    'datefrom'=>$request->datefrom,
-                    'dateto'=>$request->dateto,
-                    'yield'=>$request->yielding,
-                    'dppm'=>$request->dppm,
-                    'ptype'=>$request->ptype
-                ]);    
-        }
-        if($status == "EDIT"){
-            DB::connection($this->mysql)->table('tbl_targetregistration')
-                ->where('id','=',$id)
-                ->update(array(
-                    'datefrom'=>$request->datefrom,
-                    'dateto'=>$request->dateto,
-                    'yield'=>$request->yielding,
-                    'dppm'=>$request->dppm,
-                    'ptype'=>$request->ptype
-                ));
-        }
-        return $this->displaytargetreg();  
+            $insert = DB::connection($this->mysql)->table('tbl_targetregistration')
+                       ->insert([
+                           'datefrom'=>$request->datefrom,
+                           'dateto'=>$this->$com->convertDate($request->dateto,'Y-m-d'),
+                           'yield'=>$request->yielding,
+                           'dppm'=>$request->dppm,
+                           'ptype'=>$request->ptype,
+                           'created_at' => Carbon::Now(),
+                           'updated_at' => Carbon::Now()
+                        ]);
+
+        }   
+        return $this->displaytargetreg(); 
+
+        // if($status == "EDIT"){
+        //     $insert = DB::connection($this->mysql)->table('tbl_targetregistration')
+        //                 ->where('id','=',$request->id)
+        //                 ->update(array(
+        //                    'datefrom'=>$request->datefrom,
+        //                    'dateto'=>$request->dateto,
+        //                    'yield'=>$request->yielding,
+        //                    'dppm'=>$request->dppm,
+        //                    'ptype'=>$request->ptype,
+        //                    'created_at' => date('Y-m-d H:i:s'),
+        //                    'updated_at' => date('Y-m-d H:i:s')
+        //                 ));
+        // }
+
+        // if ($insert) {
+        //     $target_reg = DB::connection($this->mysql)->table('tbl_targetregistration')->orderBy('id','DESC')->get();
+        //     $data = [
+        //         'msg' => 'Successfully saved.',
+        //         'status' => 'success',
+        //         'target_reg' => $target_reg
+        //     ];
+        // }
+
+        // return response()->json($data);
     }
+
+
+
+    //    $status = $request->status;
+    //     $id = $request->id;
+    //     if($status == "ADD"){
+    //        DB::connection($this->mysql)->table('tbl_targetregistration')
+    //             ->insert([
+    //                 'datefrom'=>$request->datefrom,
+    //                 'dateto'=>$request->dateto,
+    //                 'yield'=>$request->yielding,
+    //                 'dppm'=>$request->dppm,
+    //                 'ptype'=>$request->ptype
+    //             ]);    
+    //     }
+    //     if($status == "EDIT"){
+    //         DB::connection($this->mysql)->table('tbl_targetregistration')
+    //             ->where('id','=',$id)
+    //             ->update(array(
+    //                 'datefrom'=>$request->datefrom,
+    //                 'dateto'=>$request->dateto,
+    //                 'yield'=>$request->yielding,
+    //                 'dppm'=>$request->dppm,
+    //                 'ptype'=>$request->ptype
+    //             ));
+    //     }
+    //     return $this->displaytargetreg();  
+    // }
     //Edit records for tbl_targetregistration------------------
+    
     public function edittargetreg(Request $request)
     {    
         $search = $request->editsearch;
@@ -673,20 +236,20 @@ class YieldPerformanceYieldTargetController extends Controller
         
             if ($ok) {
                 $msg = "Successfully deleted selected records.";
-                return redirect('/yieldperformance')->with(['message'=>$msg]);
+                return redirect('/targetyieldperformance')->with(['message'=>$msg]);
             } else {
                 $msg = "No Record Exists.";
-                return redirect('/yieldperformance')->with(['err_message'=>$msg]);
+                return redirect('/targetyieldperformance')->with(['err_message'=>$msg]);
             }
         } else {
              $ok = DB::connection($this->mysql)->table('tbl_wbssetting')->delete();
         
             if ($ok) {
                 $msg = "Successfully deleted all records.";
-                return redirect('/yieldperformance')->with(['message'=>$msg]);
+                return redirect('/targetyieldperformance')->with(['message'=>$msg]);
             } else {
                 $msg = "No Record Exists.";
-                return redirect('/yieldperformance')->with(['err_message'=>$msg]);
+                return redirect('/targetyieldperformance')->with(['err_message'=>$msg]);
             }
         }
        
@@ -898,31 +461,6 @@ class YieldPerformanceYieldTargetController extends Controller
                     ->whereBetween('productiondate', [$fixeddf, $fixeddt])
                     ->get();
        return $table;
-    }
-
-    public function devreg_get_series(Request $request){
-        $family = $request->family;
-        $table = DB::connection($this->mysql)->table('tbl_seriesregistration')->select('series')->where('family',$family)->get();
-        return $table;
-    }
-
-    public function getFamilyDropDown(){
-
-        $dropdownlist = DB::connection($this->common)
-                    ->table('tbl_mdropdowns')->where('category', '=', 8)->get();
-        return $dropdownlist;
-    }
-
-    public function getSeriesDropdown(){
-        $dropdownlist = DB::connection($this->common)
-                    ->table('tbl_mdropdowns')->where('category', '=', 9)->get();
-        return $dropdownlist;
-    }
-
-    public function getProdtypeDropdown(){
-        $dropdownlist = DB::connection($this->common)
-                    ->table('tbl_mdropdowns')->where('category', '=', 25)->get();
-        return $dropdownlist;
     }
 
 }
