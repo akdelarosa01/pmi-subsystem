@@ -215,25 +215,25 @@ class AddnewYieldingPerformanceController extends Controller
 
         ];
 
-        if (isset($req->id) || $req->id !== '' || !empty($req->id)) {
-            DB::connection($this->mysql)->table("tbl_yielding_performance")
-                ->where('id',$req->id)
-                ->update([
-                    'yieldingno' => $req->yieldingno,
-                    'pono' => $req->pono,
-                    'poqty' => $req->poqty,
-                    'device' => $req->device,
-                    'family' => $req->family,
-                    'series' => $req->series,
-                    'prodtype' => $req->prodtype,
-                    'toutput' => $req->toutput,
-                    'treject' => $req->treject,
-                    'tmng' => $req->tmng,
-                    'tpng' => $req->tpng,
-                    'ywomng' => $req->ywomng,
-                    'twoyield' => $req->twoyield,
-                    'updated_at' => date('Y-m-d h:i:s')
-                ]);
+        if ($req->id !== '' || !empty($req->id)) {
+            $updated = DB::connection($this->mysql)->table("tbl_yielding_performance")
+                        ->where('id',$req->id)
+                        ->update([
+                            'yieldingno' => $req->yieldingno,
+                            'pono' => $req->pono,
+                            'poqty' => $req->poqty,
+                            'device' => $req->device,
+                            'family' => $req->family,
+                            'series' => $req->series,
+                            'prodtype' => $req->prodtype,
+                            'toutput' => $req->toutput,
+                            'treject' => $req->treject,
+                            'tmng' => $req->tmng,
+                            'tpng' => $req->tpng,
+                            'ywomng' => $req->ywomng,
+                            'twoyield' => $req->twoyield,
+                            'updated_at' => date('Y-m-d h:i:s')
+                        ]);
 
             DB::connection($this->mysql)->table('tbl_yielding_cmq')
                 ->where('yieldingno',$req->yieldingno)
@@ -275,30 +275,34 @@ class AddnewYieldingPerformanceController extends Controller
                             ]);
             }
 
-            $data = [
-                'msg' => 'Successfully saved.',
-                'status' => 'success'
+            if ($updated) {
+                $data = [
+                    'msg' => 'Successfully saved.',
+                    'status' => 'success'
 
-            ];
+                ];
+            }
+
+            
         } else {
-            DB::connection($this->mysql)->table("tbl_yielding_performance")
-                ->insert([
-                    'yieldingno' => $req->yieldingno,
-                    'pono' => $req->pono,
-                    'poqty' => $req->poqty,
-                    'device' => $req->device,
-                    'family' => $req->family,
-                    'series' => $req->series,
-                    'prodtype' => $req->prodtype,
-                    'toutput' => $req->toutput,
-                    'treject' => $req->treject,
-                    'tmng' => $req->tmng,
-                    'tpng' => $req->tpng,
-                    'ywomng' => $req->ywomng,
-                    'twoyield' => $req->twoyield,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ]);
+            $inserted = DB::connection($this->mysql)->table("tbl_yielding_performance")
+                            ->insert([
+                                'yieldingno' => $req->yieldingno,
+                                'pono' => $req->pono,
+                                'poqty' => $req->poqty,
+                                'device' => $req->device,
+                                'family' => $req->family,
+                                'series' => $req->series,
+                                'prodtype' => $req->prodtype,
+                                'toutput' => $req->toutput,
+                                'treject' => $req->treject,
+                                'tmng' => $req->tmng,
+                                'tpng' => $req->tpng,
+                                'ywomng' => $req->ywomng,
+                                'twoyield' => $req->twoyield,
+                                'created_at' => date('Y-m-d h:i:s'),
+                                'updated_at' => date('Y-m-d h:i:s')
+                            ]);
 
             foreach ($req->newmod as $key => $rec) {
                /* if($dataField['classification']){
@@ -336,11 +340,19 @@ class AddnewYieldingPerformanceController extends Controller
                             ]);
             }
 
-            $data = [
-                'msg' => 'Successfully saved.',
-                'status' => 'success'
+            if ($inserted) {
+                $data = [
+                    'msg' => 'Successfully saved.',
+                    'status' => 'success'
+                ];
+            } else {
+                $data = [
+                    'msg' => 'Not saved.',
+                    'status' => 'failed'
+                ];
+            }
 
-            ];
+            
         }
 
         return response()->json($data);

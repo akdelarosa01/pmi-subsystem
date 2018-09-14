@@ -751,6 +751,7 @@ function save_yield(){
        
     var myData = {
         _token: token
+        ,id: $('#id').val()
         ,yieldingno : yieldingno
         ,pono : pono
         ,poqty : poqty
