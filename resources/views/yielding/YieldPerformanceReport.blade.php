@@ -24,105 +24,140 @@
                     <div class="portlet box blue" >
                          <div class="portlet-title">
                               <div class="caption">
-                                   <i class="fa fa-navicon"></i>  Yield Performance
+                                   <i class="fa fa-navicon"></i>  Yield Performance Report
                               </div>
                          </div>
                          <div class="portlet-body">
 
                               <div class="row">
                                    <div class="col-sm-3">
-                                        <form class="form-horizontal">
-                                        {!! csrf_field() !!}
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">From</label>
-                                             <div class="col-sm-3">
-                                                  <input type="text" class="form-control input-sm" name="target-datefrom" id="target-datefrom">
-                                                  <div id="er_target-datefrom"></div>
+                                        <div class="form-group row" style="margin-top:60px;;margin-left:20px;">
+                                             <div class="col-sm-10" >
+                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 btn-success" id="btnaddnew">
+                                                       <i class="fa fa-plus"></i> New Transaction
+                                                  </button>
                                              </div>
-                                             <label class="control-label col-sm-2">To</label>
-                                             <div class="col-sm-3">
-                                                  <input type="text" class="form-control input-sm" name="target-dateto" id="target-dateto">
-                                                  <div id="er_target-dateto"></div>
-                                             </div>   
                                         </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Target Yield</label>
-                                             <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="targetyield" name="targetyield">
-                                                  <div id="er_targetyield"></div>
-                                             </div>     
-                                        </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Target DPPM</label>
-                                             <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="targetdppm" name="targetdppm">
-                                                  <input type="hidden" class="form-control input-sm" id="targetstatus" name="targetstatus" maxlength="40" >
-                                                  <input type="hidden" class="form-control input-sm" id="targetid" name="targetid" maxlength="40">
-                                                  <div id="er_targetdppm"></div>
-                                             </div>     
-                                        </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Product Type</label>
-                                             <div class="col-sm-9">
-                                                  <select class="form-control input-sm" name="targetptype" id="targetptype">
-                                                     {{--   <option value=""></option>
-                                                       <option value="Test Socket">Test Socket</option>
-                                                       <option value="Burn In">Burn In</option>      --}}
-                                                  </select>
-                                                  <div id="er_targetyield"></div>
-                                             </div>     
-                                        </div>
-                                        <br>
-                                        <div class="form-group pull-right">
-                                             <div class="col-sm-12">
-                                                  <button type="button" id='targetsave' onclick="javascript:targetregistration();"  class="btn btn-success">Save</button>
-                                                  <button type="button" id='targetclear' class="btn btn-danger">Clear</button>
+                                        <div class="form-group row" style="margin-left:20px;">
+                                             <div class="col-sm-10" >
+                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_poreg" >
+                                                  <i class="fa fa-save"></i>PO Registration
+                                                  </button>
                                              </div>
-                                        </div>      
-                                   </form>       
-                              </div>
-                         </div>
-                         <div class="row">
-                              <div class="col-sm-12">
-                                   <div class="scroller" style="height: 300px" id="tablefortargetreg">
-                                        <table id="modreg-table" class="table table-striped table-bordered table-hover"style="font-size:13px">
-                                             <thead id="thead1">
-                                                  <tr>
-                                                       <td class="table-checkbox" style="width: 5%">
-                                                            <input type="checkbox" class="group-checkable checkAllitemstarget" name="checkAllitemtarget"/>
-                                                       </td>
-                                                       <td></td>
-                                                       <td>From</td>
-                                                       <td>To</td>
-                                                       <td>Target Yield</td>
-                                                       <td>Target DPPM</td>
-                                                       <td>Product Type</td>
-                                                  </tr>
-                                             </thead>
-                                             <tbody id="tblfortarget">
-                                       {{--       @foreach($target as $rec)
-                                                  <tr>
-                                                       <td style="width: 2%">
-                                                            <input type="checkbox" class="form-control input-sm checkboxestarget" value="{{$rec->id}}" name="checkitemtarget" id="checkitemtarget"></input> 
-                                                       </td> 
-                                                       <td style="width: 2%">
-                                                            <button type="button" name="edit-targetreg" class="btn btn-sm btn-primary edit-targetreg" value="{{$rec->id}}">
-                                                                 <i class="fa fa-edit"></i> 
-                                                            </button> 
-                                                       </td>
-                                                       <td>{{$rec->datefrom}}</td>
-                                                       <td>{{$rec->dateto}}</td>
-                                                       <td>{{$rec->yield}}</td>
-                                                       <td>{{$rec->dppm}}</td>
-                                                       <td>{{$rec->ptype}}</td>
-                                                  </tr>
-                                             @endforeach --}}
-                                             </tbody>
-                                        </table>
+                                        </div>
+                                        <div class="form-group row" style="margin-left:20px;">
+                                             <div class="col-sm-10">
+                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_devicereg" ><i class="fa fa-desktop"></i>Device Registration</button>
+                                             </div>
+                                        </div>
+                                        <div class="form-group row" style="margin-left:20px;">
+                                             <div class="col-sm-10">
+                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_seriesreg" ><i class="fa fa-list-alt"></i>Series Registration</button>
+                                             </div>
+                                        </div>
+                                        <div class="form-group row" style="margin-left:20px;">
+                                             <div class="col-sm-10">
+                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_modreg" ><i class="fa fa-chain-broken"></i>Mode of Defect Registration</button>
+                                             </div>
+                                        </div>
+                                        <div class="form-group row" style="margin-left:20px;">
+                                             <div class="col-sm-10">
+                                                  <button type="button" style="font-size:10px;" class="btn col-sm-8 blue-soft" id="btn_target" ><i class="fa fa-line-chart"></i>Target Yield</button>
+                                             </div>
+                                        </div>
+                                        <div class="form-group row" style="margin-left:20px;">
+                                             <div class="col-sm-10">
+                                                  <button type="button" style="font-size:10px;" onclick="javascript:deleteAllcheckeditems();" class="btn  red col-sm-8 remove-task" id="btnremove_detail">
+                                                       <i class="fa fa-trash remove-task"></i> Remove
+                                                  </button>
+                                             </div>
+                                        </div>
                                    </div>
 
-
-                                                 
+                                   <div class="col-xs-9 col-md-pull-1"">
+                                        <table class="table table-striped table-bordered table-hover" id="sample_3" style="font-size:13px">
+                                             <thead >
+                                                  <tr>
+                                                       <td class="table-checkbox" style="width: 5%">
+                                                            <input type="checkbox" class="group-checkable checkAllitems" name="checkAllitem" data-set="#sample_3 .checkboxes"/>
+                                                       </td>
+                                                       <td>
+                                                       </td>
+                                                       <td>PO Number</td>
+                                                       <td>PO Qty</td>
+                                                       <td>Device Name</td>
+                                                       <td>Series</td>
+                                                       <td>Family</td>
+                                                       <td>Total Output</td>
+                                                       <td>Total Reject</td>
+                                                       <td>Total Yield</td>
+                                                  </tr>
+                                             </thead>
+                                             <tbody>
+                                                  @foreach($records as $rec)
+                                                  <?php 
+                                                  $x = $rec->accumulatedoutput + $rec->qty;
+                                                  $y = $rec->accumulatedoutput / $x;
+                                                  $twoyield = $y * 100.;
+                                                  ?>
+                                                  <tr>
+                                                       <td style="width: 2%">
+                                                            <input type="checkbox" class="form-control input-sm checkboxes" value="{{$rec->id}}" name="checkitem" id="checkitem"></input> 
+                                                       </td>                        
+                                                       <td style="width: 5%">           
+                                                          <button type="button" name="edit-task" class="btn btn-sm btn-primary edit-task" value="{{$rec->id . '|' . $rec->pono . '|' .$rec->poqty. '|' .$rec->device. '|' . $rec->series . '|' .$rec->family. '|' .$rec->toutput. '|' . $rec->treject . '|' .$rec->twoyield}}" id="editTask{{$rec->id}}">
+                                                                 <i class="fa fa-edit"></i> 
+                                                            </button>
+                                                       </td>
+                                                       <td>{{$rec->pono}}</td>
+                                                       <td>{{$rec->poqty}}</td>
+                                                       <td>{{$rec->device}}</td>
+                                                       <td>{{$rec->series}}</td>
+                                                       <td>{{$rec->family}}</td>
+                                                       <td>{{$rec->accumulatedoutput}}</td>
+                                                       <td>{{$rec->qty}}</td>
+                                                       <td>{{round($twoyield,2)}}</td>
+                                                  </tr>
+                                                  @endforeach
+                                             </tbody>
+                                        </table>
+                                        <br>
+                                        <div class="form-group pull-right">
+                                             <label class="control-label col-sm-2">DPPM</label>
+                                             <div class="col-sm-10">
+                                                  <input type="text" class="form-control input-sm" id="dppm" name="dppm">
+                                             </div> 
+                                        </div>
+                                        <div class="col-sm-2">
+                                             <input type="text" class="form-control input-sm" id="datefroms" name="datefroms" > Date From
+                                        </div>
+                                         <div class="col-sm-2">
+                                             <input type="text" class="form-control input-sm" id="datetos" name="datetos" > Date To
+                                        </div>   
+                                   </div>
+                              </div>
+                              <br>
+                              <br>
+                              <div class="row col-sm-offset-1 col-sm-10">
+                                  <div id="chartContainer" style="height: 300px;"></div>
+                              </div>
+                              <div class="row">
+                                   <div class="col-sm-12 text-center" style="margin-top:40px;">
+                                        <a href="{{ url('/export-to-excel') }}" type="button" style="font-size:12px;" class="btn green-jungle input-sm" id="btnXexcel">
+                                        <i class="fa fa-file-excel-o"></i> Export Summary to Excel
+                                        </a>
+                                        <a href="{{ url('/export-to-pdf') }}" type="button" style="font-size:12px;" class="btn yellow-gold input-sm" id="btnXpdf">
+                                             <i class="fa fa-file-pdf-o"></i> Export Summary to Pdf
+                                        </a>
+                                        <button  type="button" style="font-size:12px;" class="btn blue-soft input-sm" id="btnxport">
+                                             <i class="fa fa-share"></i>Export Files
+                                        </button>
+                                        <button  type="button" style="font-size:12px;" class="btn blue-soft input-sm" onclick="javascript:loadchart();" id="btnloadchart">
+                                             <i class="fa fa-share"></i>Load Chart
+                                        </button>
+                                       
+                                   </div>
+                              </div>              
                          </div>
                     </div>
                     <!-- END EXAMPLE TABLE PORTLET-->
@@ -186,36 +221,18 @@
                                         {!! csrf_field() !!}
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">PO Number</label>
-
                                              <div class="col-sm-9">
-                                                  <div class="input-group">
-                                                      <input type="text" class="form-control input-sm" id="pono" name="pono" maxlength="15">
-                                                      <span class="input-group-btn">
-                                                          <button type="button" class="btn input-sm green" id="btn_getpodetails">
-                                                              <i class="fa fa-search"></i>
-                                                          </button>
-                                                      </span>
-                                                  </div>
+                                                  <input type="text" class="form-control input-sm" id="pono" name="pono">
                                                   <div id="er_pono"></div>
                                              </div>     
                                         </div>
-
                                         <div class="form-group">
-                                             <label class="control-label col-sm-3">Device Code</label>
-                                             <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="podeviceCode" name="podeviceCode" maxlength="40" >
-                                                  <div id="er_podeviceCode"></div>
-                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Device Name</label>
+                                             <label class="control-label col-sm-3">Device</label>
                                              <div class="col-sm-9">
                                                   <input type="text" class="form-control input-sm" id="podevice" name="podevice" maxlength="40" >
                                                   <div id="er_podevice"></div>
                                              </div>
                                         </div>
-
-
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">PO Quantity</label>
                                              <div class="col-sm-9">
@@ -225,46 +242,9 @@
                                                   <div id="er_poquantity"></div>
                                              </div>
                                         </div>
-
-                                         <div class="form-group row">
-                                             <label class="control-label col-sm-3">Family</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm" id="devicefamily" name="devicefamily" tabindex="3">
-                                                       <option value=""></option>
-                                                    {{--    @foreach($family as $ys)
-                                                            <option value="{{$ys->family}}">{{$ys->family}}</option>
-                                                       @endforeach     --}}
-                                                 </Select>
-                                                  <div id="er_devicefamily"></div>
-                                             </div>
-                                        </div>
-                                       
-                                        <div class="form-group row">
-                                             <label class="control-label col-sm-3">Series</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm" id="deviceseries" name="deviceseries" tabindex="4">
-                                                       <!-- block of series here -->      
-                                                 </Select>
-                                                  <div id="er_deviceseries"></div>
-                                             </div>
-                                        </div> 
-                                        <div class="form-group row">
-                                             <label class="control-label col-sm-3">Product Type</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm" id="deviceptype" name="deviceptype" tabindex="5">
-                                                     <option value=""></option>
-                                                    {{--  <option value="Test Socket">Test Socket</option>
-                                                     <option value="Burn In">Burn In</option> --}}
-                                                  </Select>
-                                                  <input type="hidden" class="form-control input-sm" id="devregstatus" name="devregstatus" maxlength="40" >
-                                                  <input type="hidden" class="form-control input-sm" id="devregid" name="devregid" maxlength="40">
-                                                  <div id="er_deviceptype"></div>
-                                             </div>
-                                        </div>
-
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
-                                                  <button type="button" id="btn_save_po_reg" class="btn btn-success">Save</button> 
+                                                  <button type="button"  onclick="javascript:poregistration();"  class="btn btn-success">Save</button> 
                                                   <button type="button" id='btnporegclear' class="btn btn-danger">Clear</button>
                                              </div>  
                                         </div>
@@ -273,29 +253,45 @@
                          </div>
                          <div class="row">
                               <div class="col-sm-12">
-                                   <table id="tbl_poregistration" class="table table-striped table-bordered table-hover"style="font-size:13px">
-                                        <thead id="thead1">
-                                             <tr>
-                                                 <td class="table-checkbox" style="width: 5%">
-                                                       {{-- <input type="checkbox" class="group-checkable checkAllitemspo" name="checkAllitempo"/>       --}}
-                                                  </td>
-                                                  <td></td>
-                                                  <td>Purchase Order</td>
-                                                  <td>Device Code</td>
-                                                  <td>Device Name</td>
-                                                  <td>PO Quantity</td>
-                                                  <td>Family</td>
-                                                  <td>Series</td>
-                                                  <td>Product Type</td>    
-                                             </tr>
-                                        </thead>
-                                        <tbody id="tbl_poregistration_body"></tbody>
-                                   </table>
+                                   <div class="scroller" id="tableforporeg" style="height: 300px">
+                                        <table id="poreg-table" class="table table-striped table-bordered table-hover"style="font-size:13px">
+                                             <thead id="thead1">
+                                                  <tr>
+                                                      <td class="table-checkbox" style="width: 5%">
+                                                            <input type="checkbox" class="group-checkable checkAllitemspo" name="checkAllitempo"/>      
+                                                       </td>
+                                                       <td></td>
+                                                       <td>Purchase Order</td>
+                                                       <td>Device</td>
+                                                       <td>PO Quantity</td>    
+                                                  </tr>
+                                             </thead>
+                                             <tbody id="tblforporeg">
+                                             @foreach($tableporeg as $rec)
+                                                  <tr>
+                                                       <td style="width: 2%" >
+                                                            <input type="checkbox" class="form-control input-sm checkboxespo" value="{{$rec->id}}" name="checkitempo" id="checkitempo"></input> 
+                                                       </td> 
+                                                       <td style="width: 2%">
+                                                            <button type="button" name="edit-poreg" class="btn btn-sm btn-primary edit-poreg" value="{{$rec->id}}">
+                                                                 <i class="fa fa-edit"></i> 
+                                                            </button> 
+                                                       </td>                  
+                                                       <td><a id="edit-poreg" name="edit-poreg" value="{{$rec->id}}">{{$rec->pono}}</a>
+                                                       </td>
+                                                       <td>{{$rec->device}}</td>
+                                                       <td>{{$rec->poqty}}</td>
+                                                       
+                                                  </tr>
+                                             @endforeach
+                                             </tbody>
+                                        </table>
+                                   </div>
                               </div>
                          </div>
                     </div>
                     <div class="modal-footer">
-                         <button type="button" id='modalsave' class="btn red">Remove</button>
+                         <button type="button" id='modalsave' onclick="javascript:removeporeg();"  class="btn red">Remove</button>
                          <button type="button" data-dismiss="modal" class="btn btn-danger" id="btn_poclose">Close</button>
                     </div>
                </div>    
@@ -365,7 +361,7 @@
                                         </div>
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
-                                                  <button type="button" id='modalsaveDEVICE' onclick="javascript:deviceregistration();"  class="btn btn-success">Save</button>
+                                                  <button type="button" id='modalsave' onclick="javascript:deviceregistration();"  class="btn btn-success">Save</button>
                                                   <button type="button" id='btndeviceregclear' class="btn btn-danger">Clear</button>
                                              </div>    
                                         </div> 
@@ -415,7 +411,7 @@
                          </div>
                     </div>
                     <div class="modal-footer">
-                         <button type="button" id='modalsaveREMOVEREG' onclick="javascript:removedevicereg();"  class="btn red">Remove</button>
+                         <button type="button" id='modalsave' onclick="javascript:removedevicereg();"  class="btn red">Remove</button>
                          <button type="button" data-dismiss="modal" class="btn btn-danger" id="btn_devclose">Close</button>
                     </div>
                </div>    
@@ -437,9 +433,9 @@
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Family</label>
                                              <div class="col-sm-9">
-                                                  <Select class="form-control input-sm" id="Seriesfamily" name="Seriesfamily">
-                                                      {{--  <option value=""></option> --}}
-                                                      {{--  <option value="BGA">BGA</option>
+                                                  <Select class="form-control select2me input-sm" id="seriesfamily" name="seriesfamily">
+                                                       <option value=""></option>
+                                                       <option value="BGA">BGA</option>
                                                        <option value="BGA-FP">BGA-FP</option>
                                                        <option value="LGA">LGA</option>
                                                        <option value="PGA">PGA</option>
@@ -452,7 +448,7 @@
                                                        <option value="Socket No.2">Socket No.2</option>
                                                        <option value="SOJ">SOJ</option>
                                                        <option value="SON">SON</option>
-                                                       <option value="TSOP">TSOP</option> --}}
+                                                       <option value="TSOP">TSOP</option>
                                                  </Select>
                                                   <div id="er_seriesfamily"></div>
                                              </div>  
@@ -468,14 +464,14 @@
                                         </div>
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
-                                                  <button type="button" id='modalsaveSERIESReg' onclick="javascript:seriesregistration();"  class="btn btn-success">Save</button> 
+                                                  <button type="button" id='modalsave' onclick="javascript:seriesregistration();"  class="btn btn-success">Save</button> 
                                                   <button type="button" id='btnseriesregclear' class="btn btn-danger">Clear</button>    
                                              </div>
                                         </div>
                                    <form>
                               </div>
                          </div>
-                        {{--  <div class="row">
+                         <div class="row">
                               <div class="col-sm-12">
                                    <div class="scroller" style="height: 300px" id="tableforseriesreg">
                                         <table id="seriesreg-table" class="table table-striped table-bordered table-hover"style="font-size:13px">
@@ -507,28 +503,11 @@
                                              </tbody>   
                                         </table>
                                    </div>
-                              </div> --}}
-                         <div class="row">
-                              <div class="col-sm-12">
-                                   <table id="tbl_seriesregtable" class="table table-striped table-bordered table-hover"style="font-size:13px">
-                                        <thead id="thead1">
-                                             <tr>
-                                                 <td class="table-checkbox" style="width: 5%">
-                                                       {{-- <input type="checkbox" class="group-checkable checkAllitemspo" name="checkAllitempo"/>       --}}
-                                                  </td>
-                                                  <td></td>
-                                                  <td>Family</td>
-                                                  <td>Series</td>
-                                             </tr>
-                                        </thead>
-                                        <tbody id="tbl_seriesregtable_body"></tbody>
-                                   </table>
                               </div>
-                       
                          </div>
                     </div>
                     <div class="modal-footer">
-                         <button type="button" id='modaldeleteSeries'  class="btn red" >Remove</button>
+                         <button type="button" id='modalsave' onclick="javascript:removeseriesreg();"  class="btn red">Remove</button>
                          <button type="button" data-dismiss="modal" class="btn btn-danger" id="btn_seriesclose">Close</button>
                     </div>
                </div>    
@@ -550,10 +529,10 @@
                                         <div class="form-group row">
                                              <label class="control-label col-sm-3">Product Type</label>
                                              <div class="col-sm-9">
-                                                  <Select class="form-control input-sm" id="modfamily" name="modfamily">
-                                                     {{-- <option value=""></option>
+                                                  <Select class="form-control select2me input-sm" id="modfamily" name="modfamily">
+                                                     <option value=""></option>
                                                      <option value="Test Socket">Test Socket</option>
-                                                     <option value="Burn In">Burn In</option> --}}
+                                                     <option value="Burn In">Burn In</option>
                                                  </Select>
                                                   <input type="hidden" class="form-control input-sm" id="modregstatus" name="modregstatus" maxlength="40" >
                                                   <input type="hidden" class="form-control input-sm" id="modregid" name="modregid" maxlength="40">
@@ -569,32 +548,14 @@
                                         </div>
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
-                                                  <button type="button" id='modalsaveModeofDefects' onclick="javascript:modregistration();"  class="btn btn-success">Save</button>
+                                                  <button type="button" id='modalsave' onclick="javascript:modregistration();"  class="btn btn-success">Save</button>
                                                   <button type="button" id='btnmodregclear' class="btn btn-danger">Clear</button>
                                              </div>
                                         </div> 
                                    </form>       
                               </div>
                          </div>
-                          <div class="row">
-                              <div class="col-sm-12">
-                                   <table id="tbl_MODtable" class="table table-striped table-bordered table-hover"style="font-size:13px">
-                                        <thead id="thead1">
-                                             <tr>
-                                                 <td class="table-checkbox" style="width: 5%">
-                                                       {{-- <input type="checkbox" class="group-checkable checkAllitemspo" name="checkAllitempo"/>       --}}
-                                                  </td>
-                                                  <td></td>
-                                                  <td>Product Type</td>
-                                                  <td>Mod</td>
-                                             </tr>
-                                        </thead>
-                                        <tbody id="tbl_MODtable_body"></tbody>
-                                   </table>
-                              </div>
-                       
-                         </div>
-                       {{--   <div class="row">
+                         <div class="row">
                               <div class="col-sm-12">
                                    <div class="scroller" style="height: 300px" id="tableformodreg">
                                         <table id="modreg-table" class="table table-striped table-bordered table-hover"style="font-size:13px">
@@ -627,10 +588,10 @@
                                         </table>
                                    </div>
                               </div>
-                         </div> --}}
+                         </div>
                     </div>
                     <div class="modal-footer">
-                         <button type="button" id='modalsaveRemoveDreg'""  class="btn red">Remove</button>
+                         <button type="button" id='modalsave' onclick="javascript:removemodreg();"  class="btn red">Remove</button>
                          <button type="button" data-dismiss="modal" class="btn btn-danger" id="btn_modclose">Close</button>
                     </div>
                </div>    
@@ -680,10 +641,10 @@
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Product Type</label>
                                              <div class="col-sm-9">
-                                                  <select class="form-control input-sm" name="targetptype" id="targetptype">
-                                                     {{--   <option value=""></option>
+                                                  <select class="form-control select2me input-sm" name="targetptype" id="targetptype">
+                                                       <option value=""></option>
                                                        <option value="Test Socket">Test Socket</option>
-                                                       <option value="Burn In">Burn In</option>      --}}
+                                                       <option value="Burn In">Burn In</option>     
                                                   </select>
                                                   <div id="er_targetyield"></div>
                                              </div>     
@@ -716,7 +677,7 @@
                                                   </tr>
                                              </thead>
                                              <tbody id="tblfortarget">
-                                       {{--       @foreach($target as $rec)
+                                             @foreach($target as $rec)
                                                   <tr>
                                                        <td style="width: 2%">
                                                             <input type="checkbox" class="form-control input-sm checkboxestarget" value="{{$rec->id}}" name="checkitemtarget" id="checkitemtarget"></input> 
@@ -732,7 +693,7 @@
                                                        <td>{{$rec->dppm}}</td>
                                                        <td>{{$rec->ptype}}</td>
                                                   </tr>
-                                             @endforeach --}}
+                                             @endforeach
                                              </tbody>
                                         </table>
                                    </div>
@@ -1080,7 +1041,7 @@
                          </div>
                     </div>
                     <div class="modal-footer">
-                         <button type="button" id='modalsaveUpdate' onclick="javascript:update();"  class="btn btn-success">Update</button> 
+                         <button type="button" id='modalsave' onclick="javascript:update();"  class="btn btn-success">Update</button> 
                          <button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
                     </div>
                </div>    
@@ -1109,80 +1070,12 @@
                </div>
           </div>
      </div>
-
-     @include('includes.modals')
  
 @endsection
 
 @push('script')
-{{-- <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/plugins/canvasjs.min.js') }}"></script> --}}
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryReport.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPYieldSummaryReport.js') }}"></script>
-
-<script type="text/javascript">
-
-var dataColumn = [
-     { data: function(data) {
-          return '<input type="checkbox" class="checkboxespo" value="'+data.id+'" name="checkitempo" id="checkitempo">';
-     }, name: 'id' },
-     { data: 'action', name: 'action', orderable: false, searchable: false },
-     { data: 'pono', name: 'pono' },
-     { data: 'device_code', name: 'device_code' },
-     { data: 'device_name', name: 'device_name' },
-     { data: 'poqty', name: 'poqty' },    
-     { data: 'Family', name: 'Family' },  
-     { data: 'Series', name: 'Series' },  
-     { data: 'Prod_type', name: 'Prod_type' },   
-];
-
- var dataColumnseries = [
-          { data: function(data) {
-               return '<input type="checkbox" class="checkboxesseries" value="'+data.id+'" name="checkboxesseries" id="checkboxesseries">';
-          }, name: 'id' },
-          { data: 'action', name: 'action', orderable: false, searchable: false },
-          { data: 'family', name: 'family' },
-          { data: 'series', name: 'series' },
-     ];
-
-
- var dataColumnMOD = [
-          { data: function(data) {
-               return '<input type="checkbox" class="checkboxesmod" value="'+data.id+'" name="checkboxesmod" id="checkboxesmod">';
-          }, name: 'id' },
-          { data: 'action', name: 'action', orderable: false, searchable: false },
-          { data: 'family', name: 'family' },
-          { data: 'mod', name: 'mod' },
-     ];
-
-var dataColumnYieldTarget = [
-          { data: function(data) {
-               return '<input type="checkbox" class="checkboxestarget" value="'+data.id+'" name="checkboxestarget" id="checkboxestarget">';
-          }, name: 'id' },
-          { data: 'action', name: 'action', orderable: false, searchable: false },
-          { data: 'datefrom', name: 'datefrom' },
-          { data: 'dateto', name: 'dateto' },
-          { data: 'yield', name: 'yield' },
-          { data: 'dppm', name: 'dppm' },
-          { data: 'ptype', name: 'ptype' },
-     ];
-
-var dataColumnYIELD = [
-     { data: function(data) {
-               return '<input type="checkbox" class="checkboxesYield" value="'+data.id+'" name="checkboxesYield" id="checkboxesYield">';
-          }, name: 'id' },
-          // { data: 'action', name: 'action', orderable: false, searchable: false },
-          { data: 'pono', name: 'pono' },
-          { data: 'poqty', name: 'poqty' },
-          { data: 'device', name: 'device' },
-          { data: 'series', name: 'series' },
-          { data: 'family', name: 'family' },
-          { data: 'toutput', name: 'toutput' },
-          { data: 'treject', name: 'treject' },
-          { data: 'accumulatedoutput', name: 'accumulatedoutput' },
-     ];
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/plugins/canvasjs.min.js') }}"></script>
+<script>
 
 $(document).ready(function(e) {
      DatePickers();
@@ -1190,28 +1083,7 @@ $(document).ready(function(e) {
      Checkboxes();
      EditButtons();
      ButtonsClear();
-     //ButtonClosed();
-     getDatatable('tbl_yield',"{{ url('/getYieldPerformanceDT')}}",dataColumnYIELD,[],0);
-
-
-     $('#btn_save_po_reg').on('click', function() {
-          poregistration();
-     });
-
-     $('#modalsave').on('click', function() {
-         DeletePOcheck();
-     });
-
-     $('#modaldeleteSeries').on('click', function() {
-         removeseriesreg();
-     });
-
-     $('#modalsaveRemoveDreg').on('click', function() {
-         removemodreg();
-     });
-
-    
-
+     ButtonClosed();
      $('#ysf-icsocket').change(function(){
           if($('#ysf-icsocket').is(':checked')){
                $('#chose').val("true");
@@ -1221,175 +1093,127 @@ $(document).ready(function(e) {
           }         
      });
 
-
-
-
-     $STATUS = "ADD";
-     $IDS = "";
-     $('#tbl_poregistration_body').on('click', '.edit-poreg', function(e) {
-          e.preventDefault();
-        //  alert($(this).attr('data-id'));
-          $('#pono').val($(this).attr('data-pono'));
-          $('#podeviceCode').val($(this).attr('data-device_code'));
-          $('#podevice').val($(this).attr('data-device_name'));
-          $('#poquantity').val($(this).attr('data-poqty')); 
-          $('#devicefamily').val($(this).attr('data-Family')); 
-          $('#deviceseries').val($(this).attr('data-Series')); 
-          $('#deviceptype').val($(this).attr('data-Prod_type')); 
-          IDs = $(this).attr('data-id');
-          STATUS = "EDIT";    
-     });
-
-     $('#tbl_seriesregtable_body').on('click', '.edit-seriesreg', function(e) {
-          e.preventDefault();
-          $('#Seriesfamily').val($(this).attr('data-family'));
-          $('#seriesname').val($(this).attr('data-series'));
-          IDs = $(this).attr('data-id');
-          STATUS = "EDIT";    
-     });
-
-     $('#tbl_MODtable_body').on('click', '.edit-modedit', function(e) {
-          e.preventDefault();
-          $('#modfamily').val($(this).attr('data-family'));
-          $('#mod').val($(this).attr('data-mod'));
-          IDs = $(this).attr('data-id');
-          STATUS = "EDIT";    
-     });
-
-     $('#tblfortarget').on('click', '.edit-target', function(e) {
-          e.preventDefault();
-          $('#target-datefrom').val($(this).attr('data-datefrom'));
-          $('#target-dateto').val($(this).attr('data-dateto'));
-          $('#targetyield').val($(this).attr('data-yield'));
-          $('#targetdppm').val($(this).attr('data-dppm'));
-          $('#targetptype').val($(this).attr('data-ptype'));
-          IDs = $(this).attr('data-id');
-          STATUS = "EDIT";    
-     });
-
-
-
-     // $('#pono').change(function(){
-     //      var pono = $(this).val();
-     //      $.ajax({
-     //           url:"{{ url('/getponoreg') }}",
-     //           method:'get',
-     //           data: { 
-     //                pono : pono, 
-     //           },
-     //      }).done(function(data, textStatus, jqXHR){
-     //           console.log(data);
+     $('#pono').change(function(){
+          var pono = $(this).val();
+          $.ajax({
+               url:"{{ url('/getponoreg') }}",
+               method:'get',
+               data: { 
+                    pono : pono, 
+               },
+          }).done(function(data, textStatus, jqXHR){
+               console.log(data);
             
-     //           $('#pono').keyup(function(e){
-     //                if(!this.val()){
-     //                     $('#pono').val("");
-     //                     $('#podevice').val("");
-     //                     $('#poquantity').val("");      
-     //                }   
-     //           });
-     //           $('#pono').val(data[0]['PO']);
-     //           $('#podevice').val(data[0]['devicename']);
-     //           $('#poquantity').val(data[0]['POqty']);
+               $('#pono').keyup(function(e){
+                    if(!this.val()){
+                         $('#pono').val("");
+                         $('#podevice').val("");
+                         $('#poquantity').val("");      
+                    }   
+               });
+               $('#pono').val(data[0]['PO']);
+               $('#podevice').val(data[0]['devicename']);
+               $('#poquantity').val(data[0]['POqty']);
 
-     //      }).fail(function(jqXHR,textStatus, errorThrown){
-     //           console.log(errorThrown+'|'+textStatus);
-     //      });   
-     // });
+          }).fail(function(jqXHR,textStatus, errorThrown){
+               console.log(errorThrown+'|'+textStatus);
+          });   
+     });
 
-     // $('#devicepono').change(function(){
-     //      var pono = $(this).val();
-     //      $.ajax({
-     //           url:"{{ url('/getponoreg') }}",
-     //           method:'get',
-     //           data: { 
-     //                pono : pono, 
-     //           },
-     //      }).done(function(data, textStatus, jqXHR){
-     //           console.log(data);
-     //           $('#devicepono').keyup(function(e){
-     //                if(!this.val()){
-     //                     $('#er_devicepono').html("Device field is empty"); 
-     //                     $('#er_devicepono').css('color', 'red');   
-     //                     return false;    
-     //                     $('#devicepono').val("");
-     //                     $('#devicename').val("");
-     //                }   
+     $('#devicepono').change(function(){
+          var pono = $(this).val();
+          $.ajax({
+               url:"{{ url('/getponoreg') }}",
+               method:'get',
+               data: { 
+                    pono : pono, 
+               },
+          }).done(function(data, textStatus, jqXHR){
+               console.log(data);
+               $('#devicepono').keyup(function(e){
+                    if(!this.val()){
+                         $('#er_devicepono').html("Device field is empty"); 
+                         $('#er_devicepono').css('color', 'red');   
+                         return false;    
+                         $('#devicepono').val("");
+                         $('#devicename').val("");
+                    }   
 
-     //           });
-     //           $('#devicepono').val(data[0]['PO']);
-     //           $('#devicename').val(data[0]['devicename']);
-     //      }).fail(function(jqXHR,textStatus, errorThrown){
-     //           console.log(errorThrown+'|'+textStatus);
-     //      });   
-     // });
+               });
+               $('#devicepono').val(data[0]['PO']);
+               $('#devicename').val(data[0]['devicename']);
+          }).fail(function(jqXHR,textStatus, errorThrown){
+               console.log(errorThrown+'|'+textStatus);
+          });   
+     });
      
      FieldsValidations();
 
-     // $('#devicefamily').on('change',function(){
-     //      $('#deviceseries').select2('val',"");
-     //      var family = $('select[name=devicefamily]').val();
-     //      $('#deviceseries').html("");
-     //      $.post("{{ url('/devreg_get_series') }}",
-     //      {
-     //           _token:$('meta[name=csrf-token]').attr('content'),
-     //           family:family 
-     //      }).done(function(data, textStatus, jqXHR){
-     //           console.log(data);
-     //           $.each(data,function(i,val){
-     //                var sup = '';
-     //                switch(family) {
-     //                     case "BGA":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "BGA-FP":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "LGA":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "PGA":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "PGA-LGA":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "PUS":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "Probe Pin":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "QFN":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "QFP1":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "QFP2":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "Socket No.2":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "SOJ":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                     case "TSOP":
-     //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-     //                          break;
-     //                    default:
-     //                          var sup = '<option value=""></option>';
-     //                }
+     $('#devicefamily').on('change',function(){
+          $('#deviceseries').select2('val',"");
+          var family = $('select[name=devicefamily]').val();
+          $('#deviceseries').html("");
+          $.post("{{ url('/devreg_get_series') }}",
+          {
+               _token:$('meta[name=csrf-token]').attr('content'),
+               family:family 
+          }).done(function(data, textStatus, jqXHR){
+               console.log(data);
+               $.each(data,function(i,val){
+                    var sup = '';
+                    switch(family) {
+                         case "BGA":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "BGA-FP":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "LGA":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "PGA":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "PGA-LGA":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "PUS":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "Probe Pin":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "QFN":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "QFP1":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "QFP2":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "Socket No.2":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "SOJ":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                         case "TSOP":
+                              var sup = '<option value="'+val.series+'">'+val.series+'</option>';
+                              break;
+                        default:
+                              var sup = '<option value=""></option>';
+                    }
                          
-     //                //var option = '<option value="'+val.supplier'">'+val.supplier'</option>';
-     //                var option = sup;
-     //                $('#deviceseries').append(option);
-     //           });
+                    //var option = '<option value="'+val.supplier'">'+val.supplier'</option>';
+                    var option = sup;
+                    $('#deviceseries').append(option);
+               });
           
-     //      }).fail(function(jqXHR, textStatus, errorThrown){
-     //           console.log(errorThrown+'|'+textStatus);
-     //      });
-     // });
+          }).fail(function(jqXHR, textStatus, errorThrown){
+               console.log(errorThrown+'|'+textStatus);
+          });
+     });
 
      $('#ypsr-family').on('change',function(){
           $('#ypsr-seriesname').select2('val',"");
@@ -1554,30 +1378,18 @@ function loadchart(){
 }
 function poregistration(){
      var pono = $('#pono').val();
-     var podeviceCode = $('#podeviceCode').val();
      var podevice = $('#podevice').val();
      var poquantity = $('#poquantity').val();
-     var Family = $('#devicefamily').val();
-     var Series = $('#deviceseries').val();
-     var ProdType = $('#deviceptype').val();
      var editsearch = $('#hdporegid').val();
-     var status = (typeof STATUS != 'undefined')?STATUS:"ADD";
-    
-     // var id = $('input[name=poregid]').val();
-     if(Family == null || Series ==null ||ProdType == null|| Family == "0" || Series =="0" ||ProdType == "0"){ 
-          msg("Fill in Required Fields",'failed');
-          return false;
-     }
+     var status = $('input[name=poregstatus]').val();
+     var id = $('input[name=poregid]').val();
+
      if(pono == ""){     
         $('#er_pono').html("PO number field is empty"); 
         $('#er_pono').css('color', 'red');       
         return false;  
      }
-     if(podeviceCode == ""){     
-        $('#er_podeviceCode').html("Device field is empty"); 
-        $('#er_podeviceCode').css('color', 'red');       
-        return false;  
-     } 
+     
      if(podevice == ""){     
         $('#er_podevice').html("Device field is empty"); 
         $('#er_podevice').css('color', 'red');       
@@ -1589,180 +1401,111 @@ function poregistration(){
         return false;  
      }
      $('#tblforporeg').html("");
-     //CER
-     jQuery.ajax({
-          url: "{{ url('/CheckYpicsPO') }}",
-          type: 'GET',
-          dataType: 'json',
-          data: {_token: "{{Session::token()}}", po: pono},
-          success: function(returnData) {
-               if(returnData > 0 && status == "ADD")
+     $.post("{{ url('/add-poregistration') }}",
+     {
+          _token:$('meta[name=csrf-token]').attr('content'),
+          pono:pono,
+          podevice:podevice,
+          poquantity:poquantity,
+          status:status,
+          id:id
+     }).done(function(data, textStatus, jqXHR){
+          console.log(data);
+          if(data >  0){
+               $('#messageModal').modal('show');
+               $('#message').html("Record exist please try another P.O number.");
+               $.post("{{ url('/display-poregistration') }}",
                {
-                    msg("PO number Already Exist","failed");
-               }
-               else{
-                    var id = (typeof IDs != 'undefined')?IDs:1;
-                    jQuery.ajax({
-                         url: "{{ url('/add-poregistration') }}",
-                         type: 'POST',
-                         dataType: 'json',
-                         data: {_token: "{{Session::token()}}", 
-                                   id:id,
-                                   pono: pono,
-                                   podeviceCode: podeviceCode,
-                                   podevice:podevice,
-                                   poquantity:poquantity,
-                                   Family:Family,
-                                   Series:Series,
-                                   ProdType:ProdType,
-                                   status:status
-                               },
-                         success:function(returnData){
-                                        if(status == "ADD"){
-                                             msg("PO Successfully added","success"); 
-                                             clearALLfields();
-                                        
-                                             getDatatable('tbl_poregistration',"{{ url('/get-poregistration')}}",dataColumn,[],0);
-                                        }
-                                        else{
-                                             msg("PO Successfully modified","success"); 
-                                             getDatatable('tbl_poregistration',"{{ url('/get-poregistration')}}",dataColumn,[],0);
-                                             clearALLfields();
-                                             status = "ADD"
-                                        }
-                         },
-                          error: function(xhr, textStatus, errorThrown) {
-
-                          }
-                     });
-
-
-
-               }
-          },
-          error: function(xhr, textStatus, errorThrown) {
-          //called when there is an error
+                    _token:$('meta[name=csrf-token]').attr('content'),
+               }).done(function(data, textStatus, jqXHR){
+                    console.log(data);
+                    $.each(data,function(i,val){
+                         var tblrow = '<tr>'+
+                                        '<td style="width: 2%" >'+
+                                             '<input type="checkbox" class="form-control input-sm checkboxespo" value="'+val.id+'" name="checkitempo" id="checkitempo"></input>'+ 
+                                        '</td>'+ 
+                                        '<td style="width: 2%">'+
+                                             '<button type="button" name="edit-poreg" class="btn btn-sm btn-primary edit-poreg" value="'+val.id+'">'+
+                                                  '<i class="fa fa-edit"></i>'+ 
+                                             '</button> '+
+                                        '</td>'+                  
+                                        '<td>'+val.pono+'</td>'+
+                                        '<td>'+val.device+'</td>'+
+                                        '<td>'+val.poqty+'</td>'+    
+                                   '</tr>';
+                         $('#tblforporeg').append(tblrow);
+                         $('#pono').val("");
+                         $('#podevice').val("");
+                         $('#poquantity').val("");
+                         $('#poregstatus').val("ADD");         
+                         $('.edit-poreg').click(function(){
+                              $('#poregstatus').val("EDIT");
+                              var editsearch = $(this).val();
+                              $('#poregid').val(editsearch);
+                              $.ajax({
+                                   url: "{{ url('/editporeg') }}",
+                                   method: 'get',
+                                   data:  { 
+                                        editsearch : editsearch, 
+                                   },    
+                              }).done(function(data, textStatus, jqXHR) {
+                                   console.log(data);
+                                   $('#pono').val(data[0]['pono']);
+                                   $('#poquantity').val(data[0]['poqty']);
+                                   $('#podevice').val(data[0]['device']); 
+                              }).fail(function(jqXHR, textStatus, errorThrown) {
+                                   console.log(errorThrown+'|'+textStatus);
+                              });
+                         });
+                    });     
+               }).fail(function(jqXHR,textStatus,erroThrown){
+                    console.log(erroThrown+'|'+textStatus);
+               });         
+          }else{
+               $.each(data,function(i,val){
+                    var tblrow = '<tr>'+
+                                   '<td style="width: 2%" >'+
+                                        '<input type="checkbox" class="form-control input-sm checkboxespo" value="'+val.id+'" name="checkitempo" id="checkitempo"></input>'+ 
+                                   '</td>'+ 
+                                   '<td style="width: 2%">'+
+                                        '<button type="button" name="edit-poreg" class="btn btn-sm btn-primary edit-poreg" value="'+val.id+'">'+
+                                             '<i class="fa fa-edit"></i>'+ 
+                                        '</button> '+
+                                   '</td>'+                  
+                                   '<td>'+val.pono+'</td>'+
+                                   '<td>'+val.device+'</td>'+
+                                   '<td>'+val.poqty+'</td>'+    
+                              '</tr>';
+                    $('#tblforporeg').append(tblrow);
+                    $('#pono').val("");
+                    $('#podevice').val("");
+                    $('#poquantity').val("");
+                    $('#poregstatus').val("ADD");         
+                    $('.edit-poreg').click(function(){
+                         $('#poregstatus').val("EDIT");
+                         var editsearch = $(this).val();
+                         $('#poregid').val(editsearch);
+                         $.ajax({
+                              url: "{{ url('/editporeg') }}",
+                              method: 'get',
+                              data:  { 
+                                   editsearch : editsearch, 
+                              },    
+                         }).done(function(data, textStatus, jqXHR) {
+                              console.log(data);
+                              $('#pono').val(data[0]['pono']);
+                              $('#poquantity').val(data[0]['poqty']);
+                              $('#podevice').val(data[0]['device']); 
+                         }).fail(function(jqXHR, textStatus, errorThrown) {
+                              console.log(errorThrown+'|'+textStatus);
+                         });
+                    });
+               });    
           }
-     });
-
-     
-
-
-     // .done(function(data, textStatus, jqXHR) {
-     //      alert(data);
-     // })
-     // .fail(function(jqXHR, textStatus, errorThrown) {
-     //      console.log(errorThrown+'|'+textStatus);
-     // });
-     //
-
-
-
-     // $.post("{{ url('/add-poregistration') }}",
-     // {
-     //      _token:$('meta[name=csrf-token]').attr('content'),
-     //      pono:pono,
-     //      podevice:podevice,
-     //      poquantity:poquantity,
-     //      status:status,
-     //      id:id
-     // }).done(function(data, textStatus, jqXHR){
-     //      console.log(data);
-     //      if(data >  0){
-     //           $('#messageModal').modal('show');
-     //           $('#message').html("Record exist please try another P.O number.");
-     //           $.post("{{ url('/display-poregistration') }}",
-     //           {
-     //                _token:$('meta[name=csrf-token]').attr('content'),
-     //           }).done(function(data, textStatus, jqXHR){
-     //                console.log(data);
-     //                $.each(data,function(i,val){
-     //                     var tblrow = '<tr>'+
-     //                                    '<td style="width: 2%" >'+
-     //                                         '<input type="checkbox" class="form-control input-sm checkboxespo" value="'+val.id+'" name="checkitempo" id="checkitempo"></input>'+ 
-     //                                    '</td>'+ 
-     //                                    '<td style="width: 2%">'+
-     //                                         '<button type="button" name="edit-poreg" class="btn btn-sm btn-primary edit-poreg" value="'+val.id+'">'+
-     //                                              '<i class="fa fa-edit"></i>'+ 
-     //                                         '</button> '+
-     //                                    '</td>'+                  
-     //                                    '<td>'+val.pono+'</td>'+
-     //                                    '<td>'+val.device+'</td>'+
-     //                                    '<td>'+val.poqty+'</td>'+    
-     //                               '</tr>';
-     //                     $('#tblforporeg').append(tblrow);
-     //                     $('#pono').val("");
-     //                     $('#podevice').val("");
-     //                     $('#poquantity').val("");
-     //                     $('#poregstatus').val("ADD");         
-     //                     $('.edit-poreg').click(function(){
-     //                          $('#poregstatus').val("EDIT");
-     //                          var editsearch = $(this).val();
-     //                          $('#poregid').val(editsearch);
-     //                          $.ajax({
-     //                               url: "{{ url('/editporeg') }}",
-     //                               method: 'get',
-     //                               data:  { 
-     //                                    editsearch : editsearch, 
-     //                               },    
-     //                          }).done(function(data, textStatus, jqXHR) {
-     //                               console.log(data);
-     //                               $('#pono').val(data[0]['pono']);
-     //                               $('#poquantity').val(data[0]['poqty']);
-     //                               $('#podevice').val(data[0]['device']); 
-     //                          }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                               console.log(errorThrown+'|'+textStatus);
-     //                          });
-     //                     });
-     //                });     
-     //           }).fail(function(jqXHR,textStatus,erroThrown){
-     //                console.log(erroThrown+'|'+textStatus);
-     //           });         
-     //      }else{
-     //           $.each(data,function(i,val){
-     //                var tblrow = '<tr>'+
-     //                               '<td style="width: 2%" >'+
-     //                                    '<input type="checkbox" class="form-control input-sm checkboxespo" value="'+val.id+'" name="checkitempo" id="checkitempo"></input>'+ 
-     //                               '</td>'+ 
-     //                               '<td style="width: 2%">'+
-     //                                    '<button type="button" name="edit-poreg" class="btn btn-sm btn-primary edit-poreg" value="'+val.id+'">'+
-     //                                         '<i class="fa fa-edit"></i>'+ 
-     //                                    '</button> '+
-     //                               '</td>'+                  
-     //                               '<td>'+val.pono+'</td>'+
-     //                               '<td>'+val.device+'</td>'+
-     //                               '<td>'+val.poqty+'</td>'+    
-     //                          '</tr>';
-     //                $('#tblforporeg').append(tblrow);
-     //                $('#pono').val("");
-     //                $('#podevice').val("");
-     //                $('#poquantity').val("");
-     //                $('#poregstatus').val("ADD");         
-     //                $('.edit-poreg').click(function(){
-     //                     $('#poregstatus').val("EDIT");
-     //                     var editsearch = $(this).val();
-     //                     $('#poregid').val(editsearch);
-     //                     $.ajax({
-     //                          url: "{{ url('/editporeg') }}",
-     //                          method: 'get',
-     //                          data:  { 
-     //                               editsearch : editsearch, 
-     //                          },    
-     //                     }).done(function(data, textStatus, jqXHR) {
-     //                          console.log(data);
-     //                          $('#pono').val(data[0]['pono']);
-     //                          $('#poquantity').val(data[0]['poqty']);
-     //                          $('#podevice').val(data[0]['device']); 
-     //                     }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                          console.log(errorThrown+'|'+textStatus);
-     //                     });
-     //                });
-     //           });    
-     //      }
           
-     // }).fail(function(jqXHR,textStatus,erroThrown){
-     //      console.log(erroThrown+'|'+textStatus);
-     // });         
+     }).fail(function(jqXHR,textStatus,erroThrown){
+          console.log(erroThrown+'|'+textStatus);
+     });         
 }
 function deviceregistration(){
      var devicepono = $('#devicepono').val();
@@ -1771,7 +1514,7 @@ function deviceregistration(){
      var deviceseries = $('#deviceseries').val();
      var ptype = $('#deviceptype').val();
      var status = $('input[name=devregstatus]').val();
-     var id = (typeof IDs != 'undefined')?IDs:1;
+     var id = $('input[name=devregid]').val();
      if(devicepono == ""){     
         $('#er_devicepono').html("PO Number field is empty"); 
         $('#er_devicepono').css('color', 'red');       
@@ -1921,10 +1664,10 @@ function deviceregistration(){
      });     
 }
 function seriesregistration(){
-     var seriesfamily = $('#Seriesfamily').val();
+     var seriesfamily = $('#seriesfamily').val();
      var seriesname = $('#seriesname').val();
-     //var id = $('#seriesregid').val();
-     var id=(typeof IDs != 'undefined')?IDs:1;
+     var status = $('#seriesregstatus').val();
+     var id = $('#seriesregid').val();
      if(seriesfamily == ""){     
         $('#er_seriesfamily').html("Family field is empty"); 
         $('#er_seriesfamily').css('color', 'red');       
@@ -1935,89 +1678,63 @@ function seriesregistration(){
         $('#er_seriesname').css('color', 'red');       
         return false;  
      }
-     jQuery.ajax({
-          url: "{{ url('/add-seriesregistration') }}",
-          type: 'POST',
-          dataType: 'json',
-          data: {_token: "{{Session::token()}}", 
-                    id:id,
-                    family:seriesfamily,
-                    series:seriesname,
-                    status:STATUS,
-                },
-          success:function(returnData){
-                         if(STATUS == "ADD"){
-                              msg("Series Successfully added","success"); 
-                              getDatatable('tbl_seriesregtable',"{{ url('/get-seriesregistration')}}",dataColumnseries,[],0);
-                         }
-                         else{
-                              msg("Series Successfully modified","success"); 
-                              getDatatable('tbl_seriesregtable',"{{ url('/get-seriesregistration')}}",dataColumnseries,[],0);
-                              clearALLfields();
-                              STATUS = "ADD"
-                         }
-          },
-           error: function(xhr, textStatus, errorThrown) {
-           }
-      });
-         
 
+     $('#tblforseries').html("");
+     $.post("{{ url('/add-seriesregistration') }}",
+     {
+          _token:$('meta[name=csrf-token]').attr('content'),
+          family:seriesfamily,
+          series:seriesname,
+          status:status,
+          id:id  
 
-     // $('#tblforseries').html("");
-     // $.post("{{ url('/add-seriesregistration') }}",
-     // {
-     //      _token:$('meta[name=csrf-token]').attr('content'),
-     //      family:seriesfamily,
-     //      series:seriesname,
-     //      status:status,
-     //      id:id  
-
-     // }).done(function(data, textStatus, jqXHR){
-     //      $.each(data,function(i,val){
-     //           var tblrow = '<tr>'+
-     //                          '<td style="width: 2%">'+
-     //                               '<input type="checkbox" class="form-control input-sm checkboxesseries" value="'+val.id+'" name="checkitemseries" id="checkitemseries"></input>'+ 
-     //                          '</td>'+  
-     //                          '<td style="width: 2%">'+
-     //                               '<button type="button" name="edit-seriesreg" class="btn btn-sm btn-primary edit-seriesreg" value="'+val.id+'">'+
-     //                                    '<i class="fa fa-edit"></i>'+ 
-     //                               '</button>'+ 
-     //                          '</td>'+                             
-     //                          '<td>'+val.family+'</td>'+
-     //                          '<td>'+val.series+'</td>'+
-     //                     '</tr>';
-     //           $('#tblforseries').append(tblrow);
-     //           $('#seriesfamily').select2('val',"");
-     //           $('#seriesname').val("");
-     //           $('#seriesregstatus').val("ADD");  
-     //           $('.edit-seriesreg').click(function(){
-     //                $('#seriesregstatus').val("EDIT");
-     //                var editsearch = $(this).val();
-     //                $('#seriesregid').val(editsearch);
-     //                $.ajax({
-     //                     url: "{{ url('/editseriesreg') }}",
-     //                     method: 'get',
-     //                     data:  { 
-     //                          editsearch : editsearch, 
-     //                     },
+     }).done(function(data, textStatus, jqXHR){
+          $.each(data,function(i,val){
+               var tblrow = '<tr>'+
+                              '<td style="width: 2%">'+
+                                   '<input type="checkbox" class="form-control input-sm checkboxesseries" value="'+val.id+'" name="checkitemseries" id="checkitemseries"></input>'+ 
+                              '</td>'+  
+                              '<td style="width: 2%">'+
+                                   '<button type="button" name="edit-seriesreg" class="btn btn-sm btn-primary edit-seriesreg" value="'+val.id+'">'+
+                                        '<i class="fa fa-edit"></i>'+ 
+                                   '</button>'+ 
+                              '</td>'+                             
+                              '<td>'+val.family+'</td>'+
+                              '<td>'+val.series+'</td>'+
+                         '</tr>';
+               $('#tblforseries').append(tblrow);
+               $('#seriesfamily').select2('val',"");
+               $('#seriesname').val("");
+               $('#seriesregstatus').val("ADD");  
+               $('.edit-seriesreg').click(function(){
+                    $('#seriesregstatus').val("EDIT");
+                    var editsearch = $(this).val();
+                    $('#seriesregid').val(editsearch);
+                    $.ajax({
+                         url: "{{ url('/editseriesreg') }}",
+                         method: 'get',
+                         data:  { 
+                              editsearch : editsearch, 
+                         },
                          
-     //                }).done(function(data, textStatus, jqXHR) {
-     //                     console.log(data);
-     //                     $('#seriesfamily').select2('val',data[0]['family']);
-     //                     $('#seriesname').val(data[0]['series']);  
-     //                }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                     console.log(errorThrown+'|'+textStatus);
-     //                });
-     //           });
-     //      });            
-     // }).fail(function(jqXHR, textStatus, erroThrown){
-     //      console.log(erroThrown+'|'+textStatus);
-     // });
+                    }).done(function(data, textStatus, jqXHR) {
+                         console.log(data);
+                         $('#seriesfamily').select2('val',data[0]['family']);
+                         $('#seriesname').val(data[0]['series']);  
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                         console.log(errorThrown+'|'+textStatus);
+                    });
+               });
+          });            
+     }).fail(function(jqXHR, textStatus, erroThrown){
+          console.log(erroThrown+'|'+textStatus);
+     });
 }
 function modregistration(){
      var mod = $('#mod').val();
      var family = $('#modfamily').val();
-     var id = (typeof IDs != 'undefined')?IDs:1;
+     var status = $('#modregstatus').val();
+     var id = $('#modregid').val();
      if(mod == ""){     
         $('#er_mod').html("Mod field is empty"); 
         $('#er_mod').css('color', 'red');       
@@ -2028,82 +1745,55 @@ function modregistration(){
         $('#er_modfamily').css('color', 'red');       
         return false;  
      }
-     $('#tbl_MODtable_body').html("");
-
-     jQuery.ajax({
-               url: "{{ url('/add-modregistration') }}",
-               type: 'POST',
-               dataType: 'json',
-               data: {_token: "{{Session::token()}}", 
-                         id:id,
-                         mod:mod,
-                         family:family,
-                         status:STATUS,
-                     },
-               success:function(returnData){
-                              if(STATUS == "ADD"){
-                                   msg("Mod Successfully added","success"); 
-                                   getDatatable('tbl_MODtable',"{{ url('/getModofDef')}}",dataColumnMOD,[],0);
-                              }
-                              else{
-                                   msg("Mod Successfully modified","success"); 
-                                   getDatatable('tbl_MODtable',"{{ url('/getModofDef')}}",dataColumnMOD,[],0);
-                                   clearALLfields();
-                                   STATUS = "ADD"
-                              }
-               },
-                error: function(xhr, textStatus, errorThrown) {
-                }
-           });
-
-     // $.post("{{ url('/add-modregistration') }}",
-     // {
-     //      _token:$('meta[name=csrf-token]').attr('content'),
-     //      mod:mod,
-     //      family:family,
-     //      status:status,
-     //      id:id
-     // }).done(function(data, textStatus, jqXHR){
-     //      $.each(data,function(i,val){
-     //           var tblrow = '<tr>'+
-     //                          '<td style="width: 2%">'+
-     //                               '<input type="checkbox" class="form-control input-sm checkboxesmod" value="'+val.id+'" name="checkitemmod" id="checkitemmod"></input>'+ 
-     //                          '</td> '+
-     //                          '<td style="width: 2%">'+
-     //                               '<button type="button" name="edit-modreg" class="btn btn-sm btn-primary edit-modreg" value="'+val.id+'">'+
-     //                                    '<i class="fa fa-edit"></i> '+
-     //                               '</button>'+ 
-     //                          '</td>'+                              
-     //                          '<td>'+val.family+'</td>'+
-     //                          '<td>'+val.mod+'</td>'+
-     //                     '</tr>';
-     //           $('#tblformodreg').append(tblrow);
-     //           $('#mod').val("");
-     //           $('#modfamily').select2('val',"");
-     //           $('#modregstatus').val("ADD");  
-     //           $('.edit-modreg').click(function(){
-     //                $('#modregstatus').val("EDIT");
-     //                var editsearch = $(this).val();
-     //                $('#modregid').val(editsearch);
-     //                $.ajax({
-     //                     url: "{{ url('/editmodreg') }}",
-     //                     method: 'get',
-     //                     data:  { 
-     //                          editsearch : editsearch, 
-     //                     },
+     $('#tblformodreg').html("");
+     $.post("{{ url('/add-modregistration') }}",
+     {
+          _token:$('meta[name=csrf-token]').attr('content'),
+          mod:mod,
+          family:family,
+          status:status,
+          id:id
+     }).done(function(data, textStatus, jqXHR){
+          $.each(data,function(i,val){
+               var tblrow = '<tr>'+
+                              '<td style="width: 2%">'+
+                                   '<input type="checkbox" class="form-control input-sm checkboxesmod" value="'+val.id+'" name="checkitemmod" id="checkitemmod"></input>'+ 
+                              '</td> '+
+                              '<td style="width: 2%">'+
+                                   '<button type="button" name="edit-modreg" class="btn btn-sm btn-primary edit-modreg" value="'+val.id+'">'+
+                                        '<i class="fa fa-edit"></i> '+
+                                   '</button>'+ 
+                              '</td>'+                              
+                              '<td>'+val.family+'</td>'+
+                              '<td>'+val.mod+'</td>'+
+                         '</tr>';
+               $('#tblformodreg').append(tblrow);
+               $('#mod').val("");
+               $('#modfamily').select2('val',"");
+               $('#modregstatus').val("ADD");  
+               $('.edit-modreg').click(function(){
+                    $('#modregstatus').val("EDIT");
+                    var editsearch = $(this).val();
+                    $('#modregid').val(editsearch);
+                    $.ajax({
+                         url: "{{ url('/editmodreg') }}",
+                         method: 'get',
+                         data:  { 
+                              editsearch : editsearch, 
+                         },
                          
-     //                }).done(function(data, textStatus, jqXHR) {
-     //                     console.log(data);
-     //                     $('#mod').val(data[0]['mod']);
-     //                     $('#modfamily').select2('val',data[0]['family']);
-     //                }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                     console.log(errorThrown+'|'+textStatus);
-     //                });
-     //           });
-     //      });
-     // }).fail(function(jqXHR, textStatus, erroThrown){
-     //      console.log(erroThrown+'|'+textStatus);
-     // });   
+                    }).done(function(data, textStatus, jqXHR) {
+                         console.log(data);
+                         $('#mod').val(data[0]['mod']);
+                         $('#modfamily').select2('val',data[0]['family']);
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                         console.log(errorThrown+'|'+textStatus);
+                    });
+               });
+          });
+     }).fail(function(jqXHR, textStatus, erroThrown){
+          console.log(erroThrown+'|'+textStatus);
+     });   
 }
 function targetregistration(){
      var datefrom = $('#target-datefrom').val();
@@ -2111,8 +1801,8 @@ function targetregistration(){
      var yielding = $('#targetyield').val();
      var dppm = $('#targetdppm').val();
      var ptype = $('#targetptype').val();
-     var id = (typeof IDs != 'undefined')?IDs:1;
-     //var status = $('#targetstatus').val();
+     var status = $('#targetstatus').val();
+     var id = $('#targetid').val();
      if(srdatefrom == ""){     
         $('#er_target-datefrom').html("Date From field is empty"); 
         $('#er_target-datefrom').css('color', 'red');       
@@ -2139,95 +1829,66 @@ function targetregistration(){
         return false;  
      }
      $('#tblfortarget').html("");
-     jQuery.ajax({
-          url: "{{ url('/add-targetreg') }}",
-          type: 'POST',
-          dataType: 'json',
-          data: {_token: "{{Session::token()}}", 
-                    datefrom:datefrom,
-                    dateto:dateto,
-                    yielding:yielding,
-                    dppm:dppm,
-                    ptype:ptype,
-                    status:STATUS,
-                    id:id
-                },
-          success:function(returnData){
-                         if(STATUS == "ADD"){
-                              msg("Yield Successfully added","success"); 
-                              getDatatable('modreg-table',"{{ url('/getTargetYield')}}",dataColumnYieldTarget,[],0);
-                         }
-                         else{
-                              msg("Yield Successfully modified","success"); 
-                              getDatatable('modreg-table',"{{ url('/getTargetYield')}}",dataColumnYieldTarget,[],0);
-                              clearALLfields();
-                              STATUS = "ADD"
-                         }
-          },
-           error: function(xhr, textStatus, errorThrown) {
-           }
-      });
-
-     // $.post("{{ url('/add-targetreg') }}",
-     // {
-     //      _token:$('meta[name=csrf-token]').attr('content'),
-     //      datefrom:datefrom,
-     //      dateto:dateto,
-     //      yielding:yielding,
-     //      dppm:dppm,
-     //      ptype:ptype,
-     //      status:status,
-     //      id:id
-     // }).done(function(data, textStatus, jqXHR){
-     //      $.each(data,function(i,val){
-     //           var tblrow = '<tr>'+
-     //                          '<td style="width: 2%">'+
-     //                               '<input type="checkbox" class="form-control input-sm checkboxestarget" value="'+val.id+'" name="checkitemtarget" id="checkitemtarget"></input>'+ 
-     //                          '</td>'+ 
-     //                          '<td style="width: 2%">'+
-     //                               '<button type="button" name="edit-targetreg" class="btn btn-sm btn-primary edit-targetreg" value="'+val.id+'">'+
-     //                                    '<i class="fa fa-edit"></i>'+ 
-     //                               '</button>'+ 
-     //                          '</td>'+
-     //                          '<td>'+val.datefrom+'</td>'+
-     //                          '<td>'+val.dateto+'</td>'+                              
-     //                          '<td>'+val.yield+'</td>'+
-     //                          '<td>'+val.dppm+'</td>'+
-     //                          '<td>'+val.ptype+'</td>'+
-     //                     '</tr>';
-     //           $('#tblfortarget').append(tblrow);
-     //           $('#target-datefrom').val("");
-     //           $('#target-dateto').val("");
-     //           $('#targetyield').val("");
-     //           $('#targetdppm').val("");
-     //           $('#targetptype').select2('val',"");
-     //           $('#targetstatus').val("ADD");  
-     //           $('.edit-targetreg').click(function(){
-     //                $('#targetstatus').val("EDIT");
-     //                var editsearch = $(this).val();
-     //                $('#targetid').val(editsearch);
-     //                $.ajax({
-     //                     url: "{{ url('/edittargetreg') }}",
-     //                     method: 'get',
-     //                     data:  { 
-     //                          editsearch : editsearch, 
-     //                     },
+     $.post("{{ url('/add-targetreg') }}",
+     {
+          _token:$('meta[name=csrf-token]').attr('content'),
+          datefrom:datefrom,
+          dateto:dateto,
+          yielding:yielding,
+          dppm:dppm,
+          ptype:ptype,
+          status:status,
+          id:id
+     }).done(function(data, textStatus, jqXHR){
+          $.each(data,function(i,val){
+               var tblrow = '<tr>'+
+                              '<td style="width: 2%">'+
+                                   '<input type="checkbox" class="form-control input-sm checkboxestarget" value="'+val.id+'" name="checkitemtarget" id="checkitemtarget"></input>'+ 
+                              '</td>'+ 
+                              '<td style="width: 2%">'+
+                                   '<button type="button" name="edit-targetreg" class="btn btn-sm btn-primary edit-targetreg" value="'+val.id+'">'+
+                                        '<i class="fa fa-edit"></i>'+ 
+                                   '</button>'+ 
+                              '</td>'+
+                              '<td>'+val.datefrom+'</td>'+
+                              '<td>'+val.dateto+'</td>'+                              
+                              '<td>'+val.yield+'</td>'+
+                              '<td>'+val.dppm+'</td>'+
+                              '<td>'+val.ptype+'</td>'+
+                         '</tr>';
+               $('#tblfortarget').append(tblrow);
+               $('#target-datefrom').val("");
+               $('#target-dateto').val("");
+               $('#targetyield').val("");
+               $('#targetdppm').val("");
+               $('#targetptype').select2('val',"");
+               $('#targetstatus').val("ADD");  
+               $('.edit-targetreg').click(function(){
+                    $('#targetstatus').val("EDIT");
+                    var editsearch = $(this).val();
+                    $('#targetid').val(editsearch);
+                    $.ajax({
+                         url: "{{ url('/edittargetreg') }}",
+                         method: 'get',
+                         data:  { 
+                              editsearch : editsearch, 
+                         },
                          
-     //                }).done(function(data, textStatus, jqXHR) {
-     //                     console.log(data);
-     //                     $('#target-datefrom').val(data[0]['datefrom']);
-     //                     $('#target-dateto').val(data[0]['dateto']);
-     //                     $('#targetyield').val(data[0]['yield']);
-     //                     $('#targetdppm').val(data[0]['dppm']); 
-     //                     $('#targetptype').select2('val',data[0]['ptype']); 
-     //                }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                     console.log(errorThrown+'|'+textStatus);
-     //                });
-     //           });    
-     //      });
-     // }).fail(function(jqXHR, textStatus, erroThrown){
-     //      console.log(erroThrown+'|'+textStatus);
-     // });      
+                    }).done(function(data, textStatus, jqXHR) {
+                         console.log(data);
+                         $('#target-datefrom').val(data[0]['datefrom']);
+                         $('#target-dateto').val(data[0]['dateto']);
+                         $('#targetyield').val(data[0]['yield']);
+                         $('#targetdppm').val(data[0]['dppm']); 
+                         $('#targetptype').select2('val',data[0]['ptype']); 
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                         console.log(errorThrown+'|'+textStatus);
+                    });
+               });    
+          });
+     }).fail(function(jqXHR, textStatus, erroThrown){
+          console.log(erroThrown+'|'+textStatus);
+     });      
 }
 function deleteAllcheckeditems(){
      var tray = [];
@@ -2259,7 +1920,7 @@ function removeporeg(){
      var traycount =tray.length;
      $('#tblforporeg').html("");
      $.ajax({
-          url: "{{ url('/deleteporeg') }}",
+          url: "{{ url('/deleteAllporeg') }}",
           method: 'get',
           data:  { 
                tray : tray, 
@@ -2268,7 +1929,6 @@ function removeporeg(){
           
      }).done(function(data, textStatus, jqXHR) {
           console.log(data);
-          alert(data);
           $.each(data,function(i,val){
                var tblrow = '<tr>'+
                               '<td style="width: 2%" >'+
@@ -2387,6 +2047,7 @@ function removeseriesreg(){
           tray.push($(this).val());
      });
      var traycount =tray.length;
+     $('#tblforseries').html("");
      $.ajax({
           url: "{{ url('/deleteAllseriesreg') }}",
           method: 'get',
@@ -2394,82 +2055,57 @@ function removeseriesreg(){
                tray : tray, 
                traycount : traycount
           },
-          success:function(){
-                    msg("Series Deleted","success"); 
-                    getDatatable('tbl_seriesregtable',"{{ url('/get-seriesregistration')}}",dataColumnseries,[],0);
-          },
-     });
           
-     // }).done(function(data, textStatus, jqXHR) {
-     //      $.each(data,function(i,val){
-     //           var tblrow = '<tr>'+
-     //                          '<td style="width: 2%">'+
-     //                               '<input type="checkbox" class="form-control input-sm checkboxesseries" value="'+val.id+'" name="checkitemseries" id="checkitemseries"></input>'+ 
-     //                          '</td>'+  
-     //                          '<td style="width: 2%">'+
-     //                               '<button type="button" name="edit-seriesreg" class="btn btn-sm btn-primary edit-seriesreg" value="'+val.id+'">'+
-     //                                    '<i class="fa fa-edit"></i>'+ 
-     //                               '</button>'+ 
-     //                          '</td>'+                             
-     //                          '<td>'+val.family+'</td>'+
-     //                          '<td>'+val.series+'</td>'+
-     //                     '</tr>';
-     //           $('#tblforseries').append(tblrow);
-     //           $('#Seriesfamily').select2('val',"");
-     //           $('#seriesname').select2('val',"");
-     //           $('#seriesregid').val("");
-     //           $('#seriesregstatus').val("ADD");  
-     //           $('.edit-seriesreg').click(function(){
-     //                $('#seriesregstatus').val("EDIT");
-     //                var editsearch = $(this).val();
-     //                $('#seriesregid').val(editsearch);
-     //                $.ajax({
-     //                     url: "{{ url('/editseriesreg') }}",
-     //                     method: 'get',
-     //                     data:  { 
-     //                          editsearch : editsearch, 
-     //                     },
+     }).done(function(data, textStatus, jqXHR) {
+          $.each(data,function(i,val){
+               var tblrow = '<tr>'+
+                              '<td style="width: 2%">'+
+                                   '<input type="checkbox" class="form-control input-sm checkboxesseries" value="'+val.id+'" name="checkitemseries" id="checkitemseries"></input>'+ 
+                              '</td>'+  
+                              '<td style="width: 2%">'+
+                                   '<button type="button" name="edit-seriesreg" class="btn btn-sm btn-primary edit-seriesreg" value="'+val.id+'">'+
+                                        '<i class="fa fa-edit"></i>'+ 
+                                   '</button>'+ 
+                              '</td>'+                             
+                              '<td>'+val.family+'</td>'+
+                              '<td>'+val.series+'</td>'+
+                         '</tr>';
+               $('#tblforseries').append(tblrow);
+               $('#seriesfamily').select2('val',"");
+               $('#seriesname').select2('val',"");
+               $('#seriesregid').val("");
+               $('#seriesregstatus').val("ADD");  
+               $('.edit-seriesreg').click(function(){
+                    $('#seriesregstatus').val("EDIT");
+                    var editsearch = $(this).val();
+                    $('#seriesregid').val(editsearch);
+                    $.ajax({
+                         url: "{{ url('/editseriesreg') }}",
+                         method: 'get',
+                         data:  { 
+                              editsearch : editsearch, 
+                         },
                          
-     //                }).done(function(data, textStatus, jqXHR) {
-     //                     console.log(data);
-     //                     $('#Seriesfamily').select2('val',data[0]['family']);
-     //                     $('#seriesname').val(data[0]['series']);  
-     //                }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                     console.log(errorThrown+'|'+textStatus);
-     //                });
-     //           });
-     //      });            
-     // }).fail(function(jqXHR, textStatus, errorThrown) {
-     //      console.log(errorThrown+'|'+textStatus);
-     // });
-}
-
-function removeYIELD(){
-     var tray = [];
-     $(".checkboxesYield:checked").each(function () {
-          tray.push($(this).val());
-     });
-     var traycount =tray.length;
-     $.ajax({
-          url: "{{ url('/deleteYIELD') }}",
-          method: 'get',
-          data:  { 
-               tray : tray, 
-               traycount : traycount
-          },  
-          success:function(){
-               msg("Yield Deleted","success"); 
-               getDatatable('tbl_yield',"{{ url('/getYieldPerformanceDT')}}",dataColumnYIELD,[],0);          
-          }
+                    }).done(function(data, textStatus, jqXHR) {
+                         console.log(data);
+                         $('#seriesfamily').select2('val',data[0]['family']);
+                         $('#seriesname').val(data[0]['series']);  
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                         console.log(errorThrown+'|'+textStatus);
+                    });
+               });
+          });            
+     }).fail(function(jqXHR, textStatus, errorThrown) {
+          console.log(errorThrown+'|'+textStatus);
      });
 }
-
 function removemodreg(){
      var tray = [];
      $(".checkboxesmod:checked").each(function () {
           tray.push($(this).val());
      });
      var traycount =tray.length;
+     $('#tblformodreg').html("");
      $.ajax({
           url: "{{ url('/deleteAllmodreg') }}",
           method: 'get',
@@ -2477,52 +2113,47 @@ function removemodreg(){
                tray : tray, 
                traycount : traycount
           },  
-          success:function(){
-               msg("Mod Deleted","success"); 
-                getDatatable('tbl_MODtable',"{{ url('/getModofDef')}}",dataColumnMOD,[],0);
-          }
-     });
-     // }).done(function(data, textStatus, jqXHR) {
-     //    $.each(data,function(i,val){
-     //           var tblrow = '<tr>'+
-     //                          '<td style="width: 2%">'+
-     //                               '<input type="checkbox" class="form-control input-sm checkboxesmod" value="'+val.id+'" name="checkitemmod" id="checkitemmod"></input>'+ 
-     //                          '</td> '+
-     //                          '<td style="width: 2%">'+
-     //                               '<button type="button" name="edit-modreg" class="btn btn-sm btn-primary edit-modreg" value="'+val.id+'">'+
-     //                                    '<i class="fa fa-edit"></i> '+
-     //                               '</button>'+ 
-     //                          '</td>'+                              
-     //                          '<td>'+val.family+'</td>'+
-     //                          '<td>'+val.mod+'</td>'+
-     //                     '</tr>';
-     //           $('#tblformodreg').append(tblrow);
-     //           $('#mod').val("");
-     //           $('#modfamily').select2('val',"");
-     //           $('#modregstatus').val("ADD");  
-     //           $('.edit-modreg').click(function(){
-     //                $('#modregstatus').val("EDIT");
-     //                var editsearch = $(this).val();
-     //                $('#modregid').val(editsearch);
-     //                $.ajax({
-     //                     url: "{{ url('/editmodreg') }}",
-     //                     method: 'get',
-     //                     data:  { 
-     //                          editsearch : editsearch, 
-     //                     },
+     }).done(function(data, textStatus, jqXHR) {
+        $.each(data,function(i,val){
+               var tblrow = '<tr>'+
+                              '<td style="width: 2%">'+
+                                   '<input type="checkbox" class="form-control input-sm checkboxesmod" value="'+val.id+'" name="checkitemmod" id="checkitemmod"></input>'+ 
+                              '</td> '+
+                              '<td style="width: 2%">'+
+                                   '<button type="button" name="edit-modreg" class="btn btn-sm btn-primary edit-modreg" value="'+val.id+'">'+
+                                        '<i class="fa fa-edit"></i> '+
+                                   '</button>'+ 
+                              '</td>'+                              
+                              '<td>'+val.family+'</td>'+
+                              '<td>'+val.mod+'</td>'+
+                         '</tr>';
+               $('#tblformodreg').append(tblrow);
+               $('#mod').val("");
+               $('#modfamily').select2('val',"");
+               $('#modregstatus').val("ADD");  
+               $('.edit-modreg').click(function(){
+                    $('#modregstatus').val("EDIT");
+                    var editsearch = $(this).val();
+                    $('#modregid').val(editsearch);
+                    $.ajax({
+                         url: "{{ url('/editmodreg') }}",
+                         method: 'get',
+                         data:  { 
+                              editsearch : editsearch, 
+                         },
                          
-     //                }).done(function(data, textStatus, jqXHR) {
-     //                     console.log(data);
-     //                     $('#mod').val(data[0]['mod']);
-     //                     $('#modfamily').select2('val',data[0]['family']);
-     //                }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                     console.log(errorThrown+'|'+textStatus);
-     //                });
-     //           });
-     //      });
-     // }).fail(function(jqXHR, textStatus, errorThrown) {
-     //      console.log(errorThrown+'|'+textStatus);
-     // });
+                    }).done(function(data, textStatus, jqXHR) {
+                         console.log(data);
+                         $('#mod').val(data[0]['mod']);
+                         $('#modfamily').select2('val',data[0]['family']);
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                         console.log(errorThrown+'|'+textStatus);
+                    });
+               });
+          });
+     }).fail(function(jqXHR, textStatus, errorThrown) {
+          console.log(errorThrown+'|'+textStatus);
+     });
 }
 function removetargetreg(){
      var tray = [];
@@ -2530,7 +2161,7 @@ function removetargetreg(){
           tray.push($(this).val());
      });
      var traycount =tray.length;
-   //  $('#tblfortarget').html("");
+     $('#tblfortarget').html("");
      $.ajax({
           url: "{{ url('/deleteAlltargetreg') }}",
           method: 'get',
@@ -2538,62 +2169,57 @@ function removetargetreg(){
                tray : tray, 
                traycount : traycount
           },
-          success:function(){
-               msg("Target Yield Deleted","success"); 
-               getDatatable('modreg-table',"{{ url('/getTargetYield')}}",dataColumnYieldTarget,[],0);
-          }
-     });
           
-     // }).done(function(data, textStatus, jqXHR) {
-     //      $.each(data,function(i,val){
-     //           var tblrow = '<tr>'+
-     //                          '<td style="width: 2%">'+
-     //                               '<input type="checkbox" class="form-control input-sm checkboxestarget" value="'+val.id+'" name="checkitemtarget" id="checkitemtarget"></input>'+ 
-     //                          '</td>'+ 
-     //                          '<td style="width: 2%">'+
-     //                               '<button type="button" name="edit-targetreg" class="btn btn-sm btn-primary edit-targetreg" value="'+val.id+'">'+
-     //                                    '<i class="fa fa-edit"></i>'+ 
-     //                               '</button>'+ 
-     //                          '</td>'+
-     //                          '<td>'+val.datefrom+'</td>'+
-     //                          '<td>'+val.dateto+'</td>'+                              
-     //                          '<td>'+val.yield+'</td>'+
-     //                          '<td>'+val.dppm+'</td>'+
-     //                          '<td>'+val.ptype+'</td>'+
-     //                     '</tr>';
-     //           //$('#tblfortarget').append(tblrow);
-     //           $('#target-datefrom').val("");
-     //           $('#target-dateto').val("");
-     //           $('#targetyield').val("");
-     //           $('#targetdppm').val("");
-     //           $('#targetptype').select2('val',"");
-     //           $('#targetstatus').val("ADD");  
-     //           $('.edit-targetreg').click(function(){
-     //                $('#targetstatus').val("EDIT");
-     //                var editsearch = $(this).val();
-     //                $('#targetid').val(editsearch);
-     //                $.ajax({
-     //                     url: "{{ url('/edittargetreg') }}",
-     //                     method: 'get',
-     //                     data:  { 
-     //                          editsearch : editsearch, 
-     //                     },
+     }).done(function(data, textStatus, jqXHR) {
+          $.each(data,function(i,val){
+               var tblrow = '<tr>'+
+                              '<td style="width: 2%">'+
+                                   '<input type="checkbox" class="form-control input-sm checkboxestarget" value="'+val.id+'" name="checkitemtarget" id="checkitemtarget"></input>'+ 
+                              '</td>'+ 
+                              '<td style="width: 2%">'+
+                                   '<button type="button" name="edit-targetreg" class="btn btn-sm btn-primary edit-targetreg" value="'+val.id+'">'+
+                                        '<i class="fa fa-edit"></i>'+ 
+                                   '</button>'+ 
+                              '</td>'+
+                              '<td>'+val.datefrom+'</td>'+
+                              '<td>'+val.dateto+'</td>'+                              
+                              '<td>'+val.yield+'</td>'+
+                              '<td>'+val.dppm+'</td>'+
+                              '<td>'+val.ptype+'</td>'+
+                         '</tr>';
+               $('#tblfortarget').append(tblrow);
+               $('#target-datefrom').val("");
+               $('#target-dateto').val("");
+               $('#targetyield').val("");
+               $('#targetdppm').val("");
+               $('#targetptype').select2('val',"");
+               $('#targetstatus').val("ADD");  
+               $('.edit-targetreg').click(function(){
+                    $('#targetstatus').val("EDIT");
+                    var editsearch = $(this).val();
+                    $('#targetid').val(editsearch);
+                    $.ajax({
+                         url: "{{ url('/edittargetreg') }}",
+                         method: 'get',
+                         data:  { 
+                              editsearch : editsearch, 
+                         },
                          
-     //                }).done(function(data, textStatus, jqXHR) {
-     //                     console.log(data);
-     //                     $('#target-datefrom').val(data[0]['datefrom']);
-     //                     $('#target-dateto').val(data[0]['dateto']);
-     //                     $('#targetyield').val(data[0]['yield']);
-     //                     $('#targetdppm').val(data[0]['dppm']); 
-     //                     $('#targetptype').select2('val',data[0]['ptype']); 
-     //                }).fail(function(jqXHR, textStatus, errorThrown) {
-     //                     console.log(errorThrown+'|'+textStatus);
-     //                });
-     //           });    
-     //      });
-     // }).fail(function(jqXHR, textStatus, errorThrown) {
-     //      console.log(errorThrown+'|'+textStatus);
-     // });
+                    }).done(function(data, textStatus, jqXHR) {
+                         console.log(data);
+                         $('#target-datefrom').val(data[0]['datefrom']);
+                         $('#target-dateto').val(data[0]['dateto']);
+                         $('#targetyield').val(data[0]['yield']);
+                         $('#targetdppm').val(data[0]['dppm']); 
+                         $('#targetptype').select2('val',data[0]['ptype']); 
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                         console.log(errorThrown+'|'+textStatus);
+                    });
+               });    
+          });
+     }).fail(function(jqXHR, textStatus, errorThrown) {
+          console.log(errorThrown+'|'+textStatus);
+     });
 }
 function update(){
      var yieldingno = $('input[name=yieldingno2]').val();
@@ -2629,6 +2255,174 @@ function update(){
      }).fail(function(jqXHR, textStatus, errorThrown){
           console.log(errorThrown+'|'+textStatus);
      });
+}
+function summaryREpt(){
+     var srdatefrom = $('#srdatefrom').val();
+     var srdateto = $('#srdateto').val();
+     var srprodtype = $('#srprodtype').val();
+     var token = "{{ Session::token() }}";
+     var paramfrom = srdatefrom.split("/");
+     var paramto = srdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
+    
+     window.location = "{{ url('/summaryREpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&srprodtype=" + srprodtype;
+}
+
+/*function summaryREptpdf(){
+     var srdatefrom = $('#srdatefrom').val();
+     var srdateto = $('#srdateto').val();
+     var srprodtype = $('#srprodtype').val();
+     var token = "{{ Session::token() }}";
+     var paramfrom = srdatefrom.split("/");
+     var paramto = srdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
+    
+     window.location = "{{ url('/summaryREptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&srprodtype=" + srprodtype;
+}
+*/
+function defectsummaryRpt(){
+     var dsrdatefrom = $('#dsr-datefrom').val();
+     var dsrdateto = $('#dsr-dateto').val();
+     var ptype = $('#dsr-ptype').val();
+     var icsocket = $('#dsr-icsocket').val();
+     var fol = $('#dsr-fol').val();
+     var option = "";
+     if($('#dsr-icsocket').is(':checked')){
+          option = icsocket;   
+     }
+     if($('#dsr-fol').is(':checked')){
+          option = fol;
+     }
+    
+     var token = "{{ Session::token() }}";
+     var paramfrom = dsrdatefrom.split("/");
+     var paramto = dsrdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
+
+     window.location = "{{ url('/defectsummaryRpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
+}
+
+/*function defectsummaryRptpdf(){
+     var dsrdatefrom = $('#dsr-datefrom').val();
+     var dsrdateto = $('#dsr-dateto').val();
+     var ptype = $('#dsr-ptype').val();
+     var icsocket = $('#dsr-icsocket').val();
+     var fol = $('#dsr-fol').val();
+     var option = "";
+     if($('#dsr-icsocket').is(':checked')){
+          option = icsocket;   
+     }
+     if($('#dsr-fol').is(':checked')){
+          option = fol;
+     }
+    
+     var token = "{{ Session::token() }}";
+     var paramfrom = dsrdatefrom.split("/");
+     var paramto = dsrdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
+
+     window.location = "{{ url('/defectsummaryRptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
+}
+*/
+function yieldsumRpt(){
+     var prodtype = $('#ypsr-prodtype').val();
+     var family = $('#ypsr-family').val();
+     var series = $('#ypsr-seriesname').val();
+     var device = $('#ypsr-device').val();
+     var pono = $('#ypsr-ponumber').val();
+     var ypsrdatefrom = $('#ypsr-datefrom').val();
+     var ypsrdateto = $('#ypsr-dateto').val();
+     var token = "{{ Session::token() }}";
+     var paramfrom = ypsrdatefrom.split("/");
+     var paramto = ypsrdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];  
+
+     window.location = "{{ url('/yieldsumRpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&prodtype=" + prodtype + "&&family=" + family + "&&series=" + series + "&&device=" + device + "&&pono=" + pono;    
+}
+
+function yieldsumRptpdf(){
+     var prodtype = $('#ypsr-prodtype').val();
+     var family = $('#ypsr-family').val();
+     var series = $('#ypsr-seriesname').val();
+     var device = $('#ypsr-device').val();
+     var pono = $('#ypsr-ponumber').val();
+     var ypsrdatefrom = $('#ypsr-datefrom').val();
+     var ypsrdateto = $('#ypsr-dateto').val();
+     var token = "{{ Session::token() }}";
+     var paramfrom = ypsrdatefrom.split("/");
+     var paramto = ypsrdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];  
+
+     window.location = "{{ url('/yieldsumRptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&prodtype=" + prodtype + "&&family=" + family + "&&series=" + series + "&&device=" + device + "&&pono=" + pono;    
+}
+
+
+function yieldsumfamRpt(){
+     
+     var ysfdatefrom = $('#ysf-datefrom').val();
+     var ysfdateto = $('#ysf-dateto').val();
+     var yieldtarget = $('#ysf-yieldtarget').val();
+     var checkboxicsocket = $('#ysf-icsocket').val();
+     var ptype = $('#ysf-ptype').val();
+    
+     var checkboxfol = $('#ysf-fol').val();
+     var token = "{{ Session::token() }}";
+     var paramfrom = ysfdatefrom.split("/");
+     var paramto = ysfdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];  
+     var chosen = $('input[name=chose]').val();
+
+     window.location = "{{ url('/yieldsumfamRpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&chosen=" + chose + "&&yieldtarget=" + yieldtarget + "&&ptype=" + ptype;
+
+     // $.ajax({
+     //      url: "{{ url('/yieldsumRptpdf') }}",
+     //      method: 'get',
+     //      data:  {
+     //           yieldtarget:yieldtarget     
+     //      },  
+     // }).done(function(data, textStatus, jqXHR) {
+     //      //alert(data);
+     // }).fail(function(jqXHR, textStatus, errorThrown) {
+     //      console.log(errorThrown+'|'+textStatus);
+     // });
+}
+
+function yieldsumfamRptpdf(){
+     
+     var ysfdatefrom = $('#ysf-datefrom').val();
+     var ysfdateto = $('#ysf-dateto').val();
+     var yieldtarget = $('#ysf-yieldtarget').val();
+     var checkboxicsocket = $('#ysf-icsocket').val();
+
+    
+     var checkboxfol = $('#ysf-fol').val();
+     var token = "{{ Session::token() }}";
+     var paramfrom = ysfdatefrom.split("/");
+     var paramto = ysfdateto.split("/");
+     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
+     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];  
+     var chosen = $('input[name=chose]').val();
+
+     window.location = "{{ url('/yieldsumfamRptpdf') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&chosen=" + chose;
+
+     // $.ajax({
+     //      url: "{{ url('/yieldsumRptpdf') }}",
+     //      method: 'get',
+     //      data:  {
+     //           yieldtarget:yieldtarget     
+     //      },  
+     // }).done(function(data, textStatus, jqXHR) {
+     //      //alert(data);
+     // }).fail(function(jqXHR, textStatus, errorThrown) {
+     //      console.log(errorThrown+'|'+textStatus);
+     // });
 }
 
 function DatePickers(){
@@ -2700,18 +2494,13 @@ function ButtonsClicked(){
           $('#podevice').val("");
           $('#poquantity').val("");
           $('#poregid').val("");
+
           $('#pono').keyup(function(){
                if(this.value == ''){
                     $('#poquantity').val(""); 
                     $('#podevice').val("");
                }
           });
-          getFamilyList('devicefamily');
-          getSeriesList();
-          getProductList();
-          getDatatable('tbl_poregistration',"{{ url('/get-poregistration')}}",dataColumn,[],0);
-          IDS="";
-          STATUS = "ADD"
      });
     
 
@@ -2726,21 +2515,15 @@ function ButtonsClicked(){
           $('#deviceseries').select2('val',"");
           $('#deviceptype').select2('val',""); 
           $('#devregid').val(""); 
-          IDS="";
-          STATUS = "ADD"
      });
      $('#btn_seriesreg').click(function(){
           $('#seriesreg_Modal').modal('show');
           $('#mAndr-Modal').modal('hide');
           $('.seriesreg_modal-title').html("Series Registration");
           $('#seriesregstatus').val("ADD");
-          $('#Seriesfamily').val("");
+          $('#seriesfamily').val("");
           $('#seriesname').val("");
           $('#seriesregid').val("");
-          getFamilyList('Seriesfamily');
-          getDatatable('tbl_seriesregtable',"{{ url('/get-seriesregistration')}}",dataColumnseries,[],0);
-          IDS="";
-          STATUS = "ADD"
      });
 
      $('#btn_modreg').click(function(){
@@ -2751,10 +2534,6 @@ function ButtonsClicked(){
           $('#mod').val("");
           $('#modfamily').val("");
           $('#modregid').val("");
-          getProductTargetList('modfamily');
-          getDatatable('tbl_MODtable',"{{ url('/getModofDef')}}",dataColumnMOD,[],0);
-          IDS="";
-          STATUS = "ADD"
      });
      $('#btn_target').click(function(){
           $('#targetreg_Modal').modal('show');
@@ -2766,10 +2545,6 @@ function ButtonsClicked(){
           $('#targetyield').val("");
           $('#targetdppm').val("");
           $('#targetid').val("");
-          getProductTargetList('targetptype');
-          getDatatable('modreg-table',"{{ url('/getTargetYield')}}",dataColumnYieldTarget,[],0);
-          IDS="";
-          STATUS = "ADD"
      });
   
      $('#btnxport-summaryrpt').click(function(){
@@ -2842,7 +2617,7 @@ function FieldsValidations(){
         $('#er_deviceptype').html(""); 
      });
      //SERIES Registration Inputs Validations-------------------
-     $('#Seriesfamily').click(function(){
+     $('#seriesfamily').click(function(){
         $('#er_seriesfamily').html(""); 
      });
      $('#seriesname').click(function(){
@@ -2871,11 +2646,11 @@ function FieldsValidations(){
 }
 function ButtonsClear(){
      $('#btnporegclear').click(function(){
-          // $('#hdporeg').val("ADD");
-          // $('#pono').val("");
-          // $('#podevice').val("");
-          // $('#poquantity').val("");
-          // $('#poregid').val("");
+          $('#hdporeg').val("ADD");
+          $('#pono').val("");
+          $('#podevice').val("");
+          $('#poquantity').val("");
+          $('#poregid').val("");
      });
      $('#btndeviceregclear').click(function(){
           $('#devregstatus').val("ADD");
@@ -2885,21 +2660,18 @@ function ButtonsClear(){
           $('#devicefamily').select2('val',"");
           $('#deviceseries').select2('val',"");
           $('#devregid').val("");
-          IDS = "";
      });
      $('#btnseriesregclear').click(function(){
           $('#hdseriesreg').val("ADD");
-          $('#Seriesfamily').select2('val',"");
+          $('#seriesfamily').select2('val',"");
           $('#seriesname').val("");
           $('#seriesregid').val("");
-          IDS = "";
      });
      $('#btnmodregclear').click(function(){
           $('#hdmodreg').val("ADD");
           $('#mod').val("");
           $('#modfamily').select2('val',"");
           $('#modregid').val("");
-          IDS = "";
      });
      $('#btntargetregclear').click(function(){
           $('#hdmodreg').val("ADD");
@@ -2908,7 +2680,6 @@ function ButtonsClear(){
           $('#targetyield').val("");
           $('#targetdppm').val("");
           $('#targetid').val("");
-          IDS = "";
      });
 }
 function Checkboxes(){
@@ -2963,26 +2734,26 @@ function Checkboxes(){
           }         
      });
 
-     // $('.checkboxespo').change(function(){
-     //      $('input[name=checkAllitempo]').parents('span').removeClass("checked");
-     //      $('input[name=checkAllitempo]').prop('checked',false);
-     //      var tray = [];
-     //      $(".checkboxespo:checked").each(function () {
-     //           tray.push($(this).val());
-     //           $('.checkAllitemspo').prop('checked',false)
-     //      });
+     $('.checkboxespo').change(function(){
+          $('input[name=checkAllitempo]').parents('span').removeClass("checked");
+          $('input[name=checkAllitempo]').prop('checked',false);
+          var tray = [];
+          $(".checkboxespo:checked").each(function () {
+               tray.push($(this).val());
+               $('.checkAllitemspo').prop('checked',false)
+          });
           
-     //      if($('.checkboxespo').is(':checked')){
-     //           $('.deleteAll-task').removeClass("disabled");
-     //           $('#add').addClass("disabled");
-     //      }else{
-     //           $('input[name=checkAllitempo]').parents('span').removeClass("checked");
-     //           $('input[name=checkAllitempo]').prop('checked',false);
-     //           $('.deleteAll-task').addClass("disabled");
-     //           $('#add').removeClass("disabled");
-     //      }
+          if($('.checkboxespo').is(':checked')){
+               $('.deleteAll-task').removeClass("disabled");
+               $('#add').addClass("disabled");
+          }else{
+               $('input[name=checkAllitempo]').parents('span').removeClass("checked");
+               $('input[name=checkAllitempo]').prop('checked',false);
+               $('.deleteAll-task').addClass("disabled");
+               $('#add').removeClass("disabled");
+          }
      
-     // });
+     });
      $('.checkAllitemsdevice').change(function(){
           if($('.checkAllitemsdevice').is(':checked')){
                $('input[name=checkitemdevice]').parents('span').addClass("checked");
@@ -3179,7 +2950,7 @@ function EditButtons(){
                },
                
           }).done(function(data, textStatus, jqXHR) {
-               $('#Seriesfamily').select2('val',data[0]['family']);
+               $('#seriesfamily').select2('val',data[0]['family']);
                $('#seriesname').val(data[0]['series']);
               
           }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -3247,128 +3018,5 @@ function ButtonClosed(){
           window.location.href = "{{ url('/yieldperformance') }}";
      });
 }
-
-//CER
-function DeletePOcheck(){
-var tray = [];
-     $(".checkboxespo:checked").each(function () {
-          tray.push($(this).val());
-     });
-     var traycount =tray.length;
-     $('#tblforporeg').html("");
-
-
-     jQuery.ajax({
-             url: "{{ url('/deleteporeg') }}",
-             type: 'GET',
-             dataType: 'json',
-             data:  { 
-                    tray : tray, 
-                    traycount : traycount
-               },
-             success: function(returnData) {
-               if(returnData == 1)
-               {
-                    msg("Selected PO Deleted","success");
-                    clearALLfields();
-               }
-               else{
-                    msg("An Error Occurs","failed");
-                    clearALLfields();
-               }
-               getDatatable('tbl_poregistration',"{{ url('/get-poregistration')}}",dataColumn,[],0);
-
-          }
-     });
-          
-}
-
-
-function clearALLfields(){
-     $('#pono').val("");
-     $('#podeviceCode').val("");
-     $('#podevice').val("");
-     $('#poquantity').val("");
-     $('#devicefamily').val("");
-     $('#deviceseries').val("");
-     $('#deviceptype').val("");
-}
-
-
-function getFamilyList(s){
-   var select = $('#'+s);
-   $.ajax({
-          url: "{{ url('/getFamilyDropDown') }}",
-          type: "get",
-          dataType: "json",
-          success: function (returndata) {
-               select.empty();
-               select.append($('<option></option>').val(0).html("- SELECT -"));
-               if (returndata.length > 0) {
-                  for(var x=0;x<returndata.length;x++){
-                         select.append($('<option></option>').val(returndata[x].description).html(returndata[x].description));
-                  }
-               }
-          }
-   });
-}
-
-function getSeriesList(){
-   var select = $('#deviceseries');
-   $.ajax({
-          url: "{{ url('/getSeriesDropdown') }}",
-          type: "get",
-          dataType: "json",
-          success: function (returndata) {
-               select.empty();
-               select.append($('<option></option>').val(0).html("- SELECT -"));
-               if (returndata.length > 0) {
-                  for(var x=0;x<returndata.length;x++){
-                         select.append($('<option></option>').val(returndata[x].description).html(returndata[x].description));
-                  }
-               }
-          }
-   });
-}
-
-function getProductList(){
-   var select = $('#deviceptype');
-   $.ajax({
-          url: "{{ url('/getProdtypeDropdown') }}",
-          type: "get",
-          dataType: "json",
-          success: function (returndata) {
-               select.empty();
-               select.append($('<option></option>').val(0).html("- SELECT -"));
-               if (returndata.length > 0) {
-                  for(var x=0;x<returndata.length;x++){
-                         select.append($('<option></option>').val(returndata[x].description).html(returndata[x].description));
-                  }
-               }
-          }
-   });
-}
-
-function getProductTargetList(s){
-   var select = $('#'+s);
-   $.ajax({
-          url: "{{ url('/getProdtypeDropdown') }}",
-          type: "get",
-          dataType: "json",
-          success: function (returndata) {
-               select.empty();
-               select.append($('<option></option>').val(0).html("- SELECT -"));
-               if (returndata.length > 0) {
-                  for(var x=0;x<returndata.length;x++){
-                         select.append($('<option></option>').val(returndata[x].description).html(returndata[x].description));
-                  }
-               }
-          }
-   });
-}
-
-
-
-
 </script>
 @endpush

@@ -413,14 +413,14 @@
                                     </li>
                                 @endif
                             @elseif ($access->program_code == "6003")
-                                <?php $url = "/targetyield"; $icon = "fa fa-bullseye"; ?>
+                                <?php $url = "/targetyieldperformance"; $icon = "fa fa-bullseye"; ?>
                                 @if ($access->read_write != "0")
                                     <li>
                                         <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
                                     </li>
                                 @endif
                             @elseif ($access->program_code == "6004")
-                                <?php $url = "/yieldperformance"; $icon = "fa fa-area-chart"; ?>
+                                <?php $url = "/yieldperformancereport"; $icon = "fa fa-area-chart"; ?>
                                 @if ($access->read_write != "0")
                                     <li>
                                         <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>

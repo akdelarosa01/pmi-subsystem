@@ -3,98 +3,71 @@ namespace App\Http\Controllers\Yielding;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CommonController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; #Auth facade
-use Datatables;
-use App\Http\Requests;
-use App\Poregistration;
-use App\Deviceregistration;
-use App\Seriesregistration;
-use App\Modregistration;
-use Carbon\Carbon;
 use Config;
 use DB;
-use Dompdf\Dompdf;
-use Excel;
-use PDF;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Requests;
+use Illuminate\Support\Facades\Auth; #Auth facade
 
 class YieldPerformanceReportController extends Controller
 {
     protected $mysql;
     protected $mssql;
     protected $common;
+    protected $com;
+    
 
     public function __construct()
     {
         $this->middleware('auth');
-        $com = new CommonController;
+        $this->com = new CommonController;
 
         if (Auth::user() != null) {
-            $this->mysql = $com->userDBcon(Auth::user()->productline,'yielding');
-            $this->mssql = $com->userDBcon(Auth::user()->productline,'mssql');
-            $this->common = $com->userDBcon(Auth::user()->productline,'common');
+            $this->mysql = $this->com->userDBcon(Auth::user()->productline,'yielding');
+            $this->mssql = $this->com->userDBcon(Auth::user()->productline,'mssql');
+            $this->common = $this->com->userDBcon(Auth::user()->productline,'common');
         } else {
             return redirect('/');
         }
     }
 
+
     public function getYieldPerformanceReport(Request $request)
     {
-        $common = new CommonController;
-         if(!$common->getAccessRights(Config::get('constants.MODULE_CODE_REP'), $userProgramAccess))
+        if(!$this->com->getAccessRights(Config::get('constants.MODULE_CODE_REP'), $userProgramAccess))
         {
             return redirect('/home');
         }
         else
         { 
-        
             $msrecords = DB::connection($this->mssql)
-                ->table('XRECE as d')
-                ->join('XHEAD as h','d.CODE','=','h.CODE')
-                ->select(DB::raw("d.SORDER as PO")
-                    , DB::raw("d.CODE as devicecode")
-                    , DB::raw("h.NAME as devicename")
-                    , DB::raw("SUM(d.KVOL) as POqty"))
-                ->where('d.SORDER',$request->pono)
-                ->groupBy('d.SORDER','d.CODE','h.NAME')
+            ->table('XSLIP as s')
+                ->leftJoin('XHEAD as h', 's.CODE', '=', 'h.CODE')
+                ->leftjoin('XRECE as r', 's.SEIBAN','=','r.SORDER')
+                ->select(DB::raw('s.SEIBAN as PO'),
+                                DB::raw('s.CODE as devicecode'),
+                                DB::raw('h.NAME as devicename'),
+                                DB::raw('r.KVOL as POqty'),
+                                DB::raw('r.SEDA as branch'))
+                ->where('s.SEIBAN',$request->pono)
+                ->orderBy('r.SEDA','desc')
+                // ->first()
                 ->get();
-            /*$msrecords = DB::connection($this->mssql)
-                ->table('XHIKI as d')
-                ->join('XHEAD as h','d.OYACODE','=','h.CODE')
-                ->select(DB::raw("d.SEIBAN as PO")
-                    , DB::raw("d.OYACODE as devicecode")
-                    , DB::raw("h.NAME as devicename")
-                    , DB::raw("SUM(d.KVOL) as POqty"))
-                ->where('d.SEIBAN',$request->pono)
-                ->groupBy('d.SEIBAN','d.OYACODE','h.NAME')
-                ->get();*/
-            $records = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
-                        ->select('id','pono','poqty','device','series','family','toutput','treject',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("SUM(qty) as qty"),DB::raw("SUM(twoyield) as twoyield"))
-                        ->groupBy('pono')
-                        ->get();
-            $record = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
-                        ->groupBy('pono')
-                        ->get();
-            $targetyield = DB::connection($this->mysql)->table("tbl_targetregistration")->distinct()->get();
-           
-            $count = DB::connection($this->mysql)->table("tbl_yielding_performance")->count() + 1;
-            $tablepya = DB::connection($this->mysql)->table("tbl_yielding_pya")->get(); 
-            $tablecmq = DB::connection($this->mysql)->table("tbl_yielding_cmq")->get(); 
-            $classification = $common->getDropdownByName('Classification');
-            $family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
-            $series = $common->getDropdownByName('series');
-            $ys = $common->getDropdownByName('Yielding Station');
-            $tableporeg = DB::connection($this->mysql)->table("tbl_poregistration")->orderBy('id','DESC')->get();
-            $tabledevicereg = DB::connection($this->mysql)->table("tbl_deviceregistration")->orderBy('id','DESC')->get();
-            $tableseriesreg = DB::connection($this->mysql)->table("tbl_seriesregistration")->orderBy('family','asc')->get();
-            $tablemodreg = DB::connection($this->mysql)->table("tbl_modregistration")->orderBy('family','asc')->get();
-            $target = DB::connection($this->mysql)->table("tbl_targetregistration")->orderBy('datefrom','asc')->get();
-            $ptype = $common->getDropdownByName('Product Type');
-            
-            return view('yielding.YieldPerformanceReport',['userProgramAccess' => $userProgramAccess,'category' => $classification,'family' => $family,'series' => $series,'yieldstation' => $ys,'records'=>$records,'record'=>$record, 'yieldingno'=>$count, 'msrecords'=>$msrecords, 'count'=>$count,'fieldpya'=>$tablepya,'fieldcmq'=>$tablecmq,'tableporeg'=>$tableporeg,'tabledevicereg'=>$tabledevicereg,'tableseriesreg'=>$tableseriesreg,'tablemodreg'=>$tablemodreg,
-                'target' => $target,
-                'ptype' => $ptype,
-                'targetyield' => $targetyield]); 
+
+            $datenow = date('Y/m/d');
+            $count = DB::connection($this->mysql)->table("tbl_yielding_pya")->select('yieldingno')->orderBy('id','desc')->first();
+
+            $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
+            $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
+            //$family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
+            $modefect = $this->com->getDropdownByName('Mode of Defect - Yield Performance');
+            $family = $this->com->getDropdownByName('Family');
+            $series = $this->com->getDropdownByName('Series');
+            //$devreg = DB::connection($this->mysql)->table('tbl_deviceregistration')->get();
+            $ys = $this->com->getDropdownByName('Yielding Station');
+
+            return view('yielding.YieldPerformanceReport',['userProgramAccess' => $userProgramAccess,'family' => $family,'modefect' => $modefect,'yieldstation' => $ys,'yieldingno'=>$count,'series'=>$series, 'msrecords'=>$msrecords, 'count'=>$count,'countpya'=> $countpya,'countcmq'=> $countcmq]); 
         }
     }
 

@@ -2146,6 +2146,10 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\YieldPerformanceYieldTargetController@getYieldTarget',
                 'name' => 'targetyieldperformance'
             ]);
+            Route::post('/targetyieldperformance' ,[
+                'uses' => 'Yielding\YieldPerformanceYieldTargetController@getYieldTarget',
+                'name' => 'targetyieldperformance'
+            ]);
             Route::get('/deleteYIELD', [
                 'uses' => 'Yielding\YieldPerformanceController@deleteYIELD',
                 'name' => 'deleteYIELD'
@@ -2235,141 +2239,17 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => '/devreg_get_series'
             ]);            
         /*REPORTS--YIELD PERFORMANCE*/
-            Route::get('/yieldperformanceReport', [
+            Route::get('/yieldperformancereport', [
                 'uses' => 'Yielding\YieldPerformanceReportController@getYieldPerformanceReport',
-                'name' => 'yieldperformanceReport'
+                'name' => 'yieldperformancereport'
             ]);
-            Route::post('/yieldperformanceReport', [
+            Route::post('/yieldperformancereport', [
                 'uses' => 'Yielding\YieldPerformanceReportController@getYieldPerformanceReport',
-                'name' => 'yieldperformanceReport'
-            ]);
-            Route::get('/get-poregistration' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@getporeg',
-                'name' => 'get-poregistration'
-            ]);
-            Route::get('/get-deviceregistration' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@getdevicereg',
-                'name' => 'get-deviceregistration'
-            ]);
-            Route::get('/get-seriesregistration' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@getseriesreg',
-                'name' => 'get-seriesregistration'
-            ]);
-            Route::get('/get-modregistration' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@getmodreg',
-                'name' => 'get-modregistration'
-            ]);
-
-            Route::get('/displayporeg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@displayporeg',
-                'name' => 'displayporeg'
-            ]);
-            Route::get('/displaydevicereg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@displaydevicereg',
-                'name' => 'displaydevicereg'
-            ]);
-            Route::get('/displayseriesreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@displayseriesreg',
-                'name' => 'displayseriesreg'
-            ]);
-            Route::get('/displaymodreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@displaymodreg',
-                'name' => 'displaymodreg'
-            ]);
-            Route::get('/deleteAll-yieldperformance', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deleteAll',
-                'name' => 'deleteAll-yieldperformance'
-            ]);
-            Route::get('/deleteAllporeg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deleteporeg',
-                'name' => 'deleteAllporeg'
-            ]);
-            Route::get('/deleteAlldevicereg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deletedevicereg',
-                'name' => 'deleteAlldevicereg'
-            ]);
-            Route::get('/deleteAllseriesreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deleteseriesreg',
-                'name' => 'deleteAllseriesreg'
-            ]);
-            Route::get('/deleteAllmodreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deletemodreg',
-                'name' => 'deleteAllmodreg'
-            ]);
-            Route::get('/deleteAlltargetreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deletetargetreg',
-                'name' => 'deleteAlltargetreg'
-            ]);
-            Route::get('/deleteyieldingsummary' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@deleteAllPost',
-                'name' => 'deleteyieldingsummary'
+                'name' => 'yieldperformancereport'
             ]);
             Route::post('/update-yieldsummary' ,[
                 'uses' => 'Yielding\YieldPerformanceReportController@udpateyieldsummary',
                 'name' => 'update-yieldsummary'
-            ]);
-            Route::post('/display-poregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@displayporegistration',
-                'name' => 'display-poregistration'
-            ]);
-            Route::post('/add-deviceregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@deviceregistration',
-                'name' => 'add-deviceregistration'
-            ]);
-            Route::post('/display-deviceregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@displaydeviceregistration',
-                'name' => 'display-deviceregistration'
-            ]);
-
-            Route::post('/add-seriesregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@seriesregistration',
-                'name' => 'add-seriesregistration'
-            ]);
-
-            Route::post('/add-modregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@modregistration',
-                'name' => 'add-modregistration'
-            ]);
-            Route::post('/add-targetreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@targetregistration',
-                'name' => 'add-targetreg'
-            ]);
-
-            Route::get('/editporeg' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@editporeg',
-                'name' => 'editporeg'
-            ]);
-            Route::get('/editdevicereg' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@editdevicereg',
-                'name' => 'editdevicereg'
-            ]);
-            Route::get('/editseriesreg' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@editseriesreg',
-                'name' => 'editseriesreg'
-            ]);
-            Route::get('/editmodreg' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@editmodreg',
-                'name' => 'editmodreg'
-            ]);
-            Route::get('/edittargetreg' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@edittargetreg',
-                'name' => 'edittargetreg'
-            ]);
-            Route::post('/update-poregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@updateporegistration',
-                'name' => 'update-poregistration'
-            ]);
-            Route::post('/update-deviceregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@updatedeviceregistration',
-                'name' => 'update-deviceregistration'
-            ]);
-            Route::post('/update-seriesregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@updateseriesregistration',
-                'name' => 'update-seriesregistration'
-            ]);
-            Route::post('/update-modregistration', [
-                'uses' => 'Yielding\YieldPerformanceReportController@updatemodregistration',
-                'name' => 'update-modregistration'
             ]);
             Route::get('/export-to-excel', [
                 'uses' => 'Yielding\YieldPerformanceReportController@exportToexcel',
@@ -2419,17 +2299,13 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\YieldPerformanceReportController@loadchart',
                 'name' => '/loadchart'
             ]);
-            Route::get('/getponoreg', [
-                'uses' => 'Yielding\YieldPerformanceReportController@getponoreg',
-                'name' => '/getponoreg'
-            ]);
-            Route::post('/devreg_get_series', [
-                'uses' => 'Yielding\YieldPerformanceReportController@devreg_get_series',
-                'name' => '/devreg_get_series'
-            ]);
             
         /*YIELD PERFORMANCE*/
             // Route::post('/yieldperformance', [
+            //     'uses' => 'Yielding\YieldPerformanceController@getYieldPerformance',
+            //     'name' => 'yieldperformance'
+            // ]);
+            // Route::get('/yieldperformance', [
             //     'uses' => 'Yielding\YieldPerformanceController@getYieldPerformance',
             //     'name' => 'yieldperformance'
             // ]);
