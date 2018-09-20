@@ -13,7 +13,7 @@
 
    /**
     *--------------------------------------------------------------------------
-    *	Routes for laravel login
+    *   Routes for laravel login
     * -------------------------------------------------------------------------
     */
 Route::get('/login', function() {
@@ -979,7 +979,7 @@ Route::group(['middleware' => 'web'], function () {
 
     /**
      *-------------------------------------------------------------------------
-     *	Routes for Phase 2
+     *  Routes for Phase 2
      * ------------------------------------------------------------------------
      */
         /*PR CHANGE*/
@@ -2146,110 +2146,32 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\YieldPerformanceYieldTargetController@getYieldTarget',
                 'name' => 'targetyieldperformance'
             ]);
-            Route::post('/targetyieldperformance' ,[
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@getYieldTarget',
-                'name' => 'targetyieldperformance'
-            ]);
-            Route::get('/deleteYIELD', [
-                'uses' => 'Yielding\YieldPerformanceController@deleteYIELD',
-                'name' => 'deleteYIELD'
-            ]);
-            Route::get('/deleteAll-yieldperformance', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@deleteAll',
-                'name' => 'deleteAll-yieldperformance'
-            ]);
-            Route::get('/deleteAlltargetreg', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@deletetargetreg',
-                'name' => 'deleteAlltargetreg'
-            ]);
-            Route::get('/deleteyieldingsummary' ,[
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@deleteAllPost',
-                'name' => 'deleteyieldingsummary'
-            ]);
-            Route::post('/update-yieldsummary' ,[
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@udpateyieldsummary',
-                'name' => 'update-yieldsummary'
+            Route::get('/getOutputsURL' ,[
+                'uses' => 'Yielding\YieldPerformanceYieldTargetController@get_outputs',
+                'name' => 'getOutputsURL'
             ]);
             Route::post('/add-targetreg', [
                 'uses' => 'Yielding\YieldPerformanceYieldTargetController@targetregistration',
                 'name' => 'add-targetreg'
             ]);
-            Route::get('/getTargetYield', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@getTargetYield',
-                'name' => 'getTargetYield'
-            ]);
             Route::get('/edittargetreg' ,[
                 'uses' => 'Yielding\YieldPerformanceYieldTargetController@edittargetreg',
                 'name' => 'edittargetreg'
             ]);
-            Route::get('/export-to-excel', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@exportToexcel',
-                'name' => 'export-to-excel'
+            Route::get('/deleteAlltargetreg', [
+                'uses' => 'Yielding\YieldPerformanceYieldTargetController@deletetargetreg',
+                'name' => 'deleteAlltargetreg'
             ]);
-            Route::get('/export-to-pdf', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@exportTopdf',
-                'name' => '/export-to-pdf'
-            ]);
-            Route::get('/summarychart', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@summarychart',
-                'name' => '/summarychart'
-            ]);
-            Route::get('/summaryRpt', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@summaryRpt',
-                'name' => '/summaryRpt'
-            ]);
-             Route::get('/summaryREpt', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@summaryREpt',
-                'name' => '/summaryREpt'
-            ]);
-            Route::get('/defectsummaryRpt', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@defectsummaryRpt',
-                'name' => '/defectsummaryRpt'
-            ]);
-            Route::get('/yieldsumRpt', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@yieldsumRpt',
-                'name' => '/yieldsumRpt'
-            ]);
-            Route::get('/yieldsumRptpdf', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@yieldsumRptpdf',
-                'name' => '/yieldsumRptpdf'
-            ]);
-            Route::get('/yieldsumfamRpt', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@yieldsumfamRpt',
-                'name' => '/yieldsumfamRpt'
-            ]);
-            Route::get('/yieldsumfamRptpdf', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@yieldsumfamRptpdf',
-                'name' => '/yieldsumfamRptpdf'
-            ]);
-            Route::get('/summaryRptPdf', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@summaryRptPdf',
-                'name' => '/summaryRptPdf'
-            ]);
-            Route::post('/loadchart', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@loadchart',
-                'name' => '/loadchart'
-            ]);
-            Route::get('/getponoreg', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@getponoreg',
-                'name' => '/getponoreg'
-            ]);
-            Route::post('/devreg_get_series', [
-                'uses' => 'Yielding\YieldPerformanceYieldTargetController@devreg_get_series',
-                'name' => '/devreg_get_series'
-            ]);            
+
         /*REPORTS--YIELD PERFORMANCE*/
-            Route::get('/yieldperformancereport', [
+
+            Route::get('/ReportYieldPerformance', [
                 'uses' => 'Yielding\YieldPerformanceReportController@getYieldPerformanceReport',
-                'name' => 'yieldperformancereport'
+                'name' => 'ReportYieldPerformance'
             ]);
-            Route::post('/yieldperformancereport', [
-                'uses' => 'Yielding\YieldPerformanceReportController@getYieldPerformanceReport',
-                'name' => 'yieldperformancereport'
-            ]);
-            Route::post('/update-yieldsummary' ,[
-                'uses' => 'Yielding\YieldPerformanceReportController@udpateyieldsummary',
-                'name' => 'update-yieldsummary'
+             Route::post('/ReportYieldPerformance', [
+                 'uses' => 'Yielding\YieldPerformanceReportController@getYieldPerformanceReport',
+                 'name' => 'ReportYieldPerformance'
             ]);
             Route::get('/export-to-excel', [
                 'uses' => 'Yielding\YieldPerformanceReportController@exportToexcel',
@@ -2299,13 +2221,17 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\YieldPerformanceReportController@loadchart',
                 'name' => '/loadchart'
             ]);
+            Route::get('/getponoreg', [
+                'uses' => 'Yielding\YieldPerformanceReportController@getponoreg',
+                'name' => '/getponoreg'
+            ]);
+            Route::post('/devreg_get_series', [
+                'uses' => 'Yielding\YieldPerformanceReportController@devreg_get_series',
+                'name' => '/devreg_get_series'
+            ]);
             
         /*YIELD PERFORMANCE*/
             // Route::post('/yieldperformance', [
-            //     'uses' => 'Yielding\YieldPerformanceController@getYieldPerformance',
-            //     'name' => 'yieldperformance'
-            // ]);
-            // Route::get('/yieldperformance', [
             //     'uses' => 'Yielding\YieldPerformanceController@getYieldPerformance',
             //     'name' => 'yieldperformance'
             // ]);
