@@ -412,7 +412,7 @@
                                         <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
                                     </li>
                                 @endif
-                            @elseif ($access->program_code == "6003")
+                             @elseif ($access->program_code == "6003")
                                 <?php $url = "/targetyieldperformance"; $icon = "fa fa-bullseye"; ?>
                                 @if ($access->read_write != "0")
                                     <li>
