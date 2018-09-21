@@ -18,6 +18,7 @@ use Dompdf\Dompdf;
 use Excel;
 use PDF;
 
+
 class YieldPerformanceYieldTargetController extends Controller
 {
     protected $mysql;
@@ -84,6 +85,15 @@ class YieldPerformanceYieldTargetController extends Controller
     }
 
     public function targetregistration(Request $request){
+        $this->validate($request, [
+            'datefrom' => 'required',
+            'dateto' => 'required',
+            'yield' => 'required',
+            'dppm' => 'required',
+            'ptype' => 'required'
+        ]);
+
+
         if ($request->id != 0) {
             DB::connection($this->mysql)->table('tbl_targetregistration')
                 ->where('id','=',$request->id)

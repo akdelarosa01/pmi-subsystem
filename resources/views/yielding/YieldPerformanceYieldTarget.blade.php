@@ -18,7 +18,7 @@
 
           <!-- BEGIN PAGE CONTENT-->
           <div class="row">
-               <div class="col-sm-12">
+               <div class="col-md-offset-2 col-md-8">
                     <!-- BEGIN EXAMPLE TABLE PORTLET-->
                     @include('includes.message-block')
                     <div class="portlet box blue" >
@@ -27,53 +27,56 @@
                                    <i class="fa fa-bullseye"></i>  Yield Target
                               </div>
                          </div>
-                         <div class="portlet-body">
+                         <div class=" portlet-body">
                          <div class="row">
-                               <div class="col-sm-6">
-                                   <form class="form-horizontal" id="formtarget">
+                               <div class="col-md-offset-2  col-sm-6">
+                                   <form class="form-horizontal" id="formtarget" role="form"  method="POST" 
+                                   action="{{ url('/add-targetreg') }}" />
                                         {!! csrf_field() !!}
                                         <input type="hidden" id="id" name="id" value="0">
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">From</label>
-                                             <div class="col-sm-3">
-                                                  <input type="text" class="form-control input-sm" name="datefrom" id="datefrom">
-                                                  <div id="er_target-datefrom"></div>
+                                             <div class="col-sm-9">
+                                                  <input type="text" class="form-control input-sm validate" name="datefrom" id="datefrom">
+                                                  <div id="datefrom_feedback"></div>
                                              </div>
-                                             <label class="control-label col-sm-2">To</label>
-                                             <div class="col-sm-3">
-                                                  <input type="text" class="form-control input-sm" name="dateto" id="dateto">
-                                                  <div id="er_target-dateto"></div>
+                                         </div>    
+                                         <div class="form-group">     
+                                             <label class="control-label col-sm-3">To</label>
+                                             <div class="col-sm-9">
+                                                  <input type="text" class="form-control input-sm validate" name="dateto" id="dateto">
+                                                 <div id="dateto_feedback"></div>
                                              </div>   
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Target Yield</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="yield" name="yield">
-                                                  <div id="er_targetyield"></div>
+                                                  <input type="text" class="form-control input-sm validate" id="yield" name="yield">
+                                                  <div id="yield_feedback"></div>
                                              </div>     
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Target DPPM</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="dppm" name="dppm">
-                                                  <div id="er_targetdppm"></div>
+                                                  <input type="text" class="form-control input-sm validate" id="dppm" name="dppm">
+                                                  <div id="dppm_feedback"></div>
                                              </div>     
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Product Type</label>
                                              <div class="col-sm-9">
-                                                  <select class="form-control input-sm" name="ptype" id="ptype">
+                                                  <select class="form-control input-sm select-validate" name="ptype" id="ptype">
                                                        <option value=""></option>
                                                        <option value="Test Socket">Test Socket</option>
                                                        <option value="Burn In">Burn In</option>     
                                                   </select>
-                                                  <div id="er_targetyield"></div>
+                                                  <div id="ptype_feedback"></div>
                                              </div>     
                                         </div>
                                         <br>
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
-                                                  <button type="button" id='targetsave' onclick="javascript:targetregistration();"  class="btn btn-success">Save</button>
+                                                  <button type="submit" id='targetsave' class="btn btn-success">Save</button>
                                                   <button type="reset" id='targetclear' class="btn btn-danger">Clear</button>
                                              </div>
                                         </div>      
@@ -97,7 +100,7 @@
                                                        <td>Product Type</td>
                                                   </tr>
                                              </thead>
-                                             <tbody id="tblfortarget">
+                                             <tbody  id="tblfortarget">
                                              </tbody>
                                         </table>
                                    </div>
@@ -119,8 +122,7 @@
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryReport.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPYieldSummaryReport.js') }}"></script>
-
-
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
 <script type="text/javascript">
      var token = "{{ Session::token() }}";
      var getOutputsURL = "{{ url('/getOutputsURL') }}";
@@ -130,7 +132,6 @@
      var deleteTarget = "{{ url('/deleteAlltargetreg') }}";
 </script>
 <script type="text/javascript"src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yield_target.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
 
 
 

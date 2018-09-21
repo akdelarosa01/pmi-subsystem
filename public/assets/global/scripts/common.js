@@ -2,6 +2,16 @@ $(function() {
     $('.modal').on('shown.bs.modal', function() {
         $(this).find('[autofocus]').focus();
     });
+
+     $('.validate').on('keyup', function(e) {
+        var no_error = $(this).attr('id');
+        hideErrors(no_error)
+    });
+
+    $('.select-validate').on('change', function(e) {
+        var no_error = $(this).attr('id');
+        hideErrors(no_error)
+    });
 });
 /**
  * Open Message Modal
@@ -207,4 +217,24 @@ function formatDate(date) {
         ((''+day).length<2 ? '0' : '') + day + '/' + d.getFullYear();
         
     return newdate;
+}
+
+//Validation
+function showErrors(errors) {
+  $.each(errors, function(i, x) {
+    switch(i) {
+      case i:
+        $('#'+i).addClass('is-invalid');
+        
+        $('#'+i+'_feedback').html(x);
+        $('#'+i+'_feedback').css('color', 'red');
+      break;
+    }
+  });
+}
+
+function hideErrors(error) {
+  $('#'+error).removeClass('is-invalid');
+  $('#'+error+'_feedback').removeClass('invalid-feedback');
+  $('#'+error+'_feedback').html('');
 }

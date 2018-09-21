@@ -1,10 +1,19 @@
 var target_arr = [];
 
-
-$( function(e) {
+$( function() {
   DatePickers();
   getOutputs();
   checkAllCheckboxesInTable('.checkAllitemstarget','.checkboxestarget');
+
+    $('.validate').on('keyup', function(e) {
+        var no_error = $(this).attr('id');
+        hideErrors(no_error)
+    });
+
+    $('.select-validate').on('change', function(e) {
+        var no_error = $(this).attr('id');
+        hideErrors(no_error)
+    });
 
   $("body").on("click",".edit-targetreg",function(e){
           var editsearch = $(this).val();
@@ -24,6 +33,27 @@ $( function(e) {
           }).fail(function(jqXHR, textStatus, errorThrown) {
                console.log(errorThrown+'|'+textStatus);
           });
+  });
+
+  $("#formtarget").on('submit',function(e){
+     e.preventDefault();
+     var form_action = $(this).attr("action");
+     jQuery.ajax({
+      dataType: 'json',
+      type: 'POST',
+      url: form_action,
+      data:  $(this).serialize(),
+      success:function(returnData){
+        msg(returnData.msg,returnData.status); 
+        target_arr = returnData.data;
+        makeDataTable(target_arr);
+        $("#formtarget")[0].reset(); 
+        },
+      error: function(xhr, textStatus, errorThrown) {
+        var errors = xhr.responseJSON;
+        showErrors(errors);
+      }
+     });
   });
 
 });  
@@ -98,61 +128,24 @@ function removetargetreg(){
           msg("Target Yield Deleted","success"); 
           target_arr = data;
           makeDataTable(target_arr);
-          getDatatable('modreg-table',getTargetTable,dataColumnYieldTarget,[],0);}
+         $("#formtarget")[0].reset(); }
      });
 }
-function targetregistration(){
-     var datefrom = $('#datefrom').val();
-     var dateto = $('#dateto').val();
-     var yield = $('#yield').val();
-     var dppm = $('#dppm').val();
-     var ptype = $('#ptype').val();
-     var id = $('#id').val();
-     if(datefrom == ""){     
-        $('#er_target-datefrom').html("Date From field is empty"); 
-        $('#er_target-datefrom').css('color', 'red');       
-        return false;  
-     }
-     if(dateto == ""){     
-        $('#er_target-dateto').html("Date To field is empty"); 
-        $('#er_target-dateto').css('color', 'red');       
-        return false;  
-     }
-     if(yield == ""){     
-        $('#er_targetyield').html("Target Yield field is empty"); 
-        $('#er_targetyield').css('color', 'red');       
-        return false;  
-     }
-     if(dppm == ""){     
-        $('#er_targetdppm').html("Target dppm field is empty"); 
-        $('#er_targetdppm').css('color', 'red');       
-        return false;  
-     }
-     if(ptype == ""){     
-        $('#er_targetptype').html("Product Type field is empty"); 
-        $('#er_targetptype').css('color', 'red');       
-        return false;  
-     }
-     jQuery.ajax({
-      url: targetInsert,
-      type: 'POST',
-      dataType: 'json',
-      data:  //$(this).serialize(),
-              {_token: token,
-              id:id, 
-              datefrom:datefrom,
-              dateto:dateto,
-              yield:yield,
-              dppm:dppm,
-              ptype:ptype},
-      success:function(returnData){
-        msg(returnData.msg,returnData.status); 
-        target_arr = returnData.data;
-        makeDataTable(target_arr);
-        $("#formtarget")[0].reset(); 
-        },
-      error: function(xhr, textStatus, errorThrown) {
-        alert(errorThrown);
-      }
-     });
+
+function showErrors(errors) {
+  $.each(errors, function(i, x) {
+    switch(i) {
+      case i:
+        $('#'+i).addClass('is-invalid');
+
+        $('#'+i+'_feedback').html(x);
+        $('#'+i+'_feedback').css('color', 'red');
+      break;
+    }
+  });
+}
+function hideErrors(error) {
+  $('#'+error).removeClass('is-invalid');
+  $('#'+error+'_feedback').removeClass('invalid-feedback');
+  $('#'+error+'_feedback').html('');
 }
