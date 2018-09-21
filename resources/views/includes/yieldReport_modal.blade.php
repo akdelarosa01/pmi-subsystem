@@ -47,7 +47,7 @@
                                                   <Select class="form-control input-sm" id="family2" name="family2">
                                                  
                                                   @foreach ($family as $fam)
-                                                  <option value="{{$fam->family}}">{{$fam->family}}</option>
+                                                  <option value="{{$fam->description}}">{{$fam->description}}</option>
                                                   @endforeach
                                                   </Select>
                                              </div>

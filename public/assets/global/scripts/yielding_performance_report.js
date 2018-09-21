@@ -24,6 +24,9 @@ $( function(e) {
      $('#btnxport').click(function(){
           $('#Export-Modal').modal('show');
      });
+     $("body").on("click",".edittaskx",function(e){
+          $('#updateyield_Modal').modal('show');
+     });
 
      $('#btnxport-defectsummaryrpt').click(function(){
           var icsocket = $('#dsr-icsocket').val();
@@ -167,5 +170,43 @@ function update(){
           window.location.href=ReportYieldPerformance;
      }).fail(function(jqXHR, textStatus, errorThrown){
           console.log(errorThrown+'|'+textStatus);
+     });
+}
+
+function EditButtons(){
+     $('.edit-task').on('click', function(e) {
+          var edittext = $(this).val().split('|');
+          var editid = edittext[0];
+          var pono = edittext[1];
+          var poqty = edittext[2];
+          var device = edittext[3];
+          var series = edittext[4];
+          var family = edittext[5];
+          var toutput = edittext[6];
+          var treject = edittext[7];
+          var twoyield = edittext[8];
+
+          $('#masterid').val(editid);
+          $('.updatetitle').html('Update Yielding Summary');
+          $('#updateyield_Modal').modal('show');
+          $('#pono2').val(pono);
+          $('#poqty2').val(poqty);
+          $('#device2').val(device);
+          $('#series2').val(series);
+          $('#family2').val(family);
+          $('#toutput2').val(toutput);
+          $('#treject2').val(treject);
+          $('#twoyield2').val(twoyield);
+          $('#masterid').val(editid);        
+
+          $('#name').keyup(function(){
+             $('#er1').html(""); 
+          });
+          $('#desc').keyup(function(){
+             $('#er2').html(""); 
+          });
+          $('#val').keyup(function(){
+             $('#er3').html(""); 
+          });
      });
 }

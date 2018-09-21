@@ -36,9 +36,9 @@
                                        <table id="modreg-table" class="table table-striped table-bordered table-hover"style="font-size:10px">
                                              <thead >
                                                   <tr>
-                                                       <td class="table-checkbox" style="width: 5%">
-                                                           {{--  <input type="checkbox" class="group-checkable checkAllitems" name="checkAllitem" data-set="#tbl_yield .checkboxes"/> --}}
-                                                       </td>
+{{--                                                        <td class="table-checkbox" style="width: 5%">
+                                                            <input type="checkbox" class="group-checkable checkAllitems" name="checkAllitem" data-set="#tbl_yield .checkboxes"/>
+                                                       </td> --}}
                                                       {{--  <td>
                                                        </td> --}}
                                                        <td>PO Number</td>
@@ -53,18 +53,18 @@
                                              </thead>
                                              <tbody>
                                               {{-- id="tbl_yield_body"> --}}
-                                                   @foreach($records as $rec)
+                                              @foreach($records as $rec)
                                                   <?php 
                                                   $x = $rec->accumulatedoutput + $rec->qty;
                                                   $y = $rec->accumulatedoutput / $x;
                                                   $twoyield = $y * 100.;
                                                   ?>
                                                   <tr> 
-                                                  <td style="width: 5%"> 
-                                                  <button type="button" name="edit-task" class="btn btn-sm btn-primary edit-task" value="{{$rec->id . '|' . $rec->pono . '|' .$rec->poqty. '|' .$rec->device. '|' . $rec->series . '|' .$rec->family. '|' .$rec->toutput. '|' . $rec->treject . '|' .$rec->twoyield}}" id="editTask{{$rec->id}}">
+{{--                                                   <td style="width: 5%"> 
+                                                  <button type="button" name="edit-task" class="btn btn-sm btn-primary edittask" value="{{$rec->id . '|' . $rec->pono . '|' .$rec->poqty. '|' .$rec->device. '|' . $rec->series . '|' .$rec->family. '|' .$rec->toutput. '|' . $rec->treject . '|' .$rec->twoyield}}" id="editTask{{$rec->id}}">
                                                   <i class="fa fa-edit"></i> 
                                                   </button>
-                                                  </td>
+                                                  </td> --}}
                                                   <td>{{$rec->pono}}</td>
                                                   <td>{{$rec->poqty}}</td>
                                                   <td>{{$rec->device}}</td>
@@ -149,4 +149,5 @@
      var updateyieldsummary = "{{ url('/update-yieldsummary') }}";
 </script>
 <script type="text/javascript"src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yielding_performance_report.js') }}"></script>
+
 @endpush

@@ -131,21 +131,3 @@ function removetargetreg(){
          $("#formtarget")[0].reset(); }
      });
 }
-
-function showErrors(errors) {
-  $.each(errors, function(i, x) {
-    switch(i) {
-      case i:
-        $('#'+i).addClass('is-invalid');
-
-        $('#'+i+'_feedback').html(x);
-        $('#'+i+'_feedback').css('color', 'red');
-      break;
-    }
-  });
-}
-function hideErrors(error) {
-  $('#'+error).removeClass('is-invalid');
-  $('#'+error+'_feedback').removeClass('invalid-feedback');
-  $('#'+error+'_feedback').html('');
-}

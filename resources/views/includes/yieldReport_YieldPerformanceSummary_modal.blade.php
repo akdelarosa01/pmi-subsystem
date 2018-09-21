@@ -46,7 +46,7 @@
                                                   <Select class="form-control input-sm " id="ypsr-family" name="ypsr-family">
                                                        <option></option>
                                                        @foreach($family as $fam)
-                                                       <option value="{{$fam->family}}">{{$fam->family}}</option>
+                                                       <option value="{{$fam->description}}">{{$fam->description}}</option>
                                                        @endforeach
                                                  </Select>
                                              </div>
@@ -60,7 +60,7 @@
                                                  </Select>
                                              </div>
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                              <label class="control-label col-sm-3">Device</label>
                                              <div class="col-sm-9">
                                                   <Select class="form-control input-sm " id="ypsr-device" name="ypsr-device">
@@ -70,7 +70,7 @@
                                                        @endforeach
                                                  </Select>
                                              </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
                                                   <button type="button" onclick="javascript:yieldsumRpt();"  class="btn green-jungle input-sm">Export to Excel</button>

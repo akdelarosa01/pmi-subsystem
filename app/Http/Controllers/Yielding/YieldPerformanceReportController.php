@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth; #Auth facade
+use Excel;
+use PDF;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
 
 class YieldPerformanceReportController extends Controller
 {
@@ -57,17 +61,38 @@ class YieldPerformanceReportController extends Controller
 
             $datenow = date('Y/m/d');
             $count = DB::connection($this->mysql)->table("tbl_yielding_pya")->select('yieldingno')->orderBy('id','desc')->first();
-
+            $targetyield = DB::connection($this->mysql)->table("tbl_targetregistration")->distinct()->get();
             $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
             $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
             //$family = DB::connection($this->mysql)->table("tbl_seriesregistration")->select('family')->distinct()->get();
             $modefect = $this->com->getDropdownByName('Mode of Defect - Yield Performance');
             $family = $this->com->getDropdownByName('Family');
             $series = $this->com->getDropdownByName('Series');
-            //$devreg = DB::connection($this->mysql)->table('tbl_deviceregistration')->get();
+            $target = DB::connection($this->mysql)->table("tbl_targetregistration")->orderBy('datefrom','asc')->get();
             $ys = $this->com->getDropdownByName('Yielding Station');
+            $record = DB::connection($this->mysql)->table("tbl_yielding_performance")
+                        ->groupBy('pono')
+                        ->get();
+            $records = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
+                        ->select('id','pono','poqty','device','series','family','toutput','treject',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("SUM(qty) as qty"),DB::raw("SUM(twoyield) as twoyield"))
+                        ->groupBy('pono')
+                        ->get();
 
-            return view('yielding.YieldPerformanceReport',['userProgramAccess' => $userProgramAccess,'family' => $family,'modefect' => $modefect,'yieldstation' => $ys,'yieldingno'=>$count,'series'=>$series, 'msrecords'=>$msrecords, 'count'=>$count,'countpya'=> $countpya,'countcmq'=> $countcmq]); 
+            return view('yielding.YieldPerformanceReport',[
+                'userProgramAccess' => $userProgramAccess,
+                'records' => $records,
+                'family' => $family,
+                'modefect' => $modefect,
+                'yieldstation' => $ys,
+                'yieldingno'=>$count,
+                'series'=>$series,
+                 'msrecords'=>$msrecords, 
+                 'target' => $target,
+                 'count'=>$count,
+                 'countpya'=> $countpya,
+                 'countcmq'=> $countcmq,
+                 'targetyield' => $targetyield
+             ]); 
         }
     }
 
