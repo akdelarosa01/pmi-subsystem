@@ -195,7 +195,7 @@ class PackingInspectionController extends Controller
     					]);
             $data = [
                 'msg' => 'No changes Made.',
-                'status' => 'failed',
+                'status' => 'no_change',
                 'inspection' => '',
             ];
     	} else {
@@ -255,11 +255,6 @@ class PackingInspectionController extends Controller
                             'created_at' => date('Y-m-d H:i:s'),
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
-            $data = [
-                'msg' => 'INSERT',
-                'status' => 'failed',
-                'runcard' => '',
-            ];
 
     	} else {
     		$query = DB::connection($this->mysql)->table('tbl_packinginspection_runcard')
@@ -274,7 +269,7 @@ class PackingInspectionController extends Controller
                         ]);
             $data = [
                 'msg' => 'No changes Made.',
-                'status' => 'failed',
+                'status' => 'no_change',
                 'runcard' => '',
             ];
     	}
@@ -333,7 +328,7 @@ class PackingInspectionController extends Controller
                         ]);
             $data = [
                 'msg' => 'No changes Made.',
-                'status' => 'failed',
+                'status' => 'no_change',
                 'mod' => '',
             ];
         }

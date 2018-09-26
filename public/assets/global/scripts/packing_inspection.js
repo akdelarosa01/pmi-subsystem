@@ -58,7 +58,9 @@ $( function() {
 			data: $(this).serialize(),
 		}).done(function(data, textStatus, xhr) {
 			getDataInspected();
-			msg(data.msg,data.status);
+			if (data.status !== 'no_change') {
+				msg(data.msg,data.status);
+			}
 		}).fail(function(xhr, textStatus, errorThrown) {
 			msg(errorThrown,textStatus);
 		}).always(function() {
@@ -87,7 +89,9 @@ $( function() {
 			}
 
 			makeRuncardTable(runcard_arr);
-			msg(data.msg,data.status);
+			if (data.status !== 'no_change') {
+				msg(data.msg,data.status);
+			}
 		}).fail(function(xhr, textStatus, errorThrown) {
 			msg(errorThrown,textStatus);
 		}).always(function() {
@@ -117,7 +121,9 @@ $( function() {
 				$('#no_of_defects').val(data.total_qty);
 			}
 
-			msg(data.msg,data.status);
+			if (data.status !== 'no_change') {
+				msg(data.msg,data.status);
+			}
 		}).fail(function(xhr, textStatus, errorThrown) {
 			msg(errorThrown,textStatus);
 		}).always(function() {
