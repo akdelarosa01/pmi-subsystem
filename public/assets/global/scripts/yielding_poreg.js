@@ -2,24 +2,35 @@ var po_reg_arr = [];
 
 $(function() {
     loadDevice(loadporegdevice);
-    makePOregTable(po_reg_arr)
+    dispalytablePoReg();
     checkAllCheckboxesInTable('.check_all_po_reg','.check_item_po_reg');
 
     $('#tbl_device').on('click','.updatesinglebtn', function() {
-       
-       // getFamilyList();
-       // getSeriesList();
-       // getItems();
-        $('#podeviceCode').prop('readonly',true);
+        $('#device_code').prop('readonly',false);
         $('#poreg_Modal').modal('show');
         $('#pono').val($(this).attr('data-pono'));
-        $('#podeviceCode').val($(this).attr('data-device_code'));
-        $('#podevice').val($(this).attr('data-device_name'));
-        $('#poquantity').val($(this).attr('data-poqty'));
+        $('#device_code').val($(this).attr('data-device_code'));
+        $('#device_name').val($(this).attr('data-device_name'));
+        $('#poqty').val($(this).attr('data-poqty'));
         $('#family').val($(this).attr('data-family'));
-        $('#deviceseries').val($(this).attr('data-series'));
-        $('#deviceptype').val($(this).attr('data-prod_type'));
+        $('#series').val($(this).attr('data-series'));
+        $('#prod_type').val($(this).attr('data-prod_type'));
         $('#poregstatus').val('ADD');
+        
+        getDropdowns();
+    });
+
+     $('#tbl_poregistration').on('click','.btn_edit_po_reg', function() {
+        $('#device_code').prop('readonly',false);
+        $('#pono').val($(this).attr('data-pono'));
+        $('#id').val($(this).attr('data-id'));
+        $('#device_code').val($(this).attr('data-device_code'));
+        $('#device_name').val($(this).attr('data-device_name'));
+        $('#poqty').val($(this).attr('data-poqty'));
+        $('#family').val($(this).attr('data-family'));
+        $('#series').val($(this).attr('data-series'));
+        $('#prod_type').val($(this).attr('data-prod_type'));
+        $('#poregstatus').val('EDIT');
         
         getDropdowns();
     });
@@ -29,17 +40,40 @@ $(function() {
     });
 
     $('#update').on('click', function(e) {
+        clearALLfields()
         update();
     });
+
+    $('#add').on('click', function(e) {
+        clearALLfields()
+        $('#poreg_Modal').modal('show');
+        $('#poregstatus').val('ADD');
+        getDropdowns();
+        $('#device_code').prop('readonly',false);
+    });
+
+    
 
     $('#btn_save_po_reg').on('click', function() {
         poregistration();
     });
 
     $('#btn_remove_po_reg').on('click', function() {
-        
+         delete_set();
     });
 });
+
+function dispalytablePoReg() { 
+    $.ajax({
+         url:displayporeg,
+         data:  {_token: token }
+    }).done(function(data){
+         po_reg_arr = data.po_reg;
+         makePOregTable(po_reg_arr);
+    }).fail(function(data,textStatus,jqXHR) {
+        msg("There's some error while processing.",'failed');
+    });
+}
 
 function getItems(id,bid) {
     var data = {
@@ -61,12 +95,12 @@ function getItems(id,bid) {
             product_type = x.product_type;
         });
 
-        $('#podeviceCode').prop('disabled',true);
-        $('#podeviceCode').val(device_code);
-        $('#podevice').val(device_name);
+        $('#device_code').prop('disabled',true);
+        $('#device_code').val(device_code);
+        $('#device_name').val(device_name);
         $('#family').val(family);
-        $('#deviceseries').val(series);
-        $('#deviceptype').val(product_type);
+        $('#series').val(series);
+        $('#prod_type').val(product_type);
     }).fail( function(data, textStatus, jqXHR) {
         $('#loading').modal('hide');
         failedMsg("There's some error while processing.");
@@ -87,11 +121,11 @@ function getDropdowns() {
             data:data.family,
             placeholder: "Select --"
         });
-        $('#deviceseries').select2({
+        $('#series').select2({
             data:data.series,
             placeholder: "Select --"
         });
-        $('#deviceptype').select2({
+        $('#prod_type').select2({
             data:data.product_type,
             placeholder: "Select --"
         });
@@ -120,7 +154,7 @@ function getFamilyList(){
 }
 
 function getSeriesList(){
-    var select = $('#deviceseries');
+    var select = $('#series');
     $.ajax({
       url: loadserieslist,
       type: "get",
@@ -146,9 +180,6 @@ function loadDevice(url) {
         deferRender: true,
         ajax: url,
         columns: [
-            {data: function(data){
-                    return '<input type="checkbox" class="chk" value="'+data.id+'" data-id="'+data.id+'" data-code="'+data.item+'"/>';
-            },orderable: false, searchable:false, name:"id" },
             { data: 'pono', name: 'pono' },
             { data: 'device_code', name: 'device_code' },
             { data: 'device_name', name: 'device_name' },
@@ -238,7 +269,7 @@ function saveporeg() {
             pono: $('#pono').val(),
             device_code: $('#device_code').val(),
             device_name: $('#device_name').val(),
-            poquantity: $('#poquantity').val(),
+            poqty: $('#poqty').val(),
             family: $('#family').val(),
             series: $('#series').val(),
             product_type: $('#product_type').val(),
@@ -267,54 +298,26 @@ function saveporeg() {
 
 function clearALLfields(){
     $('#pono').val("");
-    $('#podeviceCode').val("");
-    $('#podevice').val("");
-    $('#poquantity').val("");
+    $('#device_code').val("");
+    $('#device_name').val("");
+    $('#poqty').val("");
     $('#devicefamily').val("");
-    $('#deviceseries').val("");
-    $('#deviceptype').val("");
+    $('#series').val("");
+    $('#prod_type').val("");
 }
 
 function poregistration(){
     $('#loading').show();
     var pono = $('#pono').val();
-    var podeviceCode = $('#podeviceCode').val();
-    var podevice = $('#podevice').val();
-    var poquantity = $('#poquantity').val();
-    var Family = $('#family').val();
-    var Series = $('#deviceseries').val();
-    var ProdType = $('#deviceptype').val();
+    var id = $('#id').val();
+    var device_code = $('#device_code').val();
+    var device_name = $('#device_name').val();
+    var poqty = $('#poqty').val();
+    var family = $('#family').val();
+    var Series = $('#series').val();
+    var prod_type = $('#prod_type').val();
     var editsearch = $('#hdporegid').val();
-    var status = $('#poregstatus').val();//(typeof STATUS != 'undefined')?STATUS:"ADD";
-    
-    if(Family == null || Series ==null ||ProdType == null|| Family == "0" || Series =="0" ||ProdType == "0"){ 
-        msg("Fill in Required Fields",'failed');
-        return false;
-    }
-
-    if(pono == ""){     
-        $('#er_pono').html("PO number field is empty"); 
-        $('#er_pono').css('color', 'red');       
-        return false;  
-    }
-
-    if(podeviceCode == ""){     
-        $('#er_podeviceCode').html("Device field is empty"); 
-        $('#er_podeviceCode').css('color', 'red');       
-        return false;  
-    }
-
-    if(podevice == ""){     
-        $('#er_podevice').html("Device field is empty"); 
-        $('#er_podevice').css('color', 'red');       
-        return false;  
-    }
-
-    if(poquantity == ""){     
-        $('#er_poquantity').html("Quantity field is empty"); 
-        $('#er_poquantity').css('color', 'red');       
-        return false;  
-    }
+    var status = $('#poregstatus').val();
 
     $.ajax({
         url: getpoypics,
@@ -328,7 +331,7 @@ function poregistration(){
         if (data > 0 && status == "ADD") {
             msg("PO number Already Exist","failed");
         } else {
-            var id = (typeof IDs != 'undefined')?IDs:1;
+            var id = $('#id').val();
             $.ajax({
                 url: addpodata,
                 type: 'POST',
@@ -337,12 +340,12 @@ function poregistration(){
                     _token: token, 
                    id:id,
                    pono: pono,
-                   podeviceCode: podeviceCode,
-                   podevice:podevice,
-                   poquantity:poquantity,
-                   family:Family,
+                   device_code: device_code,
+                   device_name:device_name,
+                   poqty:poqty,
+                   family:family,
                    series:Series,
-                   prodtype:ProdType,
+                   prod_type:prod_type,
                    status:status
                 },
             }).done(function(data, textStatus, xhr) {
@@ -351,7 +354,8 @@ function poregistration(){
 
                 makePOregTable(po_reg_arr);
             }).fail(function(xhr, textStatus, errorThrown) {
-                msg(errorThrown,textStatus);
+                 var errors = xhr.responseJSON;
+                 showErrors(errors);
             }).always(function() {
                 $('#loading').hide();
             });
@@ -434,150 +438,30 @@ function update() {
     });
 }
 
-    // $(document).ready(function(e) {
-    //      // DatePickers();
-    //      ButtonsClicked();
-    //      Checkboxes();
-    //      EditButtons();
-    //      ButtonsClear();
-    //      //ButtonClosed();
-    //      getDatatable('tbl_yield',"{{ url('/getYieldPerformanceDT')}}",dataColumnYIELD,[],0);
-
-
-    //      $('#btn_save_po_reg').on('click', function() {
-    //           poregistration();
-    //      });
-
-    //      $('#modalsave').on('click', function() {
-    //          DeletePOcheck();
-    //      });
-
-    //      $('#modaldeleteSeries').on('click', function() {
-    //          removeseriesreg();
-    //      });
-
-    //      $('#modalsaveRemoveDreg').on('click', function() {
-    //          removemodreg();
-    //      });
-
+function delete_set() {
+    var tray = [];
+    $(".check_item_po_reg:checked").each(function () {
+        tray.push($(this).val());
+    });
+    var traycount =tray.length;
+   if (tray.length > 0) {
+    $.ajax({
+        url: deleteporeg,
+        method: 'get',
+        data:  { 
+            _token:token,
+            tray : tray, 
+            traycount : traycount},  
+        }).done(function(data, textStatus, xhr) {
+            msg("Successfully deleted.", textStatus);
+            dispalytablePoReg();
+            clearALLfields();
+        }).fail(function(xhr, textStatus, errorThrown) {
+             alert(errorThrown);
+        });
         
-
-    //      $('#ysf-icsocket').change(function(){
-    //           if($('#ysf-icsocket').is(':checked')){
-    //                $('#chose').val("true");
-
-    //           }else{
-    //               $('#chose').val("false");
-    //           }         
-    //      });
-
-
-
-
-    //      $STATUS = "ADD";
-    //      $IDS = "";
-    //      $('#tbl_poregistration_body').on('click', '.edit-poreg', function(e) {
-    //           e.preventDefault();
-    //         //  alert($(this).attr('data-id'));
-    //           $('#pono').val($(this).attr('data-pono'));
-    //           $('#podeviceCode').val($(this).attr('data-device_code'));
-    //           $('#podevice').val($(this).attr('data-device_name'));
-    //           $('#poquantity').val($(this).attr('data-poqty')); 
-    //           $('#devicefamily').val($(this).attr('data-Family')); 
-    //           $('#deviceseries').val($(this).attr('data-Series')); 
-    //           $('#deviceptype').val($(this).attr('data-Prod_type')); 
-    //           IDs = $(this).attr('data-id');
-    //           STATUS = "EDIT";    
-    //      });
-
-    //      $('#tbl_seriesregtable_body').on('click', '.edit-seriesreg', function(e) {
-    //           e.preventDefault();
-    //           $('#Seriesfamily').val($(this).attr('data-family'));
-    //           $('#seriesname').val($(this).attr('data-series'));
-    //           IDs = $(this).attr('data-id');
-    //           STATUS = "EDIT";    
-    //      });
-
-    //      $('#tbl_MODtable_body').on('click', '.edit-modedit', function(e) {
-    //           e.preventDefault();
-    //           $('#modfamily').val($(this).attr('data-family'));
-    //           $('#mod').val($(this).attr('data-mod'));
-    //           IDs = $(this).attr('data-id');
-    //           STATUS = "EDIT";    
-    //      });
-
-    //      $('#tblfortarget').on('click', '.edit-target', function(e) {
-    //           e.preventDefault();
-    //           $('#target-datefrom').val($(this).attr('data-datefrom'));
-    //           $('#target-dateto').val($(this).attr('data-dateto'));
-    //           $('#targetyield').val($(this).attr('data-yield'));
-    //           $('#targetdppm').val($(this).attr('data-dppm'));
-    //           $('#targetptype').val($(this).attr('data-ptype'));
-    //           IDs = $(this).attr('data-id');
-    //           STATUS = "EDIT";    
-    //      });
-
-
-
-             
-    //      // FieldsValidations();
-
-    //      // $('#ypsr-family').on('change',function(){
-    //      //      $('#ypsr-seriesname').select2('val',"");
-    //      //      var family = $('select[name=ypsr-family]').val();
-    //      //      $('#ypsr-seriesname').html("");
-    //      //      $.post("{{ url('/devreg_get_series') }}",
-    //      //      {
-    //      //           _token:$('meta[name=csrf-token]').attr('content'),
-    //      //           family:family 
-    //      //      }).done(function(data, textStatus, jqXHR){
-    //      //           console.log(data);
-    //      //           $.each(data,function(i,val){
-    //      //                var sup = '';
-    //      //                switch(family) {
-    //      //                     case "BGA":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "BGA-FP":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "LGA":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "PGA":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "PGA-LGA":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "PUS":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "Probe Pin":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "QFN":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "Socket No.2":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "SOJ":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                     case "TSOP":
-    //      //                          var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-    //      //                          break;
-    //      //                    default:
-    //      //                          var sup = '<option value=""></option>';
-    //      //                }
-                             
-    //      //                //var option = '<option value="'+val.supplier'">'+val.supplier'</option>';
-    //      //                var option = sup;
-    //      //                $('#ypsr-seriesname').append(option);
-    //      //           });
-    //      //      });
-    // });
-
-     
-//});//end of script-------------------------------------------------------------------------------------
+    } else {
+        msg("Please select at least 1 Set.", "failed");
+    }
+    $('.check_all_po_reg').prop('checked',false);
+}

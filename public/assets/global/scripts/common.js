@@ -3,10 +3,16 @@ $(function() {
         $(this).find('[autofocus]').focus();
     });
 
-     $('.validate').on('keyup', function(e) {
+     $('.select-validate').on('change', function(e) {
         var no_error = $(this).attr('id');
         hideErrors(no_error)
     });
+
+    $('.validate').on('keyup', function(e) {
+        var no_error = $(this).attr('id');
+        hideErrors(no_error)
+    });
+
 
     $('.select-validate').on('change', function(e) {
         var no_error = $(this).attr('id');

@@ -2091,10 +2091,6 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\PORegistrationController@displayporeg',
                 'name' => 'displayporeg'
             ]);
-            Route::get('/displayporeg', [
-                'uses' => 'Yielding\PORegistrationController@displayporeg',
-                'name' => 'displayporeg'
-            ]);
             Route::get('/displaydevicereg', [
                 'uses' => 'Yielding\PORegistrationController@displaydevicereg',
                 'name' => 'displaydevicereg'
@@ -2118,6 +2114,14 @@ Route::group(['middleware' => 'web'], function () {
             Route::post('/updatedevice', [
                 'uses' => 'Yielding\PORegistrationController@postUpdatebtn',
                 'name' => 'updatedevice'
+            ]);
+            Route::get('/dispalytablePoReg' ,[
+                'uses' => 'Yielding\PORegistrationController@dispalytablePoReg',
+                'name' => 'dispalytablePoReg'
+            ]);
+            Route::get('/deleteporeg', [
+                'uses' => 'Yielding\PORegistrationController@deleteporeg',
+                'name' => 'deleteporeg'
             ]);
         /* MODE OF DEFECTS */
             Route::post('/modregistration' ,[

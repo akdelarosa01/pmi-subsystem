@@ -1,644 +1,90 @@
 var pya_arr = new Array();
-var cmq_arr = new Array();
-makePyaTable(pya_arr)
-makeCmqTable(cmq_arr)
+makePyaTable(pya_arr);
+pyafieldcomputation();
 $(function(e) {
     checkAllCheckboxesInTable('.check_all_pya','.check_item_pya');
-    checkAllCheckboxesInTable('.check_all_cmq','.check_item_cmq');
-
-    $('#btnsave').addClass("disabled");
-    $('#btnload').addClass("disabled");
-    $('#btnloadpya').addClass("disabled");
-    $('#btnloadcmq').addClass("disabled");
-    $('#btndiscard').addClass("disabled");
-    // $('#family').select2();
-    // $('#series').select2();
-    // $('#prodtype').select2();
-    // $('#yieldingstation').select2();
-    // $('#mod').select2();
-    // $('#classification').select2();
-    
-    $('#yieldingstation').change(function(){
-        $('#hd_yieldingstation').val($(this).val());
-        if($(this).val() == "Machine"){
-            $('#hd_accumulatedoutput').val(0);
-        }
-        if($(this).val() == "First Visual Inspection"){
-            $('#hd_accumulatedoutput').val(0);
-        }
-        if($(this).val() == "Final Visual Inspection"){
-            $('#hd_accumulatedoutput').val("");
-        }
-    });
-
-    $('#accumulatedoutput').keyup(function(){
-        $('#hd_accumulatedoutput').val($(this).val());
-    });
-    
-  
-    $('input[name=pono]').attr('disabled',true);
-    $('input[name=poqty]').attr('disabled',true);
-    $('input[name=device]').attr('disabled',true);
-    $('input[name=treject]').attr('disabled',true);
-    $('input[name=toutput]').attr('disabled',true);
-    $('#family').attr('disabled',true);
-    $('#series').attr('disabled',true);
-    $('#prodtype').attr('disabled',true);
-    $('#classification').attr('disabled',true);
-    $('#mod').attr('disabled',true);
-    $('input[name=qty]').attr('disabled',true);
-    $('input[name=productiondate]').attr('readonly',true);
-    $('#yieldingstation').attr('disabled',true);
-    $('input[name=accumulatedoutput]').attr('disabled',true);
-    $('#yieldingno').val("");
-    $('#btnremove_detail').addClass("disabled");
-    $('.checkAllitemsPYA').attr('disabled',false);
-   
-    $('#hdstatus').val("");
-
     getFamilyList();
     getProductList();
-  
-    //-------------------------------------------------------------------------------------multisearching---------------
-        // $('#mSearchtype1').change(function(e){
-        //     var mSearchtype1 = $('#mSearchtype1').val();
-        //     var mSearchval1 = $('#mSearchval1').val();
-        //     var myData = {'mSearchtype1':mSearchtype1,'mSearchval1':mSearchval1};
-        //     var fieldname = "";
-        //     $.post("{{ url('/multisearch-yieldperformance') }}",
-        //     { 
-        //         _token: $('meta[name=csrf-token]').attr('content')
-        //         , data: myData
-        //     }).done(function(data, textStatus, jqXHR){  
-        //         for(var i=0;i<data.length;i++){
-        //             var field = data[i];
-        //             var mSearchtype1 = $('#mSearchtype1').val();
-        //             switch(mSearchtype1){
-        //                 case '2':
-        //                     $('#mSearchval1').append('<option value="'+field.pono+'">'+field.pono+'</option>'); 
-        //                     break;
-        //                 case '3':
-        //                     $('#mSearchval1').append('<option value="'+field.poqty+'">'+field.poqty+'</option>'); 
-        //                     break;
-        //                 case '4':
-        //                     $('#mSearchval1').append('<option value="'+field.device+'">'+field.device+'</option>'); 
-        //                     break;
-        //                 case '5':
-        //                     $('#mSearchval1').append('<option value="'+field.family+'">'+field.family+'</option>'); 
-        //                     break;
-        //                 case '6':
-        //                     $('#mSearchval1').append('<option value="'+field.series+'">'+field.series+'</option>'); 
-        //                     break;
-        //                 case '7':
-        //                     $('#mSearchval1').append('<option value="'+field.classification+'">'+field.classification+'</option>'); 
-        //                     break;
-        //                 case '8':
-        //                     $('#mSearchval1').append('<option value="'+field.mod+'">'+field.mod+'</option>'); 
-        //                     break;
-        //                 case '9':
-        //                     $('#mSearchval1').append('<option value="'+field.qty+'">'+field.qty+'</option>'); 
-        //                     break;
-        //                 case '10':
-        //                     $('#mSearchval1').append('<option value="'+field.pruductiondate+'">'+field.productiondate+'</option>'); 
-        //                     break;
-        //                 case '11':
-        //                     $('#mSearchval1').append('<option value="'+field.yieldingstation+'">'+field.yieldingstation+'</option>'); 
-        //                     break;
-        //                 case '12':
-        //                     $('#mSearchval1').append('<option value="'+field.accumulatedoutput+'">'+field.accumulatedoutput+'</option>'); 
-        //                     break;
-        //                 default:
-        //                     $('#mSearchval1').append('<option value="'+field.yieldingno+'">'+field.yieldingno+'</option>'); 
-        //                     break;
-        //             }
-        //         }  
-        //         return false; 
-        //     }).fail(function(jqXHR, textStatus, errorThrown){
-        //         console.log(errorThrown+'|'+textStatus);
-        //     });  
-
-        // });
-
-        //magbabago yung laman ng series field depende sa selected family-----------------------------------
-        // $('#family').on('change',function(){
-        //       $('#series').select2('val',"");
-        //       var family = $('select[name=family]').val();
-        //       $('#series').html("");
-
-        //       $.post("{{ url('/devreg_get_series') }}",
-        //       {
-        //            _token:$('meta[name=csrf-token]').attr('content'),
-        //            family:family 
-        //       }).done(function(data, textStatus, jqXHR){
-        //            console.log(data);
-        //            $.each(data,function(i,val){
-        //                 var sup = '';
-        //                 switch(family) {
-        //                      case "BGA":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "BGA-FP":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "LGA":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "PGA":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "PGA-LGA":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "PUS":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "Probe Pin":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "QFN":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "Socket No.2":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "SOJ":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                      case "TSOP":
-        //                           var sup = '<option value="'+val.series+'">'+val.series+'</option>';
-        //                           break;
-        //                     default:
-        //                           var sup = '<option value=""></option>';
-        //                 }
-                             
-        //                 //var option = '<option value="'+val.supplier'">'+val.supplier'</option>';
-        //                 var option = sup;
-        //                 $('#series').append(option);
-        //            });
-              
-        //       }).fail(function(jqXHR, textStatus, errorThrown){
-        //            console.log(errorThrown+'|'+textStatus);
-        //       });
-        //  });
-
-        //magbabago yung mga value ng mode of defects depende sa selected product type-------------------------
-        // $('#prodtype').on('change',function(){
-         //    $('#mod').select2('val',"");
-         //    var prodtype = $('select[name=prodtype]').val();
-         //    $('#mod').html("");
-
-         //    $.post("{{ url('/get_mod') }}",
-         //    {
-         //        _token:$('meta[name=csrf-token]').attr('content'),
-         //        prodtype:prodtype 
-         //    }).done(function(data, textStatus, jqXHR){
-         //        console.log(data);
-         //        $.each(data,function(i,val){
-         //            var sup = '';
-         //            switch(prodtype) {
-         //                case "Test Socket":
-         //                    var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-         //                    break;
-         //                case "Burn In":
-         //                    var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-         //                    break;
-         //                default:
-         //                    var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-         //                    break;
-         //            }       
-                             
-         //            var option = sup;
-         //            $('#mod').append(option);
-         //        });
-              
-         //    }).fail(function(jqXHR, textStatus, errorThrown){
-         //        console.log(errorThrown+'|'+textStatus);
-         //    });
-         // });
-
-
-        // $('#family').on('change',function(){
-        //     $ss = $('#family').val();
-        //      $.ajax({
-        //           url: "{{ url('/getRelatedseries') }}",
-        //           type: "get",
-        //           dataType: "json",
-        //           data:{
-        //             Family:$('#family').val(),
-        //           },
-        //           success: function (returndata) {
-        //                  var select = $('#series');
-        //                  select.empty();
-        //                  select.append($('<option></option>').val(0).html("- SELECT -"));
-        //                     if (returndata.length > 0) {
-        //                       for(var x=0;x<returndata.length;x++){
-        //                              select.append($('<option></option>').val(returndata[x].series).html(returndata[x].series));
-        //                       }
-        //                    }
-
-        //           }
-        //    });
-        // });
-     
-    //---------------------------------------------------------------------------------
-        $('#modaldelete').click(function() {
-            deleteAllcheckeditems();
-        });
-
-    //---------------------------------------------------------------------------------
-    //delete all field value ---------------------------
-    $('#btndiscard').click(function(){
-        $('#btnsearch').removeClass("disabled");
-        $('#btnload').addClass("disabled");
-        $('#btnloadpya').addClass("disabled");
-        $('#btnloadcmq').addClass("disabled");
-        $('#btndiscard').addClass("disabled");
-        $('#btnadd').removeClass("disabled");
-        $('input[name=yieldingno]').attr('disabled',false);
-        $('input[name=pono]').attr('disabled',true);
-        $('input[name=poqty]').attr('disabled',true);
-        $('input[name=device]').attr('disabled',true);
-        $('#family').attr('disabled',true);
-        $('#series').attr('disabled',true);
-        $('#prodtype').attr('disabled',true);
-        $('#classification').attr('disabled',true);
-        $('#mod').attr('disabled',true);
-        $('input[name=qty]').attr('disabled',true);
-        $('input[name=productiondate]').attr('readonly',true);
-        $('#yieldingstation').attr('disabled',true);
-        $('input[name=accumulatedoutput]').attr('readonly',true);
-        $('input[name=toutput]').attr('disabled',true);
-        $('input[name=treject]').attr('disabled',true);
-
-        $('input[name=yieldingno]').val("");
-        $('input[name=pono]').val("");
-        $('input[name=poqty]').val("");
-        $('input[name=device]').val("");
-        // $('#family').select2('val',"");
-        // $('#series').select2('val',"");
-        // $('#prodtype').select2('val',"");
-        $('#classification').val("");
-        $('#mod').val("");
-        $('input[name=qty]').val("");
-        $('input[name=productiondate]').val("");
-        $('input[name=accumulatedoutput]').val("");
-        $('#yieldingstation').val("");
-        $('input[name=toutput]').val(""); 
-        $('input[name=treject]').val("");
-        $('input[name=tmng]').val("");
-        $('input[name=tpng]').val("");
-        $('input[name=ywomng]').val("");
-        $('input[name=twoyield]').val(""); 
-        $('#dppm').val("");
-        $('#hdstatus').val("");   
-        $('#tbldetails').html("");
-        $('#tblsummary').html("");
-        $('#tbody1').html("");
-        $('#tbody2').html("");
-
-    });
-
-    $('.edit-task').click(function(){
-        $('#productiondate').attr("readonly",false);
-        var getvalue = $(this).val().split('|');
-        var yieldingno = getvalue[0];
-        var  productiondate = getvalue[1];
-        var  yieldingstation = getvalue[2];
-        var  toutput = getvalue[3];
-        var  classification = getvalue[4];
-        var  mod = getvalue[5];
-        var  qty = getvalue[6];
-        var  pono = getvalue[7];
-        var  poqty = getvalue[8];
-        var  device = getvalue[9];
-        var  family = getvalue[10];
-        var  series = getvalue[11];
-        var  Aoutput = getvalue[12];
-        var  treject = getvalue[13];
-        var  ywomng = getvalue[14];
-        var  prodtype = getvalue[15];
-        $('#hdstatus').val("EDIT");
-     
-        $('#yieldingno').val(yieldingno);
-        $('#productiondate').val(productiondate.substring(0,10));
-        $('#yieldingstation').select2('val',yieldingstation);
-        $('#accumulatedoutput').val(Aoutput);
-        $('#classification').select2('val',classification);
-        $('#mod').select2('val',mod);
-        $('#qty').val(qty);
-        $('#pono').val(pono);
-        $('#poqty').val(poqty);
-        $('#device').val(device);
-        // $('#family').select2('val',family);
-        // $('#series').select2('val',series);
-        // $('#prodtype').select2('val',prodtype);
-        $('#toutput').val(toutput);
-        $('#treject').val(treject);  
-        $('#ywomng').val(ywomng);
-
-        $('input[name=yieldingno]').attr('disabled',true);
-        $('input[name=pono]').attr('disabled',true);
-        $('input[name=poqty]').attr('disabled',true);
-        $('input[name=device]').attr('disabled',true);
-        $('#family').attr('disabled',false);
-        $('#series').attr('disabled',false);
-        $('#prodtype').attr('disabled',false);
-        $('#classification').attr('disabled',false);
-        $('#mod').attr('disabled',false);
-        $('input[name=qty]').attr('disabled',false);
-        
-        $('#yieldingstation').attr('disabled',false);
-        $('input[name=accumulatedoutput]').attr('disabled',false);
-        $('input[name=toutput]').attr('disabled',true);
-        $('input[name=treject]').attr('disabled',true);
-    });
-
-    //--------------------------------------------------------------------------------------
-    //adding of records-------------------------------
-    $('#btnadd').click(function(){
-        $('#btnsearch').addClass("disabled");
-        $('#btnloadpya').addClass("disabled");
-        $('#btnloadcmq').addClass("disabled");
-        $('#btndiscard').removeClass("disabled");
-        $('#btnadd').addClass("disabled");
-        $('#hdstatus').val("ADD");
-        var hdyieldingno = $('#hdyieldingno').val();
-        $('input[name=yieldingno]').val(hdyieldingno);
-        $('input[name=pono]').attr('disabled',false);      
-        $('#family').attr('disabled',true);
-        $('#series').attr('disabled',true);
-        $('#prodtype').attr('disabled',true);
-        $('#classification').attr('disabled',true);
-        $('#mod').attr('disabled',true);
-        $('input[name=qty]').attr('disabled',true);
-        $('select[name=yieldingstation]').attr('disabled',true);  
-        $('input[name=accumulatedoutput]').attr('disabled',true);  
-        $('input[name=toutput]').attr('disabled',true);  
-        $('input[name=treject]').attr('disabled',true);  
-        $('input[name=yieldingno]').attr('disabled',true); 
-
-        $('input[name=pono]').val("");
-        $('input[name=poqty]').val("");
-        $('input[name=device]').val("");
-        // $('#family').val("");
-        // $('#series').val("");
-        // $('#prodtype').val("");
-        $('#classification').val("");
-        $('#mod').val("");
-        $('input[name=qty]').val("");
-        $('#yieldingstation').val("");
-        $('input[name=toutput]').val(""); 
-        $('input[name=treject]').val("");
-        $('input[name=tmng]').val("");
-        $('input[name=tpng]').val("");
-        $('input[name=ywomng]').val("");
-        $('input[name=twoyield]').val("");  
-        $('input[name=accumulatedoutput]').val("");   
-    });
-    //------------------------------------------------------------------------------------------------
-    $('#btnload').click(function(){
-     /*   $('#delete-taskCMQ').addClass("disabled");
-        $('#delete-taskPYA').addClass("disabled");*/
-        $('#btnloadpya').removeClass("disabled");
-        $('#btnloadcmq').removeClass("disabled");
-        $('#family').attr('disabled',false);
-        $('#series').attr('disabled',false);
-        $('#prodtype').attr('disabled',false);
-        $('#classification').attr('disabled',false);
-        $('#mod').attr('disabled',false);
-        $('input[name=qty]').attr('disabled',false);
-        $('select[name=yieldingstation]').attr('disabled',false);  
-        $('input[name=accumulatedoutput]').attr('disabled',false);  
-        if($('#pono').val() == ''){
-            $('input[name=yieldingno]').attr('disabled',true);
-            $('input[name=poqty]').attr('disabled',true);
-            $('input[name=device]').attr('disabled',true);
-            $('#family').attr('disabled',true);
-            $('#series').attr('disabled',true);
-            $('#prodtype').attr('disabled',true);
-            $('#classification').attr('disabled',true);
-            $('#mod').attr('disabled',true);
-            $('input[name=qty]').attr('disabled',true);
-            $('input[name=productiondate]').attr('disabled',true);
-            $('#yieldingstation').attr('disabled',true);
-            $('input[name=accumulatedoutput]').attr('disabled',true);
-            $('input[name=toutput]').attr('disabled',true);
-            $('input[name=treject]').attr('disabled',true);
-        }
-
+    DisabledButton();
+    DisabledALL();
     
-         GETPoDetails();
-       
-    });
-    //---------------------------------------------------------------------------------------------    
-    //Details table Checkboxes------------------------------------------------ 
-    $('.checkAllitems').change(function(){
-        if($('.checkAllitems').is(':checked')){           
-            $('input[name=checkitem]').parents('span').addClass("checked");
-            $('input[name=checkitem]').prop('checked',this.checked);
-            $('.edit-task').addClass("disabled");                
-        }else{
-            $('input[name=checkitem]').parents('span').removeClass("checked");
-            $('input[name=checkitem]').prop('checked',this.checked);
-            $('.deleteAll-task').addClass("disabled"); 
-            $('.edit-task').removeClass("disabled");                 
-        }         
-    });
-    //-----------------------------------------------------------------------------------------------
-    $('.checkboxes').change(function(){
-        $('input[name=checkAllitem]').parents('span').removeClass("checked");
-        $('input[name=checkAllitem]').prop('checked',false);
-        var tray = [];
-        $(".checkboxes:checked").each(function () {
-            tray.push($(this).val());
-            $('.checkAllitems').prop('checked',false);  
-        });
-          
-        if($('.checkboxes').is(':checked')){
-            $('input[name=checkAllitem]').parents('span').removeClass("checked");
-            $('input[name=checkAllitem]').prop('checked',false);
-
-        } 
-    });
-    //---------------------------------------------------------------------------------------------    
-    //production Date, Yielding Performance and Accumulated Output Checkboxes---------------------------------- 
-    $('.checkAllitemsPYA').change(function(){
-        if($('.checkAllitemsPYA').is(':checked')){           
-            $('input[name=checkitemPYA]').parents('span').addClass("checked");
-            $('input[name=checkitemPYA]').prop('checked',this.checked);       
-        }else{
-            $('input[name=checkitemPYA]').parents('span').removeClass("checked");
-            $('input[name=checkitemPYA]').prop('checked',this.checked);
-          
-        }         
-    });
-
-    $('.checkboxesPYA').change(function(){
-        $('input[name=checkAllitemPYA]').parents('span').removeClass("checked");
-        $('input[name=checkAllitemPYA]').prop('checked',false);
-        var tray = [];
-        $(".checkboxesPYA:checked").each(function () {
-            tray.push($(this).val());
-            $('.checkAllitemsPYA').prop('checked',false);
-            $('#btnremove_detail').removeClass("disabled");    
-        });
-      
-        if($('.checkboxesPYA').is(':checked')){
-            $('input[name=checkAllitemPYA]').parents('span').removeClass("checked");
-            $('input[name=checkAllitemPYA]').prop('checked',false);
-        } else {
-            $('#btnremove_detail').addClass("disabled");
-        }
-    });
-    //---------------------------------------------------------------------------------------------     
-    $('.checkAllitemsCMQ').change(function(){
-        if($('.checkAllitemsCMQ').is(':checked')){           
-            $('input[name=checkitemCMQ]').parents('span').addClass("checked");
-            $('input[name=checkitemCMQ]').prop('checked',this.checked);             
-        }else{
-            $('input[name=checkitemCMQ]').parents('span').removeClass("checked");
-            $('input[name=checkitemCMQ]').prop('checked',this.checked);      
-        }         
-    });
-    //-----------------------------------------------------------------------------------------------
-    //Classification,Mode of Defects and Quantity Checkboxes----------------------------------
-    $('.checkboxesCMQ').change(function(){
-        $('input[name=checkAllitemCMQ]').parents('span').removeClass("checked");
-        $('input[name=checkAllitemCMQ]').prop('checked',false);
-        var tray = [];
-        $(".checkboxes:checked").each(function () {
-            tray.push($(this).val());
-            $('.checkAllitemsPYA').prop('checked',false);
-            $('#delete-taskCMQ').removeClass("disabled");
-          
-        });
-          
-        if($('.checkboxesPYA').is(':checked')){
-            $('input[name=checkAllitemCMQ]').parents('span').removeClass("checked");
-            $('input[name=checkAllitemCMQ]').prop('checked',false);
-        } 
-    });
-
-    //---------------------------------------------------------------------------------------------------          
-    $('.remove-task').on('click', function() {
-        $('#deleteAllModal').modal('show');
-    });
-
-    //----------------------------------------------------------------------------------------------
-    //Accumulated Output computation based on Yielding Station--
     $('#yieldingstation').change(function(){
+        $('#yieldingstation').val($(this).val());
         if($(this).val() == "Machine"){
-            $('#accumulatedoutput').val("0");
-            $('#accumulatedoutput').attr('disabled',true);
-        }else if($(this).val() == "First Visual Inspection"){
-            $('#accumulatedoutput').val("0");
-            $('#accumulatedoutput').attr('disabled',true);
-        }else if($(this).val() == "Final Visual Inspection"){
-            $('#accumulatedoutput').val("");
-            $('#accumulatedoutput').attr('disabled',false);
-        }else{
-            $('#accumulatedoutput').val("");
-            $('#accumulatedoutput').attr('disabled',true);
+            $('#accumulatedoutput').val(0);
         }
+        if($(this).val() == "First Visual Inspection"){
+            $('#accumulatedoutput').val(0);
+        }
+        if($(this).val() == "Final Visual Inspection"){
+            $('#accumulatedoutput').val(0);
+        }
+    });
+    
+    $('#btndiscard').click(function(){
+        $('#pono').val("");
+        DisabledButton();
+        DisabledALL();
+        ClearAll();
+        pya_arr = [];
+        makePyaTable();
+        pyafieldcomputation();
+    });
+
+
+    $('#btnload').click(function(){
+        ClearAll();
+        pya_arr = [];
+        makePyaTable();
+        pyafieldcomputation();
+        GETPoDetails();       
     });
 
     $('#classification').change(function(){
-        var classification = $('#classification').val();
-        if(classification == "NDF"){
-            $('#mod').append(option);
-            var sup = '<option value="NDF">NDF</option>';   
-            var option = sup;
-            $('#mod').append(option);
-            $('#qty').val("NDF");
-        } else{
-            $('#qty').val("");
-        }   
+        if($(this).val() == "NDF"){
+            $('#mod').attr('disabled',true);
+            $('#qty').attr('disabled',true);
+            $('#er5').html(""); 
+            
+        }else{
+            $('#mod').attr('disabled',false);
+            $('#qty').attr('disabled',false);
+        }
+            $('#qty').val("0");
     });
 
     $('#btnsave').on('click', function() {
         save_yield();
     });
 
-    $('#delete-taskPYA').on('click', function() {
-        var chkArray = [];
-        $(".check_item_pya:checked").each(function() {
-            chkArray.push($(this).attr('data-id'));
-        });
+    $('#tbl_pya').on('click', '.btn_edit_pya',function() {
+        $('#row').val($(this).attr('data-row'));
+        $('#productiondate').val($(this).attr('data-productiondate'));
+        $('#yieldingstation').val($(this).attr('data-yieldingstation'));
+        $('#accumulatedoutput').val($(this).attr('data-accumulatedoutput'));
+        $('#classification').val($(this).attr('data-classification'));
+        $('#mod').val($(this).attr('data-mod'));
+        $('#qty').val($(this).attr('data-qty'));
+        $('#btnloadpya').removeClass('bg-green');
+        $('#btnloadpya').addClass('bg-blue');
+        $('#btnloadpya').html('<i class="fa fa-check"></i>');
     });
 
-    $('#delete-taskCMQ').on('click', function() {
-        var chkArray = [];
-        $(".check_item_cmq:checked").each(function() {
-            chkArray.push($(this).attr('data-id'));
-        });
-    });
 });
 
-// if Button Addnew is clicked-----------------------------------
 function addnew(){
+    $('#btnsearch').addClass("disabled");
+    $('#btnloadpya').addClass("disabled");
+    $('#btndiscard').removeClass("disabled");
+    $('#btnadd').addClass("disabled");
+    $('#hdstatus').val("ADD");
+    var hdyieldingno = $('#hdyieldingno').val();
+    $('input[name=yieldingno]').val(hdyieldingno);
+    ClearAll(); 
     $('#btnsave').removeClass("disabled");
     $('#btnload').removeClass("disabled");
-    $('#treject').attr('disabled',false);
-    
-    var d = new Date();
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-    var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day   
-   
-    $('input[name=productiondate]').val(date);
-    $('#pono').keyup(function(){
-        $('#er1').html(""); 
-         
-        if(!this.value){
-            $('#poqty').val("");
-            $('#device').val("");
-            // $('#family').select2('val',"");
-            // $('#series').select2('val',"");
-            // $('#prodtype').select2('val',"");
-            $('#classification').val("");
-            $('#mod').val("");
+    $('input[name=pono]').attr('disabled',false);
 
-            $('input[name=qty]').val("");
-            $('select[name=yieldingstation]').val("");
-            $('input[name=accumulatedoutput]').val("");
-            $('input[name=toutput]').val("");
-            $('input[name=treject]').val("");
-
-            $('input[name=tmng]').val("");
-            $('input[name=tpng]').val("");
-            $('input[name=ywomng]').val("");
-            $('input[name=twoyield]').val("");
-            $('#dppm').val("");
-            $('input[name=yieldingno]').attr('disabled',true);
-            $('input[name=poqty]').attr('disabled',true);
-            $('input[name=device]').attr('disabled',true);
-            $('#family').attr('disabled',true);
-            $('#series').attr('disabled',true);
-            $('#prodtype').attr('disabled',true);
-            $('#classification').attr('disabled',true);
-            $('#mod').attr('disabled',true);
-            $('input[name=qty]').attr('disabled',true);
-            $('input[name=productiondate]').attr('disabled',true);
-            $('#yieldingstation').attr('disabled',true);
-            $('input[name=accumulatedoutput]').attr('disabled',true);
-            $('input[name=toutput]').attr('disabled',true);
-            $('input[name=treject]').attr('disabled',true);
-            
-            $('#tbody1').html("");
-            $('#tbody2').html("");
-            $('#tbldetails').html("");   
-            $('#tblsummary').html("");   
-        }
-    });
-
-    $('#pono').click(function(){
-        $('#er1').html(""); 
-        if(!this.value){
-            $('#poqty').val("");
-            $('#device').val("");
-        }
-    });
-  
     $('#btnload').click(function(){
         $('#error1').html("");  
     });
@@ -674,7 +120,6 @@ function addnew(){
     });
 }
 
-//saving Yielding Performance Record------------------------------------
 function save_yield(){
     var hdstatus = $('#hdstatus').val();
     var yieldingno = $('input[name=yieldingno]').val();
@@ -687,24 +132,8 @@ function save_yield(){
     var series = $('#series').val();
     var prodtype = $('#prodtype').val();
     var classification = $('#classification').val();
-   
     var mod = $('#mod').val();
     var qty = $('input[name=qty]').val();    
- 
-    //var d =  $('input[name=productiondate]').val().split('/');
-    // var month = d[0];
-    // var day = d[1];
-    // var year = d[2];
-    //var productiondate = year+'-'+month+'-'+day;
-  
-    // if(hdstatus == "EDIT"){
-    //     var d =  $('input[name=productiondate]').val().split('-');
-    //     var month = d[1];
-    //     var day = d[2];
-    //     var year = d[0];
-    //     var productiondate = year+'-'+month+'-'+day;    
-    // }
-   
     var yieldingstation =  $('select[name=yieldingstation]').val();
     var accumulatedoutput =  $('input[name=accumulatedoutput]').val();
     var toutput =  $('input[name=toutput]').val();
@@ -775,9 +204,9 @@ function save_yield(){
         ,newaccumulatedoutput:$('input[name^="pyaaccumulatedoutput"]').map(function(){return $(this).val();}).get()
         ,newproductiondate:$('input[name^="pyaproductiondate"]').map(function(){return $(this).val();}).get()
         ,newyieldingstation:$('input[name^="pyayieldingstation"]').map(function(){return $(this).val();}).get()
-        ,newclassification:$('input[name^="cmqclassification"]').map(function(){return $(this).val();}).get()
-        ,newmod:$('input[name^="cmqmod"]').map(function(){return $(this).val();}).get()
-        ,newqty:$('input[name^="cmqqty"]').map(function(){return $(this).val();}).get()
+        ,newclassification:$('input[name^="pyaclassification"]').map(function(){return $(this).val();}).get()
+        ,newmod:$('input[name^="pyamod"]').map(function(){return $(this).val();}).get()
+        ,newqty:$('input[name^="pyaqty"]').map(function(){return $(this).val();}).get()
     };
 
     $.ajax({
@@ -786,17 +215,14 @@ function save_yield(){
         dataType: 'JSON',
         data: myData,
     }).done(function(data, textStatus, jqXHR){        
-        $('#yieldingstation').select2('val',"");
-        $('input[name=accumulatedoutput]').val("");
-        $('#classification').select2('val',"");
-        $('#mod').val("");
-        $('#qty').val("");
-        $('#btnloadpya').attr("disabled",false);
-        $('#delete-taskCMQ').removeClass("disabled");
-        $('#delete-taskPYA').removeClass("disabled");
-        $('#btnsave').addClass("disabled");
-        $('#btnsave').removeClass("disabled");
         msg(data.msg,data.status);
+        DisabledALL();
+        DisabledButton();
+        ClearAll();
+        pya_arr = [];
+        makePyaTable();
+        pyafieldcomputation();
+        $('input[name=pono]').val("");
     }).fail(function(jqXHR, textStatus, errorThrown){
         msg(errorThrown,textStatus);
     }).always(function() {
@@ -804,10 +230,7 @@ function save_yield(){
     });
 }
 
-// if Add button is clicked(Production Date, Yielding Station and AccumulatedOutput)-----------
 function addpya(){
-    // $('#delete-taskPYA').addClass("disabled");
-    // $('#delete-taskCMQ').addClass("disabled");
     var poqty = $('#poqty').val();
     var pono =  $('input[name=pono]').val();
     var productiondate =  $('input[name=productiondate]').val();
@@ -815,6 +238,11 @@ function addpya(){
     var accumulatedoutput =  $('input[name=accumulatedoutput]').val();
     var toutput =  $('input[name=toutput]').val();
     var countpya = $('#countpya').val();
+    var classification = $('#classification').val();
+    var mod = $('#mod').val();
+    var qty = $('input[name=qty]').val();
+    var row = $('#row').val();
+
     $('#er8').html("");
 
     if(pono == ""){     
@@ -837,56 +265,71 @@ function addpya(){
         $('#er7').css('color', 'red');
         return false;
     }
-    if($('#yieldingstation').val() && $('input[name=accumulatedoutput]').val()){
-        $('#btnloadpya').attr("disabled",true);
-    }
-  
 
-    if($('#toutput').val() == ''){
-        var toutput =$('#toutput').val();
-        var accumulatedoutput = $('#accumulatedoutput').val();
-        $('#toutput').val(toutput + parseInt(accumulatedoutput));    
+    if (classification == ""){
+        $('#er4').html("Classification field is empty"); 
+        $('#er4').css('color', 'red');
+        return false;
+    }
+    if(classification != "NDF"){
+        if (mod == ""){
+            $('#er5').html("Please Select Mode of Defect field is empty"); 
+            $('#er5').css('color', 'red');
+            return false;
+        }
+        if (qty == 0){
+            $('#er10').html("Qty not accepting 0 value"); 
+            $('#er10').css('color', 'red');
+            return false;
+        }
+    }
+
+
+    if(row == ''){
+        pya_length = pya_arr.length;
+        pya_length++;
+
+        pya_arr.push({
+            id: pya_length,
+            yieldingno: $('#yieldingno').val(),
+            productiondate: productiondate,
+            yieldingstation: yieldingstation,
+            accumulatedoutput: accumulatedoutput,
+            classification: classification,
+            mod: mod,
+            qty: qty
+        });     
     }else{
-        var toutput =$('#toutput').val();
-        var accumulatedoutput = $('#accumulatedoutput').val();
-        $('#toutput').val(parseInt(toutput) + parseInt(accumulatedoutput));    
-    }
 
-    toutput = $('#toutput').val();
 
-    console.log(pya_arr);
 
-    pya_length = pya_arr.length;
-    pya_length++;
-
-    pya_arr.push({
-        id: pya_length,
-        yieldingno: $('#yieldingno').val(),
-        productiondate: productiondate,
-        yieldingstation: yieldingstation,
-        accumulatedoutput: toutput
+        pya_arr.splice(row,1,{
+                            id: '',
+                            yieldingno: $('#yieldingno').val(),
+                            productiondate: productiondate,
+                            yieldingstation: yieldingstation,
+                            accumulatedoutput: accumulatedoutput,
+                            classification: classification,
+                            mod: mod,
+                            qty: qty
     });
-
+    }
     console.log(pya_arr);
-
     makePyaTable(pya_arr);
-
-    // $('#tbody1').html("");
-    // var tblrow = '<tr id="pya_row_'+clickpya+'" class="pyarow">'+                   
-    //         '<td style="width: 3%">'+
-    //             '<span>'+
-    //                 '<input type="checkbox" class="form-control input-sm checkboxesPYA" value="'+clickpya+'" name="checkitemPYA" id="checkitemPYA">'+
-    //                 '</input>'+
-    //             '</span>'+   
-    //         '</td>'+ 
-    //         '<td>'+productiondate+'<input type="hidden" value="'+productiondate+'" class="form-control input-sm" id="pyaproductiondate'+clickpya+'" name="pyaproductiondate[]"/></td>'+
-    //         '<td>'+yieldingstation+'<input type="hidden" value="'+yieldingstation+'" class="form-control input-sm" id="pyayieldingstation'+clickpya+'" name="pyayieldingstation[]"/></td>'+
-    //         '<td>'+toutput+'<input type="hidden" value="'+toutput+'" class="form-control input-sm" id="pyaaccumulatedoutput'+clickpya+'" name="pyaaccumulatedoutput[]"/></td>'+
-    //     '</tr>';
-    // $('#tbody1').append(tblrow);     
+    pyafieldcomputation();
+    clear();
+    var d = new Date();
+    var month = d.getMonth()+1;
+    var day = d.getDate();
+    var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day   
+    $('input[name=productiondate]').val(date);
+    $('#mod').attr('disabled',false);
+    $('#qty').attr('disabled',false);
+   
 }
 
 function makePyaTable(arr) {
+    var row = -1;
     $('#tbl_pya').dataTable().fnClearTable();
     $('#tbl_pya').dataTable().fnDestroy();
     $('#tbl_pya').dataTable({
@@ -897,8 +340,13 @@ function makePyaTable(arr) {
         searching: false,
         columns: [
             { data: function(x) {
-                return "<input type='checkbox' class='check_item_pya checkboxesPYA' data-id='"+x.id+"' >";
+                row++;
+                return "<input type='checkbox' class='check_item_pya checkboxesPYA' value='"+row+"' data-id='"+x.id+"' >";
             }, searchable: false, orderable: false },
+
+            { data: function(x) {
+               return "<button class='btn btn-sm bg-blue btn_edit_pya' data-row='"+row+"'  data-id='"+x.id+"' data-qty='"+x.qty+"'data-productiondate='"+x.productiondate+"'data-yieldingstation='"+x.yieldingstation+"'data-accumulatedoutput='"+x.accumulatedoutput+"'data-classification='"+x.classification+"' data-mod='"+x.mod+"'><i class='fa fa-edit'></i></button>";
+            }},
 
             { data: function(x) {
                 return x.productiondate+"<input type='hidden' name='pyaproductiondate[]' value='"+x.productiondate+"'>";
@@ -911,831 +359,136 @@ function makePyaTable(arr) {
             { data: function(x) {
                 return x.accumulatedoutput+"<input type='hidden' name='pyaaccumulatedoutput[]' value='"+x.accumulatedoutput+"'>";
             }},
-        ]
-        // columnDefs: [
-        //     { "width": "5%", "targets": 0 },
-        //     { "width": "20%", "targets": 1 },
-        //     { "width": "35%", "targets": 2 },
-        //     { "width": "20%", "targets": 3 },
-        //     { "width": "20%", "targets": 4 }
-        // ]
-    });
-}
-
-
-// if Add button is clicked(Classification, Mode of Defects and Quantity)-----------
-var clickcmq = 0;
-
-function addcmq(){
-    var poqty = $('#poqty').val();
-    var pono = $('#pono').val();
-    var yieldingstation =  $('#yieldingstation').val();
-    var accumulatedoutput =  $('input[name=accumulatedoutput]').val();
-    var productiondate =  $('input[name=productiondate]').val();
-    var classification = $('#classification').val();
-    var mod = $('#mod').val();
-    var qty = $('input[name=qty]').val();
-    var toutput = $('input[name=toutput]').val();
-    var countcmq = $('#countcmq').val();
-
-
-    if(pono == ""){     
-        $('#er1').html("PO number field is empty"); 
-        $('#er1').css('color', 'red');       
-        return false;  
-    }
-  
-    if(poqty == ""){     
-        $('#error1').html("Please click the load button"); 
-        $('#error1').css('color', 'red');       
-        return false;  
-    }
-    if (classification == ""){
-        $('#er4').html("Classification field is empty"); 
-        $('#er4').css('color', 'red');
-        return false;
-    }
-    if (mod == ""){
-        $('#er5').html("Please Select Mode of Defect field is empty"); 
-        $('#er5').css('color', 'red');
-        return false;
-    }
-    if (qty == ""){
-        $('#er10').html("Quantity field is empty"); 
-        $('#er10').css('color', 'red');
-        return false;
-    }
-    if (toutput == ""){
-        $('#er8').html("Please click the Accumulated Output Button"); 
-        $('#er8').css('color', 'red');
-        return false;
-    }
-
-    pyafieldcomputation();
-    
-    var rowcount = $('#counter').val();
-    var tblrow = '';
-    if(rowcount == 0){
-        clickcmq++;
-
-        cmq_arr.push({
-            id: clickcmq,
-            classification: classification,
-            mod: mod,
-            qty: qty
-        });
-        // $('#tbody2').html("");
-        // tblrow = '<tr id="cmq_row_'+clickcmq+'" class="cmqrow">'+                   
-        //     '<td style="width: 3%">'+
-        //         '<span>'+
-        //             '<input type="checkbox" class="form-control input-sm checkboxesCMQ" value="'+clickcmq+'" name="checkitemCMQ" id="checkitemCMQ">'+
-        //             '</input>'+
-        //         '</span>'+   
-        //     '</td>'+ 
-        //     '<td>'+classification+'<input type="hidden"value="'+classification+'" class="form-control input-sm" id="cmqclassification'+clickcmq+'" name="cmqclassification[]"/></td>'+
-        //     '<td>'+mod+'<input type="hidden" value="' +mod+ '" class="form-control input-sm" id="cmqmod'+clickcmq+'" name="cmqmod[]"/></td>'+
-        //     '<td>'+qty+'<input type="hidden" value="' +qty+'" class="form-control input-sm" id="cmqqty'+clickcmq+'" name="cmqqty[]"/></td>'+
-        // '</tr>';
-        $('#counter').val(parseInt(rowcount) + 1);
-    } else {
-        clickcmq++;
-
-        cmq_arr.push({
-            id: clickcmq,
-            classification: classification,
-            mod: mod,
-            qty: qty
-        });
-
-        // tblrow = '<tr id="cmq_row_'+clickcmq+'" class="cmqrow">'+                   
-        //     '<td style="width: 3%">'+
-        //         '<span>'+
-        //             '<input type="checkbox" class="form-control input-sm checkboxesCMQ" value="'+clickcmq+'" name="checkitemCMQ" id="checkitemCMQ">'+
-        //             '</input>'+
-        //         '</span>'+   
-        //     '</td>'+ 
-        //     '<td>'+classification+'<input type="hidden"value="'+classification+'" class="form-control input-sm" id="cmqclassification'+clickcmq+'" name="cmqclassification[]"/></td>'+
-        //     '<td>'+mod+'<input type="hidden" value="' +mod+ '" class="form-control input-sm" id="cmqmod'+clickcmq+'" name="cmqmod[]"/></td>'+
-        //     '<td>'+qty+'<input type="hidden" value="' +qty+'" class="form-control input-sm" id="cmqqty'+clickcmq+'" name="cmqqty[]"/></td>'+
-        // '</tr>';
-    }
-
-    makeCmqTable(cmq_arr)
-
-    // $('#tbody2').append(tblrow);    
-    // var myData ={ 
-    //                    'pono' : pono  
-    //          ,'productiondate': productiondate
-    //         ,'classification' : classification
-    //                    ,'mod' : mod
-    //                    ,'qty' : qty
-    //            };
-}
-
-function makeCmqTable(arr) {
-    $('#tbl_cmq').dataTable().fnClearTable();
-    $('#tbl_cmq').dataTable().fnDestroy();
-    $('#tbl_cmq').dataTable({
-        data: arr,
-        bLengthChange : false,
-        scrollY: "200px",
-        paging: false,
-        searching: false,
-        columns: [
-            { data: function(x) {
-                return "<input type='checkbox' class='check_item_cmq checkboxesCMQ' data-id='"+x.id+"' >";
-            }, searchable: false, orderable: false },
 
             { data: function(x) {
-                return x.classification+"<input type='hidden' name='cmqclassification[]' value='"+x.classification+"'>";
+                return x.classification+"<input type='hidden' name='pyaclassification[]' value='"+x.classification+"'>";
             }},
 
             { data: function(x) {
-                return x.mod+"<input type='hidden' name='cmqmod[]' value='"+x.mod+"'>";
+                return x.mod+"<input type='hidden' name='pyamod[]' value='"+x.mod+"'>";
             }},
 
             { data: function(x) {
-                return x.qty+"<input type='hidden' name='cmqqty[]' value='"+x.qty+"'>";
+                return x.qty+"<input type='hidden' name='pyaqty[]' value='"+x.qty+"'>";
             }},
         ]
-        // columnDefs: [
-        //     { "width": "5%", "targets": 0 },
-        //     { "width": "20%", "targets": 1 },
-        //     { "width": "35%", "targets": 2 },
-        //     { "width": "20%", "targets": 3 },
-        //     { "width": "20%", "targets": 4 }
-        // ]
     });
-}
-
-
-//Searching PO Number -------------------------------------------------- 
-function searchpo(){
-    var pono = $('#pono').val();
-    $('#counter').val(0);
-    var yieldingstation = $('#yieldingstation').val();
-    $('input[name=productiondate]').attr('disabled',false);
-    $('#btnremove_detail').removeClass("disabled");
-    var myData = {'pono':pono,'yieldingstation':yieldingstation};
-  
-    if(pono == ""){
-        $('#searchpoModal').modal('show');
-        $('.searchpo-title').html('Warning Message!');
-        $('#po-message').html('PO number field is empty.');
-        $('#pono').val("");
-        $('#poqty').val("");
-        $('#device').val("");
-        // $('#family').select2('val',"");
-        // $('#series').select2('val',"");
-        // $('#prodtype').select2('val',"");
-        $('input[name=yieldingno]').attr('disabled',true);
-        $('input[name=poqty]').attr('disabled',true);
-        $('input[name=device]').attr('disabled',true);
-        $('#family').attr('disabled',true);
-        $('#series').attr('disabled',true);
-        $('#prodtype').attr('disabled',true);
-        $('#classification').attr('disabled',true);
-        $('#mod').attr('disabled',true);
-        $('input[name=qty]').attr('disabled',true);
-        $('#yieldingstation').attr('disabled',true);
-        $('input[name=accumulatedoutput]').attr('disabled',true);
-        $('input[name=toutput]').attr('disabled',true);
-        $('input[name=treject]').attr('disabled',true);
-    } else {
-        $.post(searchPOURL,
-        { 
-            _token: $('meta[name=csrf-token]').attr('content')
-            , data: myData
-        }).done(function(data, textStatus, jqXHR){
-            if(data == ""){
-                $('#searchpoModal').modal('show');
-                $('.searchpo-title').html('Warning Message!');
-                $('#po-message').html('PO number not Match');
-                $('input[name=yieldingno]').attr('disabled',true);
-                $('input[name=poqty]').attr('disabled',true);
-                $('input[name=device]').attr('disabled',true);
-                $('#family').attr('disabled',true);
-                $('#series').attr('disabled',true);
-                $('#prodtype').attr('disabled',true);
-                $('#classification').attr('disabled',true);
-                $('#mod').attr('disabled',true);
-                $('input[name=qty]').attr('disabled',true);
-                $('#yieldingstation').attr('disabled',true);
-                $('input[name=accumulatedoutput]').attr('disabled',true);
-                $('input[name=toutput]').attr('disabled',true);
-                $('input[name=treject]').attr('disabled',true);
-            } 
-            $('#accumulatedoutput').attr('disabled',true);
-            $('input[name=yieldingno]').val();
-            $('input[name=pono]').val(data[0]['pono']);
-            $('input[name=poqty]').val(data[0]['poqty']);
-            $('input[name=device]').val(data[0]['devicename']);
-            // $('#family').select2('val',data[0]['family']);
-            // $('#series').select2('val',data[0]['series']);
-            // $('#prodtype').select2('val',data[0]['ptype']);
-            $('#tbody1').html("");
-            $('#tbody2').html("");
-
-            $('#mod').select2('val',"");
-            var prodtype = $('select[name=prodtype]').val();
-            var classification = $('select[name=classification]').val();
-            $('#mod').html("");
-
-            $.post(getMODURL,
-            {
-                _token:$('meta[name=csrf-token]').attr('content'),
-                prodtype:prodtype 
-            }).done(function(data, textStatus, jqXHR){
-                console.log(data);
-                $.each(data,function(i,val){
-                    var sup = '';
-                    switch(prodtype) {
-                        case "Test Socket":
-                            var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-                            break;
-                        case "Burn In":
-                            var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-                            break;
-                        default:
-                            var sup = '<option value="'+val.mod+'">'+val.mod+'</option>';
-                            break;
-                    } 
-                    var option = sup;
-                    $('#mod').append(option);
-                });
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log(errorThrown+'|'+textStatus);
-            });
-
-            //getting the value of Yield w/o MNG, DPPM and Total Yield-----------------
-            $.ajax({
-                url: getAutoValueURL,
-                method: 'get',
-                data:{ 
-                    pono : pono
-                },      
-            }).done(function(data, textStatus, jqXHR){
-                $('input[name=treject]').val(data[0]['treject']);
-                $('input[name=toutput]').val(data[0]['toutput']);
-                var treject = parseInt(data[0]['treject']);
-                var toutput = parseInt(data[0]['toutput']);
-                $.ajax({
-                    url: getPngURL,
-                    method: 'get',
-                    data:{ 
-                        pono : pono
-                    },      
-                }).done(function(data, textStatus, jqXHR){
-                    //dppm-------------------------------
-                    $('#tpng').val(data[0]['tpng']);
-                    var tpng = parseInt(data[0]['tpng']);
-                    var sum = toutput + tpng;
-                    var temp = tpng/sum;
-                    $('#dppm').val((temp * 1000000).toFixed(2));  
-
-                    if($('#tpng').val() == ''){
-                        $('#dppm').val(0);    
-                    }
-                }).fail(function(jqXHR, textStatus, errorThrown){
-                    console.log(errorThrown+'|'+textStatus);
-                });
-                $.ajax({
-                    url: getMngURL,
-                    method: 'get',
-                    data:{ 
-                        pono : pono
-                    },      
-                }).done(function(data, textStatus, jqXHR){
-                    //yield without mng----------------------------------------
-                    $('#tmng').val(data[0]['tmng']);
-                    var toaddmng = toutput + parseInt(data[0]['tmng']);
-                    var toaddtr = toutput + treject;
-                    var quotient = toaddmng/toaddtr;
-                    var ywomng = (quotient * 100).toFixed(2);
-                    $('#ywomng').val(ywomng);
-
-                    if($('#tmng').val() == ''){
-                        var toaddmng = toutput + 0;
-                        var toaddtr = toutput + treject;
-                        var quotient = toaddmng/toaddtr;
-                        var ywomng = (quotient * 100).toFixed(2);
-                        $('#ywomng').val(ywomng);   
-                    }
-
-                }).fail(function(jqXHR, textStatus, errorThrown){
-                    console.log(errorThrown+'|'+textStatus);
-                });
-               
-            
-                //total Yield-----------------------------------------------------------
-                var toandtr = parseInt(data[0]['toutput']) + parseInt(data[0]['treject']);
-                var todivtoandtr = parseInt(data[0]['toutput']) / toandtr;
-                var twoyield = (todivtoandtr * 100).toFixed(2);
-                $('#twoyield').val(twoyield);
-
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log(errorThrown+'|'+textStatus);
-            });
-
-            //Displaying the table of (Production Date, Yielding Statioin and Accumulated Output) when searching PO Number--------------
-            $('#tbody1').html("");
-            $.ajax({
-                url: searchDisplayPYAURL,
-                method: 'get',
-                data:  { 
-                    pono : pono,
-                    yieldingstation:yieldingstation       
-                },      
-            }).done(function(data, textStatus, jqXHR){
-                $.each(data, function(i,val) {
-                    var tblrow = '<tr id="pya_row_'+val.id+'" class="pyarow">'+                   
-                                '<td style="width: 3%">'+
-                                    '<span>'+
-                                        '<input type="checkbox" class="form-control input-sm checkboxesPYA" value="'+val.id+'" name="checkitemPYA" id="checkitemPYA">'+
-                                        '</input>'+
-                                    '</span>'+   
-                                '</td>'+ 
-                                '<td>'+val.productiondate+'<input type="hidden" value="'+val.productiondate+'|'+val.yieldingno+'" class="form-control input-sm" id="pyaproductiondate'+val.id+'" name="pyaproductiondate[]"/></td>'+
-                                '<td>'+val.yieldingstation+'<input type="hidden" value="'+val.yieldingstation+'" class="form-control input-sm" id="pyayieldingstation'+val.id+'" name="pyayieldingstation[]"/></td>'+
-                                '<td>'+val.accumulatedoutput+'<input type="hidden" value="'+val.accumulatedoutput+'" class="form-control input-sm" id="pyaaccumulatedoutput'+val.id+'" name="pyaaccumulatedoutput[]"/></td>'+
-                            '</tr>';
-                    $('#tbody1').append(tblrow);   
-                });  
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log(errorThrown+'|'+textStatus);
-            });
-
-            //Displaying the table of(Classification, MOD and Qty) when searching PO Number-----------------
-            $('#tbody2').html("");
-            $.ajax({
-                url: searchDisplayCMQURL,
-                method: 'get',
-                data:  { 
-                    pono : pono, 
-                    yieldingstation:yieldingstation      
-                },      
-            }).done(function(data, textStatus, jqXHR){
-                $.each(data, function(i,val) {
-                    var tblrow = '<tr id="cmq_row_'+val.id+'" class="cmqrow">'+                   
-                            '<td style="width: 3%">'+
-                                '<span>'+
-                                    '<input type="checkbox" class="form-control input-sm checkboxesCMQ" value="'+val.id+'" name="checkitemCMQ" id="checkitemCMQ">'+
-                                    '</input>'+
-                                '</span>'+   
-                            '</td>'+ 
-                            '<td>'+val.classification+'<input type="hidden"value="'+val.classification+'" class="form-control input-sm" id="cmqclassification'+val.id+'" name="cmqclassification[]"/><input type="hidden"value="'+val.yieldingno+'" class="form-control input-sm" id="cmqyieldingno'+val.id+'" name="cmqyieldingno[]"/></td>'+
-                            '<td>'+val.mod+'<input type="hidden" value="' +val.mod+ '" class="form-control input-sm" id="cmqmod'+val.id+'" name="cmqmod[]"/></td>'+
-                            '<td>'+val.qty+'<input type="hidden" value="' +val.qty+'" class="form-control input-sm" id="cmqqty'+val.id+'" name="cmqqty[]"/></td>'+
-                        '</tr>';
-                    $('#tbody2').append(tblrow);
-                });
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log(errorThrown+'|'+textStatus);
-            });
-
-            //Displaying the Details Table when Searching records---------------------------------
-            $('#tbldetails').html("");
-            $.ajax({
-                url: searchDisplayDetailsURL,
-                method: 'get',
-                data:  { 
-                    pono : pono,
-                    yieldingstation:yieldingstation       
-                },      
-            }).done(function(data, textStatus, jqXHR){
-                $.each(data, function(i,val) {
-                console.log(val);
-                var tblrow = '<tr>'+
-                                '<td style="width: 2%">'+
-                                '<input type="checkbox" class="form-control input-sm checkboxes" value="'+val.id+'" name="checkitem" id="checkitem"></input>'+   
-                                '</td> '+                       
-                              /*  '<td style="width: 3%">'+
-                                    '<button type="button" name="edit-task" class="btn btn-sm btn-primary edit-task" value="'+val.id+ '|' +val.productiondate+ '|' +val.yieldingstation+ '|' +val.toutput+ '|' +val.classification+ '|' +val.mod+ '|' +val.qty+ '|' +val.pono+ '|' +val.poqty+ '|' +val.device+ '|' +val.family+ '|' +val.series+ '|' +val.accumulatedoutput+ '|' +val.treject+ '|' +val.twoyield+ '|' +val.prodtype+'">'+
-                                        '<i class="fa fa-edit"></i> '+
-                                    '</button>'+*/
-                                '</td>'+
-                                '<td>'+val.productiondate+'</td>'+
-                                '<td>'+val.yieldingstation+'</td>'+
-                                '<td>'+val.accumulatedoutput+'</td>'+
-                                '<td>'+val.classification+'</td>'+
-                                '<td>'+val.mod+'</td>'+
-                                '<td>'+val.qty+'</td>'+
-                                '<td>'+val.pono+'</td>'+
-                                '<td>'+val.poqty+'</td>'+
-                                '<td>'+val.device+'</td>'+
-                                '<td>'+val.family+'</td>'+
-                                '<td>'+val.series+'</td>'+
-                            '</tr>';
-                    $('#tbldetails').append(tblrow);
-                });
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log(errorThrown+'|'+textStatus);
-            });
-
-            $.ajax({
-                url: searchDisplaySummaryURL,
-                method: 'get',
-                data:  { 
-                    pono : pono       
-                },      
-            }).done(function(data, textStatus, jqXHR){
-                $.each(data, function(i,val) {
-                console.log(val);
-                var tblrow = '<tr>'+
-                                '<td>'+val.pono+'</td>'+
-                                '<td>'+val.poqty+'</td>'+
-                                '<td>'+val.device+'</td>'+
-                                '<td>'+val.series+'</td>'+
-                                '<td>'+val.family+'</td>'+
-                                '<td>'+val.toutput+'</td>'+
-                                '<td>'+val.treject+'</td>'+
-                                '<td>'+val.twoyield+'</td>'+
-                            '</tr>';
-                    $('#tblsummary').append(tblrow);
-                });
-
-                $('.edit-task').click(function(){
-                    var getvalue = $(this).val().split('|');
-                    var yieldingno = getvalue[0];
-                    var  productiondate = getvalue[1];
-                    var  yieldingstation = getvalue[2];
-                    var  toutput = getvalue[3];
-                    var  classification = getvalue[4];
-                    var  mod = getvalue[5];
-                    var  qty = getvalue[6];
-                    var  pono = getvalue[7];
-                    var  poqty = getvalue[8];
-                    var  device = getvalue[9];
-                    var  family = getvalue[10];
-                    var  series = getvalue[11];
-                    var  Aoutput = getvalue[12];
-                    var  treject = getvalue[13];
-                    var  ywomng = getvalue[14];
-                    var  prodtype = getvalue[15];
-                    $('#hdstatus').val("EDIT");
-                 
-                    $('#yieldingno').val(yieldingno);
-                    $('#productiondate').val(productiondate.substring(0,10));
-                    $('#yieldingstation').select2('val',yieldingstation);
-                    $('#accumulatedoutput').val(Aoutput);
-                    $('#classification').select2('val',classification);
-                    $('#mod').select2('val',mod);
-                    $('#qty').val(qty);
-                    $('#pono').val(pono);
-                    $('#poqty').val(poqty);
-                    $('#device').val(device);
-                    // $('#family').select2('val',family);
-                    // $('#series').select2('val',series);
-                    // $('#prodtype').select2('val',prodtype);
-                    $('#toutput').val(toutput);
-                    $('#treject').val(treject);  
-                    $('#ywomng').val(ywomng);
-
-                    $('input[name=yieldingno]').attr('disabled',true);
-                    $('input[name=pono]').attr('disabled',true);
-                    $('input[name=poqty]').attr('disabled',true);
-                    $('input[name=device]').attr('disabled',true);
-                    $('#family').attr('disabled',false);
-                    $('#series').attr('disabled',false);
-                    $('#prodtype').attr('disabled',false);
-                    $('#classification').attr('disabled',false);
-                    $('#mod').attr('disabled',false);
-                    $('input[name=qty]').attr('disabled',false);
-                    $('#yieldingstation').attr('disabled',false);
-                    $('input[name=accumulatedoutput]').attr('disabled',false);
-                    $('input[name=toutput]').attr('disabled',true);
-                    $('input[name=treject]').attr('disabled',true);
-                });
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log(errorThrown+'|'+textStatus);
-            });    
-        }).fail(function(jqXHR, textStatus, errorThrown){
-            console.log(errorThrown+'|'+textStatus);
-        }); 
-    }
-}
-
-
-function deleteAllcheckeditems(){
-    var tray = [];
-    $(".checkboxes:checked").each(function () {
-        tray.push($(this).val());
-    });
-    var traycount =tray.length;
-
-    $.ajax({
-        url: deleteAllPOURL,
-        method: 'get',
-        data:  { 
-            tray : tray, 
-            traycount : traycount
-        },     
-    }).done( function(data, textStatus, jqXHR) {
-         /* console.log(data);*/
-        window.location.href = "{{ url('/yieldperformance2') }}";   
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown+'|'+textStatus);
-    });
-}
-
-function searchrecord(){
-    var search = $('#yieldingno').val();
-    var myData = {'search':search};
-    
-    $.post(searchYieldURL,
-    { 
-        _token: $('meta[name=csrf-token]').attr('content')
-        , data: myData
-    }).done(function(data, textStatus, jqXHR){
-        console.log(data);
-        $('#pono').val(data[0]['pono']);
-        $('#poqty').val(data[0]['poqty']);
-        // $('#device').val(data[0]['device']);
-        // $('#family').select2('val',data[0]['family']);
-        // $('#series').select2('val',data[0]['series']);
-        $('#classification').select2('val',data[0]['classification']);
-        $('#mod').select2('val',data[0]['mod']);
-        $('#qty').val(data[0]['qty']);
-        $('#productiondate').val(data[0]['productiondate'].substring(0,10));
-        $('#yieldingstation').select2('val',data[0]['yieldingstation']);
-        $('#accumulatedoutput').val(data[0]['accumulatedoutput']);
-        $('#toutput').val(data[0]['toutput']);
-        $('#treject').val(data[0]['treject']);
-        $('#tmng').val(data[0]['tmng']);
-        $('#tpng').val(data[0]['tpng']);
-        $('#ywomng').val(data[0]['ywomng']);
-        $('#twoyield').val(data[0]['twoyield']);
-    }).fail(function(jqXHR, textStatus, errorThrown){
-           console.log(errorThrown+'|'+textStatus);
-    });  
-  
 }
 
 function deletepya(){
-    var tray = [];
-    $(".checkboxesPYA:checked").each(function () {
-        tray.push($(this).val());
-        var hdaccumulatedoutput = $('#pyaaccumulatedoutput'+tray).val();
-      
-        var hdqty = $('#cmqqty'+tray).val();
-        var hdacc = $('#pyaaccumulatedoutput'+tray).val();
-        var temp = $('#pyaproductiondate'+tray).val().split('|');
-        var yieldingno = temp[1];
-   
-        var toutput = $('#toutput').val(); 
-        $('#toutput').val(toutput - hdacc);
-        $('#pya_row_'+tray).remove();
-
-        var traycount = tray.length;
-            $.ajax({
-                url: deletePyaURL,
-                method:'get',
-                data:  { 
-                    tray : tray, 
-                    traycount : traycount,
-                    yieldingno:yieldingno,
-                },
-        }).done( function(data, textStatus, jqXHR) {
-            console.log(data);
-            searchpo();
-            var x = $('#hdyieldingno').val() - 1;
-            var a = $('#hdyieldingno').val();
-            var b = a - 1;
-            if(yieldingno == data){
-                $('#hdyieldingno').val(b);
-                $('#yieldingno').val(b);
-            }
-            if(b == 1){
-                $('#toutput').val("");
-                $('#treject').val("");
-                $('#tmng').val("");
-                $('#tpng').val("");
-                $('#ywomng').val("");
-                $('#twoyield').val("");
-                $('#dppm').val("");
-            }
-
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown+'|'+textStatus);
-        });
+    var id =""
+    $(".check_item_pya:checked").each(function () {
+        id = $(this).val();
+        pya_arr.splice(id,1);
+        makePyaTable(pya_arr);
+        pyafieldcomputation();
+        msg("Yield Performance was successfully remove.","success");
+        clear();
     });
-    
-
-    $('.checkAllitemsPYA:checked').each(function(){
-        $("#tblforpya").find("tr:not(:first)").remove();
-   });
-}
-
-function deletecmq(){
-    var tray = [];
-    $(".checkboxesCMQ:checked").each(function () {
-        tray.push($(this).val());
-        var hdqty = $('#cmqqty'+tray).val();
-        var hdclassification = $('#cmqclassification'+tray).val();
-        var treject = $('#treject').val();
-        var tpng = $('#tpng').val();
-        var tmng = $('#tmng').val();
-        var yieldingno = $('#cmqyieldingno'+tray).val();
-        $('#treject').val(treject - hdqty);
-        if(hdclassification == "Material NG (MNG)"){
-            $('#tmng').val(tmng - hdqty);    
-        }
-        if(hdclassification == "Production NG (PNG)"){
-            $('#tpng').val(tpng - hdqty);   
-        }
-
-        var toutput = $('#toutput').val();
-        var treject = $('#treject').val();
-        var tpng = $('#tpng').val();
-        if($('#tpng').val() == ''){
-            var toaddtp = parseInt(toutput) + tpng;
-            var dev = toutput/toaddtp * 100;
-            var final = dev.toFixed(2);
-            $('#ywomng').val(final);    
-        } else {
-            var toaddtp = parseInt(toutput) + parseInt(tpng);
-            var dev = toutput/toaddtp * 100;
-            var final = dev.toFixed(2);
-            $('#ywomng').val(final);    
-        }
-        if($('#tmng').val() == ''){
-            var toaddtr = parseInt(toutput) + treject;
-            var temp = toutput/toaddtr;
-            var final = temp.toFixed(2);
-            $('#twoyield').val(final);    
-        } else {
-            var toaddtr = parseInt(toutput) + parseInt(treject);
-            var temp = toutput/toaddtr;
-            var final = temp.toFixed(2);
-            $('#twoyield').val(final);    
-        }
-
-        var tempdppm = $('#ywomng').val() * 1000000;
-        var finaldppm = tempdppm.toFixed(2);
-        $('#dppm').val(finaldppm);
-        $('#cmq_row_'+tray).remove();
-
-        var traycount = tray.length;
-            $.ajax({
-                url:deleteCmqURL,
-                method:'get',
-                data:  { 
-                    tray : tray, 
-                    traycount : traycount,
-                    yieldingno : yieldingno
-                },
-        }).done( function(data, textStatus, jqXHR) {
-            console.log(data);
-            searchpo();
-            if(data == 1){
-                var x = $('#hdyieldingno').val() - 1;
-                var a = $('#hdyieldingno').val();
-                var b = a - 1;
-                $('#hdyieldingno').val(b);
-                $('#yieldingno').val(b);
-            }
-
-            if(b == 1){
-                $('#toutput').val("");
-                $('#treject').val("");
-                $('#tmng').val("");
-                $('#tpng').val("");
-                $('#ywomng').val("");
-                $('#twoyield').val("");
-                $('#dppm').val("");
-            }
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown+'|'+textStatus);
-        });
-    });
-
-    $('.checkAllitemsCMQ:checked').each(function(){
-    
-        $('#treject').val("");
-        $('#tmng').val("");
-        $('#tpng').val("");
-        $('#ywomng').val("");
-        $('#twoyield').val("");
-        $('#dppm').val("");
-
-        $("#tblforcmq").find("tr:not(:first)").remove();
-   });
-}
-
-function back(){
-    window.location.href=backURL;    
+    if (id == "") {
+         msg("Please select at least 1 Set.","failed");
+    }
 }
 
 function pyafieldcomputation(){
-    if($('#classification').val() == "Production NG (PNG)"){
-        if($('#tpng').val() == ''){
-            var qty = $('#qty').val();
-            var tpng = $('#tpng').val();
-            var treject =$('#treject').val(); 
-            var sample=parseInt(treject);
-            var sum = sample + parseInt(qty)
-            $('#tpng').val(tpng+parseInt(qty));
-            $('#treject').val();
+ var totalqty =0;
+ var totalClasification ="";
+ var totalOutput =0;
+ var totalPNG = 0;
+ var totalMNG = 0;
+ var treject = 0;
+    $.each(pya_arr, function(i, x) {
+    totalOutput += parseInt(x.accumulatedoutput);
+    totalqty = x.qty;
+    totalClasification = x.classification;
+
+    if(totalClasification == "NDF"){
+        totalqty = x.qty;
+    }
+
+    if(totalClasification == "Production NG (PNG)"){
+        if(totalPNG == 0){
+            var sample = parseInt(treject);
+            var sum = sample + parseInt(totalqty);
+            totalPNG = parseInt(totalPNG)+parseInt(totalqty);
         } else {
-            var qty = $('#qty').val();
-            var tpng = $('#tpng').val();
-            var treject =$('#treject').val();
-            var value=parseInt(treject);
-            var sum = value + parseInt(qty);
-            $('#tpng').val(parseInt(tpng)+parseInt(qty));
-            $('#treject').val();
+            var value = parseInt(treject);
+            var sum = value + parseInt(totalqty);
+            totalPNG = parseInt(totalPNG)+parseInt(totalqty);
         }  
     }
 
-    //computation for Total MNG and Total Reject
-    if($('#classification').val() == "Material NG (MNG)"){
-        if($('#tmng').val() == ''){
-            var qty = $('#qty').val();
-            var tmng = $('#tmng').val();
-            var treject =$('#treject').val(); 
-            $('#tmng').val(tmng+parseInt(qty));
+    if(totalClasification == "Material NG (MNG)"){
+        if(totalMNG  == 0){
+            totalMNG = parseInt(totalMNG)+parseInt(totalqty);
             if($('#tpng').val()){
-                var x = parseInt(treject)+parseInt(qty)
+                var x = parseInt(treject)+parseInt(totalqty)
             } else {
-                var x =treject+parseInt(qty);
+                var x =treject+parseInt(totalqty);
             }
-            $('#treject').val(x);
+              treject = x;
         } else {
-            var qty = $('#qty').val();
-            var tmng = $('#tmng').val();
-            var treject =$('#treject').val();
-            $('#tmng').val(parseInt(tmng)+parseInt(qty));
-            $('#treject').val(parseInt(treject)+parseInt(qty));    
+            totalMNG = parseInt(totalMNG)+parseInt(totalqty);
+            treject = parseInt(treject)+parseInt(totalqty);    
         }
 
     } else {
-        if($('#treject').val() == ''){
-            var treject =$('#treject').val();
-            var qty = $('#qty').val();
-            $('#treject').val(treject + parseInt(qty));      
+        if(treject == 0){
+             treject = treject + parseInt(totalqty);      
         } else{
-            var treject =$('#treject').val();
-            var qty = $('#qty').val();
-            $('#treject').val(parseInt(treject) + parseInt(qty));       
+             treject = parseInt(treject) + parseInt(totalqty);       
         }
     }
 
-    //computation for DPPM,Yield without MNG and Total % Yield----------------
-    var toutput = $('#toutput').val();
-    var treject = $('#treject').val();
-    var tmng = $('#tmng').val();
-
-    if($('#tmng').val() == ""){
-        var toaddtp = parseInt(toutput) + tmng;
-        var toaddtr = parseInt(toutput) + treject;
+    if(totalMNG == "0"){
+        var toaddtp = parseInt(totalOutput) + totalMNG;
+        var toaddtr = parseInt(totalOutput) + treject;
         var dev = toaddtp/toaddtr * 100;
         var final = dev.toFixed(2);
         $('#ywomng').val(final);
     } else {
 
-        var toaddtp = parseInt(toutput) + parseInt(tmng);
-        var toaddtr = parseInt(toutput) + parseInt(treject);
+        var toaddtp = parseInt(totalOutput) + parseInt(totalMNG);
+        var toaddtr = parseInt(totalOutput) + parseInt(treject);
         var dev = toaddtp/toaddtr * 100;
         var final = dev.toFixed(2);
         $('#ywomng').val(final);
     }
 
-    if($('#toutput').val() == "0"){
+    if(totalOutput == "0"){
         $('#ywomng').val("0");
     } 
 
-    if($('#tmng').val() == ''){
-        var toaddtr = parseInt(toutput) + treject;
-        var temp = toutput/toaddtr * 100;
+    if(totalMNG == 0){
+        var toaddtr = parseInt(totalOutput) + treject;
+        var temp = totalOutput/toaddtr * 100;
         var final = temp.toFixed(2);
         $('#twoyield').val(final);    
     } else {
-        var toaddtr = parseInt(toutput) + parseInt(treject);
-        var temp = toutput/toaddtr * 100;
+        var toaddtr = parseInt(totalOutput) + parseInt(treject);
+        var temp = totalOutput/toaddtr * 100;
         var final = temp.toFixed(2);
         $('#twoyield').val(final);    
     }
 
-    if($('#tpng').val() == ''){    
-        var toutput = $('#toutput').val();
-        var treject = $('#treject').val();
-        var tpng = $('#tpng').val();
-        var toutputandtr = parseInt(toutput) + parseInt(treject);
-        var tempdppm = tpng/toutputandtr; 
+    if(totalMNG == 0){    
+        var toutputandtr = parseInt(totalOutput) + parseInt(treject);
+        var tempdppm = totalPNG/toutputandtr; 
         $('#dppm').val((tempdppm * 1000000).toFixed(2));    
     }else{
-        var toutput = $('#toutput').val();
-        var treject = $('#treject').val();
-        var tpng = $('#tpng').val();
-        var toutputandtr = parseInt(toutput) + parseInt(treject);
-        var tempdppm = tpng/toutputandtr; 
+        var toutputandtr = parseInt(totalOutput) + parseInt(treject);
+        var tempdppm = totalPNG/toutputandtr; 
         $('#dppm').val((tempdppm * 1000000).toFixed(2));    
     }
+
+    $('#toutput').val(totalOutput);
+    $('#treject').val(treject);
+    $('#tpng').val(totalPNG);
+    $('#tmng').val(totalMNG);
+
+    });
 }
 
-
-
-//CER
 function GETPoDetails(){
     pono = $('#pono').val();
     $.ajax({
@@ -1763,11 +516,7 @@ function GETPoDetails(){
                 $('#prodtype').val(details.prodtype);
               
             }
-
             var yld = returnData.yield_data[0];
-
-            console.log(yld);
-
             if (returnData.yield_data.length > 0) {
                 $('#id').val(yld.id);
                 $('#yieldingno').val(yld.yieldingno);
@@ -1777,25 +526,7 @@ function GETPoDetails(){
                 $('#family').val(yld.family);
                 $('#series').val(yld.series);
                 $('#prodtype').val(yld.prodtype);
-
-                console.log(yld.productiondate);
-
-                $('#productiondate').val(yld.productiondate);
-                $('#yieldingstation').val(yld.yieldingstation);
-                $('#accumulatedoutput').val(yld.accumulatedoutput);
-                $('#classification').val(yld.classification);
-                $('#mod').val(yld.mod);
-                $('#qty').val(yld.qty);
-                $('#toutput').val(yld.toutput);
-                $('#treject').val(yld.treject);
-                $('#tmng').val(yld.tmng);
-                $('#tpng').val(yld.tpng);
-                $('#ywomng').val(yld.ywomng);
-                $('#twoyield').val(yld.twoyield);
-                // $('#dppm').val();
-
                 pya_arr = [];
-                cmq_arr = [];
 
                 $.each(returnData.pya, function(i, x) {
                     pya_arr.push({
@@ -1803,48 +534,38 @@ function GETPoDetails(){
                         yieldingno: yld.yieldingno,
                         productiondate: x.productiondate,
                         yieldingstation: x.yieldingstation,
-                        accumulatedoutput: x.accumulatedoutput
-                    });
-                });
-
-                $.each(returnData.cmq, function(i, x) {
-                    cmq_arr.push({
-                        id: x.id,
+                        accumulatedoutput: x.accumulatedoutput,
                         classification: x.classification,
                         mod: x.mod,
                         qty: x.qty
                     });
                 });
-
                 makePyaTable(pya_arr);
-                makeCmqTable(cmq_arr);
+                pyafieldcomputation();
+            }
 
+            if($('#poqty').val() != ''){
+                $('#btnloadpya').removeClass("disabled");
+                var d = new Date();
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;  
+                $('input[name=productiondate]').val(date);
+                $('input[name=productiondate]').attr('disabled',false);
+                $('#family').attr('disabled',false);
+                $('#series').attr('disabled',false);
+                $('#prodtype').attr('disabled',false);
+                $('#classification').attr('disabled',false);
+                $('#mod').attr('disabled',false);
+                $('input[name=qty]').attr('disabled',false);
+                $('select[name=yieldingstation]').attr('disabled',false);  
+                $('input[name=accumulatedoutput]').attr('disabled',false);  
+                $('#pono').attr('disabled',true);
+            }else{
+                msg("Wrong Input of PO Number","failed");
             }
        }
    });
-}
-
-function DisabledALL(){
-  
-    $('input[name=poqty]').attr('disabled',true);
-    $('input[name=device]').attr('disabled',true);
-    $('input[name=treject]').attr('disabled',true);
-    $('input[name=toutput]').attr('disabled',true);
-    $('#family').attr('disabled',true);
-    $('#series').attr('disabled',true);
-    $('#prodtype').attr('disabled',true);
-    $('#classification').attr('disabled',true);
-    $('#mod').attr('disabled',true);
-    $('input[name=qty]').attr('disabled',true);
-    $('input[name=productiondate]').attr('disabled',true);
-    $('#yieldingstation').attr('disabled',true);
-    $('input[name=accumulatedoutput]').attr('disabled',true);
-    $('#btnremove_detail').addClass("disabled");
-    $('.checkAllitemsPYA').attr('disabled',false);
-    $('input[name=poqty]').val("");
-    $('input[name=device]').val("");
-
-    $('#hdstatus').val("");
 }
 
 function getFamilyList(){
@@ -1881,4 +602,81 @@ function getProductList(){
                }
           }
    });
+}
+
+function DisabledALL(){
+    $('input[name=pono]').attr('disabled',true);
+    $('input[name=poqty]').attr('disabled',true);
+    $('input[name=device]').attr('disabled',true);
+    $('input[name=treject]').attr('disabled',true);
+    $('input[name=toutput]').attr('disabled',true);
+    $('#family').attr('disabled',true);
+    $('#series').attr('disabled',true);
+    $('#prodtype').attr('disabled',true);
+    $('#classification').attr('disabled',true);
+    $('#mod').attr('disabled',true);
+    $('input[name=qty]').attr('disabled',true);
+    $('input[name=productiondate]').attr('disabled',true)
+    $('#yieldingno').val("");
+    $('#hdstatus').val("");
+    $('#yieldingstation').attr('disabled',true);
+    $('input[name=accumulatedoutput]').attr('disabled',true);
+    $('#btnremove_detail').addClass("disabled");
+    $('.checkAllitemsPYA').attr('disabled',false);
+    $('input[name=yieldingno]').attr('disabled',false);
+}
+
+function DisabledButton(){
+    $('#btnsave').addClass("disabled");
+    $('#btnload').addClass("disabled");
+    $('#btnloadpya').addClass("disabled");
+    $('#btndiscard').addClass("disabled");
+    $('#btnadd').removeClass("disabled");
+}
+
+function ClearAll(){
+        $('#row').val("");
+        $('#id').val("");
+        $('input[name=yieldingno]').val("");
+        $('input[name=poqty]').val("");
+        $('input[name=device]').val("");
+        $('#classification').val("");
+        $('#mod').val("");
+        $('input[name=qty]').val("");
+        $('input[name=productiondate]').val("");
+        $('input[name=accumulatedoutput]').val("");
+        $('#yieldingstation').val("");
+        $('input[name=toutput]').val(""); 
+        $('input[name=treject]').val("");
+        $('input[name=tmng]').val("");
+        $('input[name=tpng]').val("");
+        $('input[name=ywomng]').val("");
+        $('input[name=twoyield]').val(""); 
+        $('#dppm').val("");
+        $('#hdstatus').val("");          
+        $('#family').val("");
+        $('#series').val("");
+        $('#prodtype').val("");
+        $('#tbldetails').html("");
+        $('#tblsummary').html("");
+        $('#tbody1').html("");
+        $('#tbody2').html("");
+        $('#btnloadpya').removeClass('bg-blue');
+        $('#btnloadpya').addClass('bg-green');
+        $('#btnloadpya').html('<i class="fa fa-plus"></i>');
+}
+function clear(){
+    $('#row').val("");
+    $('#classification').val("");
+    $('#mod').val("");
+    $('#yieldingstation').val("");
+    $('input[name=qty]').val("");
+    $('input[name=productiondate]').val("");
+    $('input[name=accumulatedoutput]').val("");
+    $('#btnloadpya').removeClass('bg-blue');
+    $('#btnloadpya').addClass('bg-green');
+    $('#btnloadpya').html('<i class="fa fa-plus"></i>');
+}
+function back(){
+    window.location.href=backURL;    
 }

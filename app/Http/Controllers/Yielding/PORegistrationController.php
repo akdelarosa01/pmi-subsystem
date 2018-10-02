@@ -39,56 +39,6 @@ class PORegistrationController extends Controller
             return redirect('/');
         }
     }
-
-    // public function index()
-    // {
-    //     if(!$this->com->getAccessRights(Config::get('constants.MODULE_CODE_POREG'), $userProgramAccess))
-    //     {
-    //         return redirect('/home');
-    //     }
-    //     else
-    //     {
-    //         return view('yielding.deviceregistration',['userProgramAccess' => $userProgramAccess]);
-    //     }
-    // }
-
-    // public function GetYieldPerformanceMain(){
-    //     $markup = DB::connection($this->mysql)->table('tbl_yielding_performance')
-    //                 ->orderBy('id','DESC')
-    //                 ->select([
-    //                     'id',
-    //                     'pono',
-    //                     'poqty',
-    //                     'device',
-    //                     'family',
-    //                     'series',
-    //                     'toutput',
-    //                     'treject',
-    //                     'accumulatedoutput',
-    //                 ]);
-    //     return Datatables::of($markup)
-    //                     ->editColumn('id', function($data) {
-    //                         return $data->id;
-    //                     })
-    //                     ->addColumn('action', function($data) {
-    //                         return '<button type="button" name="edit-mainEdit" class="btn btn-sm btn-primary edit-mainEdit" 
-    //                         data-id="'.$data->id.'" 
-    //                         data-pono="'.$data->pono.'" 
-    //                         data-poqty="'.$data->poqty.'"
-    //                         data-device="'.$data->device.'"
-    //                         data-family="'.$data->family.'"
-    //                         data-series="'.$data->series.'"
-    //                         data-toutput="'.$data->toutput.'"
-    //                         data-treject="'.$data->treject.'"
-    //                         data-accumulatedoutput="'.$data->accumulatedoutput.'">
-    //                                      <i class="fa fa-edit"></i> 
-    //                                 </button>';
-    //                     })
-    //                     ->make(true);
-    
-    // }
-
-    
     public function getPORegistration(Request $request)
     {
          if(!$this->com->getAccessRights(Config::get('constants.MODULE_CODE_POREG'), $userProgramAccess))
@@ -324,18 +274,14 @@ class PORegistrationController extends Controller
     }
 
 
-    private function displayporeg(Request $request)
-    {
-        if(!$this->com->getAccessRights(Config::get('constants.MODULE_CODE_POREG'), $userProgramAccess))
-        {
-            return redirect('/home');
-        }
-        else
-        { 
-
-        $table = DB::connection($this->mysql)->table('tbl_poregistration')->orderBy('id','DESC')->get();
-        return $table;
-        }
+    public function displayporeg(){
+        $po_reg = DB::connection($this->mysql)->table('tbl_poregistration')->orderBy('id','DESC')->get();
+        $data = [
+                'msg' => 'Successfully saved.',
+                'status' => 'success',
+                'po_reg' => $po_reg
+        ];
+        return response()->json($data);
     }
 
     public function getporeg()
@@ -372,8 +318,17 @@ class PORegistrationController extends Controller
                         ->make(true);
     }
 
-    //Add and Update PO Registration------------------------
     public function poregistration(Request $request){
+
+         $this->validate($request, [
+            'pono' => 'required',
+            'device_name' => 'required',
+            'poqty' => 'required',
+            'family' => 'required',
+            'series' => 'required',
+            'prod_type' => 'required'
+        ]);
+
         $status = $request->status;
         $id = $request->id;
 
@@ -389,12 +344,12 @@ class PORegistrationController extends Controller
             $insert = DB::connection($this->mysql)->table('tbl_poregistration')
                         ->insert([
                             'pono'=>$request->pono,
-                            'device_code'=>$request->podeviceCode,
-                            'device_name'=>$request->podevice,
-                            'poqty'=>$request->poquantity,
+                            'device_code'=>$request->device_code,
+                            'device_name'=>$request->device_name,
+                            'poqty'=>$request->poqty,
                             'family'=>$request->family,
                             'series'=>$request->series,
-                            'prod_type'=>$request->prodtype,
+                            'prod_type'=>$request->prod_type,
                             'create_user' => Auth::user()->user_id,
                             'created_at' => date('Y-m-d H:i:s'),
                             'update_user' => Auth::user()->user_id,
@@ -408,12 +363,12 @@ class PORegistrationController extends Controller
                         ->where('id','=',$request->id)
                         ->update(array(
                             'pono'=>$request->pono,
-                            'device_code'=>$request->podeviceCode,
-                            'device_name'=>$request->podevice,
-                            'poqty'=>$request->poquantity,
+                            'device_code'=>$request->device_code,
+                            'device_name'=>$request->device_name,
+                            'poqty'=>$request->poqty,
                             'family'=>$request->family,
                             'series'=>$request->series,
-                            'prod_type'=>$request->prodtype,
+                            'prod_type'=>$request->prod_type,
                             'update_user' => Auth::user()->user_id,
                             'updated_at' => date('Y-m-d H:i:s')
                         ));
@@ -429,22 +384,20 @@ class PORegistrationController extends Controller
         }
 
         
-        return response()->json($data);
-   
-       
+        return response()->json($data);  
     }
     //Edit records for tbl_poregistration------------------
     public function editporeg(Request $request)
     {    
-        $search = $request->editsearch;
-        $ok =DB::connection($this->mysql)->table('tbl_poregistration')
+        $data =DB::connection($this->mysql)->table('tbl_poregistration')
         ->where('id', $search)
         ->get();
-        return $ok;
+        return response()->json($data);
     }
     
     //Delete records for tbl_poregistration------------------
     public function deleteporeg(Request $request){  
+        
         $tray = $request->tray;
         $traycount = $request->traycount;  
       /*  return $tray;  */
@@ -1053,5 +1006,6 @@ class PORegistrationController extends Controller
                     ->table('tbl_mdropdowns')->where('category', '=', 25)->get();
         return $dropdownlist;
     }
+
 
 }

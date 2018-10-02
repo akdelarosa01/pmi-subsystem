@@ -67,7 +67,7 @@ class AddnewYieldingPerformanceController extends Controller
                 ->get();
 
             $datenow = date('Y/m/d');
-            $count = DB::connection($this->mysql)->table("tbl_yielding_pya")->select('yieldingno')->orderBy('id','desc')->first();
+            $count = DB::connection($this->mysql)->table("tbl_yielding_performance")->select('yieldingno')->orderBy('yieldingno','desc')->first();
 
             $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
             $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
@@ -205,88 +205,15 @@ class AddnewYieldingPerformanceController extends Controller
 
     public function addYieldperformance(Request $req)
     {
-        $status = $req->status;
-        $classification = $req->classification;
-        $x = 0;
+        if(isset($req->newyieldingstation)){
 
-        $data = [
-            'msg' => 'Saving Failed.',
-            'status' => 'failed'
-
-        ];
-
-        if ($req->id !== '' || !empty($req->id)) {
-            $updated = DB::connection($this->mysql)->table("tbl_yielding_performance")
-                        ->where('id',$req->id)
-                        ->update([
-                            'yieldingno' => $req->yieldingno,
-                            'pono' => $req->pono,
-                            'poqty' => $req->poqty,
-                            'device' => $req->device,
-                            'family' => $req->family,
-                            'series' => $req->series,
-                            'prodtype' => $req->prodtype,
-                            'toutput' => $req->toutput,
-                            'treject' => $req->treject,
-                            'tmng' => $req->tmng,
-                            'tpng' => $req->tpng,
-                            'ywomng' => $req->ywomng,
-                            'twoyield' => $req->twoyield,
-                            'updated_at' => date('Y-m-d h:i:s')
-                        ]);
-
-            DB::connection($this->mysql)->table('tbl_yielding_cmq')
-                ->where('yieldingno',$req->yieldingno)
-                ->delete();
-            foreach ($req->newmod as $key => $rec) {
-               /* if($dataField['classification']){
-                    $qty = $dataField['newqty'][$key];
-                    $classification = $dataField['newclassification'][$key];
-                    $mod = $rec;
-                }else{
-                    $qty = "NDF";
-                    $classification = "NDF";
-                    $mod = "NDF";
-                }*/
-                DB::connection($this->mysql)->table('tbl_yielding_cmq')
-                    ->insert([
-                        'yieldingno' => $req->yieldingno,
-                        'pono' => $req->pono,
-                        'productiondate' => $req->productiondate,
-                        'mod' => $rec,
-                        'classification' =>$req->newclassification[$key],
-                        'qty' => $req->newqty[$key],
-                        'updated_at' => date('Y-m-d h:i:s')
-                    ]);
-            }
-
-            DB::connection($this->mysql)->table('tbl_yielding_pya')
-                ->where('yieldingno',$req->yieldingno)
-                ->delete();
-            foreach ($req->newyieldingstation as $key => $rec) {
-                DB::connection($this->mysql)->table('tbl_yielding_pya')
-                            ->insert([
-                                'yieldingno' => $req->yieldingno,
-                                'pono' => $req->pono,
-                                'productiondate' => $req->productiondate,
-                                'yieldingstation' => $rec,
-                                'accumulatedoutput' => $req->accumulatedoutput,
-                                'updated_at' => date('Y-m-d h:i:s')
-                            ]);
-            }
-
-            if ($updated) {
-                $data = [
-                    'msg' => 'Successfully saved.',
-                    'status' => 'success'
-
-                ];
-            }
-
-            
-        } else {
-            $inserted = DB::connection($this->mysql)->table("tbl_yielding_performance")
-                            ->insert([
+            $status = $req->status;
+            $classification = $req->classification;
+            $x = 0;
+            if ($req->id !== '' || !empty($req->id)) {
+                $updated = DB::connection($this->mysql)->table("tbl_yielding_performance")
+                            ->where('id',$req->id)
+                            ->update([
                                 'yieldingno' => $req->yieldingno,
                                 'pono' => $req->pono,
                                 'poqty' => $req->poqty,
@@ -300,62 +227,79 @@ class AddnewYieldingPerformanceController extends Controller
                                 'tpng' => $req->tpng,
                                 'ywomng' => $req->ywomng,
                                 'twoyield' => $req->twoyield,
-                                'created_at' => date('Y-m-d h:i:s'),
                                 'updated_at' => date('Y-m-d h:i:s')
                             ]);
 
-            foreach ($req->newmod as $key => $rec) {
-               /* if($dataField['classification']){
-                    $qty = $dataField['newqty'][$key];
-                    $classification = $dataField['newclassification'][$key];
-                    $mod = $rec;
-                }else{
-                    $qty = "NDF";
-                    $classification = "NDF";
-                    $mod = "NDF";
-                }*/
-                DB::connection($this->mysql)->table('tbl_yielding_cmq')
-                    ->insert([
-                        'yieldingno' => $req->yieldingno,
-                        'pono' => $req->pono,
-                        'productiondate' => $req->productiondate,
-                        'mod' => $rec,
-                        'classification' =>$req->newclassification[$key],
-                        'qty' => $req->newqty[$key],
-                        'created_at' => date('Y-m-d h:i:s'),
-                        'updated_at' => date('Y-m-d h:i:s')
-                    ]);
-            }
-
-            foreach ($req->newyieldingstation as $key => $rec) {
                 DB::connection($this->mysql)->table('tbl_yielding_pya')
-                            ->insert([
-                                'yieldingno' => $req->yieldingno,
-                                'pono' => $req->pono,
-                                'productiondate' => $req->productiondate,
-                                'yieldingstation' => $rec,
-                                'accumulatedoutput' => $req->accumulatedoutput,
-                                'created_at' => date('Y-m-d h:i:s'),
-                                'updated_at' => date('Y-m-d h:i:s')
-                            ]);
-            }
+                    ->where('yieldingno',$req->yieldingno)
+                    ->delete();
+                foreach ($req->newyieldingstation as $key => $rec) {
+                    DB::connection($this->mysql)->table('tbl_yielding_pya')
+                                ->insert([
+                                    'yieldingno' => $req->yieldingno,
+                                    'pono' => $req->pono,
+                                    'productiondate' =>$req->newproductiondate[$key],
+                                    'yieldingstation' => $rec,
+                                    'accumulatedoutput' => $req->newaccumulatedoutput[$key],
+                                    'mod' => $req->newmod[$key],
+                                    'classification' =>$req->newclassification[$key],
+                                    'qty' => $req->newqty[$key],
+                                    'updated_at' => date('Y-m-d h:i:s')
+                                ]);
+                }
+            }else {
+                $inserted = DB::connection($this->mysql)->table("tbl_yielding_performance")
+                                ->insert([
+                                    'yieldingno' => $req->yieldingno,
+                                    'pono' => $req->pono,
+                                    'poqty' => $req->poqty,
+                                    'device' => $req->device,
+                                    'family' => $req->family,
+                                    'series' => $req->series,
+                                    'prodtype' => $req->prodtype,
+                                    'toutput' => $req->toutput,
+                                    'treject' => $req->treject,
+                                    'tmng' => $req->tmng,
+                                    'tpng' => $req->tpng,
+                                    'ywomng' => $req->ywomng,
+                                    'twoyield' => $req->twoyield,
+                                    'created_at' => date('Y-m-d h:i:s'),
+                                    'updated_at' => date('Y-m-d h:i:s')
+                                ]);
+                foreach ($req->newmod as $key => $rec) {
+                    DB::connection($this->mysql)->table('tbl_yielding_cmq')
+                        ->insert([
+                            'yieldingno' => $req->yieldingno,
+                            'pono' => $req->pono,
+                            'productiondate' => $req->productiondate,
+                            'mod' => $rec,
+                            'classification' =>$req->newclassification[$key],
+                            'qty' => $req->newqty[$key],
+                            'created_at' => date('Y-m-d h:i:s'),
+                            'updated_at' => date('Y-m-d h:i:s')
+                        ]);
+                }
+                foreach ($req->newyieldingstation as $key => $rec) {
+                    DB::connection($this->mysql)->table('tbl_yielding_pya')
+                                ->insert([
+                                    'yieldingno' => $req->yieldingno,
+                                    'pono' => $req->pono,
+                                    'productiondate' =>$req->newproductiondate[$key],
+                                    'yieldingstation' => $rec,
+                                    'accumulatedoutput' => $req->newaccumulatedoutput[$key],
+                                    'mod' => $req->newmod[$key],
+                                    'classification' =>$req->newclassification[$key],
+                                    'qty' => $req->newqty[$key],
+                                    'created_at' => date('Y-m-d h:i:s'),
+                                    'updated_at' => date('Y-m-d h:i:s')
+                                ]);
+                }
+                    
 
-            if ($inserted) {
-                $data = [
-                    'msg' => 'Successfully saved.',
-                    'status' => 'success'
-                ];
-            } else {
-                $data = [
-                    'msg' => 'Not saved.',
-                    'status' => 'failed'
-                ];
             }
-
-            
+            return response()->json(['msg' => 'Successfully saved.','status' => 'success']);
         }
-
-        return response()->json($data);
+         return response()->json( ['msg' => "Insert some data on the table.",'status' => 'failed']);
     } 
 
     public function searchPO(Request $request)
@@ -651,8 +595,7 @@ class AddnewYieldingPerformanceController extends Controller
         } else {
             $pya = DB::connection($this->mysql)->table('tbl_yielding_pya')
                         ->where('pono','=',$req->po)
-                        ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput')
-                        ->groupBy('yieldingno')
+                        ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput','classification','mod','qty')
                         ->orderBY('productiondate','DESC')
                         ->get();
 

@@ -51,6 +51,9 @@ PO Registration | Pricon Microelectronics, Inc.
                                     <div class="pull-right">
                                         {{-- <form class="" action="{{ url('/updatedevice') }}" method="post" id="frm">
                                                         {{ csrf_field() }} --}}
+                                           <button type="button" id="add" class="btn btn-sm green input-sm"  {{$state}}> 
+                                                <i class="fa fa-plus"></i> ADD  PO DETAILS
+                                           </button>
                                            <button type="button" id="update" class="btn btn-sm blue input-sm"  {{$state}}> 
                                                 <i class="fa fa-star"></i> UPDATE DEVICE FROM YPICS
                                             </button>
@@ -65,9 +68,6 @@ PO Registration | Pricon Microelectronics, Inc.
                                         <table class="table table-bordered table-striped" id="tbl_device" style="font-size:10px">
                                             <thead>
                                                 <tr>
-                                                    <td class="table-checkbox">
-                                                        <input type="checkbox" id="chk_all" name="chk_all" class="group-checkable"/>
-                                                    </td>
                                                     <td>PO NUmber</td>
                                                     <td>Device Code</td>
                                                     <td>Device Name</td>
@@ -114,7 +114,8 @@ PO Registration | Pricon Microelectronics, Inc.
     var addpodata = "{{ url('/add-poregistration') }}";
     var loadypicsdevice = "{{url('/updatedevice')}}";
     var getPOregistration = "{{ url('/get-poregistration')}}";
-
+    var displayporeg = "{{ url('/displayporeg')}}";
+    var deleteporeg = "{{ url('/deleteporeg')}}";
 </script>
 <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
 <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/yielding_poreg.js') }}" type="text/javascript"></script>

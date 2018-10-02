@@ -13,13 +13,13 @@
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">From</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" name="ysf-datefrom" id="ysf-datefrom">
+                                                  <input type="text" class="form-control input-sm date-picker" name="ysf-datefrom" id="ysf-datefrom">
                                              </div>     
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">To</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" name="ysf-dateto" id="ysf-dateto">
+                                                  <input type="text" class="form-control input-sm date-picker" name="ysf-dateto" id="ysf-dateto">
                                              </div>
                                         </div>
                                         <hr>

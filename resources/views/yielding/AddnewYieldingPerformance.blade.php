@@ -43,22 +43,14 @@
                         <form class="form-horizontal">
                             {!! csrf_field() !!}
                             <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3">Control No</label>
-                                    <div class="col-sm-6">
-                                        <input class="form-control input-sm" size="16" type="hidden" value="<?php if(isset($count)){
-                                                echo $count->yieldingno + 1;
-                                            } else {
-                                                echo $count + 1;
-                                            } ?>" name="hdyieldingno" id="hdyieldingno" />
-                                        <input placeholder="Search by Control#/PO#" class="form-control input-sm" size="16" type="text"  name="yieldingno" id="yieldingno" />  
-                                    </div>   
-                                </div>
+                                <input type="hidden"  value="<?php if(isset($count)){ echo $count->yieldingno + 1; } else {echo $count + 1;} ?>" name="hdyieldingno" id="hdyieldingno" />
+                                <input type="hidden"  name="yieldingno" id="yieldingno" />  
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">PO No.</label>
                                     <div class="col-sm-6">
                                         <input type="hidden"  id="id" name="id"/>
+                                        <input type="hidden"  id="row" name="row"/>
                                         <input type="text" value="@foreach($msrecords as $msrec){{$msrec->PO}}@endforeach" class="form-control input-sm" id="pono" name="pono"/>
                                         <div id="er1"></div>
 
@@ -72,18 +64,17 @@
 
                                  <div class="form-group">
                                     <label class="control-label col-sm-3">PO Qty</label>
-                                    <div class="col-sm-6">
-                                    {{--     <input class="form-control input-sm" size="16" type="text" name="poqty" value="@foreach($msrecords as $msrec){{$msrec->POqty}} @endforeach" id="poqty"  --}}
-                                    <input class="form-control input-sm" size="16" type="text" name="poqty" id="poqty" 
+                                    <div class="col-sm-6">                                    
+                                        <input class="form-control input-sm" size="16" type="text" name="poqty" id="poqty" 
                                     disabled="disabled"/> 
+                                    <input class="form-control input-sm" size="16" type="hidden" name="hdpoqty" id="hdpoqty"/> 
                                         <div id="error1"></div>  
                                     </div>
                                 </div> 
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Device</label>
-                                    <div class="col-sm-6">
-                                       {{--  <input type="text" class="form-control input-sm" id="device" name="device" value="@foreach($msrecords as $msrec){{$msrec->devicename}}@endforeach" disabled="disabled"/> --}}
+                                    <div class="col-sm-6">                                        
                                         <input type="text" class="form-control input-sm" id="device" name="device" disabled="disabled"/>
                                         <div id="error2"></div>   
                                     </div>
@@ -133,7 +124,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Production Date</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm date-picker" id="productiondate" name="productiondate"/>
+                                        <input type="date" class="form-control input-sm" id="productiondate" name="productiondate"/>
                                     </div>
                                       
                                 </div>
@@ -157,12 +148,7 @@
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control input-sm" id="accumulatedoutput" name="accumulatedoutput" />
                                         <div id="er7"></div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button type="button" onclick="javascript:addpya();" name="search-task"  class="btn btn-circle input-sm green load-task"  id="btnloadpya">
-                                        <i class="fa fa-plus"></i> 
-                                        </button>
-                                    </div>     
+                                    </div> 
                                 </div>
 
                                 <div class="form-group">
@@ -195,12 +181,12 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Qty</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="qty" name="qty" />
+                                        <input type="number" class="form-control input-sm" id="qty" name="qty" />
                                         <div id="er10"></div>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="button" onclick="javascript:addcmq();" name="search-task" class="btn btn-circle input-sm green load-task" id="btnloadcmq">
-                                            <i class="fa fa-plus"></i> 
+                                        <button type="button" onclick="javascript:addpya();" name="search-task"  class="btn btn-circle input-sm green load-task"  id="btnloadpya">
+                                        <i class="fa fa-plus"></i> 
                                         </button>
                                     </div>       
                                  </div>
@@ -276,67 +262,34 @@
                         <button type="button" style="font-size:12px;" class="btn green input-sm" id="btnsave">
                            <i class="fa fa-save"></i> Save
                         </button>
-                        <button type="button" style="font-size:12px;" class="btn blue-steel input-sm" id="btnsearch" onclick="javascript:searchrecord();">
-                           <i class="fa fa-search"></i> Search
-                        </button>
                     </div>
                 </div>
 
                 <hr>
-                                              
-                <div class="row">
-                    <div class="col-sm-5 col-sm-offset-1">
-                        <label class="control-label col-sm-12">
-                            <h5>Table for (Production Date,Yielding Station and Accumulated Data)</h5>
-                        </label>
-                    </div>
-                    <div class="col-sm-5">
-                        <label class="control-label col-sm-12">
-                            <h5>Table for (Classification,Mode of Defect/s and Quantity)</h5>
-                        </label>
-                    </div>
-                </div>
 
                 <div class="row">
-                    <div class="col-sm-5 col-sm-offset-1">
-                        {{-- <div class="scroller" style="height: 200px" id="tblforpya"> --}}
+                        <div class="col-sm-12" > 
                             <table id="tbl_pya" class="table table-striped table-bordered table-hover"style="font-size:10px">
                                 <thead id="thead1">
                                     <tr>
                                         <td class="table-checkbox" style="width: 5%">
                                             <input type="checkbox" class="check_all_pya"/>
                                         </td>
+                                        <td style="width: 5%">
+                                        </td>
                                         <td>Production Date</td>
                                         <td>Yielding Station</td>
                                         <td>Accumulated Output</td>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbl_pya_body"></tbody>
-                            </table>
-                        {{-- </div> --}}
-                        <button style="margin-top: 20px;" type="button" onclick="javascript:deletepya();" name="delete-taskPYA" class="btn btn-sm btn-danger delete-taskPYA" id="delete-taskPYA">Delete
-                             <i class="fa fa-trash"></i> 
-                        
-                        </button>
-                    </div>
-                    <div class="col-sm-5">
-                        {{-- <div class="scroller" style="height: 200px" id="tblforcmq"> --}}
-                            <table id="tbl_cmq" class="table table-striped table-bordered table-hover" style="font-size:10px">
-                                <thead id="thead2">
-                                    <tr>
-                                        <td class="table-checkbox" style="width: 5%">
-                                            <input type="checkbox" class="check_all_cmq"/>
-                                        </td>
                                         <td>Classification</td>
                                         <td>Mode of Defects</td>
                                         <td>Quantity</td>
                                     </tr>
                                 </thead>
-                                <tbody id="tbl_cmq_body"></tbody>
+                                <tbody id="tbl_pya_body"></tbody>
                             </table>
-                        {{-- </div> --}}
-                        <button style="margin-top:20px;" type="button" onclick="javascript:deletecmq();" name="delete-taskCMQ" class="btn btn-sm btn-danger delete-taskCMQ" id="delete-taskCMQ">Delete
-                            <i class="fa fa-trash"></i> 
+                       
+                        <button style="margin-top: 20px;" type="button" onclick="javascript:deletepya();" name="delete-taskPYA" class="btn btn-sm btn-danger delete-taskPYA" id="delete-taskPYA">Delete
+                             <i class="fa fa-trash"></i> 
                         </button>
                     </div>
                 </div>

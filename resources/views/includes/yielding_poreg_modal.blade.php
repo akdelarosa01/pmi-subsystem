@@ -69,7 +69,7 @@
           <div class="modal-dialog gray-gallery modal-xl">
                <div class="modal-content ">
                     <div class="modal-header">
-                         <h4 class="poreg_modal-title"> Update PO Details</h4>
+                         <h4 class="poreg_modal-title"> PO Details</h4>
                     </div>
                     <div class="modal-body">
                          <div class="row">
@@ -80,31 +80,31 @@
                                              <label class="control-label col-sm-3">PO Number</label>
 
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="pono" name="pono" maxlength="17">
-                                                  <div id="er_pono"></div>
+                                                  <input type="text" class="form-control input-sm validate" id="pono" name="pono" maxlength="17">
+                                                  <div id="pono_feedback"></div>
                                              </div>     
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Device Code</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="podeviceCode" name="podeviceCode" maxlength="45" >
-                                                  <div id="er_podeviceCode"></div>
+                                                  <input type="text" class="form-control input-sm validate" id="device_code" name="device_code" maxlength="45" >
+                                                  <div id="device_code_feedback"></div>
                                              </div>
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Device Name</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="podevice" name="podevice" maxlength="40" >
-                                                  <div id="er_podevice"></div>
+                                                  <input type="text" class="form-control input-sm validate" id="device_name" name="device_name" maxlength="40" >
+                                                  <div id="device_name_feedback"></div>
                                              </div>
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">PO Quantity</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" id="poquantity" name="poquantity" maxlength="40" >
+                                                  <input type="text" class="form-control input-sm validate" id="poqty" name="poqty" maxlength="40" >
                                                   <input type="hidden" class="form-control input-sm" id="poregstatus" name="poregstatus" maxlength="40" >
-                                                  <input type="hidden" class="form-control input-sm" id="poregid" name="poregid" maxlength="40">
-                                                  <div id="er_poquantity"></div>
+                                                  <input type="hidden" class="form-control input-sm" id="id" name="id" maxlength="40">
+                                                  <div id="poqty_feedback"></div>
                                              </div>
                                         </div>
                                         <div class="form-group">
@@ -116,22 +116,22 @@
                                                           <option value="{{$fam->family}}">{{$fam->family}}</option>
                                                                 @endforeach --}}
                                                  </Select> -->
-                                                 <input type="text" class="form-control required input-sm clearselect show-tick actual" name="family" id="family">
-                                                  <div id="er_family"></div>
+                                                 <input type="text" class="form-control required input-sm clearselect show-tick actual select-validate" name="family" id="family">
+                                                  <div id="family_feedback"></div>
                                              </div>
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Series</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control required input-sm clearselect show-tick actual" name="deviceseries" id="deviceseries">
-                                                  <div id="er_deviceseries"></div>
+                                                  <input type="text" class="form-control required input-sm clearselect show-tick actual select-validate" name="series" id="series">
+                                                  <div id="series_feedback"></div>
                                              </div>
                                         </div> 
                                         <div class="form-group row">
                                              <label class="control-label col-sm-3">Product Type</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control required input-sm clearselect show-tick actual" name="deviceptype" id="deviceptype">
-                                                  <div id="er_deviceptype"></div>
+                                                  <input type="text" class="form-control required input-sm clearselect show-tick actual select-validate" name="prod_type" id="prod_type">
+                                                  <div id="prod_type_feedback"></div>
                                              </div>
                                         </div>
 
