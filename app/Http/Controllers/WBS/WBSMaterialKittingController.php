@@ -1910,15 +1910,29 @@ class WBSMaterialKittingController extends Controller
     public function printBarCode(Request $req)
     {
         $data = DB::connection($this->mysql)
-                    ->table('tbl_wbs_kit_issuance')
-                    ->where('issue_no',$req->issuanceno)
-                    ->where('detailid',$req->id)
+                    ->table('tbl_wbs_kit_issuance as i')
+                    ->join('tbl_wbs_material_kitting as k','k.issuance_no','=','i.issue_no')
+                    ->where('i.issue_no',$req->issuanceno)
+                    ->where('i.detailid',$req->id)
+                    ->select(
+                        DB::raw('i.create_user as create_user'),
+                        DB::raw('i.created_at as created_at'),
+                        DB::raw('i.po as po'),
+                        DB::raw('i.issued_qty as issued_qty'),
+                        DB::raw('i.lot_no as lot_no'),
+                        DB::raw('i.item_desc as item_desc'),
+                        DB::raw('i.item as item'),
+                        DB::raw('k.kit_no as kit_no'),
+                    )
                     ->first();
+
         if ($this->com->checkIfExistObject($data) > 0) {
             $path = storage_path().'/brcodekitting';
-                            if (!File::exists($path)) {
-                                File::makeDirectory($path,755, true, true);
-                            }
+
+            if (!File::exists($path)) {
+                File::makeDirectory($path,755, true, true);
+            }
+
             $filename = $data->issue_no.'_'.$data->po.'_'.$data->item.'.prn';
 
             $content = 'CLIP ON'."\r\n";
@@ -1953,22 +1967,33 @@ class WBSMaterialKittingController extends Controller
             $content .= 'FONTSIZE 8'."\r\n";
             $content .= 'PT "'.$data->issued_qty.'"'."\r\n";
             $content .= 'PP200,360:FT "Swiss 721 BT"'."\r\n";
+
             $content .= 'FONTSIZE 8'."\r\n";
             $content .= 'PT "pc(s)"'."\r\n";
             $content .= 'PP160,400:FT "Swiss 721 BT"'."\r\n";
+
+            $content .= 'FONTSIZE 8'."\r\n";
+            $content .= 'PT "KitNo: '.$data->kit_no.'"'."\r\n";
+            $content .= 'PP160,460:FT "Swiss 721 BT"'."\r\n";
+
             $content .= 'FONTSIZE 6'."\r\n";
-            $content .= 'PT "LOT:"'."\r\n";
+            // $content .= 'PT "LOT:"'."\r\n";
+            
             $content .= 'PP160,480:BARSET "CODE128",2,1,3,30'."\r\n";
             $content .= 'PB "'.$data->lot_no.'"'."\r\n";
             $content .= 'PP120,350:FT "Swiss 721 BT"'."\r\n";
+
             $content .= 'FONTSIZE 6'."\r\n";
             $content .= 'PT "'.$data->lot_no.'"'."\r\n";
             $content .= 'PP100,350:FT "Swiss 721 BT"'."\r\n";
+
             $content .= 'FONTSIZE 6'."\r\n";
             $content .= 'PT "'.$data->item_desc.'"'."\r\n";
             $content .= 'PP80,480:BARSET "CODE128",2,1,3,30'."\r\n";
+
             $content .= 'PB "'.$data->item.'"'."\r\n";
             $content .= 'PP40,350:FT "Swiss 721 BT"'."\r\n";
+
             $content .= 'FONTSIZE 6'."\r\n";
             $content .= 'PT "'.$data->item.'"'."\r\n";
             $content .= 'PP150,779:AN7'."\r\n";
