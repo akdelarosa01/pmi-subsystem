@@ -1975,7 +1975,7 @@ class WBSMaterialKittingController extends Controller
 
             $content .= 'FONTSIZE 8'."\r\n";
             $content .= 'PT "KitNo: '.$data->kit_no.'"'."\r\n";
-            $content .= 'PP160,460:FT "Swiss 721 BT"'."\r\n";
+            $content .= 'PP160,440:FT "Swiss 721 BT"'."\r\n";
 
             $content .= 'FONTSIZE 6'."\r\n";
             // $content .= 'PT "LOT:"'."\r\n";
