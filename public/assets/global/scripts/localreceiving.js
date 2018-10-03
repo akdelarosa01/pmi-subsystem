@@ -3,28 +3,39 @@ $(function() {
 	checkAllCheckboxesInTable('.group-checkable','.checkboxes');
 
 	$('#btn_save').on('click', function(e) {
-		var data = {
-			_token: token,
-			id: $('#loc_info_id').val(),
-			receive_no: $('#controlno').val(),
-			invoice_no: $('#invoice_no').val(),
-			orig_invoice: $('#orig_invoice').val(),
-			invoicedate: $('#invoicedate').val(),
-			receivingdate: $('#receivingdate').val(),
-			save_type: $('#save_type').val(),
+		if ($('#invoicedate').val() == '' || $('#receivingdate').val() == '') {
+			msg('Please fill out all the dates.','failed');
+		}
+
+		if ($('#invoice_no').val() == '') {
+			msg('Please fill out the Invoice number field.','failed');
+		}
+
+		if ($('#invoicedate').val() !== '' && $('#receivingdate').val() !== '' && $('#invoice_no').val() !== '') {
+			var data = {
+				_token: token,
+				id: $('#loc_info_id').val(),
+				receive_no: $('#controlno').val(),
+				invoice_no: $('#invoice_no').val(),
+				orig_invoice: $('#orig_invoice').val(),
+				invoicedate: $('#invoicedate').val(),
+				receivingdate: $('#receivingdate').val(),
+				save_type: $('#save_type').val(),
+			}
+			
+			$.ajax({
+				url: savematlocURL,
+				type: 'POST',
+				dataType: 'JSON',
+				data: data,
+			}).done(function(data,textStatus,jqXHR) {
+				msg(data.msg,data.status);
+				getLocalMaterialData();
+			}).fail(function(data,textStatus,jqXHR) {
+				console.log(data);
+			});
 		}
 		
-		$.ajax({
-			url: savematlocURL,
-			type: 'POST',
-			dataType: 'JSON',
-			data: data,
-		}).done(function(data,textStatus,jqXHR) {
-			msg(data.msg,data.status);
-			getLocalMaterialData();
-		}).fail(function(data,textStatus,jqXHR) {
-			console.log(data);
-		});
 	});
 
 	$('#controlno').on('change', function() {
