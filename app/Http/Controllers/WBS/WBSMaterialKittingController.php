@@ -1922,7 +1922,7 @@ class WBSMaterialKittingController extends Controller
                         DB::raw('i.lot_no as lot_no'),
                         DB::raw('i.item_desc as item_desc'),
                         DB::raw('i.item as item'),
-                        DB::raw('k.kit_no as kit_no'),
+                        DB::raw('k.kit_no as kit_no')
                     )
                     ->first();
 
