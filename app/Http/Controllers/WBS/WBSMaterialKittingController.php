@@ -2016,37 +2016,49 @@ class WBSMaterialKittingController extends Controller
             $content .= 'FONTSIZE 8'."\r\n";
             $content .= 'PT "'.$data->po.'"'."\r\n";
             $content .= 'PP290,120:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 6'."\r\n";
+            $content .= 'FONTSIZE 5'."\r\n";
             $content .= 'PT "Kit # '.$data->kit_no.'"'."\r\n";
             $content .= 'PP260,120:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 4'."\r\n";
+            $content .= 'FONTSIZE 5'."\r\n";
             $content .= 'PT "'.$data->create_user.'"'."\r\n";
             $content .= 'PP210,540:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 4'."\r\n";
+            $content .= 'FONTSIZE 5'."\r\n";
             $content .= 'PT "QTY."'."\r\n";
             $content .= 'PP210,460:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 8'."\r\n";
+            $content .= 'FONTSIZE 6'."\r\n";
             $content .= 'PT "'.$data->issued_qty.''."\r\n";
             $content .= 'PP210,360:FT "Swiss 721 BT"'."\r\n";
             $content .= 'FONTSIZE 4'."\r\n";
             $content .= 'PT "pc(s)"'."\r\n";
             $content .= 'PP210,260:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 4'."\r\n";
-            // $content .= 'PT "Lot No:"'."\r\n";
-            $content .= 'PP125,540:BARSET "CODE128",2,1,3,30'."\r\n";
+
+            $content .= 'FONTSIZE 6'."\r\n";
+            $content .= 'PP175,540:BARSET "CODE128",2,1,3,30'."\r\n";
             $content .= 'PB "'.$data->lot_no.'"'."\r\n";
-            $content .= 'PP95,380:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 4'."\r\n";
+            $content .= 'PP145,380:FT "Swiss 721 BT"'."\r\n";
+            $content .= 'FONTSIZE 5'."\r\n";
             $content .= 'PT "'.$data->lot_no.'"'."\r\n";
+            $content .= 'PP145,540:FT "Swiss 721 BT"'."\r\n";
+
+            $content .= 'FONTSIZE 5'."\r\n";
+            $content .= 'PP125,540:BARSET "CODE128",2,1,3,30'."\r\n";
+            $content .= 'PB "'.$data->item.'"'."\r\n";
+            $content .= 'PP95,380:FT "Swiss 721 BT"'."\r\n";
+
+            $content .= 'FONTSIZE 5'."\r\n";
+            $content .= 'PT "'.$data->item.'"'."\r\n";
             $content .= 'PP80,380:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 4'."\r\n";
+
+            $content .= 'FONTSIZE 5'."\r\n";
             $content .= 'PT "'.$data->item_desc.'"'."\r\n";
             $content .= 'PP63,540:BARSET "CODE128",2,1,3,30'."\r\n";
-            $content .= 'PB "'.$data->item.'"'."\r\n";
-            $content .= 'PP30,380:FT "Swiss 721 BT"'."\r\n";
-            $content .= 'FONTSIZE 4'."\r\n";
-            $content .= 'PT "'.$data->item.'"'."\r\n";
-            $content .= 'PP60,190:FT "Swiss 721 BT"'."\r\n";
+            
+            // $content .= 'PB "'.$data->item.'"'."\r\n";
+            // $content .= 'PP30,380:FT "Swiss 721 BT"'."\r\n";
+            // $content .= 'FONTSIZE 4'."\r\n";
+            // $content .= 'PT "'.$data->item.'"'."\r\n";
+            // $content .= 'PP60,190:FT "Swiss 721 BT"'."\r\n";
+
             $content .= 'FONTSIZE 6'."\r\n";
             $content .= 'PT "'.$data->created_at.'"'."\r\n";
             $content .= 'PP150,779:AN7'."\r\n";
