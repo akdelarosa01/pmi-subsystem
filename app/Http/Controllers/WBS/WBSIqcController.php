@@ -268,7 +268,7 @@ class WBSIqcController extends Controller
         $app_date = '';
         $app_time = '';
         $app_no = '';
-        $lot_qty = '';
+        $lot_qty = 0;
         $time_ins_from = '';
         $inspector = '';
         $lot = '';
@@ -317,7 +317,7 @@ class WBSIqcController extends Controller
                 $app_date = $app->app_date;
                 $app_time = $app->app_time;
                 $app_no = $app->receive_no;
-                $lot_qty = $lot_qty + $iqc->qty;
+                $lot_qty = intval($lot_qty) + intval($iqc->qty);
                 $time_ins_from = $req->start_time;
                 $inspector = $req->inspector;
 
