@@ -87,7 +87,9 @@ class IQCInspectionController extends Controller
 
     private function insertToInspection($req,$lots)
     {
-        foreach ($lots as $key => $lot) {
+        $array_lots = explode(',',$lots);
+
+        foreach ($array_lots as $key => $lot) {
             $lot_qty = $this->getLotQty($req->invoice_no,$req->partcode,$lot);
             $status = 0;
             $kitting = 0;
@@ -138,7 +140,19 @@ class IQCInspectionController extends Controller
                     'updated_at' => Carbon::now(),
                 ]);
 
-                DB::connection($this->wbs)->table('tbl_wbs_material_receiving_batch')
+                $table = 'tbl_wbs_local_receiving_batch';
+
+                $checker = DB::connection($this->wbs)->table('tbl_wbs_material_receiving_batch')
+                                ->where('not_for_iqc',0)
+                                ->where('invoice_no',$req->invoice_no)
+                                ->where('item',$req->partcode)
+                                ->where('lot_no',$lot)
+                                ->count();
+                if ($checker > 0) {
+                    $table = 'tbl_wbs_material_receiving_batch';
+                }
+
+                DB::connection($this->wbs)->table($table)
                     ->where('not_for_iqc',0)
                     ->where('invoice_no',$req->invoice_no)
                     ->where('item',$req->partcode)
@@ -168,6 +182,37 @@ class IQCInspectionController extends Controller
                         'ins_by' => $req->inspector,
                         'updated_at' => Carbon::now(),
                     ]);
+
+                // DB::connection($this->wbs)->table('tbl_wbs_material_receiving_batch')
+                //     ->where('not_for_iqc',0)
+                //     ->where('invoice_no',$req->invoice_no)
+                //     ->where('item',$req->partcode)
+                //     ->where('lot_no',$lot)
+                //     ->update([
+                //         'iqc_status' => $status,
+                //         'for_kitting' => $kitting,
+                //         'iqc_result' => $req->remarks,
+                //         'judgement' => $req->judgement,
+                //         'ins_date' => $this->formatDate($req->date_inspected,'m/d/Y'),
+                //         'ins_time' => $req->time_ins_to,
+                //         'ins_by' => $req->inspector,
+                //         'updated_at' => Carbon::now(),
+                //     ]);
+                // DB::connection($this->wbs)->table('tbl_wbs_inventory')
+                //     ->where('not_for_iqc',0)
+                //     ->where('invoice_no',$req->invoice_no)
+                //     ->where('item',$req->partcode)
+                //     ->where('lot_no',$lot)
+                //     ->update([
+                //         'iqc_status' => $status,
+                //         'for_kitting' => $kitting,
+                //         'iqc_result' => $req->remarks,
+                //         'judgement' => $req->judgement,
+                //         'ins_date' => $this->formatDate($req->date_inspected,'m/d/Y'),
+                //         'ins_time' => $req->time_ins_to,
+                //         'ins_by' => $req->inspector,
+                //         'updated_at' => Carbon::now(),
+                //     ]);
         }
     }
 
@@ -217,7 +262,16 @@ class IQCInspectionController extends Controller
 
     private function updateInspection($req,$lots)
     {
-        foreach ($lots as $key => $lot) {
+        $for_lots;
+
+        if (is_array($lots)) {
+            $for_lots = $lots;
+        } else {
+            $for_lots = explode(',',$lots);
+        }
+        
+
+        foreach ($for_lots as $key => $lot) {
             $lot_qty = $this->getLotQty($req->invoice_no,$req->partcode,$lot);
             $status = 0;
             $kitting = 0;
@@ -231,7 +285,21 @@ class IQCInspectionController extends Controller
                 $status = 2;
                 $kitting = 0;
             }
-            DB::connection($this->wbs)->table('tbl_wbs_material_receiving_batch')
+
+            $table = 'tbl_wbs_local_receiving_batch';
+
+            $checker = DB::connection($this->wbs)->table('tbl_wbs_material_receiving_batch')
+                            ->where('not_for_iqc',0)
+                            ->where('invoice_no',$req->invoice_no)
+                            ->where('item',$req->partcode)
+                            ->where('lot_no',$lot)
+                            ->count();
+
+            if ($checker > 0) {
+                $table = 'tbl_wbs_material_receiving_batch';
+            }
+
+            DB::connection($this->wbs)->table($table)
                 ->where('not_for_iqc',0)
                 ->where('invoice_no',$req->invoice_no)
                 ->where('item',$req->partcode)
