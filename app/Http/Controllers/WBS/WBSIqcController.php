@@ -140,7 +140,9 @@ class WBSIqcController extends Controller
                             return $data->ins_by;
                         })
                         ->addColumn('action', function ($data) {
-                            return '<a href="javascript:;" class="updatesinglebtn btn btn-primary btn-sm input-sm" data-id="'.$data->id.'"><i class="fa fa-edit"></i></a>';
+                            return '<a href="javascript:;" class="updatesinglebtn btn btn-primary btn-sm input-sm" data-id="'.$data->id.
+                                    '" data-app_date="'.$data->app_date.
+                                    '" data-app_time="'.$data->app_time.'"><i class="fa fa-edit"></i></a>';
                         })
                         ->make(true);
     }
@@ -568,7 +570,9 @@ class WBSIqcController extends Controller
                             }
                         })
                         ->addColumn('action', function ($data) {
-                            return '<a href="javascript:;" class="updatesinglebtn btn btn-primary btn-sm input-sm" data-id="'.$data->id.'"><i class="fa fa-edit"></i></a>';
+                            return '<a href="javascript:;" class="updatesinglebtn btn btn-primary btn-sm input-sm" data-id="'.$data->id.
+                                    '" data-app_date="'.$data->app_date.
+                                    '" data-app_time="'.$data->app_time.'"><i class="fa fa-edit"></i></a>';
                         })
                         ->make(true);
     }

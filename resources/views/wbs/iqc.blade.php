@@ -216,6 +216,9 @@ WBS | Pricon Microelectronics, Inc.
                                     </div>
                                 </div>
 
+                                <input type="text" name="app_date" id="app_date">
+                                <input type="text" name="app_time" id="app_time">
+
                             </form>
                         </div>
                     </div>
@@ -437,7 +440,9 @@ WBS | Pricon Microelectronics, Inc.
                 ajax: url,
                 columns: [
                     {data: function(data){
-                            return '<input type="checkbox" class="chk" value="'+data.id+'" data-id="'+data.id+'" data-code="'+data.item+'"/>';
+                            return '<input type="checkbox" class="chk" value="'+data.id+'"'+
+                                    ' data-id="'+data.id+'" data-code="'+data.item+'" '+
+                                    ' data-app_by="'+data.app_by+'" data-app_date="'+data.app_date+'"/>';
                     },orderable: false, searchable:false, name:"id" },
                     { data: 'item', name: 'i.item' },
                     { data: 'item_desc', name: 'i.item_desc' },
