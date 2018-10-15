@@ -56,8 +56,12 @@
                                               @foreach($records as $rec)
                                                   <?php 
                                                   $x = $rec->accumulatedoutput + $rec->qty;
-                                                  $y = $rec->accumulatedoutput / $x;
-                                                  $twoyield = $y * 100.;
+                                                  if ($x <> 0){
+                                                       $y = $rec->accumulatedoutput / $x;     
+                                                  }else{
+                                                       $y = 0;
+                                                  }
+                                                  $twoyield = $y * 100;
                                                   ?>
                                                   <tr> 
 {{--                                                   <td style="width: 5%"> 
