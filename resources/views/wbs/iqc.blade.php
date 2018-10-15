@@ -216,8 +216,8 @@ WBS | Pricon Microelectronics, Inc.
                                     </div>
                                 </div>
 
-                                <input type="text" name="app_date" id="app_date">
-                                <input type="text" name="app_time" id="app_time">
+                                <input type="hidden" name="app_date" id="app_date">
+                                <input type="hidden" name="app_time" id="app_time">
 
                             </form>
                         </div>
@@ -306,7 +306,7 @@ WBS | Pricon Microelectronics, Inc.
         </div>
     </div>
 
-    <div id="msg" class="modal fade" role="dialog" data-backdrop="static">
+    {{-- <div id="msg" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm gray-gallery">
             <div class="modal-content ">
                 <div class="modal-header">
@@ -320,10 +320,13 @@ WBS | Pricon Microelectronics, Inc.
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
+
+    @include('includes.modals')
 @endsection
 
 @push('script')
+    <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(function() {
             loadforIQC("{{url('/getwbsiqc')}}"+"?status=0");
@@ -336,13 +339,24 @@ WBS | Pricon Microelectronics, Inc.
 			});
 
 			$('#statusbtn').on('click', function() {
-				$('#bulkupdatemodal').modal('show');
+                var notAppliedItems = checkIfAppliedToIQC();
+
+                if (notAppliedItems.length > 0) {
+                    msg('Please notify Receiving Staff to apply these items to IQC. Items : '+notAppliedItems.join(),'failed');
+                } else {
+                    $('#bulkupdatemodal').modal('show');
+                }
 			});
 
 			$('#tbl_iqc_body').on('click','.updatesinglebtn', function() {
 				var id = $(this).attr('data-id');
-				$('#selectedid').val(id);
-				$('#statusModal').modal('show');
+
+                if ($(this).attr('data-app_date') == '') {
+                    msg('Please notify the Receiving Staff to apply this item to IQC.','failed');
+                } else {
+                    $('#selectedid').val(id);
+                    $('#statusModal').modal('show');
+                }
 			});
 
 			$('#gobtn').on('click', function() {
@@ -375,9 +389,7 @@ WBS | Pricon Microelectronics, Inc.
 	            	isCheck($('#chk_all'))
 	            }).fail( function(data, textStatus, jqXHR) {
 	            	$('#loading').modal('hide');
-	                $('#msg').modal('show');
-	                $('#title').html('<strong><i class="fa fa-exclamation-triangle"></i></strong> Failed!')
-	                $('#err_msg').html("There's some error while processing.");
+                    msg(jqXHR,textStatus);
 	            });
 			});
 
@@ -416,15 +428,11 @@ WBS | Pricon Microelectronics, Inc.
 		            	isCheck($('#chk_all'))
 		            }).fail( function(data, textStatus, jqXHR) {
 		            	$('#loading').modal('hide');
-		                $('#msg').modal('show');
-		                $('#title').html('<strong><i class="fa fa-exclamation-triangle"></i></strong> Failed!')
-		                $('#err_msg').html("There's some error while processing.");
+                        msg(jqXHR,textStatus);
 		            });
 	            } else {
 	            	$('#loading').modal('hide');
-	                $('#msg').modal('show');
-	                $('#title').html('<strong><i class="fa fa-exclamation-triangle"></i></strong> Failed!')
-	                $('#err_msg').html("Please check 2 or more checkboxes");
+                    msg('Please check 2 or more checkboxes','failed');
 	            }
 			});
 
@@ -442,7 +450,7 @@ WBS | Pricon Microelectronics, Inc.
                     {data: function(data){
                             return '<input type="checkbox" class="chk" value="'+data.id+'"'+
                                     ' data-id="'+data.id+'" data-code="'+data.item+'" '+
-                                    ' data-app_by="'+data.app_by+'" data-app_date="'+data.app_date+'"/>';
+                                    ' data-app_date="'+data.app_date+'"/>';
                     },orderable: false, searchable:false, name:"id" },
                     { data: 'item', name: 'i.item' },
                     { data: 'item_desc', name: 'i.item_desc' },
@@ -530,5 +538,17 @@ WBS | Pricon Microelectronics, Inc.
 				element.prop('checked',false)
 			}
 		}
+
+        function checkIfAppliedToIQC() {
+            var notApplied = [];
+
+            $(".chk:checked").each(function() {
+                if ($(this).attr('data-app_date') == ' ') {
+                    notApplied.push($(this).attr('data-code'));
+                }
+            });
+
+            return $.unique(notApplied);
+        }
 	</script>
 @endpush
