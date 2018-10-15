@@ -73,7 +73,7 @@ class YieldPerformanceReportController extends Controller
             $record = DB::connection($this->mysql)->table("tbl_yielding_performance")
                         ->groupBy('pono')
                         ->get();
-            $records = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")
+            $records = DB::connection($this->mysql)->table("tbl_yielding_performance")
                         ->select('id','pono','poqty','device','series','family','toutput','treject',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("SUM(qty) as qty"),DB::raw("SUM(twoyield) as twoyield"))
                         ->groupBy('pono')
                         ->get();
@@ -398,7 +398,7 @@ class YieldPerformanceReportController extends Controller
 
        /* return $tray;*/
         if($traycount > 0){
-            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->wherein('id',$tray)->delete();
+            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance')->wherein('id',$tray)->delete();
         
             if ($ok) {
                 $msg = "Successfully deleted selected records.";
@@ -408,7 +408,7 @@ class YieldPerformanceReportController extends Controller
                 return redirect('/yieldperformance')->with(['err_message'=>$msg]);
             }
         } else {
-            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->delete();
+            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance')->delete();
         
             if ($ok) {
                 $msg = "Successfully deleted all records.";
@@ -428,7 +428,7 @@ class YieldPerformanceReportController extends Controller
         $traycount = $request->traycount;
        /* return $tray;*/
         if($traycount > 0){
-            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->wherein('id',$tray)->delete();
+            $ok = DB::connection($this->mysql)->table('tbl_yielding_performance')->wherein('id',$tray)->delete();
         
             if ($ok) {
                 $msg = "Successfully deleted selected records.";
@@ -454,7 +454,7 @@ class YieldPerformanceReportController extends Controller
  
     public function udpateyieldsummary(Request $request)
     {
-        $table = "tbl_yielding_performance_backup";
+        $table = "tbl_yielding_performance";
         $exist = $request->data;
 
   
@@ -472,7 +472,7 @@ class YieldPerformanceReportController extends Controller
     }
 
     function summarychart(){
-        $ok =DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->get();
+        $ok =DB::connection($this->mysql)->table('tbl_yielding_performance')->get();
         return $ok;
     }
 
@@ -521,7 +521,7 @@ class YieldPerformanceReportController extends Controller
                         )
                     ));
                     $row = 2;
-                    $data = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->get();
+                    $data = DB::connection($this->mysql)->table('tbl_yielding_performance')->get();
                     foreach ($data as $key => $val) {
                         $sheet->cell('A'.$row, $val->pono);
                         $sheet->cell('B'.$row, $val->poqty);
@@ -546,7 +546,7 @@ class YieldPerformanceReportController extends Controller
 
     public function exportTopdf(Request $request)
     {
-        $field = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')->get();
+        $field = DB::connection($this->mysql)->table('tbl_yielding_performance')->get();
             $html1 = '<style>
                         #data {
                           border-collapse: collapse;
@@ -648,8 +648,8 @@ class YieldPerformanceReportController extends Controller
             $datefrom = $request->datefrom;
             $dateto = $request->dateto;
             $prodtype = $request->srprodtype;
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$prodtype)->count();
-            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->count();
+            $check = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$prodtype)->count();
+            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->count();
 
             if ($check > 0 || $check1 > 0) {
                 Excel::create('Summary_Report_'.$date, function($excel) use($request)
@@ -689,7 +689,7 @@ class YieldPerformanceReportController extends Controller
 
                          
 
-                          $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                          $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance')
                             ->select('family','device','yieldingno','pono','twoyield','poqty','mod','toutput','qty','twoyield','classification',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"))
                             ->groupBy('mod')
 
@@ -699,14 +699,14 @@ class YieldPerformanceReportController extends Controller
                             ->get();
 
                             if($prodtype == ''){
-                                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance')
                                      ->select('family','device','yieldingno','pono','twoyield','poqty','mod','toutput','qty','twoyield',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"))
                                      ->groupBy('pono')
                                      ->whereBetween('productiondate', [$datefrom, $dateto])
                                      ->get();
                             }
                             else{
-                                 $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                                 $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance')
                                      ->select('family','device','yieldingno','pono','twoyield','poqty','mod','toutput','qty','twoyield',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"))
                                      ->groupBy('pono')
                                      ->whereBetween('productiondate', [$datefrom, $dateto])
@@ -1032,7 +1032,7 @@ class YieldPerformanceReportController extends Controller
             $datefrom = $request->datefrom;
             $dateto = $request->dateto;
             $prodtype = $request->srprodtype;
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$prodtype)->count();
+            $check = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$prodtype)->count();
             if($check > 0){
             Excel::create('Summary_Report_'.$date, function($excel) use($request)
             {
@@ -1071,7 +1071,7 @@ class YieldPerformanceReportController extends Controller
 
                      
 
-                      $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                      $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance')
                         ->select('family','device','yieldingno','pono','twoyield','poqty','mod','toutput','qty','twoyield',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"))
                         ->groupBy('mod')
 
@@ -1079,7 +1079,7 @@ class YieldPerformanceReportController extends Controller
                          ->where('prodtype',$prodtype)
                         ->get();
 
-                     $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                     $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance')
                         ->select('family','device','yieldingno','pono','twoyield','poqty','mod','toutput','qty','twoyield',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"))
                         ->groupBy('pono')
 
@@ -1461,8 +1461,8 @@ class YieldPerformanceReportController extends Controller
             $datefrom = $request->datefrom;
             $dateto = $request->dateto;
             $ptype = $request->ptype;
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$ptype)->count();
-            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->count();
+            $check = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$ptype)->count();
+            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->count();
             if($check > 0 || $check1 > 0){
             Excel::create('Defect_Summary_Report_'.$date, function($excel) use($request)
             {
@@ -1506,14 +1506,14 @@ class YieldPerformanceReportController extends Controller
                                                     $sheet->cell('B6',"Defectives");
                                                     $sheet->cells('B6', function($cells) {$cells->setFontWeight('bold'); });
                                                     $sheet->getStyle('B6')->getAlignment()->setTextRotation(90);
-                                                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                                                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                                                         ->select('family','device','yieldingno','ywomng','pono','twoyield','poqty','mod',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("COUNT(a.mod) as wew"),DB::raw("SUM(poqty) as sumpoqty"))
                                                         ->groupBy('mod')
                                                         ->orderBy('family')
                                                         ->whereBetween('productiondate', [$datefrom, $dateto])
                                                         ->get();
 
-                                                        $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                                                        $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                                                         ->select('family')
                                                         ->groupBy('family')
                                                        // ->orderBy('family')
@@ -1615,7 +1615,7 @@ class YieldPerformanceReportController extends Controller
                          $PNGC = [];
                          for($x=0;$x<$countmod;$x++)
                          {
-                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                             ->select(DB::raw("COUNT(*) as wew"),'mod')
                             ->where('mod',$modOfD[$x])
                             ->where('classification','like','%Production%')
@@ -1629,7 +1629,7 @@ class YieldPerformanceReportController extends Controller
                         $MNGC = [];
                         for($x=0;$x<$countmod;$x++)
                          {
-                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                             ->select(DB::raw("COUNT(*) as wew"),'mod')
                             ->where('mod',$modOfD[$x])
                             ->where('classification','like','%Material%')
@@ -1726,7 +1726,7 @@ class YieldPerformanceReportController extends Controller
             $datefrom = $request->datefrom;
             $dateto = $request->dateto;
             $ptype = $request->ptype;
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$ptype)->count();
+            $check = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$ptype)->count();
             if($check > 0)
             {
             Excel::create('Defect_Summary_Report_'.$date, function($excel) use($request)
@@ -1771,14 +1771,14 @@ class YieldPerformanceReportController extends Controller
                                                     $sheet->cell('B6',"Defectives");
                                                     $sheet->cells('B6', function($cells) {$cells->setFontWeight('bold'); });
                                                     $sheet->getStyle('B6')->getAlignment()->setTextRotation(90);
-                                                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                                                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                                                         ->select('family','device','yieldingno','ywomng','pono','twoyield','poqty','mod',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("COUNT(a.mod) as wew"),DB::raw("SUM(poqty) as sumpoqty"))
                                                         ->groupBy('mod')
                                                         ->orderBy('family')
                                                         ->whereBetween('productiondate', [$datefrom, $dateto])
                                                         ->get();
 
-                                                        $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                                                        $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                                                         ->select('family')
                                                         ->groupBy('family')
                                                        // ->orderBy('family')
@@ -1879,7 +1879,7 @@ class YieldPerformanceReportController extends Controller
                          $PNGC = [];
                          for($x=0;$x<$countmod;$x++)
                          {
-                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                             ->select(DB::raw("COUNT(*) as wew"),'mod')
                             ->where('mod',$modOfD[$x])
                             ->where('classification','like','%Production%')
@@ -1893,7 +1893,7 @@ class YieldPerformanceReportController extends Controller
                         $MNGC = [];
                         for($x=0;$x<$countmod;$x++)
                          {
-                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                             $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                             ->select(DB::raw("COUNT(*) as wew"),'mod')
                             ->where('mod',$modOfD[$x])
                             ->where('classification','like','%Material%')
@@ -2095,9 +2095,9 @@ else{
              $chosen = $request->chosen;
              $ptype = $request->ptype;
 
-             $check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$ptype)->count();
-             $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->count();
-              $check2 = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('yieldtarget',$yieldtarget)->count();
+             $check = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$ptype)->count();
+             $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->count();
+              $check2 = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('yieldtarget',$yieldtarget)->count();
             if($check > 0 || $check1 > 0 || $check2){
             
             Excel::create('Yield_Summary_Family_Report_'.$date, function($excel) use($request)
@@ -2164,7 +2164,7 @@ else{
                     $datefrom = $request->datefrom;
                     $dateto = $request->dateto;
                     $yieldtarget = $request->yieldtarget;
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance')
                         //->select('family',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("SUM(toutput) as toutput"),'ywomng')
                         ->select('family',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),'toutput','ywomng','tpng')
                         ->groupBy('family')
@@ -2230,7 +2230,7 @@ else{
                      }
                      $row++;
                     //FOR PRODUCTIOM
-                      $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                      $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select(DB::raw("COUNT(*) as classificationCount"),'family')
                         ->groupBy('family')
                         ->orderBy('family')
@@ -2267,7 +2267,7 @@ else{
                     $row++;
                    
                     //FOR MATERIALS
-                    $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select(DB::raw("COUNT(*) as classificationCount"),'family')
                         ->groupBy('family')
                         ->orderBy('family')
@@ -2425,7 +2425,7 @@ else{
                     $datefrom = $request->datefrom;
                     $dateto = $request->dateto;
                     $yieldtarget = $request->yieldtarget;
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance')
                         //->select('family',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("SUM(toutput) as toutput"),'ywomng')
                         ->select('family',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),'toutput','ywomng','tpng')
                         ->groupBy('family')
@@ -2491,7 +2491,7 @@ else{
                      }
                      $row++;
                     //FOR PRODUCTIOM
-                      $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                      $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select(DB::raw("COUNT(*) as classificationCount"),'family')
                         ->groupBy('family')
                         ->orderBy('family')
@@ -2525,7 +2525,7 @@ else{
                     }
                     $row++;
                     //FOR MATERIALS
-                    $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select(DB::raw("COUNT(*) as classificationCount"),'family')
                         ->groupBy('family')
                         ->orderBy('family')
@@ -2684,7 +2684,7 @@ else{
             $dt = Carbon::now();    
             $date = substr($dt->format('Ymd'), 2);
             $path = public_path().'/Yielding_Performance_Data_Check/export';
-             //$check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->where('pono',$pono)->count();
+             //$check = DB::connection($this->mysql)->table("tbl_yielding_performance")->where('pono',$pono)->count();
              $check = 1;
             if($check > 0){
             Excel::create('Yield_Summary_Report_'.$date, function($excel) use($request)
@@ -2745,7 +2745,7 @@ else{
                     ));
 
                    if($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != ''){
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->where('family',$family)
@@ -2757,7 +2757,7 @@ else{
                         ->get();
                     }
                     else if($pono != '' && $prodtype != '' && $family != '' && $series != ''){
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->where('family',$family)
@@ -2768,7 +2768,7 @@ else{
                         ->get();
                     }
                     else if($pono != '' && $prodtype != '' && $family != ''){
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->where('family',$family)
@@ -2778,7 +2778,7 @@ else{
                         ->get();
                     }
                     else if($pono != '' && $prodtype != ''){
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->where('prodtype',$prodtype)
@@ -2787,7 +2787,7 @@ else{
                         ->get();
                     }
                     else if($pono != ''){
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->where('pono',$pono)
@@ -2795,7 +2795,7 @@ else{
                         ->get();
                     }
                     else{
-                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->whereBetween('productiondate', [$datefrom, $dateto])
@@ -2823,7 +2823,7 @@ else{
                     }
 
                     if($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != ''){
-                      $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                      $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate')
                         ->orderBy('productiondate')
                         ->groupBy('productiondate')
@@ -2836,7 +2836,7 @@ else{
                         ->get();
                     }
                     else if($pono != '' && $prodtype != '' && $family != '' && $series != ''){
-                      $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                      $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate')
                         ->orderBy('productiondate')
                         ->groupBy('productiondate')
@@ -2848,7 +2848,7 @@ else{
                         ->get();
                     }
                      else if($pono != '' && $prodtype != ''){
-                      $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                      $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate')
                         ->orderBy('productiondate')
                         ->groupBy('productiondate')
@@ -2858,7 +2858,7 @@ else{
                         ->get();
                     }
                     else if($pono != ''){
-                          $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                          $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate')
                         ->orderBy('productiondate')
                         ->groupBy('productiondate')
@@ -2867,7 +2867,7 @@ else{
                         ->get();
                     }
                     else{
-                          $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                          $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate')
                         ->orderBy('productiondate')
                         ->groupBy('productiondate')
@@ -2957,7 +2957,7 @@ else{
 
 
                     if($pono != '' && $prodtype != '' && $family != '' && $series != null && $device != ''){
-                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -2970,7 +2970,7 @@ else{
                         ->get();
                     }
                     else if($pono != '' && $prodtype != '' && $family != '' && $series != ''){
-                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -2982,7 +2982,7 @@ else{
                         ->get();
                     }
                     else if($pono != '' && $prodtype != ''){
-                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('pono',$pono)
                         ->where('prodtype',$prodtype)
@@ -2992,7 +2992,7 @@ else{
                         ->get();
                     }
                     else if($pono != ''){
-                         $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                         $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('pono',$pono)
                         ->where('classification',"Production NG (PNG)")
@@ -3001,7 +3001,7 @@ else{
                         ->get();
                     }
                     else{
-                         $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                         $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('classification',"Production NG (PNG)")
                         ->groupBy('mod')
@@ -3020,7 +3020,7 @@ else{
                         }
 
                         if($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != ''){
-                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3033,7 +3033,7 @@ else{
                         ->get();
                         }
                         else if($pono != '' && $prodtype != '' && $family != '' && $series != ''){
-                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3045,7 +3045,7 @@ else{
                         ->get();
                         }
                         else if($pono != '' && $prodtype != ''){
-                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('pono',$pono)
                         ->where('prodtype',$prodtype)
@@ -3055,7 +3055,7 @@ else{
                         ->get();
                         }
                         else if($pono != ''){
-                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('pono',$pono)
                         ->where('classification',"Material NG (MNG)")
@@ -3064,7 +3064,7 @@ else{
                         ->get();
                         }
                         else{
-                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('classification',"Material NG (MNG)")
                         ->groupBy('mod')
@@ -3093,7 +3093,7 @@ else{
                             $twoyieldd = $ches + 5;
 
                         if($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != ''){
-                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate','ywomng','twoyield')
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3106,7 +3106,7 @@ else{
                         ->get();
                          }
                          else if($pono != '' && $prodtype != '' && $family != '' && $series != ''){
-                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate','ywomng','twoyield')
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3118,7 +3118,7 @@ else{
                         ->get();
                          }
                          else if($pono != '' && $prodtype != ''){
-                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate','ywomng','twoyield')
                         ->where('prodtype',$prodtype)
                         ->where('pono',$pono)
@@ -3128,7 +3128,7 @@ else{
                         ->get();
                          }
                          else if($pono != ''){
-                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate','ywomng','twoyield')
                         ->where('pono',$pono)
                         ->where('classification','like','%PNG%')
@@ -3137,7 +3137,7 @@ else{
                         ->get();
                          }
                         else{
-                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate','ywomng','twoyield')
                         ->where('classification','like','%PNG%')
                         ->orwhere('classification','like','%MNG%')
@@ -3397,7 +3397,7 @@ else{
             $dt = Carbon::now();    
             $date = substr($dt->format('Ymd'), 2);
             $path = public_path().'/Yielding_Performance_Data_Check/export';
-             $check = DB::connection($this->mysql)->table("tbl_yielding_performance_backup")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$prodtype)->where('family',$family)->where('series',$series)->where('pono',$pono)->where('device',$device)->count();
+             $check = DB::connection($this->mysql)->table("tbl_yielding_performance")->whereBetween('productiondate', [$datefrom, $dateto])->where('prodtype',$prodtype)->where('family',$family)->where('series',$series)->where('pono',$pono)->where('device',$device)->count();
             if($check > 0){
       
             
@@ -3455,7 +3455,7 @@ else{
                             'size'      =>  10
                         )
                     ));
-                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                    $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','productiondate')
                         ->groupBy('mod')
                         ->where('family',$family)
@@ -3485,7 +3485,7 @@ else{
                     }
 
 
-                       $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                       $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate')
                         ->orderBy('productiondate')
                         ->groupBy('productiondate')
@@ -3572,7 +3572,7 @@ else{
                      $endA = $arrayLetter[$x].$twelve;
                      $sheet->cells("A12:$endA", function($cells) {$cells->setBackground('#00FFFF'); });
 
-                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                     $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3593,7 +3593,7 @@ else{
                         }
 
 
-                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                        $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate',DB::raw("COUNT(*) as classificationCount"))
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3621,7 +3621,7 @@ else{
                         {
                             $ywmng = $ches + 4;
                             $twoyieldd = $ches + 5;
-                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance_backup as a')
+                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as a')
                         ->select('mod','family','prodtype','series','device','pono','toutput','accumulatedoutput','classification','productiondate','ywomng','twoyield')
                         ->where('family',$family)
                         ->where('prodtype',$prodtype)
@@ -3923,7 +3923,7 @@ else{
         $fixeddf = $pieces[2]."-".$pieces[0]."-".$pieces[1];
         $fixeddt = $pieces2[2]."-".$pieces2[0]."-".$pieces2[1];
        // var_dump($fixeddf);
-        $table = DB::connection($this->mysql)->table('tbl_yielding_performance_backup')
+        $table = DB::connection($this->mysql)->table('tbl_yielding_performance')
                     ->select('family',DB::raw("SUM(toutput) as toutput"),DB::raw("SUM(qty) as qty"))
                     ->groupBy('family')
                     ->orderBy('family')
