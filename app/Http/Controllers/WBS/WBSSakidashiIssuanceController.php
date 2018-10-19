@@ -1439,62 +1439,79 @@ class WBSSakidashiIssuanceController extends Controller
         $content .= 'PP310,766:AN7'."\r\n";
         $content .= 'DIR2'."\r\n";
         $content .= 'FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 10'."\r\n";
         $content .= 'PP60,776:FT "Swiss 721 Bold BT",20,0,78'."\r\n";
         $content .= 'PP290,540:BARSET "CODE128",2,1,3,51'."\r\n";
         $content .= 'PB "'.$data->po_no.'"'."\r\n";
         $content .= 'PP240,460:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 8'."\r\n";
         $content .= 'PT "'.$data->po_no.'"'."\r\n";
         $content .= 'PP290,120:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "PAIR # '.$data->pair_no.'"'."\r\n";
         $content .= 'PP260,120:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "ACTUAL RETURN"'."\r\n";
         $content .= 'PP210,540:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "ISSUED QTY."'."\r\n";
         $content .= 'PP210,460:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 8'."\r\n";
         $content .= 'PT "'.$data->issued_qty.''."\r\n";
         $content .= 'PP210,360:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "REQUIRED QTY"'."\r\n";
         $content .= 'PP210,260:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 8'."\r\n";
         $content .= 'PT "'.$data->required_qty.'"'."\r\n";
         $content .= 'PP210,160:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "FOR RETURN"'."\r\n";
         $content .= 'PP210,80:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 8'."\r\n";
         $content .= 'PT "'.$data->return_qty.'"'."\r\n";
         $content .= 'PP195,540:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "CTRL #"'."\r\n";
         $content .= 'PP175,540:BARSET "CODE128",2,1,3,30'."\r\n";
         $content .= 'PB "'.$data->issuance_no.'"'."\r\n";
         $content .= 'PP145,380:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "'.$data->issuance_no.'"'."\r\n";
         $content .= 'PP145,540:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "Lot No:"'."\r\n";
         $content .= 'PP125,540:BARSET "CODE128",2,1,3,30'."\r\n";
         $content .= 'PB "'.$data->lot_no.'"'."\r\n";
         $content .= 'PP95,380:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "'.$data->lot_no.'"'."\r\n";
         $content .= 'PP80,380:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "'.$data->item_desc.'"'."\r\n";
         $content .= 'PP63,540:BARSET "CODE128",2,1,3,30'."\r\n";
         $content .= 'PB "'.$data->item.'"'."\r\n";
         $content .= 'PP30,380:FT "Swiss 721 BT"'."\r\n";
-        $content .= 'FONTSIZE 4'."\r\n";
+
+        $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "'.$data->item.'"'."\r\n";
         $content .= 'PP60,190:FT "Swiss 721 BT"'."\r\n";
+
         $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "PREPARED BY: '.$data->incharge.'"'."\r\n";
         $content .= 'PP150,779:AN7'."\r\n";
