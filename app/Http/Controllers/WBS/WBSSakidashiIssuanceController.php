@@ -1450,35 +1450,35 @@ class WBSSakidashiIssuanceController extends Controller
         $content .= 'PT "'.$data->po_no.'"'."\r\n";
         $content .= 'PP290,120:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "PAIR # '.$data->pair_no.'"'."\r\n";
         $content .= 'PP260,120:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "ACTUAL RETURN"'."\r\n";
         $content .= 'PP210,540:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "ISSUED QTY."'."\r\n";
         $content .= 'PP210,460:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "'.$data->issued_qty.''."\r\n";
         $content .= 'PP210,360:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "REQUIRED QTY"'."\r\n";
         $content .= 'PP210,260:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "'.$data->required_qty.'"'."\r\n";
         $content .= 'PP210,160:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "FOR RETURN"'."\r\n";
         $content .= 'PP210,80:FT "Swiss 721 BT"'."\r\n";
 
-        $content .= 'FONTSIZE 4'."\r\n";
+        $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "'.$data->return_qty.'"'."\r\n";
         $content .= 'PP195,540:FT "Swiss 721 BT"'."\r\n";
 
