@@ -1460,11 +1460,11 @@ class WBSSakidashiIssuanceController extends Controller
 
         $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "ISSUED QTY."'."\r\n";
-        $content .= 'PP210,460:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'PP210,470:FT "Swiss 721 BT"'."\r\n";
 
         $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "'.$data->issued_qty.''."\r\n";
-        $content .= 'PP210,370:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'PP210,380:FT "Swiss 721 BT"'."\r\n";
 
         $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "REQUIRED QTY"'."\r\n";
@@ -1480,7 +1480,7 @@ class WBSSakidashiIssuanceController extends Controller
 
         $content .= 'FONTSIZE 5'."\r\n";
         $content .= 'PT "'.$data->return_qty.'"'."\r\n";
-        $content .= 'PP210,550:FT "Swiss 721 BT"'."\r\n";
+        $content .= 'PP210,560:FT "Swiss 721 BT"'."\r\n";
 
         $content .= 'FONTSIZE 6'."\r\n";
         $content .= 'PT "CTRL #"'."\r\n";
