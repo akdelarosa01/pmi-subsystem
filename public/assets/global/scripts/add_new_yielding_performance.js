@@ -214,11 +214,12 @@ function save_yield(){
         type: 'POST',
         dataType: 'JSON',
         data: myData,
-    }).done(function(data, textStatus, jqXHR){        
+    }).done(function(data, textStatus, jqXHR){
+        ClearAll();
         msg(data.msg,data.status);
         DisabledALL();
         DisabledButton();
-        ClearAll();
+        
         pya_arr = [];
         makePyaTable();
         pyafieldcomputation();
@@ -671,7 +672,7 @@ function clear(){
     $('#mod').val("");
     $('#yieldingstation').val("");
     $('input[name=qty]').val("");
-    $('input[name=productiondate]').val("");
+    $('#productiondate').val("");
     $('input[name=accumulatedoutput]').val("");
     $('#btnloadpya').removeClass('bg-blue');
     $('#btnloadpya').addClass('bg-green');
