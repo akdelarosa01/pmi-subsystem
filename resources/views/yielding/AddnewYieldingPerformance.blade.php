@@ -43,7 +43,7 @@
                         <form class="form-horizontal">
                             {!! csrf_field() !!}
                             <div class="col-sm-4">
-                                <input type="hidden"  value="<?php if(isset($count)){ echo $count->yieldingno + 1; } else {echo $count + 1;} ?>" name="hdyieldingno" id="hdyieldingno" />
+                                <input type="hidden"  value="<?php if(isset($count)){ echo intVal($count->yieldingno) + 1; } else {echo intVal($count) + 1;} ?>" name="hdyieldingno" id="hdyieldingno" />
                                 <input type="hidden"  name="yieldingno" id="yieldingno" />  
 
                                 <div class="form-group">

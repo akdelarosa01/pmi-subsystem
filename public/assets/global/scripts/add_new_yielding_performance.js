@@ -643,7 +643,7 @@ function ClearAll(){
         $('#classification').val("");
         $('#mod').val("");
         $('input[name=qty]').val("");
-        $('input[name=productiondate]').val("");
+        $('#productiondate').val("");
         $('input[name=accumulatedoutput]').val("");
         $('#yieldingstation').val("");
         $('input[name=toutput]').val(""); 
