@@ -84,7 +84,7 @@
                                                   <div id="pono_feedback"></div>
                                              </div>     
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" style="display: none">
                                              <label class="control-label col-sm-3">Device Code</label>
                                              <div class="col-sm-9">
                                                   <input type="text" class="form-control input-sm validate" id="device_code" name="device_code" maxlength="45" >

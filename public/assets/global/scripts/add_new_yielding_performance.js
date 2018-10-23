@@ -472,14 +472,20 @@ function pyafieldcomputation(){
         $('#twoyield').val(final);    
     }
 
-    if(totalMNG == 0){    
-        var toutputandtr = parseInt(totalOutput) + parseInt(treject);
-        var tempdppm = totalPNG/toutputandtr; 
-        $('#dppm').val((tempdppm * 1000000).toFixed(2));    
+    if(totalMNG == 0){
+        var tempdppm = parseInt(treject)/parseInt(totalOutput); 
+        $('#dppm').val((tempdppm * 1000000).toFixed(2));
+
+        // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
+        // var tempdppm = totalPNG/toutputandtr; 
+        // $('#dppm').val((tempdppm * 1000000).toFixed(2));
     }else{
-        var toutputandtr = parseInt(totalOutput) + parseInt(treject);
-        var tempdppm = totalPNG/toutputandtr; 
-        $('#dppm').val((tempdppm * 1000000).toFixed(2));    
+        var tempdppm = parseInt(treject)/parseInt(totalOutput); 
+        $('#dppm').val((tempdppm * 1000000).toFixed(2));
+        
+        // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
+        // var tempdppm = totalPNG/toutputandtr; 
+        // $('#dppm').val((tempdppm * 1000000).toFixed(2));    
     }
 
     $('#toutput').val(totalOutput);
