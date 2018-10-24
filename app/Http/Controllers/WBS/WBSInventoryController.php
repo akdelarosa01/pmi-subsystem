@@ -122,7 +122,7 @@ class WBSInventoryController extends Controller
         foreach ($req->id as $key => $id) {
             $deleted = DB::connection($this->mysql)->table('tbl_wbs_inventory')
                         ->where('id',$id)
-                        ->delete();
+                        ->update(['deleted' => 1]);
 
             if ($deleted) {
                 $data = [
