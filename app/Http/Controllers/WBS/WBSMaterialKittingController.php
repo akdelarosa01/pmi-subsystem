@@ -1737,6 +1737,7 @@ class WBSMaterialKittingController extends Controller
 		                ->join('tbl_wbs_material_kitting_details as k','i.item','=','k.item')
 		                // ->join('tbl_wbs_material_receiving_batch as r','i.invoice_no','=','r.invoice_no')
 		                ->whereRaw("i.qty > 0 AND i.for_kitting='1' AND k.issue_no='".$req->issuanceno."'".$lotno_cond.$item_cond) //i.item=r.item AND 
+                        ->where('i.deleted',0)
 		                ->select(DB::raw('i.id as id'),
                             DB::raw('i.item as item'),
                             DB::raw('i.item_desc as item_desc'),
@@ -1772,6 +1773,7 @@ class WBSMaterialKittingController extends Controller
 		                ->join('tbl_wbs_material_kitting_details as k','i.item','=','k.item')
 		                // ->join('tbl_wbs_material_receiving_batch as r','i.invoice_no','=','r.invoice_no')
 		                ->whereRaw("i.qty > 0 AND i.for_kitting='1' AND k.issue_no='".$req->issuanceno."'".$item_cond)//i.item=r.item AND 
+                        ->where('i.deleted',0)
 		                ->select(DB::raw('i.id as id'),
                             DB::raw('i.item as item'),
                             DB::raw('i.item_desc as item_desc'),

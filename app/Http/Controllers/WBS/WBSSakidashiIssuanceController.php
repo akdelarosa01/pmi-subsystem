@@ -274,6 +274,7 @@ class WBSSakidashiIssuanceController extends Controller
                     ->table('tbl_wbs_inventory')
                     ->select('qty')
                     ->where('id',$id)
+                    ->where('deleted',0)
                     ->count();
 
         if ($check > 0) {
@@ -281,6 +282,7 @@ class WBSSakidashiIssuanceController extends Controller
                         ->table('tbl_wbs_inventory')
                         ->select('qty')
                         ->where('id',$id)
+                        ->where('deleted',0)
                         ->first();
             return $data->qty;
         } else {
@@ -1336,6 +1338,7 @@ class WBSSakidashiIssuanceController extends Controller
     {
         $data = DB::connection($this->mysql)->table(DB::raw('tbl_wbs_inventory, (SELECT @rownum := 0) i'))
                     ->whereRaw("qty > 0 AND iqc_status='1' AND for_kitting='1' AND item='".$req->code."'")
+                    ->where('deleted',0)
                     ->orderBy('received_date','asc')
                     ->distinct()
                     ->select([DB::raw("@rownum:=@rownum+1 as rn"),
@@ -1352,6 +1355,7 @@ class WBSSakidashiIssuanceController extends Controller
         if (count((array)$data) < 1) {
             $data = DB::connection($this->mysql)->table(DB::raw('tbl_wbs_inventory, (SELECT @rownum := 0) i'))
                         ->whereRaw("qty > 0 AND iqc_status='1' AND for_kitting='1' AND item='".$req->code."'")
+                        ->where('deleted',0)
                         ->orderBy('received_date','asc')
                         ->distinct()
                         ->select([DB::raw("@rownum:=@rownum+1 as rn"),
@@ -1409,6 +1413,7 @@ class WBSSakidashiIssuanceController extends Controller
     public function checkInFIFO(Request $req)
     {
         $data =  DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                    ->where('deleted',0)
                     ->where('item',$req->item)
                     ->where('lot_no',$req->lot)
                     ->where('qty','>',0)
