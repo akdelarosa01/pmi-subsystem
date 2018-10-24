@@ -527,35 +527,44 @@ function GETPoDetails(){
                 $('#family').val(details.family);
                 $('#series').val(details.series);
                 $('#prodtype').val(details.prodtype);
-                $('#productiondate').val(details.productiondate);
             }
-            var yld = returnData.yield_data[0];
-            if (returnData.yield_data.length > 0) {
-                $('#id').val(yld.id);
-                $('#yieldingno').val(yld.yieldingno);
-                $('#pono').val(yld.pono);
-                $('#poqty').val(yld.poqty);
-                $('#device').val(yld.device);
-                $('#family').val(yld.family);
-                $('#series').val(yld.series);
-                $('#prodtype').val(yld.prodtype);
-                pya_arr = [];
 
-                $.each(returnData.pya, function(i, x) {
-                    pya_arr.push({
-                        id: x.id,
-                        yieldingno: yld.yieldingno,
-                        productiondate: x.productiondate,
-                        yieldingstation: x.yieldingstation,
-                        accumulatedoutput: x.accumulatedoutput,
-                        classification: x.classification,
-                        mod: x.mod,
-                        qty: x.qty
+            if (returnData.effect == "2") {
+                var yld = returnData.yield_data[0];
+                if (returnData.yield_data.length > 0) {
+                    $('#id').val(yld.id);
+                    $('#yieldingno').val(yld.yieldingno);
+                    $('#pono').val(yld.pono);
+                    $('#poqty').val(yld.poqty);
+                    $('#device').val(yld.device);
+                    $('#family').val(yld.family);
+                    $('#series').val(yld.series);
+                    $('#prodtype').val(yld.prodtype);
+
+                    pya_arr = [];
+                    var prod_date = '';
+
+                    $.each(returnData.pya, function(i, x) {
+                        pya_arr.push({
+                            id: x.id,
+                            yieldingno: yld.yieldingno,
+                            productiondate: x.productiondate,
+                            yieldingstation: x.yieldingstation,
+                            accumulatedoutput: x.accumulatedoutput,
+                            classification: x.classification,
+                            mod: x.mod,
+                            qty: x.qty
+                        });
+
+                        prod_date = x.productiondate;
                     });
-                });
-                makePyaTable(pya_arr);
-                pyafieldcomputation();
+                    makePyaTable(pya_arr);
+                    pyafieldcomputation();
+                }
+
+                $('#productiondate').val(prod_date);
             }
+                
 
             if($('#poqty').val() != ''){
                 $('#btnloadpya').removeClass("disabled");
