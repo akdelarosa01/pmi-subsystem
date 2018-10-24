@@ -513,6 +513,12 @@ function GETPoDetails(){
                 $('#family').val(details.family);
                 $('#series').val(details.series);
                 $('#prodtype').val(details.prodtype);
+
+                var d = new Date();
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;  
+                $('input[name=productiondate]').val(date);
             }
             else if(returnData.effect == "1")
             {    var details = returnData.po_details;
@@ -521,7 +527,7 @@ function GETPoDetails(){
                 $('#family').val(details.family);
                 $('#series').val(details.series);
                 $('#prodtype').val(details.prodtype);
-              
+                $('#productiondate').val(details.productiondate);
             }
             var yld = returnData.yield_data[0];
             if (returnData.yield_data.length > 0) {
@@ -553,11 +559,7 @@ function GETPoDetails(){
 
             if($('#poqty').val() != ''){
                 $('#btnloadpya').removeClass("disabled");
-                var d = new Date();
-                var month = d.getMonth()+1;
-                var day = d.getDate();
-                var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;  
-                $('input[name=productiondate]').val(date);
+                
                 $('input[name=productiondate]').attr('disabled',false);
                 $('#family').attr('disabled',false);
                 $('#series').attr('disabled',false);
