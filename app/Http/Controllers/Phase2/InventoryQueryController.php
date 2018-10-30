@@ -16,16 +16,17 @@ class InventoryQueryController extends Controller
     protected $mysql;
     protected $mssql;
     protected $common;
+    protected $com;
     
     public function __construct()
     {
         $this->middleware('auth');
-        $com = new CommonController;
+        $this->com = new CommonController;
 
         if (Auth::user() != null) {
-            $this->mysql = $com->userDBcon(Auth::user()->productline,'stocksquery');
-            $this->mssql = $com->userDBcon(Auth::user()->productline,'mssql');
-            $this->common = $com->userDBcon(Auth::user()->productline,'common');
+            $this->mysql = $this->com->userDBcon(Auth::user()->productline,'stocksquery');
+            $this->mssql = $this->com->userDBcon(Auth::user()->productline,'mssql');
+            $this->common = $this->com->userDBcon(Auth::user()->productline,'common');
         } else {
             return redirect('/');
         }
@@ -33,8 +34,7 @@ class InventoryQueryController extends Controller
 
     public function getInventoryQuery()
     {
-    	$common = new CommonController;
-        if(!$common->getAccessRights(Config::get('constants.MODULE_CODE_STCKQUERY'), $userProgramAccess))
+        if(!$this->com->getAccessRights(Config::get('constants.MODULE_CODE_STCKQUERY'), $userProgramAccess))
         {
             return redirect('/home');
         }
@@ -227,8 +227,8 @@ class InventoryQueryController extends Controller
         foreach ($dbs as $key => $db) {
             array_push($value, [
                     'code' => $db->partcode,
-                    'name' => $db->NAME,
-                    'vendor' => $db->VENDOR,
+                    'name' => $this->com->convert_unicode($db->NAME),
+                    'vendor' => $this->com->convert_unicode($db->VENDOR),
                     'price' => $db->PRICE,
                     'whssm' => $db->WHSSM,
                     'whsnon' => $db->WHSNON,
