@@ -302,7 +302,7 @@ class InventoryQueryController extends Controller
                         $row++;
                     }
                 });
-            })->export('xls');
+            })->download('xls');
 
         // }
         // catch (Exception $e)
