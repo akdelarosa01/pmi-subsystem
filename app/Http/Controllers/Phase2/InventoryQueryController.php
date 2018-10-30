@@ -285,8 +285,8 @@ class InventoryQueryController extends Controller
                     $db = DB::connection($this->mysql)->table('tbl_stockquery')->get();
                     foreach ($db as $key => $item) {
                         $sheet->cell('A'.$row, $item->code);
-                        $sheet->cell('B'.$row, $item->name);
-                        $sheet->cell('C'.$row, $item->vendor);
+                        $sheet->cell('B'.$row, $this->com->convert_unicode($item->name));
+                        $sheet->cell('C'.$row, $this->com->convert_unicode($item->vendor));
                         $sheet->cell('D'.$row, $item->price);
                         $sheet->cell('E'.$row, ($item->assy100 == 0)? '0.00': $item->assy100);
                         $sheet->cell('F'.$row, ($item->assy102 == 0)? '0.00': $item->assy102);
