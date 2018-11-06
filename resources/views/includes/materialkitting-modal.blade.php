@@ -261,3 +261,41 @@
 		</div>
 	</div>
 </div>
+
+<div id="print_modal" class="modal fade" role="dialog" data-backdrop="static">
+	<div class="modal-dialog gray-gallery">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Print Labels</h4>
+			</div>
+			<form class="form-horizontal">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							{{ csrf_field() }}
+							<div class="form-group">
+								<label class="control-label col-sm-2">Printer</label>
+								<div class="col-sm-9">
+									<select class="form-control input-sm" id="printer" name="printer">
+										<option value="">Intermec PB22</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2">Print Qty</label>
+								<div class="col-sm-9">
+									<input type="number" class="form-control input-sm" id="print_qty" name="print_qty" minlength="1">
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<a href="javascript:;" class="btn btn-success" target="_blank">Print</a>
+					<button type="button" data-dismiss="modal" class="btn btn-danger">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

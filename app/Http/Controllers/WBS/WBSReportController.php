@@ -215,7 +215,7 @@ class WBSReportController extends Controller
             }
 
             if (!empty($req->from) && !empty($req->to)) {
-                $from_cond = "AND k.issuance_date BETWEEN '" . $req->from . "' AND '" . $req->to . "'";
+                $from_cond = "AND LEFT(k.created_at,10) BETWEEN '" . $req->from . "' AND '" . $req->to . "'";
             } else {
                 $from_cond = '';
                 $to_cond = '';
@@ -455,7 +455,7 @@ class WBSReportController extends Controller
             }
 
             if (!empty($req->from) && !empty($req->to)) {
-                $from_cond = "AND k.issuance_date BETWEEN '" . $req->from . "' AND '" . $req->to . "'";
+                $from_cond = "AND LEFT(k.created_at,10) BETWEEN '" . $req->from . "' AND '" . $req->to . "'";
             } else {
                 $from_cond = '';
                 $to_cond = '';
