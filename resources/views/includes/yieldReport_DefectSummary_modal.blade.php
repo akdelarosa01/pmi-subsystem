@@ -28,8 +28,8 @@
                                              <div class="col-sm-9">
                                                   <select class="form-control input-sm" name="dsr-ptype" id="dsr-ptype">
                                                        <option value=""></option>
-                                                       <option value="Test Socket">Test Socket</option>
-                                                       <option value="Burn In">Burn In</option>     
+                                                       <option value="TEST SOCKET">TEST SOCKET</option>
+                                                       <option value="BURN-IN">BURN-IN</option>     
                                                   </select>
                                              </div>
                                         </div>
@@ -37,7 +37,6 @@
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
                                                   <button type="button" onclick="javascript:defectsummaryRpt();"  class="btn green-jungle input-sm">Export to Excel</button>
-                                                  <!-- <button type="button" onclick="javascript:defectsummaryRptpdf();" class="btn yellow-gold input-sm" >Export to PDF</button>  -->
                                                    <button type="button" data-dismiss="modal" class="btn btn-danger input-sm">Close</button>
                                              </div>  
                                         </div>

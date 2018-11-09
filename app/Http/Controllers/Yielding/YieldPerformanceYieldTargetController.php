@@ -24,16 +24,17 @@ class YieldPerformanceYieldTargetController extends Controller
     protected $mysql;
     protected $mssql;
     protected $common;
+    protected $com;
 
     public function __construct()
     {
         $this->middleware('auth');
-        $com = new CommonController;
+        $this->com = new CommonController;
 
         if (Auth::user() != null) {
-            $this->mysql = $com->userDBcon(Auth::user()->productline,'yielding');
-            $this->mssql = $com->userDBcon(Auth::user()->productline,'mssql');
-            $this->common = $com->userDBcon(Auth::user()->productline,'common');
+            $this->mysql = $this->com->userDBcon(Auth::user()->productline,'yielding');
+            $this->mssql = $this->com->userDBcon(Auth::user()->productline,'mssql');
+            $this->common = $this->com->userDBcon(Auth::user()->productline,'common');
         } else {
             return redirect('/');
         }
@@ -41,8 +42,7 @@ class YieldPerformanceYieldTargetController extends Controller
 
     public function getYieldTarget(Request $request)
     {
-        $common = new CommonController;
-         if(!$common->getAccessRights(Config::get('constants.MODULE_CODE_YIELDTAR'), $userProgramAccess))
+         if(!$this->com->getAccessRights(Config::get('constants.MODULE_CODE_YIELDTAR'), $userProgramAccess))
         {
             return redirect('/home');
         }
@@ -98,8 +98,8 @@ class YieldPerformanceYieldTargetController extends Controller
             DB::connection($this->mysql)->table('tbl_targetregistration')
                 ->where('id','=',$request->id)
                 ->update(array(
-                'datefrom'=>$request->datefrom,
-                'dateto'=>$request->dateto,
+                'datefrom'=>$this->com->convertDate($request->datefrom,'Y-m-d'),
+                'dateto'=>$this->com->convertDate($request->dateto,'Y-m-d'),
                 'yield'=>$request->yield,
                 'dppm'=>$request->dppm,
                 'ptype'=>$request->ptype,
@@ -108,8 +108,8 @@ class YieldPerformanceYieldTargetController extends Controller
         }else{
             DB::connection($this->mysql)->table('tbl_targetregistration')
                 ->insert([
-                'datefrom'=>$request->datefrom,
-                'dateto'=>$request->dateto,
+                'datefrom'=>$this->com->convertDate($request->datefrom,'Y-m-d'),
+                'dateto'=>$this->com->convertDate($request->dateto,'Y-m-d'),
                 //'dateto'=>$this->$com->convertDate($request->dateto,'Y-m-d'),
                 'yield'=>$request->yield,
                 'dppm'=>$request->dppm,

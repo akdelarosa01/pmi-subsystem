@@ -67,8 +67,8 @@
                                              <div class="col-sm-9">
                                                   <select class="form-control input-sm select-validate" name="ptype" id="ptype">
                                                        <option value=""></option>
-                                                       <option value="Test Socket">Test Socket</option>
-                                                       <option value="Burn In">Burn In</option>     
+                                                       <option value="TEST SOCKET">TEST SOCKET</option>
+                                                       <option value="BURN-IN">BURN-IN</option>     
                                                   </select>
                                                   <div id="ptype_feedback"></div>
                                              </div>     

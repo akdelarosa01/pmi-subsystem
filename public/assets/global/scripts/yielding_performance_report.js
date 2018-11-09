@@ -1,6 +1,10 @@
 var i =0;
 
-$( function(e) {    
+$( function(e) {
+     loadchart();
+
+     getReportRecords();
+
      $('#btnxport-summaryrpt').click(function(){
           $('#summaryrpt_Modal').modal('show');
           $('#Export-Modal').modal('hide');
@@ -53,9 +57,9 @@ function loadchart(){
      var datetos = $('#datetos').val();
      var data = {_token: token, datefroms:datefroms, datetos:datetos};
      $.ajax({
-          url:loadchart,
+          url: loadchartURL,
           method:'post',
-          data:data
+          data: data
      }).done(function(data, textStatus, jqXHR){
          console.log(data);
      /*    alert(data[0]['toutput']);
@@ -137,6 +141,7 @@ function loadchart(){
           console.log(errorThrown+'|'+textStatus);
      });     
 }
+
 function update(){
      var yieldingno = $('input[name=yieldingno2]').val();
      var pono = $('input[name=pono2]').val();
@@ -208,5 +213,53 @@ function EditButtons(){
           $('#val').keyup(function(){
              $('#er3').html(""); 
           });
+     });
+}
+
+function getReportRecords() {
+     $.ajax({
+          url: reportRecordsURL,
+          type: 'GET',
+          dataType: 'JSON',
+          data: {
+               _token: token
+          },
+     }).done(function(data,textStatus,jqXHR) {
+          makeReportTable(data)
+     }).fail(function(data,textStatus,jqXHR) {
+          console.log("error");
+     }).always(function() {
+          console.log("complete");
+     });
+     
+}
+
+
+function makeReportTable(arr) {
+     $('#tbl_reports').dataTable().fnClearTable();
+     $('#tbl_reports').dataTable().fnDestroy();
+     $('#tbl_reports').dataTable({
+          data: arr,
+          columns: [
+               { data: 'pono' },
+               { data: 'poqty' },
+               { data: 'device' },
+               { data: 'series' },
+               { data: 'family' },
+               { data: 'accumulatedoutput' },
+               { data: 'qty' },
+               { data: function(x) {
+                    var xx = parseFloat(x.accumulatedoutput) + parseFloat(x.qty);
+                    var yy = 0;
+
+                    if (xx !== 0){
+                         yy = parseFloat(x.accumulatedoutput) / xx;
+                    }
+
+                    var twoyield = yy * 100;
+
+                    return twoyield;
+               } },
+          ]
      });
 }

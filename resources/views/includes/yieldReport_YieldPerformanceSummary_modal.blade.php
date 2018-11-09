@@ -35,8 +35,8 @@
                                              <div class="col-sm-9">
                                                   <Select class="form-control input-sm " id="ypsr-prodtype" name="ypsr-prodtype">
                                                        <option value=""></option>
-                                                       <option value="Test Socket">Test Socket</option>
-                                                       <option value="Burn In">Burn In</option>
+                                                       <option value="TEST SOCKET">TEST SOCKET</option>
+                                                       <option value="BURN-IN">BURN-IN</option>
                                                  </Select>
                                              </div>     
                                         </div>
@@ -74,7 +74,7 @@
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
                                                   <button type="button" onclick="javascript:yieldsumRpt();"  class="btn green-jungle input-sm">Export to Excel</button>
-                                                  <button type="button" onclick="javascript:yieldsumRptpdf();" class="btn yellow-gold input-sm" >Export to PDF</button> 
+                                                  {{-- <button type="button" onclick="javascript:yieldsumRptpdf();" class="btn yellow-gold input-sm" >Export to PDF</button>  --}}
                                                   <button type="button" data-dismiss="modal" class="btn btn-danger input-sm">Close</button>
                                              </div>  
                                         </div>

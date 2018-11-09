@@ -32,15 +32,10 @@
                               <div class="row">
 
                                    <div class="col-sm-12">
-                                   <div class="scroller" style="height: 300px" id="tablefortargetreg">
-                                       <table id="modreg-table" class="table table-striped table-bordered table-hover"style="font-size:10px">
+
+                                        <table id="tbl_reports" class="table table-striped table-bordered table-hover"style="font-size:10px">
                                              <thead >
                                                   <tr>
-{{--                                                        <td class="table-checkbox" style="width: 5%">
-                                                            <input type="checkbox" class="group-checkable checkAllitems" name="checkAllitem" data-set="#tbl_yield .checkboxes"/>
-                                                       </td> --}}
-                                                      {{--  <td>
-                                                       </td> --}}
                                                        <td>PO Number</td>
                                                        <td>PO Qty</td>
                                                        <td>Device Name</td>
@@ -51,36 +46,10 @@
                                                        <td>Total Yield</td>
                                                   </tr>
                                              </thead>
-                                             <tbody>
-                                              {{-- id="tbl_yield_body"> --}}
-                                              @foreach($records as $rec)
-                                                  <?php 
-                                                  $x = $rec->accumulatedoutput + $rec->qty;
-                                                  if ($x <> 0){
-                                                       $y = $rec->accumulatedoutput / $x;     
-                                                  }else{
-                                                       $y = 0;
-                                                  }
-                                                  $twoyield = $y * 100;
-                                                  ?>
-                                                  <tr> 
-{{--                                                   <td style="width: 5%"> 
-                                                  <button type="button" name="edit-task" class="btn btn-sm btn-primary edittask" value="{{$rec->id . '|' . $rec->pono . '|' .$rec->poqty. '|' .$rec->device. '|' . $rec->series . '|' .$rec->family. '|' .$rec->toutput. '|' . $rec->treject . '|' .$rec->twoyield}}" id="editTask{{$rec->id}}">
-                                                  <i class="fa fa-edit"></i> 
-                                                  </button>
-                                                  </td> --}}
-                                                  <td>{{$rec->pono}}</td>
-                                                  <td>{{$rec->poqty}}</td>
-                                                  <td>{{$rec->device}}</td>
-                                                  <td>{{$rec->series}}</td>
-                                                  <td>{{$rec->family}}</td>
-                                                  <td>{{$rec->accumulatedoutput}}</td>
-                                                  <td>{{$rec->qty}}</td>
-                                                  <td>{{round($twoyield,2)}}</td>
-                                                  </tr>
-                                                  @endforeach
-                                              </tbody> 
+                                             <tbody></tbody> 
                                         </table>
+
+
                                         <br>
                                         <div class="form-group pull-right">
                                              <label class="control-label col-sm-2">DPPM</label>
@@ -89,11 +58,11 @@
                                              </div> 
                                         </div>
                                         <div class="col-sm-2">
-                                             <input type="text" class="form-control input-sm" id="datefroms" name="datefroms" > Date From
+                                             <input type="text" class="form-control input-sm date-picker" id="datefroms" name="datefroms" > Date From
                                         </div>
                                          <div class="col-sm-2">
-                                             <input type="text" class="form-control input-sm" id="datetos" name="datetos" > Date To
-                                        </div>   
+                                             <input type="text" class="form-control input-sm date-picker" id="datetos" name="datetos" > Date To
+                                        </div>
                                    </div>
                               </div>
                               <br>
@@ -138,7 +107,7 @@
 @endsection
 
 @push('script')
-{{-- <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/plugins/canvasjs.min.js') }}"></script> --}}
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/plugins/canvasjs.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js') }}"></script>
@@ -149,8 +118,14 @@
 <script type="text/javascript">
      var token = "{{ Session::token() }}";
      var ReportYieldPerformance = "{{ url('/ReportYieldPerformance') }}";
-     var loadchart = "{{ url('/loadchart') }}";
+     var loadchartURL = "{{ url('/loadchart') }}";
      var updateyieldsummary = "{{ url('/update-yieldsummary') }}";
+     var reportRecordsURL = "{{ url('/report-records') }}";
+
+     var summaryREptURL = "{{ url('/summaryREpt') }}";
+     var defectsummaryRptURL = "{{ url('/defectsummaryRpt') }}";
+     var yieldsumfamRptURL = "{{ url('/yieldsumfamRpt') }}";
+     var yieldsumRptURL = "{{ url('/yieldsumRpt') }}";
 </script>
 <script type="text/javascript"src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yielding_performance_report.js') }}"></script>
 

@@ -2233,6 +2233,11 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\YieldPerformanceReportController@devreg_get_series',
                 'name' => '/devreg_get_series'
             ]);
+
+            Route::get('/report-records', [
+                'uses' => 'Yielding\YieldPerformanceReportController@records',
+                'name' => '/report-records'
+            ]);
             
         /*YIELD PERFORMANCE*/
             // Route::post('/yieldperformance', [

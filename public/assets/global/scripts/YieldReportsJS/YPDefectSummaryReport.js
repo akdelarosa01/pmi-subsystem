@@ -12,11 +12,10 @@ function defectsummaryRpt(){
           option = fol;
      }
     
-     var token = "{{ Session::token() }}";
      var paramfrom = dsrdatefrom.split("/");
      var paramto = dsrdateto.split("/");
      var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
      var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
 
-     window.location = "{{ url('/defectsummaryRpt') }}" + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
+     window.location = defectsummaryRptURL + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
 }
