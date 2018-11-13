@@ -513,6 +513,7 @@ class WBSIqcController extends Controller
                             DB::raw('i.supplier as supplier'),
                             DB::raw("IFNULL(b.qty,(SELECT b.qty FROM tbl_wbs_local_receiving_batch as b
                                                     where b.id = i.loc_batch_id)) as qty"),
+                            DB::raw('i.box as box'),
                             DB::raw('i.lot_no as lot_no'),
                             DB::raw('i.drawing_num as drawing_num'),
                             DB::raw('i.wbs_mr_id as wbs_mr_id'),
@@ -533,6 +534,7 @@ class WBSIqcController extends Controller
                             'i.item_desc',
                             'i.supplier',
                             'i.lot_no',
+                            'i.box',
                             'i.drawing_num',
                             'i.wbs_mr_id',
                             'i.invoice_no',
