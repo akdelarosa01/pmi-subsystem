@@ -52,11 +52,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_common'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -70,11 +66,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -88,11 +80,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_cn'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -106,11 +94,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yf'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -124,11 +108,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -142,11 +122,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -160,11 +136,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_stockquery_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -178,11 +150,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_stockquery_cn'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -196,11 +164,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_stockquery_yf'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -214,11 +178,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_wbs_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -232,11 +192,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_wbs_cn'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -250,11 +206,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_wbs_yf'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -268,11 +220,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -286,11 +234,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_cn'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -304,11 +248,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_yf'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -322,11 +262,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_mrp_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -340,11 +276,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_sss_ts'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -358,11 +290,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yielding'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -375,11 +303,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yielding'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -392,11 +316,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yielding'),
             'username' => env('DB_USERNAME', 'root'),
-<<<<<<< HEAD
-            'password' => env('DB_PASSWORD', 'seikoit'),
-=======
-            'password' => env('DB_PASSWORD', ''),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
+            'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -434,11 +354,7 @@ return [
 
         'sqlsrvcn' => [
             'driver' => 'sqlsrv',
-<<<<<<< HEAD
-            'host' => env('DB_HOST', '127.0.0.1'),
-=======
             'host' => env('DB_HOST', '192.168.200.52'),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'cn_v4'),
             'username' => env('DB_USERNAME', 'sa'),
@@ -448,11 +364,7 @@ return [
 
         'sqlsrvbu' => [
             'driver' => 'sqlsrv',
-<<<<<<< HEAD
-            'host' => env('DB_HOST', '127.0.0.1'),
-=======
             'host' => env('DB_HOST', '192.168.200.52'),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
@@ -462,11 +374,7 @@ return [
 
         'sqlsrvts' => [
             'driver' => 'sqlsrv',
-<<<<<<< HEAD
-            'host' => env('DB_HOST', '127.0.0.1'),
-=======
             'host' => env('DB_HOST', '192.168.200.52'),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'probe_v4'),
             'username' => env('DB_USERNAME', 'sa'),
@@ -476,11 +384,7 @@ return [
 
         'sqlsrvyf' => [
             'driver' => 'sqlsrv',
-<<<<<<< HEAD
-            'host' => env('DB_HOST', '127.0.0.1'),
-=======
             'host' => env('DB_HOST', '192.168.200.52'),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'yf1_v4'),
             'username' => env('DB_USERNAME', 'sa'),
@@ -491,11 +395,7 @@ return [
 
         'sqlsrvpps' => [
             'driver' => 'sqlsrv',
-<<<<<<< HEAD
-            'host' => env('DB_HOST', '127.0.0.1'),
-=======
             'host' => env('DB_HOST', '192.168.200.52'),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
@@ -505,11 +405,7 @@ return [
 
         'sqlsrvmold' => [
             'driver' => 'sqlsrv',
-<<<<<<< HEAD
-            'host' => env('DB_HOST', '127.0.0.1'),
-=======
             'host' => env('DB_HOST', '192.168.200.52'),
->>>>>>> 5c0d84ab4cea0eb35af6f8d9094381e7869706d2
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
