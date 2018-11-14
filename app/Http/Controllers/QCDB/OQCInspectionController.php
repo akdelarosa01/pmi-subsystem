@@ -160,35 +160,41 @@ class OQCInspectionController extends Controller
                         ->addColumn('fyww', function($data) {
                             return $data->fy.' - '.$data->ww;
                         })
-                        ->addColumn('mod', function($data) use($req,$output) {
+                        ->addColumn('mod', function($data) use($req) {
+                            $mode_of_defects = [];
                             if ($data->judgement == 'Accept') {
                                 return 'NDF';
                             } else {
                                 if($req->report_status == "GROUPBY"){
                                     $table = DB::connection($this->mysql)->table('oqc_inspections_mod')
-                                        ->select('pono',DB::raw("(GROUP_CONCAT(mod1 SEPARATOR ' , ')) AS mod1"),DB::raw("(GROUP_CONCAT(lotno SEPARATOR ' , ')) AS lot_no"),'submission','qty')
+                                        ->select('pono',
+                                                DB::raw("(GROUP_CONCAT(mod1 SEPARATOR ' , ')) AS mod1"),
+                                                DB::raw("(GROUP_CONCAT(lotno SEPARATOR ' , ')) AS lot_no"),
+                                                'submission',
+                                                'qty')
                                         ->groupBy('pono','submission','device')
                                         ->get();
-
                                 } else {
-                                    $table = DB::connection($this->mysql)->table('oqc_inspections as a')
-                                        ->leftJoin('oqc_inspections_mod as b','a.lot_no','=','b.lotno')
-                                        ->select('a.po_no',
-                                                'b.mod1',
-                                                'a.lot_no',
-                                                'a.submission')
-                                        ->where('b.pono',$data->po_no)
-                                        ->where('a.lot_no',$data->lot_no)
-                                        ->where('a.submission',$data->submission)
-                                        ->get();
+                                    $table = DB::connection($this->mysql)
+                                                ->select("SELECT a.po_no,
+                                                                b.mod1,
+                                                                a.lot_no,
+                                                                a.submission
+                                                        from oqc_inspections as a
+                                                        left join oqc_inspections_mod as b
+                                                        on a.lot_no = b.lotno and a.po_no = b.pono
+                                                        where a.po_no = '".$data->po_no."'
+                                                        and a.lot_no = '".$data->lot_no."'
+                                                        and a.submission = '".$data->submission."'");
                                 }
 
-                                foreach ($table as $key => $data) {
-                                    $output[$key] = 'ok';//$data->mod1;
-                                    // $output['lotno'][$key] = $data->lot_no;
+                                foreach ($table as $key => $tb) {
+                                    array_push($mode_of_defects, $tb->mod1);
                                 }
 
-                                return $output;
+                                $mods = implode(',', $mode_of_defects);
+
+                                return $mods;
                             }
                         })
                         ->make(true);
