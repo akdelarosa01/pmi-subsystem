@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-md-12" id="main_pane">
 
-                <table class="table table-hover table-bordered table-striped" id="tbl_oqc" style="font-size: 11px;">
+                <table class="table table-hover table-bordered table-striped table-condensed" id="tbl_oqc" style="font-size: 11px;">
                     <thead>
                         <tr>
                             <td class="table-checkbox">
