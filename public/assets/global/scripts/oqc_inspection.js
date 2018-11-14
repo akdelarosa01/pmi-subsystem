@@ -89,11 +89,11 @@ $( function() {
 			dataType: 'JSON',
 			data: $(this).serialize(),
 		}).done(function(data, textStatus, xhr) {
-            getNumOfDefectives($('#ins_id').val());
+            getNumOfDefectives($('#po_no').val(),$('#lot_no').val(),$('#submission').val());
 			var modUrl = modDataTableURL+'?_token='+token+
 					'&&pono='+$('#po_no').val()+
-					'&&device='+$('#series_name').val()+
-					// '&&lotno='+$('#lot_no').val()+
+					// '&&device='+$('#series_name').val()+
+					'&&lotno='+$('#lot_no').val()+
 					'&&submission='+$('#submission').val();
 			getDatatable('tbl_mode_of_defects',modUrl,modColumn,[],0);
 			clearMOD();
@@ -139,13 +139,21 @@ $( function() {
 		$('#remarks').val($(this).attr('data-remarks'));
 		$('#inspection_save_status').val('EDIT');
 
-        getNumOfDefectives($(this).attr('data-id'));
+        getNumOfDefectives($(this).attr('data-po_no'),$(this).attr('data-lot_no'),$(this).attr('data-submission'));
 
 		if ($(this).attr('data-type') == 'PROBE PIN') {
 			$('#is_probe').prop('checked', true);
 		}
 
 		checkAuhtor($(this).attr('data-inspector'));
+
+		if ($(this).attr('data-lot_accepted') > 0) {
+			$('#no_of_defects_div').hide();
+			$('#mode_of_defects_div').hide();
+		} else {
+			$('#no_of_defects_div').show();
+			$('#mode_of_defects_div').show();
+		}
 
 		$('#inspection_modal').modal('show');
 	});
@@ -266,12 +274,17 @@ function clearMOD() {
 	$('.clear_mod').val('');
 }
 
-function getNumOfDefectives(id) {
+function getNumOfDefectives(po_no,lot_no,submission) {
     $.ajax({
         url: getNumOfDefectivesURL,
         type: 'GET',
         dataType: 'JSON',
-        data: {_token:token,id:id}
+        data: {
+        	_token: token,
+        	po_no: po_no,
+        	lot_no: lot_no,
+        	submission: submission
+        }
     }).done(function(data,xhr,textStatus) {
         $('#no_of_defects').val(data);
         if (data > 0) {

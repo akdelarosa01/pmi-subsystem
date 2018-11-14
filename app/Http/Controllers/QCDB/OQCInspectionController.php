@@ -153,7 +153,16 @@ class OQCInspectionController extends Controller
                             return $data->id;
                         })
                         ->addColumn('action', function($data) {
-                            return '<button type="button" class="btn btn-sm btn-primary btn_edit_inspection" data-id="'.$data->id.'" data-assembly_line="'.$data->assembly_line.'" data-app_date="'.$data->app_date.'" data-app_time="'.$data->app_time.'" data-lot_no="'.$data->lot_no.'" data-prod_category="'.$data->prod_category.'" data-po_no="'.$data->po_no.'" data-device_name="'.$data->device_name.'" data-customer="'.$data->customer.'" data-po_qty="'.$data->po_qty.'" data-family="'.$data->family.'" data-type_of_inspection="'.$data->type_of_inspection.'" data-severity_of_inspection="'.$data->severity_of_inspection.'" data-inspection_lvl="'.$data->inspection_lvl.'" data-aql="'.$data->aql.'" data-accept="'.$data->accept.'" data-reject="'.$data->reject.'" data-date_inspected="'.$data->date_inspected.'" data-ww="'.$data->ww.'" data-fy="'.$data->fy.'" data-shift="'.$data->shift.'" data-time_ins_from="'.$data->time_ins_from.'" data-time_ins_to="'.$data->time_ins_to.'" data-inspector="'.$data->inspector.'" data-submission="'.$data->submission.'" data-coc_req="'.$data->coc_req.'" data-judgement="'.$data->judgement.'" data-lot_qty="'.$data->lot_qty.'" data-sample_size="'.$data->sample_size.'" data-lot_inspected="'.$data->lot_inspected.'" data-lot_accepted="'.$data->lot_accepted.'" data-num_of_defects="'.$data->num_of_defects.'" data-remarks="'.$data->remarks.'" data-type="'.$data->type.'">'.
+                            $num_of_defects = DB::connection($this->mysql)
+                                                ->select("SELECT SUM(b.qty) as num_of_defects
+                                                        from oqc_inspections as a
+                                                        left join oqc_inspections_mod as b
+                                                        on a.lot_no = b.lotno and a.po_no = b.pono
+                                                        where a.po_no = '".$data->po_no."'
+                                                        and a.lot_no = '".$data->lot_no."'
+                                                        and a.submission = '".$data->submission."' LIMIT 1");
+
+                            return '<button type="button" class="btn btn-sm btn-primary btn_edit_inspection" data-id="'.$data->id.'" data-assembly_line="'.$data->assembly_line.'" data-app_date="'.$data->app_date.'" data-app_time="'.$data->app_time.'" data-lot_no="'.$data->lot_no.'" data-prod_category="'.$data->prod_category.'" data-po_no="'.$data->po_no.'" data-device_name="'.$data->device_name.'" data-customer="'.$data->customer.'" data-po_qty="'.$data->po_qty.'" data-family="'.$data->family.'" data-type_of_inspection="'.$data->type_of_inspection.'" data-severity_of_inspection="'.$data->severity_of_inspection.'" data-inspection_lvl="'.$data->inspection_lvl.'" data-aql="'.$data->aql.'" data-accept="'.$data->accept.'" data-reject="'.$data->reject.'" data-date_inspected="'.$data->date_inspected.'" data-ww="'.$data->ww.'" data-fy="'.$data->fy.'" data-shift="'.$data->shift.'" data-time_ins_from="'.$data->time_ins_from.'" data-time_ins_to="'.$data->time_ins_to.'" data-inspector="'.$data->inspector.'" data-submission="'.$data->submission.'" data-coc_req="'.$data->coc_req.'" data-judgement="'.$data->judgement.'" data-lot_qty="'.$data->lot_qty.'" data-sample_size="'.$data->sample_size.'" data-lot_inspected="'.$data->lot_inspected.'" data-lot_accepted="'.$data->lot_accepted.'" data-num_of_defects="'.$num_of_defects[0]->num_of_defects.'" data-remarks="'.$data->remarks.'" data-type="'.$data->type.'">'.
                                 '   <i class="fa fa-edit"></i> '.
                             '</button>';
                         })
@@ -1423,14 +1432,16 @@ class OQCInspectionController extends Controller
 
     public function getNumOfDefectives(Request $req)
     {
-        $db = DB::connection($this->mysql)->table('oqc_inspections_mod')
-                ->where('modid',$req->id)
-                ->select(
-                    DB::raw("SUM(qty) as no_of_defectives")
-                )
-                ->groupBy('modid')->first();
+        $db = DB::connection($this->mysql)
+                ->select("SELECT SUM(b.qty) as no_of_defectives
+                        from oqc_inspections as a
+                        left join oqc_inspections_mod as b
+                        on a.lot_no = b.lotno and a.po_no = b.pono
+                        where a.po_no = '".$req->po_no."'
+                        and a.lot_no = '".$req->lot_no."'
+                        and a.submission = '".$req->submission."' LIMIT 1");
         if (count((array)$db) > 0) {
-            return $db->no_of_defectives;
+            return $db[0]->no_of_defectives;
         } else {
             return 0;
         }
