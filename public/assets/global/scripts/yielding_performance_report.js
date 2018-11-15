@@ -5,10 +5,10 @@ $( function(e) {
      var month = d.getMonth()+1;
      var months = d.getMonth();
      var day = d.getDate();
-     var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day
-     var dates = d.getFullYear() + '-' + (month<10 ? '0' : '') + months + '-' +(day<10 ? '0' : '') + day
-     $('#datefroms').val(dates);
-     $('#datetos').val(date);
+     var lastMonth = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day
+     var today = d.getFullYear() + '-' + (months<10 ? '0' : '') + months + '-' +(day<10 ? '0' : '') + day
+     $('#datefroms').val(today);
+     $('#datetos').val(lastMonth);
 
      loadchart();
      getReportRecords();
