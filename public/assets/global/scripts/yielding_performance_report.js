@@ -1,8 +1,16 @@
 var i =0;
 
 $( function(e) {
-     loadchart();
+     var d = new Date();
+     var month = d.getMonth()+1;
+     var months = d.getMonth();
+     var day = d.getDate();
+     var lastMonth = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day
+     var today = d.getFullYear() + '-' + (months<10 ? '0' : '') + months + '-' +(day<10 ? '0' : '') + day
+     $('#datefroms').val(today);
+     $('#datetos').val(lastMonth);
 
+     loadchart();
      getReportRecords();
 
      $('#btnxport-summaryrpt').click(function(){
