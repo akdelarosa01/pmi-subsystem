@@ -1089,571 +1089,9 @@ class WBSMaterialKittingController extends Controller
     	}
     }
 
-    // public function transferSlip(Request $req)
-    // {
-
-    //     $id = trim($req['id']);
-    //     $cur_id = '';
-    //     $issuance_no = '';
-    //     $max_id = '';
-
-    //     $dt = Carbon::now();
-    //     $date = substr($dt->format('  M j, Y A'), 2);
-    //     $company_info = $this->com->getCompanyInfo();
-
-    //     $mk_data = $this->getKitInfoByID($id);
-
-    //     if(count((array)$mk_data) > 0)
-    //     {
-    //         $issuanceno = $mk_data->issuance_no;
-    //         $pono       = $mk_data->po_no;
-    //         $devicecode = $mk_data->device_code;
-    //         $devicename = $mk_data->device_name;
-    //         $poqty      = $mk_data->po_qty;
-    //         $kitqty     = $mk_data->kit_qty;
-    //         $kitno      = $mk_data->kit_no;
-    //         $preparedby = $mk_data->prepared_by;
-    //         $createdat  = $mk_data->created_at;
-    //         $status     = $mk_data->status;
-
-    //         if ($status == 'O') {
-    //         	$status = 'Open';
-    //         }
-
-    //         if ($status == 'C') {
-    //         	$status = 'Cancelled';
-    //         }
-
-    //         if ($status == 'X') {
-    //         	$status = 'Closed';
-    //         }
-            
-
-    //         $mk_details_data = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance AS I')
-    //                         ->leftJoin('tbl_wbs_material_kitting_details as D', 'D.issue_no', '=', 'I.issue_no')
-    //                         ->where('I.issue_no',$issuanceno)
-    //                         ->whereRaw('I.item = D.item')
-    //                         ->select('I.item'
-    //                                 , 'I.item_desc'
-    //                                 , DB::raw('FORMAT(D.usage,2) AS `usage`')
-    //                                 , DB::raw('FORMAT(D.rqd_qty,2) AS rqd_qty')
-    //                                 , DB::raw('FORMAT(SUM(I.issued_qty),2) AS issued_qty')
-    //                                 , 'I.lot_no')
-    //                         ->groupBy('I.item','I.item_desc','D.usage','D.rqd_qty','I.issued_qty','I.lot_no')
-    //                         ->orderBy('D.id')
-    //                         ->get();
-    //     }
-    //     else
-    //     {
-    //         $issuanceno = '';
-    //         $pono       = '';
-    //         $devicecode = '';
-    //         $devicename = '';
-    //         $poqty      = '';
-    //         $kitqty     = '';
-    //         $kitno      = '';
-    //         $preparedby = '';
-    //         $createdat  = '';
-    //         $status     = '';
-    //         $mk_details_data = [];
-    //     }
-
-    //     $html = '<!DOCTYPE html>
-    //                 <html>
-
-    //                 <head>
-    //                     <style type="text/css">
-    //                         @page
-    //                         {
-    //                             margin-top: 0.0em;
-    //                             margin-bottom: 0.0em;
-    //                             margin-left: 0.0em;
-    //                             margin-right: 0.0em;
-    //                         }
-    //                         @page :first
-    //                         {
-    //                             margin-top: 0px;
-    //                         }
-    //                         html {
-    //                             height: 100%;
-    //                         }
-    //                         body
-    //                         {
-    //                             height: 930px;
-    //                             margin: 3px, 3px, 3px, 3px;
-    //                             padding: 0px;
-    //                             min-height: 100vh;
-    //                         }
-    //                         #headerA
-    //                         {
-    //                             position: fixed;
-    //                             left: 20px; right: 20px; top: 0px;
-    //                             text-align: center;
-    //                             height: 90px;
-    //                         }
-    //                         #headerB
-    //                         {
-    //                             position: absolute;
-    //                             left: -20px; right: -20px; top: -240px;
-    //                             text-align: center;
-    //                             width:100%;
-    //                             height: 220px;
-    //                         }
-    //                         #footer
-    //                         {
-    //                             position: fixed;
-    //                             left: 3px; right: 3px; bottom: 90px;
-    //                             text-align: center;
-    //                             height: 40px;
-    //                         }
-    //                         .pagenum:before
-    //                         {
-    //                             content: counter(page) " of " counter(pages);
-    //                         }
-    //                         .rTable {
-    //                             display: table;
-    //                             width: 100%;
-    //                         }
-
-    //                         .rTableRow {
-    //                             display: table-row;
-    //                         }
-
-    //                         .rTableHeading {
-    //                             background-color: #ddd;
-    //                             display: table-header-group;
-    //                         }
-
-    //                         .rTableCell,
-    //                         .rTableHead {
-    //                             display: table-cell;
-    //                             padding: 1px 10px;
-    //                             border: 0px solid #999999;
-    //                         }
-
-    //                         .rTableCell-bordered,
-    //                         .rTableHead-bordered {
-    //                             display: table-cell;
-    //                             padding: 3px 10px;
-    //                             border: 1px solid black;
-    //                         }
-
-    //                         .rTableCell-half{
-    //                             display: table-cell;
-    //                             padding: 3px 10px;
-    //                             border: 2px solid black;
-    //                             width:50%;
-    //                         }
-
-    //                         .width-10 {
-    //                             width:10%;
-    //                         }
-    //                         .width-20 {
-    //                             width:20%;
-    //                         }
-    //                         .width-23 {
-    //                             width:23%;
-    //                         }
-    //                         .width-25 {
-    //                             width:25%;
-    //                         }
-    //                         .width-30 {
-    //                             width:30%;
-    //                         }
-    //                         .width-32 {
-    //                             width:32%;
-    //                         }
-    //                         .width-35 {
-    //                             width:35%;
-    //                         }
-    //                         .width-40 {
-    //                             width:40%;
-    //                         }
-    //                         .width-45 {
-    //                             width:45%;
-    //                         }
-    //                         .width-50 {
-    //                             width:50%;
-    //                         }
-    //                         .width-60 {
-    //                             width:60%;
-    //                         }
-    //                         .width-70 {
-    //                             width:70%;
-    //                         }
-    //                         .width-100 {
-    //                             width:100%;
-    //                         }
-
-    //                         .height-30 {
-    //                             height:500px;
-    //                         }
-
-    //                         .center{
-    //                             text-align: center;
-    //                         }
-
-    //                         .right{
-    //                             text-align: right;
-    //                         }
-
-    //                         .largeText{
-    //                             font-size: 23px;
-    //                         }
-
-    //                         .large1Text{
-    //                             font-size: 15px;
-    //                         }
-
-    //                         .mediumText{
-    //                             font-size: 13px;
-    //                         }
-
-    //                         .smallText{
-    //                             font-size: 8px;
-    //                         }
-    //                         .small1Text{
-    //                             font-size: 7px;
-    //                         }
-
-    //                         .smallestText{
-    //                             font-size: 5px;
-    //                         }
-
-    //                         .fontArial
-    //                         {
-    //                             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    //                         }
-
-    //                         .rTableHeading {
-    //                             display: table-header-group;
-    //                             background-color: #ddd;
-    //                             font-weight: bold;
-    //                         }
-
-    //                         .rTableFoot {
-    //                             display: table-footer-group;
-    //                             font-weight: bold;
-    //                             background-color: #ddd;
-    //                         }
-
-    //                         .rTableBody {
-    //                             display: table-row-group;
-    //                         }
-    //                         .rBorder-1 {
-    //                             border: 1px solid black;
-    //                         }
-    //                         .rBorder-2 {
-    //                             border: 3px solid black;
-    //                         }
-    //                         label {
-    //                           display: block;
-    //                           padding-left: 5px;
-    //                           text-indent: -5px;
-    //                         }
-    //                         input {
-    //                           width: 13px;
-    //                           height: 13px;
-    //                           padding: 0;
-    //                           margin:0;
-    //                           vertical-align: bottom;
-    //                           position: relative;
-    //                           top: -1px;
-    //                           *overflow: hidden;
-    //                         }
-    //                         .header, .footer {
-    //                             width: 100%;
-    //                             text-align: center;
-    //                             position: fixed;
-    //                         }
-    //                         .header {
-    //                             top: 0px;
-    //                         }
-    //                         .footer {
-    //                             bottom: 0px;
-    //                         }
-    //                         .pagenum:before {
-    //                             content: counter(page);
-    //                         }
-    //                         .fontArial {
-    //                             font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    //                         }
-    //                         thead{display: table-header-group;}
-    //                         tfoot {display: table-row-group;}
-    //                         tr {page-break-inside: avoid;}
-    //                     </style>
-    //                 </head>
-                        
-    //                 <body>
-    //                     <div class="rTable fontArial" style="height: 100%;">
-    //                         <div class="rTableBody">
-    //                             <div class="rTableRow">
-    //                                 <div class="rTableCell-bordered rBorder-2">
-    //                                     <div class="rTable">
-    //                                         <div class="rTableBody">
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell large1Text width-70 ">
-    //                                                     <strong><ins class="largeText">MATERIAL ISSUANCE SHEET</ins></strong>
-    //                                                 </div>
-    //                                                 <div class="rTableCell right width-30 mediumText">Warehouse<br/>COPY</div>
-    //                                             </div>
-    //                                         </div>
-    //                                     </div>
-    //                                     <div class="rTable small1Text">
-    //                                         <div class="rTableBody">
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell mediumText width-25 right">PO :</div>
-    //                                                 <div class="rTableCell mediumText width-30 left"><strong>'. $pono .'</strong></div>
-    //                                                 <div class="rTableCell mediumText width-45 right">Page: 1 of 1</div>
-    //                                             </div>
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell mediumText width-25 right">DEVICE NAME:</div>
-    //                                                 <div class="rTableCell mediumText width-30 left"><strong>'. $devicename .'</strong></div>
-    //                                                 <div class="rTableCell mediumText width-45"></div>
-    //                                             </div>
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell mediumText width-25 right">ORDER QTY.:</div>
-    //                                                 <div class="rTableCell mediumText width-30 left">'. $poqty .'</div>
-    //                                                 <div class="rTableCell mediumText width-45">Transfer to:</div>
-    //                                             </div>
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell mediumText width-25 right">KIT QTY :</div>
-    //                                                 <div class="rTableCell mediumText width-30 left">'. $kitqty .'</div>
-    //                                                 <div class="rTableCell mediumText width-45">A. Kanban House ______________</div>
-    //                                             </div>
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell mediumText width-25 right">KIT NUMBER :</div>
-    //                                                 <div class="rTableCell mediumText width-30 left">'. $kitno .'</div>
-    //                                                 <div class="rTableCell mediumText width-45">B. Warehouse _________________</div>
-    //                                             </div>
-    //                                             <div class="rTableRow">
-    //                                                 <div class="rTableCell mediumText width-25 right">PREPARED DT:</div>
-    //                                                 <div class="rTableCell mediumText width-30 left">'. $createdat .'</div>
-    //                                                 <div class="rTableCell mediumText width-45"></div>
-    //                                             </div>
-    //                                         </div>
-    //                                     </div>
-    //                                     <br/>
-    //                                     <div class="rTable mediumText">
-    //                                         <div class="rTableRow">
-    //                                             <div class="rTableCell-bordered mediumText"><b>Item Code</b></div>
-    //                                             <div class="rTableCell-bordered mediumText"><b>Part Name</b></div>
-    //                                             <div class="rTableCell-bordered mediumText"><b>USG</b></div>
-    //                                             <div class="rTableCell-bordered mediumText"><b>RQD</b></div>
-    //                                             <div class="rTableCell-bordered mediumText"><b>QTY</b></div>
-    //                                             <div class="rTableCell-bordered mediumText"><b>LOT</b></div>
-    //                                         </div>';
-    //     $html2 = '';
-    //     foreach ($mk_details_data as $key => $value)
-    //     {
-    //                      $html2 = $html2 . ' <div class="rTableRow mediumText">
-    //                                     <div class="rTableCell-bordered">'. $value->item .'</div>
-    //                                     <div class="rTableCell-bordered width-30">'. $value->item_desc .'</div>
-    //                                     <div class="rTableCell-bordered">'. $value->usage .'</div>
-    //                                     <div class="rTableCell-bordered">'. $value->rqd_qty .'</div>
-    //                                     <div class="rTableCell-bordered">'. $value->issued_qty .'</div>
-    //                                     <div class="rTableCell-bordered">'. $value->lot_no .'</div>
-    //                                 </div> ';
-    //     }
-
-    //     $html2.= ' </div>
-    //                 <br>
-    //                 <div class="rTable smallText">
-    //                 <div class="rTableRow mediumText">
-    //                     <div class="rTableCell mediumText">Prepared By:</div>
-    //                     <div class="rTableCell mediumText width-30">'.$preparedby.'</div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                 </div> ';
-    //     $html2.= ' <div class="rTableRow mediumText">
-    //                     <div class="rTableCell mediumText">Issued By:</div>
-    //                     <div class="rTableCell mediumText width-30">__________________</div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText">Date: __________________</div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                 </div> ';
-    //     $html2.= ' <div class="rTableRow mediumText">
-    //                     <div class="rTableCell mediumText">Received By:</div>
-    //                     <div class="rTableCell mediumText width-30">__________________</div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText">Date: __________________</div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                 </div> ';
-    //     $html2.= ' <div class="rTableRow mediumText">
-    //                     <div class="rTableCell mediumText">Transfer Slip:</div>
-    //                     <div class="rTableCell mediumText width-30">'.$issuanceno.'</div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                     <div class="rTableCell mediumText"></div>
-    //                 </div> ';
-
-    //     $html3 =  ' </div>
-    //             </div>
-    //             <div class="rTableCell-bordered rBorder-2">
-    //                 <div class="rTable">
-    //                     <div class="rTableBody">
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell large1Text width-70">
-    //                                 <strong><ins class="largeText">MATERIAL ISSUANCE SHEET</ins></strong>
-    //                             </div>
-    //                             <div class="rTableCell right width-30 mediumText">Production<br/>COPY</div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //                 <div class="rTable small1Text">
-    //                     <div class="rTableBody">
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell mediumText width-25 right">PO :</div>
-    //                             <div class="rTableCell mediumText width-30 left"><strong>'. $pono .'</strong></div>
-    //                             <div class="rTableCell mediumText width-45 right">Page: 1 of 1</div>
-    //                         </div>
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell mediumText width-25 right">DEVICE NAME:</div>
-    //                             <div class="rTableCell mediumText width-30 left"><strong>'. $devicename .'</strong></div>
-    //                             <div class="rTableCell mediumText width-45"></div>
-    //                         </div>
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell mediumText width-25 right">ORDER QTY.:</div>
-    //                             <div class="rTableCell mediumText width-30 left">'. $poqty .'</div>
-    //                             <div class="rTableCell mediumText width-45">Transfer to:</div>
-    //                         </div>
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell mediumText width-25 right">KIT QTY :</div>
-    //                             <div class="rTableCell mediumText width-30 left">'. $kitqty .'</div>
-    //                             <div class="rTableCell mediumText width-45">A. Kanban House ______________</div>
-    //                         </div>
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell mediumText width-25 right">KIT NUMBER :</div>
-    //                             <div class="rTableCell mediumText width-30 left">'. $kitno .'</div>
-    //                             <div class="rTableCell mediumText width-45">B. Warehouse _________________</div>
-    //                         </div>
-    //                         <div class="rTableRow">
-    //                             <div class="rTableCell mediumText width-25 right">PREPARED DT:</div>
-    //                             <div class="rTableCell mediumText width-30 left">'. $createdat .'</div>
-    //                             <div class="rTableCell mediumText width-45"></div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //                 <br/>
-    //                 <div class="rTable smallText">
-    //                     <div class="rTableRow">
-    //                         <div class="rTableCell-bordered mediumText"><b>Item Code</b></div>
-    //                         <div class="rTableCell-bordered mediumText"><b>Part Name</b></div>
-    //                         <div class="rTableCell-bordered mediumText"><b>USG</b></div>
-    //                         <div class="rTableCell-bordered mediumText"><b>RQD</b></div>
-    //                         <div class="rTableCell-bordered mediumText"><b>QTY</b></div>
-    //                         <div class="rTableCell-bordered mediumText"><b>LOT</b></div>
-    //                     </div>';
-    //     $html4 ='';
-    //     foreach ($mk_details_data as $key => $value)
-    //     {
-    //          $html4  = $html4 . '<div class="rTableRow mediumText">
-    //                                 <div class="rTableCell-bordered mediumText">'. $value->item .'</div>
-    //                                 <div class="rTableCell-bordered mediumText width-30">'. $value->item_desc .'</div>
-    //                                 <div class="rTableCell-bordered mediumText">'. $value->usage .'</div>
-    //                                 <div class="rTableCell-bordered mediumText">'. $value->rqd_qty .'</div>
-    //                                 <div class="rTableCell-bordered mediumText">'. $value->issued_qty .'</div>
-    //                                 <div class="rTableCell-bordered mediumText">'. $value->lot_no .'</div>
-    //                             </div>';
-    //     }
-
-    //         $html4.= ' </div>
-    //                     <br>
-    //                     <div class="rTable smallText">
-    //                     <div class="rTableRow mediumText">
-    //                         <div class="rTableCell mediumText">Prepared By:</div>
-    //                         <div class="rTableCell mediumText width-30">'.$preparedby.'</div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                     </div> ';
-    //         $html4.= ' <div class="rTableRow mediumText">
-    //                         <div class="rTableCell mediumText">Issued By:</div>
-    //                         <div class="rTableCell mediumText width-30">__________________</div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText">Date: __________________</div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                     </div> ';
-    //         $html4.= ' <div class="rTableRow mediumText">
-    //                         <div class="rTableCell mediumText">Received By:</div>
-    //                         <div class="rTableCell mediumText width-30">__________________</div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText">Date: __________________</div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                     </div> ';
-    //         $html4.= ' <div class="rTableRow mediumText">
-    //                         <div class="rTableCell mediumText">Transfer Slip:</div>
-    //                         <div class="rTableCell mediumText width-30">'.$issuanceno.'</div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                         <div class="rTableCell mediumText"></div>
-    //                    </div> ';
-
-    //             $html5 =  '</div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </body>
-
-    //     </html> ';
-    //     // echo $html;
-
-    //     # gather all html parts.
-    //     $html = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . $html . $html2 . $html3. $html4. $html5;
-
-    //     // $pdf = PDF::loadHTML($html)->setPaper('A4', 'landscape');
-
-    //     // return $pdf->stream('Material_Issuance'.Carbon::now().'.pdf');
-
-    //     # apply snappy pdf wrapper
-    //     // $data = [
-    //     //     'issuanceno' => $issuanceno,
-    //     //     'pono' => $pono,
-    //     //     'devicecode' => $devicecode,
-    //     //     'devicename' => $devicename,
-    //     //     'poqty' => $poqty,
-    //     //     'kitqty' => $kitqty,
-    //     //     'kitno' => $kitno,
-    //     //     'preparedby' => $preparedby,
-    //     //     'createdat' => $createdat,
-    //     //     'status' => $status,
-    //     //     'mk_details_data' => $mk_details_data
-    //     // ];
-    //     $pdf = App::make('snappy.pdf.wrapper');
-    //     # transform html to pdf format.
-    //     $pdf->loadHTML($html)
-    //         ->setPaper('A4')
-    //         ->setOption('margin-top', 6)
-    //         ->setOption('margin-left', 3)
-    //         ->setOption('margin-right', 3)
-    //         ->setOption('margin-bottom', 3)
-    //         ->setOrientation('landscape');
-    //     # display PDF report to response.
-    //     return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
-
-    //     // $pdf = PDF::loadView('pdf.material_issuance_sheet', $data)
-    //     //             ->setPaper('A4')
-    //     //             ->setOption('margin-top', 6)
-    //     //             ->setOption('margin-left', 3)
-    //     //             ->setOption('margin-right', 3)
-    //     //             ->setOption('margin-bottom', 3)
-    //     //             ->setOrientation('landscape');
-
-    //     // return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
-    // }
-
     public function transferSlip(Request $req)
     {
+
         $id = trim($req['id']);
         $cur_id = '';
         $issuance_no = '';
@@ -1665,7 +1103,8 @@ class WBSMaterialKittingController extends Controller
 
         $mk_data = $this->getKitInfoByID($id);
 
-        if (count((array)$mk_data) > 0) {
+        if(count((array)$mk_data) > 0)
+        {
             $issuanceno = $mk_data->issuance_no;
             $pono       = $mk_data->po_no;
             $devicecode = $mk_data->device_code;
@@ -1678,15 +1117,15 @@ class WBSMaterialKittingController extends Controller
             $status     = $mk_data->status;
 
             if ($status == 'O') {
-             $status = 'Open';
+            	$status = 'Open';
             }
 
             if ($status == 'C') {
-             $status = 'Cancelled';
+            	$status = 'Cancelled';
             }
 
             if ($status == 'X') {
-             $status = 'Closed';
+            	$status = 'Closed';
             }
             
 
@@ -1703,45 +1142,606 @@ class WBSMaterialKittingController extends Controller
                             ->groupBy('I.item','I.item_desc','D.usage','D.rqd_qty','I.issued_qty','I.lot_no')
                             ->orderBy('D.id')
                             ->get();
-            $data = [
-                'issuanceno' => $issuanceno,
-                'pono' => $pono,
-                'devicecode' => $devicecode,
-                'devicename' => $devicename,
-                'poqty' => $poqty,
-                'kitqty' => $kitqty,
-                'kitno' => $kitno,
-                'preparedby' => $preparedby,
-                'createdat' => $createdat,
-                'status' => $status,
-                'mk_details_data' => $mk_details_data
-            ];
-
-            $page_header_html = view()->make('pdf.material_issuance_sheet_header', $data)->render();
-            $page_footer_html = view()->make('pdf.material_issuance_sheet_footer', $data)->render();
-
-            $options = [
-                'orientation' => 'landscape',
-                'encoding' => 'UTF-8',
-                'margin-top' => '75mm',
-                'margin-left' => 3,
-                'margin-right' => 3,
-                'margin-bottom' => '40mm',
-                'header-html' => $page_header_html,
-                'footer-html'   => $page_footer_html
-            ];
-
-
-            $pdf = PDF::loadView('pdf.material_issuance_sheet', $data)
-                    ->setPaper('A4')
-                    ->setOptions($options)
-                    ->setOption('footer-left','Page [page] from [topage]');
-
-            return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
+        }
+        else
+        {
+            $issuanceno = '';
+            $pono       = '';
+            $devicecode = '';
+            $devicename = '';
+            $poqty      = '';
+            $kitqty     = '';
+            $kitno      = '';
+            $preparedby = '';
+            $createdat  = '';
+            $status     = '';
+            $mk_details_data = [];
         }
 
-        
+        $html = '<!DOCTYPE html>
+                    <html>
+
+                    <head>
+                        <style type="text/css">
+                            @page
+                            {
+                                margin-top: 0.0em;
+                                margin-bottom: 0.0em;
+                                margin-left: 0.0em;
+                                margin-right: 0.0em;
+                            }
+                            @page :first
+                            {
+                                margin-top: 0px;
+                            }
+                            html {
+                                height: 100%;
+                            }
+                            body
+                            {
+                                height: 930px;
+                                margin: 3px, 3px, 3px, 3px;
+                                padding: 0px;
+                                min-height: 100vh;
+                            }
+                            #headerA
+                            {
+                                position: fixed;
+                                left: 20px; right: 20px; top: 0px;
+                                text-align: center;
+                                height: 90px;
+                            }
+                            #headerB
+                            {
+                                position: absolute;
+                                left: -20px; right: -20px; top: -240px;
+                                text-align: center;
+                                width:100%;
+                                height: 220px;
+                            }
+                            #footer
+                            {
+                                position: fixed;
+                                left: 3px; right: 3px; bottom: 90px;
+                                text-align: center;
+                                height: 40px;
+                            }
+                            .pagenum:before
+                            {
+                                content: counter(page) " of " counter(pages);
+                            }
+                            .rTable {
+                                display: table;
+                                width: 100%;
+                            }
+
+                            .rTableRow {
+                                display: table-row;
+                            }
+
+                            .rTableHeading {
+                                background-color: #ddd;
+                                display: table-header-group;
+                            }
+
+                            .rTableCell,
+                            .rTableHead {
+                                display: table-cell;
+                                padding: 1px 10px;
+                                border: 0px solid #999999;
+                            }
+
+                            .rTableCell-bordered,
+                            .rTableHead-bordered {
+                                display: table-cell;
+                                padding: 3px 10px;
+                                border: 1px solid black;
+                            }
+
+                            .rTableCell-half{
+                                display: table-cell;
+                                padding: 3px 10px;
+                                border: 2px solid black;
+                                width:50%;
+                            }
+
+                            .width-10 {
+                                width:10%;
+                            }
+                            .width-20 {
+                                width:20%;
+                            }
+                            .width-23 {
+                                width:23%;
+                            }
+                            .width-25 {
+                                width:25%;
+                            }
+                            .width-30 {
+                                width:30%;
+                            }
+                            .width-32 {
+                                width:32%;
+                            }
+                            .width-35 {
+                                width:35%;
+                            }
+                            .width-40 {
+                                width:40%;
+                            }
+                            .width-45 {
+                                width:45%;
+                            }
+                            .width-50 {
+                                width:50%;
+                            }
+                            .width-60 {
+                                width:60%;
+                            }
+                            .width-70 {
+                                width:70%;
+                            }
+                            .width-100 {
+                                width:100%;
+                            }
+
+                            .height-30 {
+                                height:500px;
+                            }
+
+                            .center{
+                                text-align: center;
+                            }
+
+                            .right{
+                                text-align: right;
+                            }
+
+                            .largeText{
+                                font-size: 23px;
+                            }
+
+                            .large1Text{
+                                font-size: 15px;
+                            }
+
+                            .mediumText{
+                                font-size: 13px;
+                            }
+
+                            .smallText{
+                                font-size: 8px;
+                            }
+                            .small1Text{
+                                font-size: 7px;
+                            }
+
+                            .smallestText{
+                                font-size: 5px;
+                            }
+
+                            .fontArial
+                            {
+                                font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+                            }
+
+                            .rTableHeading {
+                                display: table-header-group;
+                                background-color: #ddd;
+                                font-weight: bold;
+                            }
+
+                            .rTableFoot {
+                                display: table-footer-group;
+                                font-weight: bold;
+                                background-color: #ddd;
+                            }
+
+                            .rTableBody {
+                                display: table-row-group;
+                            }
+                            .rBorder-1 {
+                                border: 1px solid black;
+                            }
+                            .rBorder-2 {
+                                border: 3px solid black;
+                            }
+                            label {
+                              display: block;
+                              padding-left: 5px;
+                              text-indent: -5px;
+                            }
+                            input {
+                              width: 13px;
+                              height: 13px;
+                              padding: 0;
+                              margin:0;
+                              vertical-align: bottom;
+                              position: relative;
+                              top: -1px;
+                              *overflow: hidden;
+                            }
+                            .header, .footer {
+                                width: 100%;
+                                text-align: center;
+                                position: fixed;
+                            }
+                            .header {
+                                top: 0px;
+                            }
+                            .footer {
+                                bottom: 0px;
+                            }
+                            .pagenum:before {
+                                content: counter(page);
+                            }
+                            .fontArial {
+                                font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+                            }
+                            thead{display: table-header-group;}
+                            tfoot {display: table-row-group;}
+                            tr {page-break-inside: avoid;}
+                        </style>
+                    </head>
+                        
+                    <body>
+                        <div class="rTable fontArial" style="height: 100%;">
+                            <div class="rTableBody">
+                                <div class="rTableRow">
+                                    <div class="rTableCell-bordered rBorder-2">
+                                        <div class="rTable">
+                                            <div class="rTableBody">
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell large1Text width-70 ">
+                                                        <strong><ins class="largeText">MATERIAL ISSUANCE SHEET</ins></strong>
+                                                    </div>
+                                                    <div class="rTableCell right width-30 mediumText">Warehouse<br/>COPY</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="rTable small1Text">
+                                            <div class="rTableBody">
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell mediumText width-25 right">PO :</div>
+                                                    <div class="rTableCell mediumText width-30 left"><strong>'. $pono .'</strong></div>
+                                                    <div class="rTableCell mediumText width-45 right">Page: 1 of 1</div>
+                                                </div>
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell mediumText width-25 right">DEVICE NAME:</div>
+                                                    <div class="rTableCell mediumText width-30 left"><strong>'. $devicename .'</strong></div>
+                                                    <div class="rTableCell mediumText width-45"></div>
+                                                </div>
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell mediumText width-25 right">ORDER QTY.:</div>
+                                                    <div class="rTableCell mediumText width-30 left">'. $poqty .'</div>
+                                                    <div class="rTableCell mediumText width-45">Transfer to:</div>
+                                                </div>
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell mediumText width-25 right">KIT QTY :</div>
+                                                    <div class="rTableCell mediumText width-30 left">'. $kitqty .'</div>
+                                                    <div class="rTableCell mediumText width-45">A. Kanban House ______________</div>
+                                                </div>
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell mediumText width-25 right">KIT NUMBER :</div>
+                                                    <div class="rTableCell mediumText width-30 left">'. $kitno .'</div>
+                                                    <div class="rTableCell mediumText width-45">B. Warehouse _________________</div>
+                                                </div>
+                                                <div class="rTableRow">
+                                                    <div class="rTableCell mediumText width-25 right">PREPARED DT:</div>
+                                                    <div class="rTableCell mediumText width-30 left">'. $createdat .'</div>
+                                                    <div class="rTableCell mediumText width-45"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="rTable mediumText">
+                                            <div class="rTableRow">
+                                                <div class="rTableCell-bordered mediumText"><b>Item Code</b></div>
+                                                <div class="rTableCell-bordered mediumText"><b>Part Name</b></div>
+                                                <div class="rTableCell-bordered mediumText"><b>USG</b></div>
+                                                <div class="rTableCell-bordered mediumText"><b>RQD</b></div>
+                                                <div class="rTableCell-bordered mediumText"><b>QTY</b></div>
+                                                <div class="rTableCell-bordered mediumText"><b>LOT</b></div>
+                                            </div>';
+        $html2 = '';
+        foreach ($mk_details_data as $key => $value)
+        {
+                         $html2 = $html2 . ' <div class="rTableRow mediumText">
+                                        <div class="rTableCell-bordered">'. $value->item .'</div>
+                                        <div class="rTableCell-bordered width-30">'. $value->item_desc .'</div>
+                                        <div class="rTableCell-bordered">'. $value->usage .'</div>
+                                        <div class="rTableCell-bordered">'. $value->rqd_qty .'</div>
+                                        <div class="rTableCell-bordered">'. $value->issued_qty .'</div>
+                                        <div class="rTableCell-bordered">'. $value->lot_no .'</div>
+                                    </div> ';
+        }
+
+        $html2.= ' </div>
+                    <br>
+                    <div class="rTable smallText">
+                    <div class="rTableRow mediumText">
+                        <div class="rTableCell mediumText">Prepared By:</div>
+                        <div class="rTableCell mediumText width-30">'.$preparedby.'</div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                    </div> ';
+        $html2.= ' <div class="rTableRow mediumText">
+                        <div class="rTableCell mediumText">Issued By:</div>
+                        <div class="rTableCell mediumText width-30">__________________</div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText">Date: __________________</div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                    </div> ';
+        $html2.= ' <div class="rTableRow mediumText">
+                        <div class="rTableCell mediumText">Received By:</div>
+                        <div class="rTableCell mediumText width-30">__________________</div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText">Date: __________________</div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                    </div> ';
+        $html2.= ' <div class="rTableRow mediumText">
+                        <div class="rTableCell mediumText">Transfer Slip:</div>
+                        <div class="rTableCell mediumText width-30">'.$issuanceno.'</div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                        <div class="rTableCell mediumText"></div>
+                    </div> ';
+
+        $html3 =  ' </div>
+                </div>
+                <div class="rTableCell-bordered rBorder-2">
+                    <div class="rTable">
+                        <div class="rTableBody">
+                            <div class="rTableRow">
+                                <div class="rTableCell large1Text width-70">
+                                    <strong><ins class="largeText">MATERIAL ISSUANCE SHEET</ins></strong>
+                                </div>
+                                <div class="rTableCell right width-30 mediumText">Production<br/>COPY</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rTable small1Text">
+                        <div class="rTableBody">
+                            <div class="rTableRow">
+                                <div class="rTableCell mediumText width-25 right">PO :</div>
+                                <div class="rTableCell mediumText width-30 left"><strong>'. $pono .'</strong></div>
+                                <div class="rTableCell mediumText width-45 right">Page: 1 of 1</div>
+                            </div>
+                            <div class="rTableRow">
+                                <div class="rTableCell mediumText width-25 right">DEVICE NAME:</div>
+                                <div class="rTableCell mediumText width-30 left"><strong>'. $devicename .'</strong></div>
+                                <div class="rTableCell mediumText width-45"></div>
+                            </div>
+                            <div class="rTableRow">
+                                <div class="rTableCell mediumText width-25 right">ORDER QTY.:</div>
+                                <div class="rTableCell mediumText width-30 left">'. $poqty .'</div>
+                                <div class="rTableCell mediumText width-45">Transfer to:</div>
+                            </div>
+                            <div class="rTableRow">
+                                <div class="rTableCell mediumText width-25 right">KIT QTY :</div>
+                                <div class="rTableCell mediumText width-30 left">'. $kitqty .'</div>
+                                <div class="rTableCell mediumText width-45">A. Kanban House ______________</div>
+                            </div>
+                            <div class="rTableRow">
+                                <div class="rTableCell mediumText width-25 right">KIT NUMBER :</div>
+                                <div class="rTableCell mediumText width-30 left">'. $kitno .'</div>
+                                <div class="rTableCell mediumText width-45">B. Warehouse _________________</div>
+                            </div>
+                            <div class="rTableRow">
+                                <div class="rTableCell mediumText width-25 right">PREPARED DT:</div>
+                                <div class="rTableCell mediumText width-30 left">'. $createdat .'</div>
+                                <div class="rTableCell mediumText width-45"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="rTable smallText">
+                        <div class="rTableRow">
+                            <div class="rTableCell-bordered mediumText"><b>Item Code</b></div>
+                            <div class="rTableCell-bordered mediumText"><b>Part Name</b></div>
+                            <div class="rTableCell-bordered mediumText"><b>USG</b></div>
+                            <div class="rTableCell-bordered mediumText"><b>RQD</b></div>
+                            <div class="rTableCell-bordered mediumText"><b>QTY</b></div>
+                            <div class="rTableCell-bordered mediumText"><b>LOT</b></div>
+                        </div>';
+        $html4 ='';
+        foreach ($mk_details_data as $key => $value)
+        {
+             $html4  = $html4 . '<div class="rTableRow mediumText">
+                                    <div class="rTableCell-bordered mediumText">'. $value->item .'</div>
+                                    <div class="rTableCell-bordered mediumText width-30">'. $value->item_desc .'</div>
+                                    <div class="rTableCell-bordered mediumText">'. $value->usage .'</div>
+                                    <div class="rTableCell-bordered mediumText">'. $value->rqd_qty .'</div>
+                                    <div class="rTableCell-bordered mediumText">'. $value->issued_qty .'</div>
+                                    <div class="rTableCell-bordered mediumText">'. $value->lot_no .'</div>
+                                </div>';
+        }
+
+            $html4.= ' </div>
+                        <br>
+                        <div class="rTable smallText">
+                        <div class="rTableRow mediumText">
+                            <div class="rTableCell mediumText">Prepared By:</div>
+                            <div class="rTableCell mediumText width-30">'.$preparedby.'</div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                        </div> ';
+            $html4.= ' <div class="rTableRow mediumText">
+                            <div class="rTableCell mediumText">Issued By:</div>
+                            <div class="rTableCell mediumText width-30">__________________</div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText">Date: __________________</div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                        </div> ';
+            $html4.= ' <div class="rTableRow mediumText">
+                            <div class="rTableCell mediumText">Received By:</div>
+                            <div class="rTableCell mediumText width-30">__________________</div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText">Date: __________________</div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                        </div> ';
+            $html4.= ' <div class="rTableRow mediumText">
+                            <div class="rTableCell mediumText">Transfer Slip:</div>
+                            <div class="rTableCell mediumText width-30">'.$issuanceno.'</div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                            <div class="rTableCell mediumText"></div>
+                       </div> ';
+
+                $html5 =  '</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+
+        </html> ';
+        // echo $html;
+
+        # gather all html parts.
+        $html = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . $html . $html2 . $html3. $html4. $html5;
+
+        // $pdf = PDF::loadHTML($html)->setPaper('A4', 'landscape');
+
+        // return $pdf->stream('Material_Issuance'.Carbon::now().'.pdf');
+
+        # apply snappy pdf wrapper
+        // $data = [
+        //     'issuanceno' => $issuanceno,
+        //     'pono' => $pono,
+        //     'devicecode' => $devicecode,
+        //     'devicename' => $devicename,
+        //     'poqty' => $poqty,
+        //     'kitqty' => $kitqty,
+        //     'kitno' => $kitno,
+        //     'preparedby' => $preparedby,
+        //     'createdat' => $createdat,
+        //     'status' => $status,
+        //     'mk_details_data' => $mk_details_data
+        // ];
+        $pdf = App::make('snappy.pdf.wrapper');
+        # transform html to pdf format.
+        $pdf->loadHTML($html)
+            ->setPaper('A4')
+            ->setOption('margin-top', 6)
+            ->setOption('margin-left', 3)
+            ->setOption('margin-right', 3)
+            ->setOption('margin-bottom', 3)
+            ->setOrientation('landscape');
+        # display PDF report to response.
+        return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
+
+        // $pdf = PDF::loadView('pdf.material_issuance_sheet', $data)
+        //             ->setPaper('A4')
+        //             ->setOption('margin-top', 6)
+        //             ->setOption('margin-left', 3)
+        //             ->setOption('margin-right', 3)
+        //             ->setOption('margin-bottom', 3)
+        //             ->setOrientation('landscape');
+
+        // return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
     }
+
+    // public function transferSlip(Request $req)
+    // {
+    //     $id = trim($req['id']);
+    //     $cur_id = '';
+    //     $issuance_no = '';
+    //     $max_id = '';
+
+    //     $dt = Carbon::now();
+    //     $date = substr($dt->format('  M j, Y A'), 2);
+    //     $company_info = $this->com->getCompanyInfo();
+
+    //     $mk_data = $this->getKitInfoByID($id);
+
+    //     if (count((array)$mk_data) > 0) {
+    //         $issuanceno = $mk_data->issuance_no;
+    //         $pono       = $mk_data->po_no;
+    //         $devicecode = $mk_data->device_code;
+    //         $devicename = $mk_data->device_name;
+    //         $poqty      = $mk_data->po_qty;
+    //         $kitqty     = $mk_data->kit_qty;
+    //         $kitno      = $mk_data->kit_no;
+    //         $preparedby = $mk_data->prepared_by;
+    //         $createdat  = $mk_data->created_at;
+    //         $status     = $mk_data->status;
+
+    //         if ($status == 'O') {
+    //          $status = 'Open';
+    //         }
+
+    //         if ($status == 'C') {
+    //          $status = 'Cancelled';
+    //         }
+
+    //         if ($status == 'X') {
+    //          $status = 'Closed';
+    //         }
+            
+
+    //         $mk_details_data = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance AS I')
+    //                         ->leftJoin('tbl_wbs_material_kitting_details as D', 'D.issue_no', '=', 'I.issue_no')
+    //                         ->where('I.issue_no',$issuanceno)
+    //                         ->whereRaw('I.item = D.item')
+    //                         ->select('I.item'
+    //                                 , 'I.item_desc'
+    //                                 , DB::raw('FORMAT(D.usage,2) AS `usage`')
+    //                                 , DB::raw('FORMAT(D.rqd_qty,2) AS rqd_qty')
+    //                                 , DB::raw('FORMAT(SUM(I.issued_qty),2) AS issued_qty')
+    //                                 , 'I.lot_no')
+    //                         ->groupBy('I.item','I.item_desc','D.usage','D.rqd_qty','I.issued_qty','I.lot_no')
+    //                         ->orderBy('D.id')
+    //                         ->get();
+    //         $data = [
+    //             'issuanceno' => $issuanceno,
+    //             'pono' => $pono,
+    //             'devicecode' => $devicecode,
+    //             'devicename' => $devicename,
+    //             'poqty' => $poqty,
+    //             'kitqty' => $kitqty,
+    //             'kitno' => $kitno,
+    //             'preparedby' => $preparedby,
+    //             'createdat' => $createdat,
+    //             'status' => $status,
+    //             'mk_details_data' => $mk_details_data
+    //         ];
+
+    //         $page_header_html = view()->make('pdf.material_issuance_sheet_header', $data)->render();
+    //         $page_footer_html = view()->make('pdf.material_issuance_sheet_footer', $data)->render();
+
+    //         $options = [
+    //             'orientation' => 'landscape',
+    //             'encoding' => 'UTF-8',
+    //             'margin-top' => '75mm',
+    //             'margin-left' => 3,
+    //             'margin-right' => 3,
+    //             'margin-bottom' => '40mm',
+    //             'header-html' => $page_header_html,
+    //             'footer-html'   => $page_footer_html
+    //         ];
+
+
+    //         $pdf = PDF::loadView('pdf.material_issuance_sheet', $data)
+    //                 ->setPaper('A4')
+    //                 ->setOptions($options)
+    //                 ->setOption('footer-left','Page [page] from [topage]');
+
+    //         return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
+    //     }
+
+        
+    // }
 
     public function postDeleteKitDetails(Request $req)
     {
