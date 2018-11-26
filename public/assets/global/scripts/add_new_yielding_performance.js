@@ -634,7 +634,7 @@ function DisabledALL(){
     $('#classification').attr('disabled',true);
     $('#mod').attr('disabled',true);
     $('input[name=qty]').attr('disabled',true);
-    $('input[name=productiondate]').attr('disabled',true)
+    $('input[name=productiondate]').attr('disabled',true);
     $('#yieldingno').val("");
     $('#hdstatus').val("");
     $('#yieldingstation').attr('disabled',true);
@@ -661,7 +661,6 @@ function ClearAll(){
         $('#classification').val("");
         $('#mod').val("");
         $('input[name=qty]').val("");
-        $('#productiondate').val("");
         $('input[name=accumulatedoutput]').val("");
         $('#yieldingstation').val("");
         $('input[name=toutput]').val(""); 
@@ -689,7 +688,6 @@ function clear(){
     $('#mod').val("");
     $('#yieldingstation').val("");
     $('input[name=qty]').val("");
-    $('#productiondate').val("");
     $('input[name=accumulatedoutput]').val("");
     $('#btnloadpya').removeClass('bg-blue');
     $('#btnloadpya').addClass('bg-green');

@@ -230,7 +230,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 	@include('includes.materialissuance-modal')

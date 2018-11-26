@@ -665,20 +665,49 @@ function save() {
 		request_qty: $('input[name="request_qty[]"]').map(function(){return $(this).val();}).get(),
 	};
 
-	$.ajax({
-		url: saveURL,
-		type: 'POST',
-		dataType: 'JSON',
-		data: data,
-	}).done(function(data, textStatus, xhr) {
-		getData(data.issuance_no);
-		getPendingRequest();
-		msg(data.msg,data.status);
-	}).fail(function(xhr, textStatus, errorThrown) {
-		msg(textStatus+': '+errorThrown,textStatus);
-	}).always(function() {
-		$('#loading').modal('hide');
+	var no_issued_qty = false;
+	var no_lot = false;
+
+	$('input[name=issued_qty_t]').each(function(){
+		if ($(this).val() == '' || $(this).val() == 0) {
+			no_issued_qty = true;
+			break;
+		}
 	});
+
+	$('input[name=lot_no]').each(function(){
+		if ($(this).val() == '') {
+			no_lot = true;
+			break;
+		}
+	});
+
+	if (no_issued_qty == true) {
+		msg("Please issue a valid quantity.",'failed');
+	}
+
+	if (no_lot == true) {
+		msg("Please input a valid Lot Number.",'failed');
+	}
+
+	if (no_issued_qty == false && no_lot == false) {
+		$.ajax({
+			url: saveURL,
+			type: 'POST',
+			dataType: 'JSON',
+			data: data,
+		}).done(function(data, textStatus, xhr) {
+			getData(data.issuance_no);
+			getPendingRequest();
+			msg(data.msg,data.status);
+		}).fail(function(xhr, textStatus, errorThrown) {
+			msg(textStatus+': '+errorThrown,textStatus);
+		}).always(function() {
+			$('#loading').modal('hide');
+		});
+	}
+
+		
 }
 
 function printBRcode(arr_data) {

@@ -33,7 +33,7 @@
         <div class="portlet box blue" >
             <div class="portlet-title">
                 <div class="caption">
-                     <i class="fa fa-navicon"></i>  Add New Yield Performance
+                     <i class="fa fa-navicon"></i>  New Yield Performance
                 </div>
             </div>
 
@@ -42,21 +42,16 @@
                     <div class="col-sm-12">  
                         <form class="form-horizontal">
                             {!! csrf_field() !!}
-                            <div class="col-sm-4">
-                                <input type="hidden"  value="<?php if(isset($count)){ echo intVal($count->yieldingno) + 1; } else {echo intVal($count) + 1;} ?>" name="hdyieldingno" id="hdyieldingno" />
-                                <input type="hidden"  name="yieldingno" id="yieldingno" />  
+                            <input type="hidden"  id="id" name="id"/>
 
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">PO No.</label>
                                     <div class="col-sm-6">
-                                        <input type="hidden"  id="id" name="id"/>
-                                        <input type="hidden"  id="row" name="row"/>
-                                        <input type="text" value="@foreach($msrecords as $msrec){{$msrec->PO}}@endforeach" class="form-control input-sm" id="pono" name="pono"/>
-                                        <div id="er1"></div>
-
+                                        <input type="text" class="form-control input-sm clear" id="po" name="po" size="16"/>
                                     </div>
                                     <div class="col-sm-3">
-                                        <button type="button" name="search-task"  class="btn btn-circle input-sm green load-task"  id="btnload">
+                                        <button type="button" class="btn btn-circle input-sm green" id="btn_load_po">
                                            <i class="fa fa-arrow-circle-down"></i> 
                                         </button>
                                     </div>                                                           
@@ -65,57 +60,38 @@
                                  <div class="form-group">
                                     <label class="control-label col-sm-3">PO Qty</label>
                                     <div class="col-sm-6">                                    
-                                        <input class="form-control input-sm" size="16" type="text" name="poqty" id="poqty" 
-                                    disabled="disabled"/> 
-                                    <input class="form-control input-sm" size="16" type="hidden" name="hdpoqty" id="hdpoqty"/> 
-                                        <div id="error1"></div>  
+                                        <input class="form-control input-sm clear" size="16" type="number" name="po_qty" id="po_qty"/>
                                     </div>
                                 </div> 
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Device</label>
                                     <div class="col-sm-6">                                        
-                                        <input type="text" class="form-control input-sm" id="device" name="device" disabled="disabled"/>
-                                        <div id="error2"></div>   
+                                        <input type="text" class="form-control input-sm clear" id="device" name="device"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Family</label>
                                     <div class="col-sm-6">
-                                        <Select class="form-control input-sm" id="family" name="family" required>
-                                            <option value=""></option>
-                                          @foreach($family as $family)
-                                                <option value="{{$family->description}}">{{$family->description}}
-                                                </option>
-                                            @endforeach
-                                        </Select>
-                                        <div id="er2"></div>
+                                        <select class="form-control input-sm clear" id="family" name="family" required></select>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Series</label>
                                     <div class="col-sm-6">
-                                        <Select class="form-control input-sm" id="series" name="series" required>
-                                            <option value=""></option>
-                                            @foreach($series as $series)
-                                                <option value="{{$series->description}}">{{$series->description}}
-                                                </option>
-                                            @endforeach
-                                        </Select>
-                                        <div id="er3"></div>
+                                        <select class="form-control input-sm clear" id="series" name="series" required></select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">Product Type</label>
                                     <div class="col-sm-6">
-                                        <Select class="form-control input-sm" id="prodtype" name="prodtype" required>
-                                           {<option value=""></option>
+                                        <select class="form-control input-sm clear" id="prod_type" name="prod_type" required>
+                                            <option value=""></option>
                                             <option value="Test Socket">Test Socket</option>
                                             <option value="Burn In">Burn In</option> 
-                                        </Select>
-                                        <div id="erprodtype"></div>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -124,69 +100,51 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Production Date</label>
                                     <div class="col-sm-6">
-                                        <input type="date" class="form-control input-sm" id="productiondate" name="productiondate"/>
+                                        <input type="date" class="form-control input-sm clear" id="production_date"/>
                                     </div>
-                                      
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Yielding Station</label>
                                     <div class="col-sm-6">
-                                        <Select class="form-control input-sm" id="yieldingstation" name="yieldingstation">
-                                            <option value=""></option>
-                                            @foreach($yieldstation as $ys)
-                                                <option value="{{$ys->description}}">{{$ys->description}}
-                                                </option>
-                                            @endforeach
-                                        </Select>
-                                        <div id="er6"></div>
+                                        <select class="form-control input-sm clear" id="yielding_station"></select>
                                     </div>
                                 </div>
 
                                  <div class="form-group">
                                     <label class="control-label col-sm-4">Accumulated Output</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="accumulatedoutput" name="accumulatedoutput" />
-                                        <div id="er7"></div>
+                                        <input type="number" class="form-control input-sm clear" id="accumulated_output"/>
                                     </div> 
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Classification</label>
                                     <div class="col-sm-6">
-                                        <Select class="form-control input-sm" id="classification" name="classification">
+                                        <select class="form-control input-sm clear" id="classification">
                                             <option value=""></option>
                                             <option value="NDF">NDF</option>
                                             <option value="Material NG (MNG)">Material NG (MNG)</option>
                                             <option value="Production NG (PNG)">Production NG (PNG)</option>   
-                                        </Select>
-                                        <div id="er4"></div>
+                                        </select>
                                     </div>   
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Mode of Defect</label>
                                     <div class="col-sm-6">
-                                        <Select class="form-control input-sm mod" id="mod" name="mod">
-                                        <option value=""></option>
-                                            @foreach($modefect as $modefect)
-                                                <option value="{{$modefect->description}}">{{$modefect->description}}
-                                                </option>
-                                            @endforeach
-                                        </Select>
-                                        <div id="er5"></div>
+                                        <select class="form-control input-sm clear mod" id="mode_of_defect"></select>
                                     </div>   
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Qty</label>
                                     <div class="col-sm-6">
-                                        <input type="number" class="form-control input-sm" id="qty" name="qty" />
-                                        <div id="er10"></div>
+                                        <input type="number" class="form-control input-sm clear" id="defect_qty"/>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="button" onclick="javascript:addpya();" name="search-task"  class="btn btn-circle input-sm green load-task"  id="btnloadpya">
-                                        <i class="fa fa-plus"></i> 
+                                        <button type="button" class="btn btn-circle input-sm green"  id="btn_add_details">
+                                            <i class="fa fa-plus"></i> 
                                         </button>
                                     </div>       
                                  </div>
@@ -194,8 +152,7 @@
                                  <div class="form-group">
                                     <label class="control-label col-sm-4">Remarks</label>
                                     <div class="col-sm-6">
-                                        <textarea class="form-control input-sm remarks" id="remarks" name="remarks"></textarea>
-                                        <div id="er5"></div>
+                                        <textarea class="form-control input-sm clear remarks" id="remarks"></textarea>
                                     </div>   
                                 </div>
 
@@ -205,48 +162,44 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Total Input</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="tinput" name="tinput"/>
-                                        <div id="er8"></div>
-                                      </div>
+                                        <input type="number" class="form-control input-sm clear" id="total_input" name="total_input"/>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Total Output</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="toutput" name="toutput"/>
-                                        <div id="er8"></div>
-                                      </div>
+                                        <input type="number" class="form-control input-sm clear" id="total_output" name="total_output"/>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Total Reject</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="treject" name="treject"/>
-                                        <div id="er9"></div>
+                                        <input type="number" class="form-control input-sm clear" id="total_reject" name="total_reject"/>
                                     </div>
                                  </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Total MNG</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="tmng" name="tmng"  disabled="disabled" />
+                                        <input type="number" class="form-control input-sm clear" id="total_mng" name="total_mng"/>
                                     </div>
                                  </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Total PNG</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="tpng" name="tpng"  disabled="disabled" />
+                                        <input type="number" class="form-control input-sm clear" id="total_png" name="total_png"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">% Yield w/o MNG</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="ywomng" name="ywomng"  disabled="disabled" />
+                                        <input type="text" class="form-control input-sm clear" id="yield_wo_mng" name="yield_wo_mng"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-4">Total Yield</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control input-sm" id="twoyield" name="twoyield"  disabled="disabled" />
-                                        <input type="hidden" class="form-control input-sm" id="counter" name="counter"  disabled="disabled" />
+                                        <input type="text" class="form-control input-sm clear" id="total_yield" name="total_yield"/>
                                     </div>
                                  </div>
 
@@ -261,21 +214,20 @@
                 <div class="form-group pull-right">
                     <label class="control-label col-sm-2">DPPM</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control input-sm" id="dppm" name="dppm" disabled="disabled">
-                        <input type="hidden" class="form-control input-sm " name="hdstatus" id="hdstatus"></input>
+                        <input type="text" class="form-control input-sm clear" id="dppm" name="dppm">
                     </div>    
                 </div>
                 <br/>
 
                 <div class="row">
-                    <div class="col-sm-12 text-center">
-                        <button type="button" style="font-size:12px;" onclick="javascript:addnew();" class="btn green input-sm" id="btnadd">
+                    <div class="col-sm-12 text-center" style="font-size:12px;">
+                        <button type="button" onclick="javascript:new_transaction();" class="btn green input-sm" id="btn_add_new">
                            <i class="fa fa-plus"></i> Add New
                         </button>
-                        <button type="button" style="font-size:12px;" onclick="javascript: setcontrol('DIS'); " class="btn red-intense input-sm" id="btndiscard">
+                        <button type="button" onclick="javascript: discard(); " class="btn red-intense input-sm" id="btn_discard">
                            <i class="fa fa-pencil"></i> Discard Changes
                         </button>
-                        <button type="button" style="font-size:12px;" class="btn green input-sm" id="btnsave">
+                        <button type="button" class="btn green input-sm" id="btn_save">
                            <i class="fa fa-save"></i> Save
                         </button>
                     </div>
@@ -284,28 +236,29 @@
                 <hr>
 
                 <div class="row">
-                        <div class="col-sm-12" > 
-                            <table id="tbl_pya" class="table table-striped table-bordered table-hover"style="font-size:10px">
-                                <thead id="thead1">
-                                    <tr>
-                                        <td class="table-checkbox" style="width: 5%">
-                                            <input type="checkbox" class="check_all_pya"/>
-                                        </td>
-                                        <td style="width: 5%">
-                                        </td>
-                                        <td>Production Date</td>
-                                        <td>Yielding Station</td>
-                                        <td>Accumulated Output</td>
-                                        <td>Classification</td>
-                                        <td>Mode of Defects</td>
-                                        <td>Quantity</td>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbl_pya_body"></tbody>
-                            </table>
+                    <div class="col-sm-12" > 
+                        <table id="tbl_details" class="table table-striped table-bordered table-hover"style="font-size:10px">
+                            <thead id="thead1">
+                                <tr>
+                                    <td class="table-checkbox" style="width: 5%">
+                                        <input type="checkbox" class="check_all_details"/>
+                                    </td>
+                                    <td style="width: 5%">
+                                    </td>
+                                    <td>Production Date</td>
+                                    <td>Yielding Station</td>
+                                    <td>Accumulated Output</td>
+                                    <td>Classification</td>
+                                    <td>Mode of Defects</td>
+                                    <td>Quantity</td>
+                                    <td>remarks</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl_details_body"></tbody>
+                        </table>
                        
-                        <button style="margin-top: 20px;" type="button" onclick="javascript:deletepya();" name="delete-taskPYA" class="btn btn-sm btn-danger delete-taskPYA" id="delete-taskPYA">Delete
-                             <i class="fa fa-trash"></i> 
+                        <button type="button" class="btn btn-sm btn-danger delete_details">
+                             <i class="fa fa-trash"></i> Delete
                         </button>
                     </div>
                 </div>
@@ -314,8 +267,6 @@
 
     </div>
 
-
-    @include('includes.yielding-modals')
     @include('includes.modals')
 
 @endsection
@@ -323,6 +274,11 @@
 @push('script')
 <script type="text/javascript">
     var token = "{{ Session::token() }}";
+    var DropdownsURL = "{{ url('/new-transaction-dropdowns') }}";
+    var getPODetailsURL = "{{ url('/get-po-details')}}";
+
+
+
     var saveURL = "{{ url('/save-yield') }}";
     var searchPOURL = "{{ url('/search-pono2') }}";
     var getMODURL = "{{ url('/get_mod') }}";
@@ -338,10 +294,10 @@
     var deletePyaURL = "{{ url('/deletepya') }}";
     var deleteCmqURL = "{{ url('/deletecmq') }}";
     var backURL = "{{ url('/yieldperformance') }}";
-    var getPODetailsURL = "{{ url('/GetPONumberDetails')}}";
+    
     var getFamilyDropdownURL = "{{ url('/getFamilyDropDown') }}";
     var getProdtypeDropdownURL = "{{ url('/getProdtypeDropdown') }}";
 </script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/add_new_yielding_performance.js') }}"></script>
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yield_new_transaction.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
 @endpush

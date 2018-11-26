@@ -2451,6 +2451,38 @@ Route::group(['middleware' => 'web'], function () {
 
 
         // yieldperformance2---------------------------------------------
+            Route::get('/yielding-new-transaction', [
+                'uses' => 'Yielding\NewTransactionController@index',
+                'name' => 'yielding-new-transaction'
+            ]);
+
+            Route::get('/new-transaction-dropdowns', [
+                'uses' => 'Yielding\NewTransactionController@dropdowns',
+                'name' => 'new-transaction-dropdowns'
+            ]);
+
+            Route::get('/get-po-details', [
+                'uses' => 'Yielding\NewTransactionController@po_details',
+                'name' => 'get-po-details'
+            ]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             Route::post('/save-yield', [
                 'uses' => 'Yielding\AddnewYieldingPerformanceController@addYieldperformance',
                 'name' => 'save-yield'
