@@ -1008,7 +1008,7 @@ class PackingListSystemController extends Controller
                             , 'B.SPRICE')
                     ->select(DB::raw('D.CODE AS PORDER')
                             , DB::raw('H.NAME')
-                            , DB::raw("'YF' as CODE")
+                            , DB::raw("'TS' as CODE")
                             , DB::raw('ISNULL(B.SPRICE,0.0000)')
                             , DB::raw('SUM(D.KVOL) as KVOL'))
                     ->get();
@@ -1024,7 +1024,7 @@ class PackingListSystemController extends Controller
                             , 'B.PRICE')
                     ->select(DB::raw('D.CODE AS PORDER')
                             , DB::raw('H.NAME')
-                            , DB::raw("'YF' as CODE")
+                            , DB::raw("'TS' as CODE")
                             , DB::raw('ISNULL(B.PRICE,0.0000)')
                             , DB::raw('SUM(D.KVOL) as KVOL'))
                     ->get();
@@ -1041,7 +1041,7 @@ class PackingListSystemController extends Controller
                             , 'B.SPRICE')
                     ->select(DB::raw('D.CODE AS PORDER')
                             , DB::raw('D.NAME')
-                            , DB::raw("'YF' as CODE")
+                            , DB::raw("'TS' as CODE")
                             , DB::raw('ISNULL(B.SPRICE,0.0000)'))
                     ->get();
             }
