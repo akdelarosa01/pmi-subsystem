@@ -991,30 +991,47 @@ class PackingListSystemController extends Controller
                             , 'D.CODE'
                             , 'B.PRICE'
                             , 'D.KVOL')
-                           // , 'C.CNAME')
                     ->select('D.SEIBAN'
                             , 'H.NAME'
                             , 'D.CODE as CODE'
                             , 'B.PRICE'
                             , 'D.KVOL')
-                           // , 'C.CNAME')
                     ->get();
             } else {
                 $output = DB::connection($this->mssql)->table('XSLIP AS D')
                     // ->leftjoin('XHIKI AS HK', 'HK.PORDER', '=', 'D.PORDER')
                     ->leftjoin('XHEAD AS H', 'H.CODE', '=', 'D.CODE')
-                    ->leftJoin('XTANK AS B', 'B.CODE', '=', 'H.CODE')
+                    ->join('XTANK AS B', 'B.CODE', '=', 'H.CODE')
                     ->where('D.CODE', 'like', $porder.'%')
                     ->groupBy('D.CODE'
                             , 'H.NAME'
                             , 'B.SPRICE')
                     ->select(DB::raw('D.CODE AS PORDER')
                             , DB::raw('H.NAME')
-                            , DB::raw("'BU2' as CODE")
+                            , DB::raw("'YF' as CODE")
                             , DB::raw('ISNULL(B.SPRICE,0.0000)')
                             , DB::raw('SUM(D.KVOL) as KVOL'))
                     ->get();
             }
+
+            if (count((array)$output) == 0) {
+                $output = DB::connection($this->mssql)->table('XSLIP AS D')
+                    ->leftjoin('XHEAD AS H', 'H.CODE', '=', 'D.CODE')
+                    ->leftjoin('XBAIK AS B', 'B.CODE', '=', 'H.CODE')
+                    ->where('D.CODE', 'like', $porder.'%')
+                    ->groupBy('D.CODE'
+                            , 'H.NAME'
+                            , 'B.PRICE')
+                    ->select(DB::raw('D.CODE AS PORDER')
+                            , DB::raw('H.NAME')
+                            , DB::raw("'YF' as CODE")
+                            , DB::raw('ISNULL(B.PRICE,0.0000)')
+                            , DB::raw('SUM(D.KVOL) as KVOL'))
+                    ->get();
+            }
+
+
+
             if (count((array)$output) == 0) {
                 $output = DB::connection($this->mssql)->table('XHEAD AS D')
                     ->leftJoin('XTANK AS B', 'B.CODE', '=', 'D.CODE')
@@ -1024,25 +1041,22 @@ class PackingListSystemController extends Controller
                             , 'B.SPRICE')
                     ->select(DB::raw('D.CODE AS PORDER')
                             , DB::raw('D.NAME')
-                            , DB::raw("'BU2' as CODE")
+                            , DB::raw("'YF' as CODE")
                             , DB::raw('ISNULL(B.SPRICE,0.0000)'))
                     ->get();
             }
             if (count((array)$output) == 0) {
                 $output = DB::connection($this->mssql)->table('XRECE AS D')
                     ->leftJoin('XHEAD AS H', 'H.CODE', '=', 'D.CODE')
-                    ->leftJoin('XBAIK AS B', 'B.CODE', '=', 'D.CODE')
                     ->where('D.SORDER', 'like', $porder.'%')
                     ->groupBy('D.SORDER'
                             , 'H.NAME'
                             , 'D.CODE'
-                            , 'B.PRICE'
-                            , 'D.KVOL')
+                            , 'D.PRICE')
                     ->select(DB::raw('D.SORDER AS PORDER')
                             , DB::raw('H.NAME')
                             , DB::raw('D.CODE as CODE')
-                            , DB::raw("B.PRICE")
-                            , 'D.KVOL')
+                            , DB::raw("CASE WHEN D.PRICE <> NULL THEN 'NO PRICE' ELSE 'NO PRICE' END AS TPRICE"))
                     ->get();
             }
 
