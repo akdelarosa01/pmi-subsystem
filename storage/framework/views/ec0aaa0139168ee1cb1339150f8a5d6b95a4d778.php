@@ -1,9 +1,9 @@
-@extends('layouts.master')    
-@section('title')
+    
+<?php $__env->startSection('title'); ?>
      Yield Performance | Pricon Microelectronics, Inc.
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('css')
+<?php $__env->startPush('css'); ?>
     <style type="text/css">
         .dataTables_scrollHeadInner{
             width:100% !important;
@@ -15,18 +15,18 @@
             z-index: -1;
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <?php $state = ""; $readonly = ""; ?>
-    @foreach ($userProgramAccess as $access)
-          @if ($access->program_code == Config::get('constants.MODULE_CODE_NEWTRAN'))  <!-- Please update "2001" depending on the corresponding program_code -->
-               @if ($access->read_write == "2")
+    <?php foreach($userProgramAccess as $access): ?>
+          <?php if($access->program_code == Config::get('constants.MODULE_CODE_NEWTRAN')): ?>  <!-- Please update "2001" depending on the corresponding program_code -->
+               <?php if($access->read_write == "2"): ?>
                <?php $state = "disabled"; $readonly = "readonly"; ?>
-               @endif
-          @endif
-     @endforeach
+               <?php endif; ?>
+          <?php endif; ?>
+     <?php endforeach; ?>
      
     <div class="page-content">
 
@@ -41,7 +41,8 @@
                 <div class="row">
                     <div class="col-sm-12">  
                         <form class="form-horizontal">
-                            {!! csrf_field() !!}
+                            <?php echo csrf_field(); ?>
+
                             <div class="col-sm-4">
                                 <input type="hidden"  value="<?php if(isset($count)){ echo intVal($count->yieldingno) + 1; } else {echo intVal($count) + 1;} ?>" name="hdyieldingno" id="hdyieldingno" />
                                 <input type="hidden"  name="yieldingno" id="yieldingno" />  
@@ -51,7 +52,7 @@
                                     <div class="col-sm-6">
                                         <input type="hidden"  id="id" name="id"/>
                                         <input type="hidden"  id="row" name="row"/>
-                                        <input type="text" value="@foreach($msrecords as $msrec){{$msrec->PO}}@endforeach" class="form-control input-sm" id="pono" name="pono"/>
+                                        <input type="text" value="<?php foreach($msrecords as $msrec): ?><?php echo e($msrec->PO); ?><?php endforeach; ?>" class="form-control input-sm" id="pono" name="pono"/>
                                         <div id="er1"></div>
 
                                     </div>
@@ -85,10 +86,11 @@
                                     <div class="col-sm-6">
                                         <Select class="form-control input-sm" id="family" name="family" required>
                                             <option value=""></option>
-                                          @foreach($family as $family)
-                                                <option value="{{$family->description}}">{{$family->description}}
+                                          <?php foreach($family as $family): ?>
+                                                <option value="<?php echo e($family->description); ?>"><?php echo e($family->description); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; ?>
                                         </Select>
                                         <div id="er2"></div>
                                     </div>
@@ -99,10 +101,11 @@
                                     <div class="col-sm-6">
                                         <Select class="form-control input-sm" id="series" name="series" required>
                                             <option value=""></option>
-                                            @foreach($series as $series)
-                                                <option value="{{$series->description}}">{{$series->description}}
+                                            <?php foreach($series as $series): ?>
+                                                <option value="<?php echo e($series->description); ?>"><?php echo e($series->description); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; ?>
                                         </Select>
                                         <div id="er3"></div>
                                     </div>
@@ -134,10 +137,11 @@
                                     <div class="col-sm-6">
                                         <Select class="form-control input-sm" id="yieldingstation" name="yieldingstation">
                                             <option value=""></option>
-                                            @foreach($yieldstation as $ys)
-                                                <option value="{{$ys->description}}">{{$ys->description}}
+                                            <?php foreach($yieldstation as $ys): ?>
+                                                <option value="<?php echo e($ys->description); ?>"><?php echo e($ys->description); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; ?>
                                         </Select>
                                         <div id="er6"></div>
                                     </div>
@@ -169,10 +173,11 @@
                                     <div class="col-sm-6">
                                         <Select class="form-control input-sm mod" id="mod" name="mod">
                                         <option value=""></option>
-                                            @foreach($modefect as $modefect)
-                                                <option value="{{$modefect->description}}">{{$modefect->description}}
+                                            <?php foreach($modefect as $modefect): ?>
+                                                <option value="<?php echo e($modefect->description); ?>"><?php echo e($modefect->description); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; ?>
                                         </Select>
                                         <div id="er5"></div>
                                     </div>   
@@ -299,33 +304,34 @@
     </div>
 
 
-    @include('includes.yielding-modals')
-    @include('includes.modals')
+    <?php echo $__env->make('includes.yielding-modals', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('includes.modals', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('script')
+<?php $__env->startPush('script'); ?>
 <script type="text/javascript">
-    var token = "{{ Session::token() }}";
-    var saveURL = "{{ url('/save-yield') }}";
-    var searchPOURL = "{{ url('/search-pono2') }}";
-    var getMODURL = "{{ url('/get_mod') }}";
-    var getAutoValueURL = "{{ url('/getautovalue') }}";
-    var getPngURL = "{{ url('/getpng') }}";
-    var getMngURL = "{{ url('/getmng') }}";
-    var searchDisplayPYAURL = "{{ url('/searchdisplaypya') }}";
-    var searchDisplayCMQURL = "{{ url('/searchdisplaycmq') }}";
-    var searchDisplayDetailsURL = "{{ url('/searchdisplaydetails') }}";
-    var searchDisplaySummaryURL = "{{ url('/searchdisplaysummary') }}";
-    var deleteAllPOURL = "{{ url('/deleteAll-pono2') }}";
-    var searchYieldURL = "{{ url('/search-yieldperformance2') }}";
-    var deletePyaURL = "{{ url('/deletepya') }}";
-    var deleteCmqURL = "{{ url('/deletecmq') }}";
-    var backURL = "{{ url('/yieldperformance') }}";
-    var getPODetailsURL = "{{ url('/GetPONumberDetails')}}";
-    var getFamilyDropdownURL = "{{ url('/getFamilyDropDown') }}";
-    var getProdtypeDropdownURL = "{{ url('/getProdtypeDropdown') }}";
+    var token = "<?php echo e(Session::token()); ?>";
+    var saveURL = "<?php echo e(url('/save-yield')); ?>";
+    var searchPOURL = "<?php echo e(url('/search-pono2')); ?>";
+    var getMODURL = "<?php echo e(url('/get_mod')); ?>";
+    var getAutoValueURL = "<?php echo e(url('/getautovalue')); ?>";
+    var getPngURL = "<?php echo e(url('/getpng')); ?>";
+    var getMngURL = "<?php echo e(url('/getmng')); ?>";
+    var searchDisplayPYAURL = "<?php echo e(url('/searchdisplaypya')); ?>";
+    var searchDisplayCMQURL = "<?php echo e(url('/searchdisplaycmq')); ?>";
+    var searchDisplayDetailsURL = "<?php echo e(url('/searchdisplaydetails')); ?>";
+    var searchDisplaySummaryURL = "<?php echo e(url('/searchdisplaysummary')); ?>";
+    var deleteAllPOURL = "<?php echo e(url('/deleteAll-pono2')); ?>";
+    var searchYieldURL = "<?php echo e(url('/search-yieldperformance2')); ?>";
+    var deletePyaURL = "<?php echo e(url('/deletepya')); ?>";
+    var deleteCmqURL = "<?php echo e(url('/deletecmq')); ?>";
+    var backURL = "<?php echo e(url('/yieldperformance')); ?>";
+    var getPODetailsURL = "<?php echo e(url('/GetPONumberDetails')); ?>";
+    var getFamilyDropdownURL = "<?php echo e(url('/getFamilyDropDown')); ?>";
+    var getProdtypeDropdownURL = "<?php echo e(url('/getProdtypeDropdown')); ?>";
 </script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/add_new_yielding_performance.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
-@endpush
+<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/add_new_yielding_performance.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js')); ?>"></script>
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

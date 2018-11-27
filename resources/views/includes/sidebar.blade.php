@@ -399,7 +399,7 @@
                         <ul class="sub-menu">
                         @foreach ($userProgramAccess as $access)
                             @if ($access->program_code == "6001")
-                                <?php $url = "/yielding-new-transaction"; $icon = "fa fa-pencil-square-o";?>
+                                <?php $url = "/addnewYieldperformance"; $icon = "fa fa-pencil-square-o";?>
                                 @if ($access->read_write != "0")
                                     <li>
                                         <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
