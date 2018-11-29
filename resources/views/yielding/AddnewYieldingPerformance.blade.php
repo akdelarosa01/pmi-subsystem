@@ -188,7 +188,15 @@
                                         <button type="button" onclick="javascript:addpya();" name="search-task"  class="btn btn-circle input-sm green load-task"  id="btnloadpya">
                                         <i class="fa fa-plus"></i> 
                                         </button>
-                                    </div>       
+                                    </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                    <label class="control-label col-sm-4">Remarks</label>
+                                    <div class="col-sm-6">
+                                        <textarea name="remarks" id="remarks" class="form-control input-sm"></textarea>
+                                        <div id="er10"></div>
+                                    </div>
                                  </div>
                             </div>
 
@@ -283,6 +291,7 @@
                                         <td>Classification</td>
                                         <td>Mode of Defects</td>
                                         <td>Quantity</td>
+                                        <td>Remarks</td>
                                     </tr>
                                 </thead>
                                 <tbody id="tbl_pya_body"></tbody>
