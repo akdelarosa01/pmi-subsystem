@@ -96,7 +96,7 @@ class AddnewYieldingPerformanceController extends Controller
         $table = "tbl_yielding_performance";
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
-                    ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput')
+                    ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput','remarks')
                     ->groupBy('yieldingno')
                     ->orderBY('productiondate','DESC')
                     ->get();
@@ -110,7 +110,7 @@ class AddnewYieldingPerformanceController extends Controller
         $table = "tbl_yielding_performance";  
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
-                    ->select('id','pono','classification','mod','qty')
+                    ->select('id','pono','classification','mod','qty','remarks')
                     ->orderBY('productiondate','DESC')
                     ->get();
         return $dataexist; 
@@ -122,7 +122,7 @@ class AddnewYieldingPerformanceController extends Controller
         $pono = $request->pono;  
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
-                    ->select('id','yieldingno','pono','productiondate','yieldingstation','accumulatedoutput')
+                    ->select('id','yieldingno','pono','productiondate','yieldingstation','accumulatedoutput','remarks')
                     ->groupBy('yieldingno')
                     ->orderBY('productiondate','DESC')
                     ->get();
@@ -172,7 +172,7 @@ class AddnewYieldingPerformanceController extends Controller
         $pono = $request->pono;
         $dataexist = DB::connection($this->mysql)->table($table)
                     ->where('pono','=',$pono)
-                    ->select('id','pono','yieldingno','classification','mod','qty')
+                    ->select('id','pono','yieldingno','classification','mod','qty','remarks')
                     ->orderBY('productiondate','DESC')
                     ->get();
 
@@ -244,6 +244,7 @@ class AddnewYieldingPerformanceController extends Controller
                                     'mod' => $req->newmod[$key],
                                     'classification' =>$req->newclassification[$key],
                                     'qty' => $req->newqty[$key],
+                                    'remarks' => $req->remarks[$key],
                                     'updated_at' => date('Y-m-d h:i:s')
                                 ]);
                 }
@@ -275,6 +276,7 @@ class AddnewYieldingPerformanceController extends Controller
                             'mod' => $rec,
                             'classification' =>$req->newclassification[$key],
                             'qty' => $req->newqty[$key],
+                            'remarks' => $req->remarks[$key],
                             'created_at' => date('Y-m-d h:i:s'),
                             'updated_at' => date('Y-m-d h:i:s')
                         ]);
@@ -290,6 +292,7 @@ class AddnewYieldingPerformanceController extends Controller
                                     'mod' => $req->newmod[$key],
                                     'classification' =>$req->newclassification[$key],
                                     'qty' => $req->newqty[$key],
+                                    'remarks' => $req->remarks[$key],
                                     'created_at' => date('Y-m-d h:i:s'),
                                     'updated_at' => date('Y-m-d h:i:s')
                                 ]);
@@ -595,13 +598,13 @@ class AddnewYieldingPerformanceController extends Controller
         } else {
             $pya = DB::connection($this->mysql)->table('tbl_yielding_pya')
                         ->where('pono','=',$req->po)
-                        ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput','classification','mod','qty')
+                        ->select('id','yieldingno','productiondate','yieldingstation','accumulatedoutput','classification','mod','qty','remarks')
                         ->orderBY('productiondate','DESC')
                         ->get();
 
             $cmq = DB::connection($this->mysql)->table('tbl_yielding_cmq')
                         ->where('pono','=',$req->po)
-                        ->select('id','pono','classification','mod','qty')
+                        ->select('id','pono','classification','mod','qty','remarks')
                         ->orderBY('productiondate','DESC')
                         ->get();
         }

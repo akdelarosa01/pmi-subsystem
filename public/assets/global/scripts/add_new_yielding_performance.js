@@ -44,11 +44,13 @@ $(function(e) {
         if($(this).val() == "NDF"){
             $('#mod').attr('disabled',true);
             $('#qty').attr('disabled',true);
+            $('#remarks').attr('disabled',true);
             $('#er5').html(""); 
             
         }else{
             $('#mod').attr('disabled',false);
             $('#qty').attr('disabled',false);
+            $('#remarks').attr('disabled',false);
         }
             $('#qty').val("0");
     });
@@ -201,12 +203,13 @@ function save_yield(){
         ,ywomng : ywomng
         ,twoyield : twoyield
         ,status : hdstatus
-        ,newaccumulatedoutput:$('input[name^="pyaaccumulatedoutput"]').map(function(){return $(this).val();}).get()
-        ,newproductiondate:$('input[name^="pyaproductiondate"]').map(function(){return $(this).val();}).get()
-        ,newyieldingstation:$('input[name^="pyayieldingstation"]').map(function(){return $(this).val();}).get()
-        ,newclassification:$('input[name^="pyaclassification"]').map(function(){return $(this).val();}).get()
-        ,newmod:$('input[name^="pyamod"]').map(function(){return $(this).val();}).get()
-        ,newqty:$('input[name^="pyaqty"]').map(function(){return $(this).val();}).get()
+        ,newaccumulatedoutput:$('input[name="pyaaccumulatedoutput[]"]').map(function(){return $(this).val();}).get()
+        ,newproductiondate:$('input[name="pyaproductiondate[]"]').map(function(){return $(this).val();}).get()
+        ,newyieldingstation:$('input[name="pyayieldingstation[]"]').map(function(){return $(this).val();}).get()
+        ,newclassification:$('input[name="pyaclassification[]"]').map(function(){return $(this).val();}).get()
+        ,newmod:$('input[name="pyamod[]"]').map(function(){return $(this).val();}).get()
+        ,newqty:$('input[name="pyaqty[]"]').map(function(){return $(this).val();}).get()
+        ,remarks:$('input[name="pyaremarks[]"]').map(function(){return $(this).val();}).get()
     };
 
     $.ajax({
@@ -298,7 +301,8 @@ function addpya(){
             accumulatedoutput: accumulatedoutput,
             classification: classification,
             mod: mod,
-            qty: qty
+            qty: qty,
+            remarks: $('#remarks').val()
         });     
     }else{
 
@@ -312,20 +316,22 @@ function addpya(){
                             accumulatedoutput: accumulatedoutput,
                             classification: classification,
                             mod: mod,
-                            qty: qty
-    });
+                            qty: qty,
+                            remarks: $('#remarks').val()
+        });
     }
     console.log(pya_arr);
     makePyaTable(pya_arr);
     pyafieldcomputation();
     clear();
-    var d = new Date();
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-    var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day   
-    $('input[name=productiondate]').val(date);
+    // var d = new Date();
+    // var month = d.getMonth()+1;
+    // var day = d.getDate();
+    // var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day   
+    // $('input[name=productiondate]').val(date);
     $('#mod').attr('disabled',false);
     $('#qty').attr('disabled',false);
+    $('#remarks').attr('disabled',false);
    
 }
 
@@ -371,6 +377,10 @@ function makePyaTable(arr) {
 
             { data: function(x) {
                 return x.qty+"<input type='hidden' name='pyaqty[]' value='"+x.qty+"'>";
+            }},
+
+            { data: function(x) {
+                return x.remarks+"<input type='hidden' name='pyaremarks[]' value='"+x.remarks+"'>";
             }},
         ]
     });
@@ -540,6 +550,18 @@ function GETPoDetails(){
                     $('#family').val(yld.family);
                     $('#series').val(yld.series);
                     $('#prodtype').val(yld.prodtype);
+                    $('#yieldingstation').val(yld.yieldingstation);
+                    $('#accumulatedoutput').val(yld.accumulatedoutput);
+                    $('#classification').val(yld.classification);
+                    $('#mod').val(yld.mod);
+                    $('#qty').val(yld.qty);
+                    $('#toutput').val(yld.toutput);
+                    $('#treject').val(yld.treject);
+                    $('#tmng').val(yld.tmng);
+                    $('#tpng').val(yld.tpng);
+                    $('#ywomng').val(yld.ywomng);
+                    $('#twoyield').val(yld.twoyield);
+                    $('#dppm').val(yld.dppm);
 
                     pya_arr = [];
                     var prod_date = '';
@@ -553,7 +575,8 @@ function GETPoDetails(){
                             accumulatedoutput: x.accumulatedoutput,
                             classification: x.classification,
                             mod: x.mod,
-                            qty: x.qty
+                            qty: x.qty,
+                            remarks: x.remarks
                         });
 
                         prod_date = x.productiondate;
@@ -579,6 +602,7 @@ function GETPoDetails(){
                 $('select[name=yieldingstation]').attr('disabled',false);  
                 $('input[name=accumulatedoutput]').attr('disabled',false);  
                 $('#pono').attr('disabled',true);
+                $('#remarks').attr('disabled',false);
             }else{
                 msg("Wrong Input of PO Number","failed");
             }
@@ -624,6 +648,7 @@ function getProductList(){
 
 function DisabledALL(){
     $('input[name=pono]').attr('disabled',true);
+    $('#remarks').attr('disabled',true);
     $('input[name=poqty]').attr('disabled',true);
     $('input[name=device]').attr('disabled',true);
     $('input[name=treject]').attr('disabled',true);
