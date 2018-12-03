@@ -202,6 +202,13 @@
 
                             <div class="col-sm-4">
                                 <div class="form-group">
+                                    <label class="control-label col-sm-4">Total Input</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control input-sm" id="tinput" name="tinput"/>
+                                        <div id="er8"></div>
+                                      </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="control-label col-sm-4">Total Output</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control input-sm" id="toutput" name="toutput"/>

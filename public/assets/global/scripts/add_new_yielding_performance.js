@@ -70,6 +70,16 @@ $(function(e) {
         $('#btnloadpya').removeClass('bg-green');
         $('#btnloadpya').addClass('bg-blue');
         $('#btnloadpya').html('<i class="fa fa-check"></i>');
+
+        if ($(this).attr('data-classification') == 'NDF') {
+            $('#mod').prop('disabled', true);
+            $('#qty').prop('readonly', true);
+            $('#remarks').prop('readonly', true);
+        } else {
+            $('#mod').prop('disabled', false);
+            $('#qty').prop('readonly', false);
+            $('#remarks').prop('readonly', false);
+        }
     });
 
 });
@@ -114,6 +124,9 @@ function addnew(){
     $('#toutput').keyup(function(){
         $('#er8').html(""); 
     });
+    $('#tinput').keyup(function(){
+        $('#er8').html(""); 
+    });
     $('#treject').keyup(function(){
         $('#er9').html(""); 
     });
@@ -139,6 +152,7 @@ function save_yield(){
     var yieldingstation =  $('select[name=yieldingstation]').val();
     var accumulatedoutput =  $('input[name=accumulatedoutput]').val();
     var toutput =  $('input[name=toutput]').val();
+    var tinput =  $('input[name=tinput]').val();
     var treject = $('input[name=treject]').val();
     var tmng =  $('input[name=tmng]').val();
     var tpng =  $('input[name=tpng]').val();
@@ -197,6 +211,7 @@ function save_yield(){
         ,yieldingstation : yieldingstation
         ,accumulatedoutput : accumulatedoutput
         ,toutput : toutput
+        ,tinput : tinput
         ,treject : treject
         ,tmng : tmng
         ,tpng : tpng
@@ -241,6 +256,7 @@ function addpya(){
     var yieldingstation =  $('#yieldingstation').val();
     var accumulatedoutput =  $('input[name=accumulatedoutput]').val();
     var toutput =  $('input[name=toutput]').val();
+    var tinput =  $('input[name=tinput]').val();
     var countpya = $('#countpya').val();
     var classification = $('#classification').val();
     var mod = $('#mod').val();
@@ -402,106 +418,110 @@ function deletepya(){
 }
 
 function pyafieldcomputation(){
- var totalqty =0;
- var totalClasification ="";
- var totalOutput =0;
- var totalPNG = 0;
- var totalMNG = 0;
- var treject = 0;
+    var totalqty =0;
+    var totalClasification ="";
+    var totalOutput =0;
+    var totalInput =0;
+    var totalPNG = 0;
+    var totalMNG = 0;
+    var treject = 0;
+
     $.each(pya_arr, function(i, x) {
-    totalOutput += parseInt(x.accumulatedoutput);
-    totalqty = x.qty;
-    totalClasification = x.classification;
-
-    if(totalClasification == "NDF"){
+        totalOutput += parseInt(x.accumulatedoutput) - parseInt(x.qty);
+        totalInput += parseInt(x.accumulatedoutput);
         totalqty = x.qty;
-    }
+        totalClasification = x.classification;
 
-    if(totalClasification == "Production NG (PNG)"){
-        if(totalPNG == 0){
-            var sample = parseInt(treject);
-            var sum = sample + parseInt(totalqty);
-            totalPNG = parseInt(totalPNG)+parseInt(totalqty);
-        } else {
-            var value = parseInt(treject);
-            var sum = value + parseInt(totalqty);
-            totalPNG = parseInt(totalPNG)+parseInt(totalqty);
-        }  
-    }
+        if(totalClasification == "NDF"){
+            totalqty = x.qty;
+        }
 
-    if(totalClasification == "Material NG (MNG)"){
-        if(totalMNG  == 0){
-            totalMNG = parseInt(totalMNG)+parseInt(totalqty);
-            if($('#tpng').val()){
-                var x = parseInt(treject)+parseInt(totalqty)
+        if(totalClasification == "Production NG (PNG)"){
+            if(totalPNG == 0){
+                var sample = parseInt(treject);
+                var sum = sample + parseInt(totalqty);
+                totalPNG = parseInt(totalPNG)+parseInt(totalqty);
             } else {
-                var x =treject+parseInt(totalqty);
+                var value = parseInt(treject);
+                var sum = value + parseInt(totalqty);
+                totalPNG = parseInt(totalPNG)+parseInt(totalqty);
+            }  
+        }
+
+        if(totalClasification == "Material NG (MNG)"){
+            if(totalMNG  == 0){
+                totalMNG = parseInt(totalMNG)+parseInt(totalqty);
+                if($('#tpng').val()){
+                    var x = parseInt(treject)+parseInt(totalqty)
+                } else {
+                    var x =treject+parseInt(totalqty);
+                }
+                  treject = x;
+            } else {
+                totalMNG = parseInt(totalMNG)+parseInt(totalqty);
+                treject = parseInt(treject)+parseInt(totalqty);    
             }
-              treject = x;
+
         } else {
-            totalMNG = parseInt(totalMNG)+parseInt(totalqty);
-            treject = parseInt(treject)+parseInt(totalqty);    
+            if(treject == 0){
+                 treject = treject + parseInt(totalqty);      
+            } else{
+                 treject = parseInt(treject) + parseInt(totalqty);       
+            }
         }
 
-    } else {
-        if(treject == 0){
-             treject = treject + parseInt(totalqty);      
-        } else{
-             treject = parseInt(treject) + parseInt(totalqty);       
+        if(totalMNG == "0"){
+            var toaddtp = parseInt(totalOutput) + totalMNG;
+            var toaddtr = parseInt(totalOutput) + treject;
+            var dev = toaddtp/toaddtr * 100;
+            var final = dev.toFixed(2);
+            $('#ywomng').val(final);
+        } else {
+
+            var toaddtp = parseInt(totalOutput) + parseInt(totalMNG);
+            var toaddtr = parseInt(totalOutput) + parseInt(treject);
+            var dev = toaddtp/toaddtr * 100;
+            var final = dev.toFixed(2);
+            $('#ywomng').val(final);
         }
-    }
 
-    if(totalMNG == "0"){
-        var toaddtp = parseInt(totalOutput) + totalMNG;
-        var toaddtr = parseInt(totalOutput) + treject;
-        var dev = toaddtp/toaddtr * 100;
-        var final = dev.toFixed(2);
-        $('#ywomng').val(final);
-    } else {
+        if(totalOutput == "0"){
+            $('#ywomng').val("0");
+        } 
 
-        var toaddtp = parseInt(totalOutput) + parseInt(totalMNG);
-        var toaddtr = parseInt(totalOutput) + parseInt(treject);
-        var dev = toaddtp/toaddtr * 100;
-        var final = dev.toFixed(2);
-        $('#ywomng').val(final);
-    }
+        if(totalMNG == 0){
+            var toaddtr = parseInt(totalOutput) + treject;
+            var temp = totalOutput/toaddtr * 100;
+            var final = temp.toFixed(2);
+            $('#twoyield').val(final);    
+        } else {
+            var toaddtr = parseInt(totalOutput) + parseInt(treject);
+            var temp = totalOutput/toaddtr * 100;
+            var final = temp.toFixed(2);
+            $('#twoyield').val(final);    
+        }
 
-    if(totalOutput == "0"){
-        $('#ywomng').val("0");
-    } 
+        if(totalMNG == 0){
+            var tempdppm = parseInt(treject)/parseInt(totalOutput); 
+            $('#dppm').val((tempdppm * 1000000).toFixed(2));
 
-    if(totalMNG == 0){
-        var toaddtr = parseInt(totalOutput) + treject;
-        var temp = totalOutput/toaddtr * 100;
-        var final = temp.toFixed(2);
-        $('#twoyield').val(final);    
-    } else {
-        var toaddtr = parseInt(totalOutput) + parseInt(treject);
-        var temp = totalOutput/toaddtr * 100;
-        var final = temp.toFixed(2);
-        $('#twoyield').val(final);    
-    }
+            // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
+            // var tempdppm = totalPNG/toutputandtr; 
+            // $('#dppm').val((tempdppm * 1000000).toFixed(2));
+        }else{
+            var tempdppm = parseInt(treject)/parseInt(totalOutput); 
+            $('#dppm').val((tempdppm * 1000000).toFixed(2));
+            
+            // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
+            // var tempdppm = totalPNG/toutputandtr; 
+            // $('#dppm').val((tempdppm * 1000000).toFixed(2));    
+        }
 
-    if(totalMNG == 0){
-        var tempdppm = parseInt(treject)/parseInt(totalOutput); 
-        $('#dppm').val((tempdppm * 1000000).toFixed(2));
-
-        // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
-        // var tempdppm = totalPNG/toutputandtr; 
-        // $('#dppm').val((tempdppm * 1000000).toFixed(2));
-    }else{
-        var tempdppm = parseInt(treject)/parseInt(totalOutput); 
-        $('#dppm').val((tempdppm * 1000000).toFixed(2));
-        
-        // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
-        // var tempdppm = totalPNG/toutputandtr; 
-        // $('#dppm').val((tempdppm * 1000000).toFixed(2));    
-    }
-
-    $('#toutput').val(totalOutput);
-    $('#treject').val(treject);
-    $('#tpng').val(totalPNG);
-    $('#tmng').val(totalMNG);
+        $('#toutput').val(totalOutput);
+        $('#tinput').val(totalInput);
+        $('#treject').val(treject);
+        $('#tpng').val(totalPNG);
+        $('#tmng').val(totalMNG);
 
     });
 }
@@ -562,6 +582,8 @@ function GETPoDetails(){
                     $('#ywomng').val(yld.ywomng);
                     $('#twoyield').val(yld.twoyield);
                     $('#dppm').val(yld.dppm);
+
+                    $('#tinput').val();
 
                     pya_arr = [];
                     var prod_date = '';
@@ -653,6 +675,7 @@ function DisabledALL(){
     $('input[name=device]').attr('disabled',true);
     $('input[name=treject]').attr('disabled',true);
     $('input[name=toutput]').attr('disabled',true);
+    $('input[name=tinput]').attr('readonly',true);
     $('#family').attr('disabled',true);
     $('#series').attr('disabled',true);
     $('#prodtype').attr('disabled',true);
@@ -689,6 +712,7 @@ function ClearAll(){
         $('input[name=accumulatedoutput]').val("");
         $('#yieldingstation').val("");
         $('input[name=toutput]').val(""); 
+        $('input[name=tinput]').val(""); 
         $('input[name=treject]').val("");
         $('input[name=tmng]').val("");
         $('input[name=tpng]').val("");
