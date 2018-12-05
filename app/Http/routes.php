@@ -2169,6 +2169,11 @@ Route::group(['middleware' => 'web'], function () {
 
         /*REPORTS--YIELD PERFORMANCE*/
 
+            Route::get('/searchPOdetails', [
+                'uses' => 'Yielding\YieldPerformanceReportController@searchPOdetails',
+                'name' => 'searchPOdetails'
+            ]);
+
             Route::get('/ReportYieldPerformance', [
                 'uses' => 'Yielding\YieldPerformanceReportController@getYieldPerformanceReport',
                 'name' => 'ReportYieldPerformance'
@@ -2198,7 +2203,7 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => '/summaryREpt'
             ]);
             Route::get('/defectsummaryRpt', [
-                'uses' => 'Yielding\YieldPerformanceReportController@defectsummaryRpt',
+                'uses' => 'Yielding\YieldPerformanceReportController@defectSummary',
                 'name' => '/defectsummaryRpt'
             ]);
             Route::get('/yieldsumRpt', [

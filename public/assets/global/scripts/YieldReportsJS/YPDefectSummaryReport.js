@@ -1,21 +1,38 @@
-function defectsummaryRpt(){
-     var dsrdatefrom = $('#dsr-datefrom').val();
-     var dsrdateto = $('#dsr-dateto').val();
-     var ptype = $('#dsr-ptype').val();
-     var icsocket = $('#dsr-icsocket').val();
-     var fol = $('#dsr-fol').val();
-     var option = "";
-     if($('#dsr-icsocket').is(':checked')){
-          option = icsocket;   
-     }
-     if($('#dsr-fol').is(':checked')){
-          option = fol;
-     }
-    
-     var paramfrom = dsrdatefrom.split("/");
-     var paramto = dsrdateto.split("/");
-     var datefrom = paramfrom[2]+'-'+paramfrom[0]+'-'+paramfrom[1];
-     var dateto = paramto[2]+'-'+paramto[0]+'-'+paramto[1];
+$( function() {
+     $('#dsr-po').on('change', function() {
+          if ($(this).val() == '') {
 
-     window.location = defectsummaryRptURL + "?_token=" + token + "&&datefrom=" + datefrom + "&&dateto=" + dateto + "&&ptype=" + ptype + "&&option=" + option;
+          } else {
+               $.ajax({
+                    url: searchPOdetailsURL,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    data: {
+                         _token: token,
+                         po: $(this).val()
+                    },
+               }).done(function(data, textStatus, xhr) {
+                    console.log(data);
+                    $('#dsr-ptype').val(data.prod_type);
+                    $('#dsr-family').val(data.family);
+                    $('#dsr-series').val(data.series);
+                    $('#dsr-device').val(data.device_name);
+               }).fail(function(xhr, textStatus, errorThrown) {
+                    console.log("error");
+               });
+               
+          }
+     });
+});
+
+function defectsummaryRpt(){
+     window.location.href = defectsummaryRptURL + "?_token=" + token + 
+          "&&datefrom=" + $('#dsr-datefrom').val() + 
+          "&&dateto=" + $('#dsr-dateto').val() + 
+          '&&ptype=' + $('#dsr-ptype').val() +
+          '&&family=' + $('#dsr-family').val() +
+          '&&series=' + $('#dsr-series').val() +
+          '&&device=' + $('#dsr-device').val() +
+          '&&po=' + $('#dsr-po').val();
 }
+

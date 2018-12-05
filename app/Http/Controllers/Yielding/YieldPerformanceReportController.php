@@ -60,7 +60,7 @@ class YieldPerformanceReportController extends Controller
                             ->get();
 
             $datenow = date('Y/m/d');
-            $count = DB::connection($this->mysql)->table("tbl_yielding_pya")->select('yieldingno')->orderBy('id','desc')->first();
+            $count = DB::connection($this->mysql)->table("tbl_yielding_pya")->orderBy('id','desc')->first();
             $targetyield = DB::connection($this->mysql)->table("tbl_targetregistration")->distinct()->get();
             $countpya = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
             $countcmq = DB::connection($this->mysql)->table("tbl_yielding_performance")->count(); 
@@ -73,10 +73,6 @@ class YieldPerformanceReportController extends Controller
             $record = DB::connection($this->mysql)->table("tbl_yielding_performance")
                         ->groupBy('pono')
                         ->get();
-            $records = DB::connection($this->mysql)->table("tbl_yielding_performance")
-                        ->select('id','pono','poqty','device','series','family','toutput','treject',DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),DB::raw("SUM(qty) as qty"),DB::raw("SUM(twoyield) as twoyield"))
-                        ->groupBy('pono')
-                        ->get();
 
             return view('yielding.YieldPerformanceReport',[
                 'userProgramAccess' => $userProgramAccess,
@@ -87,7 +83,7 @@ class YieldPerformanceReportController extends Controller
                 'series'=>$series,
                 'msrecords'=>$msrecords, 
                 'target' => $target,
-                'count'=>$count,
+                'count'=> $count,
                 'countpya'=> $countpya,
                 'countcmq'=> $countcmq,
                 'targetyield' => $targetyield
@@ -95,22 +91,61 @@ class YieldPerformanceReportController extends Controller
         }
     }
 
-    public function records($value='')
+    public function searchPOdetails(Request $req)
     {
-        $records = DB::connection($this->mysql)->table("tbl_yielding_performance")
+        if (isset($req->po)) {
+            $data = DB::connection($this->mysql)
+                        ->select("SELECT pono,
+                                        device_code,
+                                        device_name,
+                                        family,
+                                        prod_type,
+                                        series
+                                FROM tbl_poregistration
+                                where pono='".$req->po."'");
+            if (count((array)$data) > 0) {
+                return response()->json($data[0]);
+            } else {
+                $data = DB::connection($this->mssql)
+                            ->SELECT("SELECT r.SORDER as pono, r.CODE as device_code, h.NAME as device_name, r.KVOL as po_qty, SUBSTRING(h.NAME, 1, CHARINDEX('-',h.NAME) - 1) as  series,
+                                UPPER(i.BUNR) as prodtype, h.NOTE as family 
+                                FROM XRECE r 
+                                     LEFT JOIN XITEM i ON i.CODE = r.CODE
+                                     LEFT JOIN XHEAD h ON h.CODE = r.CODE
+                                WHERE i.BUNR IN('Burn-In','Test Sockets') AND r.SORDER = '$req->po'
+                                GROUP BY r.SORDER, r.CODE, h.NAME, r.KVOL, i.BUNR, h.NOTE
+                                ORDER BY i.BUNR, r.CODE");
+                if (count((array)$data) > 0) {
+                    return response()->json($data[0]);
+                }
+            }
+        }
+    }
+
+    public function records()
+    {
+        $records = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
+                        ->leftJoin('tbl_yielding_pya as p','y.pono','=','p.pono')
                         ->select(
-                                'id',
-                                'pono',
-                                'poqty',
-                                'device',
-                                'series',
-                                'family',
-                                'toutput',
-                                'treject',
-                                DB::raw("SUM(accumulatedoutput) as accumulatedoutput"),
-                                DB::raw("SUM(qty) as qty"),DB::raw("SUM(twoyield) as twoyield")
+                                DB::raw('y.id as id'),
+                                DB::raw('y.pono as pono'),
+                                DB::raw('y.poqty as poqty'),
+                                DB::raw('y.device as device'),
+                                DB::raw('y.series as series'),
+                                DB::raw('y.family as family'),
+                                DB::raw('y.tinput as tinput'),
+                                DB::raw('y.toutput as toutput'),
+                                DB::raw('y.treject as treject'),
+                                DB::raw("IFNULL(SUM(p.qty),0) as qty")
                             )
-                        ->groupBy('pono')
+                        ->groupBy('y.id',
+                                'y.pono',
+                                'y.poqty',
+                                'y.device',
+                                'y.series',
+                                'y.family',
+                                'y.toutput',
+                                'y.treject')
                         ->get();
 
         return response()->json($records);
@@ -683,6 +718,157 @@ class YieldPerformanceReportController extends Controller
         } catch (Exception $e) {
             return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
         }
+    }
+
+    public function defectSummary(Request $req)
+    {
+        Excel::create('Defect_Summary_Report', function($excel) use($req)
+        {
+            $excel->sheet('Sheet1', function($sheet) use($req)
+            {
+
+                $date_cond = '';
+                $ptype_cond = '';
+                $family_cond = '';
+                $series_cond = '';
+                $device_cond = '';
+                $po_cond = '';
+                $datefrom = '';
+                $dateto = '';
+                $fams = [];
+
+                if ($req->datefrom !== '') {
+                    $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+                    $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
+
+                    $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+                }
+
+                if ($req->ptype !== '') {
+                    $ptype_cond = " AND y.prodtype='".$req->ptype."'";
+                }
+
+                if ($req->family !== '') {
+                    $family_cond = " AND y.family='".$req->family."'";
+                }
+
+                if ($req->series !== '') {
+                    $series_cond = " AND y.series='".$req->series."'";
+                }
+
+                if ($req->device !== '') {
+                    $device_cond = " AND y.device like '%".$req->device."%'";
+                }
+
+                if ($req->po !== '') {
+                    $po_cond = " AND y.pono='".$req->po."'";
+                }
+
+                $families = DB::connection($this->mysql)
+                                ->select("select y.family
+                                        from tbl_yielding_performance as y
+                                        inner join tbl_yielding_pya as p
+                                        on y.pono = p.pono
+                                        where 1=1".$date_cond.
+                                        $ptype_cond.
+                                        $family_cond.
+                                        $series_cond.
+                                        $device_cond.
+                                        $po_cond."
+                                        group by y.family");
+
+
+                foreach ($families as $key => $fam) {
+                    array_push($fams, $fam->family);
+                }
+
+                $sheet->setAutoSize(true);
+                $sheet->setCellValue('A1', 'Defect Summary Per Family');
+                $sheet->mergeCells('A1:D1');
+
+                $sheet->setHeight(1,30);
+                $sheet->row(1, function ($row) {
+                    $row->setFontFamily('Calibri');
+                    $row->setFontSize(15);
+                });
+
+                $sheet->cell('A3',"DATE");
+
+                $sheet->cell('C3',"From");
+                $sheet->cell('D3',$datefrom);
+                $sheet->cell('C4',"To");
+                $sheet->cell('D4',$dateto);
+
+                $sheet->cell('A6',"No.");
+                $sheet->cell('B6',"Defectives");
+
+                $cols = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
+
+                $lastColKey = '';
+                $nextCol = '';
+
+                foreach ($fams as $famkey => $family) {
+                    $sheet->cell($cols[$famkey].'6',$family);
+                    $lastColKey = $famkey;
+                }
+
+                $defects = DB::connection($this->mysql)
+                            ->select("select p.`mod` as defects
+                                    from tbl_yielding_performance as y
+                                    inner join tbl_yielding_pya as p
+                                    on y.pono = p.pono
+                                    where p.`mod` <> '' ".$date_cond.
+                                    $ptype_cond.
+                                    $series_cond.
+                                    $device_cond.
+                                    $po_cond."
+                                    group by p.`mod`");
+
+                $no = 1;
+                $row = 7;
+                
+                foreach ($defects as $key => $df) {
+                    $sheet->cell('A'.$row,$no);
+                    $sheet->cell('B'.$row,$df->defects);
+
+                    // if ($family == $df->family) {
+                        // $dt = DB::connection($this->mysql)
+                        //         ->select("select SUM(p.qty) as qty
+                        //             from tbl_yielding_performance as y
+                        //             inner join tbl_yielding_pya as p
+                        //             on y.pono = p.pono
+                        //             where p.`mod` = '".$df->defects."' ".$date_cond.
+                        //             $ptype_cond.
+                        //             $series_cond.
+                        //             $device_cond.
+                        //             $po_cond."
+                        //             and y.family = '".$family."'");
+
+                        // $sheet->cell($cols[$famkey].$row,($dt[0]->qty == 0)? '00.0':$dt[0]->qty);
+                    // }
+
+                    $row++;
+                    $no++;
+                }
+
+                $nextCol = $cols[$lastColKey+1];
+
+                $sheet->cell($nextCol.'6',"Total");
+
+                $sheet->cells('A6:'.$nextCol.'6', function($cells) {
+                    $cells->setFont([
+                        'family'     => 'Calibri',
+                        'size'       => '11',
+                        'bold'       =>  true,
+                    ]);
+                    // Set all borders (top, right, bottom, left)
+                    $cells->setBorder('solid', 'solid', 'solid', 'solid');
+                });
+
+                $sheet->setHeight(6, 20);
+            });
+        })->download('xls');
+
     }
 
     public function defectsummaryRpt(Request $request)

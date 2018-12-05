@@ -41,6 +41,7 @@
                                                        <td>Device Name</td>
                                                        <td>Series</td>
                                                        <td>Family</td>
+                                                       <td>Total Input</td>
                                                        <td>Total Output</td>
                                                        <td>Total Reject</td>
                                                        <td>Total Yield</td>
@@ -109,10 +110,6 @@
 @push('script')
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/plugins/canvasjs.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryReport.js') }}"></script>
-<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPYieldSummaryReport.js') }}"></script>
 
 
 <script type="text/javascript">
@@ -126,7 +123,14 @@
      var defectsummaryRptURL = "{{ url('/defectsummaryRpt') }}";
      var yieldsumfamRptURL = "{{ url('/yieldsumfamRpt') }}";
      var yieldsumRptURL = "{{ url('/yieldsumRpt') }}";
+
+     var searchPOdetailsURL = "{{ url('/searchPOdetails') }}";
 </script>
 <script type="text/javascript"src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yielding_performance_report.js') }}"></script>
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js') }}"></script>
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js') }}"></script>
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryReport.js') }}"></script>
+<script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPYieldSummaryReport.js') }}"></script>
+
 
 @endpush

@@ -24,6 +24,13 @@
                                         </div>
                                         <hr>
                                         <div class="form-group">
+                                             <label class="control-label col-sm-3">P.O.</label>
+                                             <div class="col-sm-9">
+                                                  <input type="text" class="form-control input-sm" name="dsr-po" id="dsr-po">
+                                             </div>
+                                        </div>
+
+                                        <div class="form-group">
                                              <label class="control-label col-sm-3">Product Type</label>
                                              <div class="col-sm-9">
                                                   <select class="form-control input-sm" name="dsr-ptype" id="dsr-ptype">
@@ -33,7 +40,40 @@
                                                   </select>
                                              </div>
                                         </div>
-                                       <br>
+
+                                        <div class="form-group">
+                                             <label class="control-label col-sm-3">Family</label>
+                                             <div class="col-sm-9">
+                                                  <select class="form-control input-sm" name="dsr-family" id="dsr-family">
+                                                       <option value=""></option>
+                                                       @foreach($family as $family)
+                                                            <option value="{{$family->description}}">{{$family->description}}</option>
+                                                       @endforeach
+                                                  </select>
+                                             </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                             <label class="control-label col-sm-3">Series Name</label>
+                                             <div class="col-sm-9">
+                                                  <select class="form-control input-sm" name="dsr-series" id="dsr-series">
+                                                       <option value=""></option>
+                                                       @foreach($series as $series)
+                                                          <option value="{{$series->description}}">{{$series->description}}</option>
+                                                       @endforeach
+                                                  </select>
+                                             </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                             <label class="control-label col-sm-3">Device</label>
+                                             <div class="col-sm-9">
+                                                  <input type="text" class="form-control input-sm" name="dsr-device" id="dsr-device">
+                                             </div>
+                                        </div>
+
+                                        
+                                        <br>
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
                                                   <button type="button" onclick="javascript:defectsummaryRpt();"  class="btn green-jungle input-sm">Export to Excel</button>

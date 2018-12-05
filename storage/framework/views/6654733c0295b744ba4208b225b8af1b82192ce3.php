@@ -10,24 +10,28 @@
                          <div class="row">
                               <?php echo csrf_field(); ?>
 
-                              <div class="form-group row">
-                                   <div class="col-sm-12 col-sm-offset-3">
-                                        <button type="button" class="btn col-sm-6 blue-hoki" id="btnxport-summaryrpt" ><i class="fa fa-list-ul"></i>Summary Report</button>
-                                   </div>
-                              </div>
+
                               <div class="form-group row">
                                    <div class="col-sm-12 col-sm-offset-3">
                                         <button type="button" class="btn col-sm-6 grey-cascade" id="btnxport-defectsummaryrpt" ><i class="fa fa-chain-broken"></i>Defect Summary</button>
                                    </div>
                               </div>
+
+                              <div class="form-group row">
+                                   <div class="col-sm-12 col-sm-offset-3">
+                                        <button type="button" class="btn col-sm-6 blue-hoki" id="btnxport-summaryrpt" ><i class="fa fa-list-ul"></i>Yield Performance Report</button>
+                                   </div>
+                              </div>
+
                               <div class="form-group row">
                                    <div class="col-sm-12 col-sm-offset-3">
                                         <button type="button" class="btn col-sm-6 red-sunglo" id="btnxport-yieldpsrpt" ><i class="fa fa-list-alt"></i>Yield Performance Summary</button>
                                    </div>
                               </div>
+                              
                               <div class="form-group row">
                                    <div class="col-sm-12 col-sm-offset-3">
-                                        <button type="button" class="btn col-sm-6 purple-plum" id="btnxport-yieldsfrpt" ><i class="fa fa-align-justify"></i>Yield Summary Family</button>
+                                        <button type="button" class="btn col-sm-6 purple-plum" id="btnxport-yieldsfrpt" ><i class="fa fa-align-justify"></i>Yield Summary per Family</button>
                                    </div>
                               </div>
                          </div>

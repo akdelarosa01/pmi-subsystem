@@ -41,6 +41,7 @@
                                                        <td>Device Name</td>
                                                        <td>Series</td>
                                                        <td>Family</td>
+                                                       <td>Total Input</td>
                                                        <td>Total Output</td>
                                                        <td>Total Reject</td>
                                                        <td>Total Yield</td>
@@ -109,10 +110,6 @@
 <?php $__env->startPush('script'); ?>
 <script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/plugins/canvasjs.min.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/common.js')); ?>"></script>
-<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js')); ?>"></script>
-<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js')); ?>"></script>
-<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryReport.js')); ?>"></script>
-<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPYieldSummaryReport.js')); ?>"></script>
 
 
 <script type="text/javascript">
@@ -126,8 +123,15 @@
      var defectsummaryRptURL = "<?php echo e(url('/defectsummaryRpt')); ?>";
      var yieldsumfamRptURL = "<?php echo e(url('/yieldsumfamRpt')); ?>";
      var yieldsumRptURL = "<?php echo e(url('/yieldsumRpt')); ?>";
+
+     var searchPOdetailsURL = "<?php echo e(url('/searchPOdetails')); ?>";
 </script>
 <script type="text/javascript"src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yielding_performance_report.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryFamilyReport.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPSummaryReport.js')); ?>"></script>
+<script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPYieldSummaryReport.js')); ?>"></script>
+
 
 <?php $__env->stopPush(); ?>
 <?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

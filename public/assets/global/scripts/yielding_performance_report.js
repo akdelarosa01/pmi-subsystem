@@ -254,19 +254,20 @@ function makeReportTable(arr) {
                { data: 'device' },
                { data: 'series' },
                { data: 'family' },
-               { data: 'accumulatedoutput' },
+               { data: 'tinput' },
+               { data: 'toutput' },
                { data: 'qty' },
                { data: function(x) {
-                    var xx = parseFloat(x.accumulatedoutput) + parseFloat(x.qty);
+                    var xx = parseFloat(x.tinput) + parseFloat(x.qty);
                     var yy = 0;
 
                     if (xx !== 0){
-                         yy = parseFloat(x.accumulatedoutput) / xx;
+                         yy = parseFloat(x.tinput) / xx;
                     }
 
                     var twoyield = yy * 100;
 
-                    return twoyield;
+                    return (twoyield).toFixed(2);
                } },
           ]
      });

@@ -25,9 +25,9 @@
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                             <label class="control-label col-sm-3">PO Number</label>
+                                             <label class="control-label col-sm-3">Target Yield</label>
                                              <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" name="ypsr-ponumber" id="ypsr-ponumber">
+                                                  <input type="text" class="form-control input-sm" name="ypsr-targetyield" id="ypsr-targetyield">
                                              </div>
                                         </div>
                                         <div class="form-group">
@@ -40,37 +40,6 @@
                                                  </Select>
                                              </div>     
                                         </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Family</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm " id="ypsr-family" name="ypsr-family">
-                                                       <option></option>
-                                                       @foreach($family as $fam)
-                                                       <option value="{{$fam->description}}">{{$fam->description}}</option>
-                                                       @endforeach
-                                                 </Select>
-                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Series Name</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm " id="ypsr-seriesname" name="ypsr-seriesname">
-                                                       <option value=""></option>
-                                                       <!-- yield performance series -->
-                                                 </Select>
-                                             </div>
-                                        </div>
-                                        {{-- <div class="form-group">
-                                             <label class="control-label col-sm-3">Device</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm " id="ypsr-device" name="ypsr-device">
-                                                       <option value=""></option>
-                                                       @foreach($record as $rec)
-                                                       <option value="{{$rec->device}}">{{$rec->device}}</option>
-                                                       @endforeach
-                                                 </Select>
-                                             </div>
-                                        </div> --}}
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
                                                   <button type="button" onclick="javascript:yieldsumRpt();"  class="btn green-jungle input-sm">Export to Excel</button>

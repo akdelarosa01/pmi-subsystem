@@ -137,9 +137,7 @@ function addnew(){
 
 function save_yield(){
     var hdstatus = $('#hdstatus').val();
-    var yieldingno = $('input[name=yieldingno]').val();
-    $('#hdyieldingno').val(parseInt(yieldingno) + 1);
-    $('#yieldingno').val(parseInt(yieldingno) + 1);
+    
     var pono = $('input[name=pono]').val();
     var poqty = $('input[name=poqty]').val();
     var device = $('input[name=device]').val();
@@ -151,6 +149,7 @@ function save_yield(){
     var qty = $('input[name=qty]').val();    
     var yieldingstation =  $('select[name=yieldingstation]').val();
     var accumulatedoutput =  $('input[name=accumulatedoutput]').val();
+    var tinput =  $('input[name=tinput]').val();
     var toutput =  $('input[name=toutput]').val();
     var tinput =  $('input[name=tinput]').val();
     var treject = $('input[name=treject]').val();
@@ -197,7 +196,6 @@ function save_yield(){
     var myData = {
         _token: token
         ,id: $('#id').val()
-        ,yieldingno : yieldingno
         ,pono : pono
         ,poqty : poqty
         ,device : device
@@ -305,13 +303,13 @@ function addpya(){
     }
 
 
-    if(row == ''){
+    if (row == '') {
         pya_length = pya_arr.length;
         pya_length++;
 
         pya_arr.push({
             id: pya_length,
-            yieldingno: $('#yieldingno').val(),
+            yield_id: $('#id').val(),
             productiondate: productiondate,
             yieldingstation: yieldingstation,
             accumulatedoutput: accumulatedoutput,
@@ -320,31 +318,24 @@ function addpya(){
             qty: qty,
             remarks: $('#remarks').val()
         });     
-    }else{
-
-
-
+    } else {
         pya_arr.splice(row,1,{
-                            id: '',
-                            yieldingno: $('#yieldingno').val(),
-                            productiondate: productiondate,
-                            yieldingstation: yieldingstation,
-                            accumulatedoutput: accumulatedoutput,
-                            classification: classification,
-                            mod: mod,
-                            qty: qty,
-                            remarks: $('#remarks').val()
+            id: '',
+            yield_id: $('#id').val(),
+            productiondate: productiondate,
+            yieldingstation: yieldingstation,
+            accumulatedoutput: accumulatedoutput,
+            classification: classification,
+            mod: mod,
+            qty: qty,
+            remarks: $('#remarks').val()
         });
     }
-    console.log(pya_arr);
+
     makePyaTable(pya_arr);
     pyafieldcomputation();
     clear();
-    // var d = new Date();
-    // var month = d.getMonth()+1;
-    // var day = d.getDate();
-    // var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day   
-    // $('input[name=productiondate]').val(date);
+
     $('#mod').attr('disabled',false);
     $('#qty').attr('disabled',false);
     $('#remarks').attr('disabled',false);
@@ -368,7 +359,12 @@ function makePyaTable(arr) {
             }, searchable: false, orderable: false },
 
             { data: function(x) {
-               return "<button class='btn btn-sm bg-blue btn_edit_pya' data-row='"+row+"'  data-id='"+x.id+"' data-qty='"+x.qty+"'data-productiondate='"+x.productiondate+"'data-yieldingstation='"+x.yieldingstation+"'data-accumulatedoutput='"+x.accumulatedoutput+"'data-classification='"+x.classification+"' data-mod='"+x.mod+"'><i class='fa fa-edit'></i></button>";
+               return "<button class='btn btn-sm bg-blue btn_edit_pya' data-row='"+row+"' "+
+                    "data-id='"+x.id+"' data-qty='"+x.qty+"' data-productiondate='"+x.productiondate+"' "+
+                    "data-yieldingstation='"+x.yieldingstation+"' data-accumulatedoutput='"+x.accumulatedoutput+"' "+
+                    "data-classification='"+x.classification+"' data-mod='"+x.mod+"' data-yield_id='"+x.yield_id+"'>"+
+                        "<i class='fa fa-edit'></i>"+
+                    "</button>";
             }},
 
             { data: function(x) {
@@ -432,11 +428,11 @@ function pyafieldcomputation(){
         totalqty = x.qty;
         totalClasification = x.classification;
 
-        if(totalClasification == "NDF"){
+        if (totalClasification == "NDF") {
             totalqty = x.qty;
         }
 
-        if(totalClasification == "Production NG (PNG)"){
+        if (totalClasification == "Production NG (PNG)") {
             if(totalPNG == 0){
                 var sample = parseInt(treject);
                 var sum = sample + parseInt(totalqty);
@@ -448,10 +444,10 @@ function pyafieldcomputation(){
             }  
         }
 
-        if(totalClasification == "Material NG (MNG)"){
-            if(totalMNG  == 0){
+        if (totalClasification == "Material NG (MNG)") {
+            if (totalMNG  == 0){
                 totalMNG = parseInt(totalMNG)+parseInt(totalqty);
-                if($('#tpng').val()){
+                if ($('#tpng').val()) {
                     var x = parseInt(treject)+parseInt(totalqty)
                 } else {
                     var x =treject+parseInt(totalqty);
@@ -463,14 +459,14 @@ function pyafieldcomputation(){
             }
 
         } else {
-            if(treject == 0){
+            if (treject == 0){
                  treject = treject + parseInt(totalqty);      
-            } else{
+            } else {
                  treject = parseInt(treject) + parseInt(totalqty);       
             }
         }
 
-        if(totalMNG == "0"){
+        if (totalMNG == "0") {
             var toaddtp = parseInt(totalOutput) + totalMNG;
             var toaddtr = parseInt(totalOutput) + treject;
             var dev = toaddtp/toaddtr * 100;
@@ -485,11 +481,11 @@ function pyafieldcomputation(){
             $('#ywomng').val(final);
         }
 
-        if(totalOutput == "0"){
+        if (totalOutput == "0") {
             $('#ywomng').val("0");
         } 
 
-        if(totalMNG == 0){
+        if (totalMNG == 0) {
             var toaddtr = parseInt(totalOutput) + treject;
             var temp = totalOutput/toaddtr * 100;
             var final = temp.toFixed(2);
@@ -501,14 +497,14 @@ function pyafieldcomputation(){
             $('#twoyield').val(final);    
         }
 
-        if(totalMNG == 0){
+        if (totalMNG == 0) {
             var tempdppm = parseInt(treject)/parseInt(totalOutput); 
             $('#dppm').val((tempdppm * 1000000).toFixed(2));
 
             // var toutputandtr = parseInt(totalOutput) + parseInt(treject);
             // var tempdppm = totalPNG/toutputandtr; 
             // $('#dppm').val((tempdppm * 1000000).toFixed(2));
-        }else{
+        } else {
             var tempdppm = parseInt(treject)/parseInt(totalOutput); 
             $('#dppm').val((tempdppm * 1000000).toFixed(2));
             
@@ -532,9 +528,9 @@ function GETPoDetails(){
       url: getPODetailsURL,
       type: 'GET',
       dataType: 'json',
-      data: {_token: token, po: $('#pono').val()},
+      data: { _token: token, po: $('#pono').val() },
       success: function(returnData) {
-            if(returnData.po_details != null && returnData.effect == "0")
+            if (returnData.po_details != null && returnData.effect == "0")
             {
                 var details = returnData.po_details;
 
@@ -550,7 +546,7 @@ function GETPoDetails(){
                 var date = d.getFullYear() + '-' + (month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;  
                 $('input[name=productiondate]').val(date);
             }
-            else if(returnData.effect == "1")
+            else if (returnData.effect == "1")
             {    var details = returnData.po_details;
                 $('#device').val(details.device_name);
                 $('#poqty').val(details.po_qty);
@@ -563,15 +559,12 @@ function GETPoDetails(){
                 var yld = returnData.yield_data[0];
                 if (returnData.yield_data.length > 0) {
                     $('#id').val(yld.id);
-                    $('#yieldingno').val(yld.yieldingno);
                     $('#pono').val(yld.pono);
                     $('#poqty').val(yld.poqty);
                     $('#device').val(yld.device);
                     $('#family').val(yld.family);
                     $('#series').val(yld.series);
                     $('#prodtype').val(yld.prodtype);
-                    $('#yieldingstation').val(yld.yieldingstation);
-                    $('#accumulatedoutput').val(yld.accumulatedoutput);
                     $('#classification').val(yld.classification);
                     $('#mod').val(yld.mod);
                     $('#qty').val(yld.qty);

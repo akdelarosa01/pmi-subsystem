@@ -25,18 +25,6 @@
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                             <label class="control-label col-sm-3">Yield Target</label>
-                                             <div class="col-sm-9">
-                                                  <Select class="form-control input-sm " id="ysf-yieldtarget" name="ysf-yieldtarget">
-                                                       <option value=""></option>
-                                                       <?php foreach($targetyield as $rec): ?>
-                                                       <option value="<?php echo e($rec->yield); ?>"><?php echo e($rec->yield); ?></option>
-                                                       <?php endforeach; ?>
-                                                  </Select>
-                                                  <input type="hidden" class="form-control input-sm" id="chose" name="chose" disabled="disabled"/>
-                                             </div>     
-                                        </div>
-                                        <div class="form-group">
                                              <label class="control-label col-sm-3">Product</label>
                                              <div class="col-sm-9">
                                                   <Select class="form-control input-sm " id="ysf-ptype" name="ysf-ptype">
@@ -44,7 +32,12 @@
                                                        <option value="TEST SOCKET">TEST SOCKET</option>
                                                        <option value="BURN-IN">BURN-IN</option>
                                                   </Select>
-                                                  <input type="hidden" class="form-control input-sm" id="chose" name="chose" disabled="disabled"/>
+                                             </div>     
+                                        </div>
+                                        <div class="form-group">
+                                             <label class="control-label col-sm-3">Family</label>
+                                             <div class="col-sm-9">
+                                                  <Select class="form-control input-sm " id="ysf-ptype" name="ysf-ptype"></Select>
                                              </div>     
                                         </div>
                                         <hr>

@@ -43,9 +43,6 @@
                         <form class="form-horizontal">
                             {!! csrf_field() !!}
                             <div class="col-sm-4">
-                                <input type="hidden"  value="<?php if(isset($count)){ echo intVal($count->yieldingno) + 1; } else {echo intVal($count) + 1;} ?>" name="hdyieldingno" id="hdyieldingno" />
-                                <input type="hidden"  name="yieldingno" id="yieldingno" />  
-
                                 <div class="form-group">
                                     <label class="control-label col-sm-3">PO No.</label>
                                     <div class="col-sm-6">
