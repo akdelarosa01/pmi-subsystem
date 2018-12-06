@@ -36,20 +36,30 @@
 										<div class="form-group">
 											 <label class="control-label col-sm-3">Family</label>
 											 <div class="col-sm-9">
-												  <Select class="form-control input-sm" id="srfamily" name="srfamily"></Select>
+												  <Select class="form-control input-sm" id="srfamily" name="srfamily">
+												  	<option value=""></option>
+                                                       @foreach($family as $family)
+                                                            <option value="{{$family->description}}">{{$family->description}}</option>
+                                                       @endforeach
+												  </Select>
 											 </div>
 										</div>
 										<div class="form-group">
 											 <label class="control-label col-sm-3">Series Name</label>
 											 <div class="col-sm-9">
-												  <Select class="form-control input-sm" id="srseries" name="srseries"></Select>
+												  <Select class="form-control input-sm" id="srseries" name="srseries">
+												  	<option value=""></option>
+                                                       @foreach($series as $series)
+                                                          <option value="{{$series->description}}">{{$series->description}}</option>
+                                                       @endforeach
+												  </Select>
 											 </div>
 										</div>
 										<div class="form-group">
 											 <label class="control-label col-sm-3">Device</label>
 											 <div class="col-sm-9">
-												  <Select class="form-control input-sm" id="srdevice" name="srdevice"></Select>
-											 </div>
+                                                  <input type="text" class="form-control input-sm" id="srdevice" name="srdevice">
+                                             </div>
 										</div>
 										<div class="form-group">
 											 <label class="control-label col-sm-3">P.O.</label>

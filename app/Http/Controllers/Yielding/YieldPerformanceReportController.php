@@ -272,452 +272,612 @@ class YieldPerformanceReportController extends Controller
         return $pdf->inline('Yielding_Performance_'.date('Y-m-d'));
     }
 
-    public function summaryREpt(Request $request)
-    {
-        try
-        { 
-            $dt = Carbon::now();
-            $date = substr($dt->format('Ymd'), 2);
-            $path = public_path().'/Yielding_Performance_Data_Check/export';
-            $datefrom = $request->datefrom;
-            $dateto = $request->dateto;
-            $prodtype = $request->srprodtype;
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])
-                        ->where('y.prodtype',$prodtype)
-                        ->count();
+    // public function summaryREpt(Request $request)
+    // {
+    //     try
+    //     { 
+    //         $dt = Carbon::now();
+    //         $date = substr($dt->format('Ymd'), 2);
+    //         $path = public_path().'/Yielding_Performance_Data_Check/export';
+    //         $datefrom = $request->datefrom;
+    //         $dateto = $request->dateto;
+    //         $prodtype = $request->srprodtype;
+    //         $check = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
+    //                     ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
+    //                     ->whereBetween('p.productiondate', [
+    //                         $this->com->convertDate($datefrom,'Y-m-d'), 
+    //                         $this->com->convertDate($dateto,'Y-m-d')
+    //                     ])
+    //                     ->where('y.prodtype',$prodtype)
+    //                     ->count();
 
-            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])->count();
+    //         $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
+    //                     ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
+    //                     ->whereBetween('p.productiondate', [
+    //                         $this->com->convertDate($datefrom,'Y-m-d'), 
+    //                         $this->com->convertDate($dateto,'Y-m-d')
+    //                     ])->count();
 
-            if ($check > 0 || $check1 > 0) {
-                Excel::create('Summary_Report_'.$date, function($excel) use($request)
-                {
-                    $excel->sheet('Sheet1', function($sheet) use($request)
-                    {
-                        $sheet->setAutoSize(true);
-                        $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-                        $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-                        $prodtype = $request->srprodtype;
-                        $family = $request->srfamily;
-                        $sheet->setCellValue('A1', "$family Yield Summary");
-                        $sheet->mergeCells('A1:B1');
-                        $sheet->cell('A3',"Inclusive Date");
-                        $date = date("Y-m-d");
-                        $sheet->cell('A4',$date);
-                        $sheet->cell('C3',"Date From");
-                        $sheet->cell('D3',$datefrom);
-                        $sheet->cell('C4',"Date To");
-                        $sheet->cell('D4',$dateto);
-                        $sheet->setHeight(1,30);
+    //         if ($check > 0 || $check1 > 0) {
+    //             Excel::create('Summary_Report_'.$date, function($excel) use($request)
+    //             {
+    //                 $excel->sheet('Sheet1', function($sheet) use($request)
+    //                 {
+    //                     $sheet->setAutoSize(true);
+    //                     $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
+    //                     $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
+    //                     $prodtype = $request->srprodtype;
+    //                     $family = $request->srfamily;
+    //                     $sheet->setCellValue('A1', "$family Yield Summary");
+    //                     $sheet->mergeCells('A1:B1');
+    //                     $sheet->cell('A3',"Inclusive Date");
+    //                     $date = date("Y-m-d");
+    //                     $sheet->cell('A4',$date);
+    //                     $sheet->cell('C3',"Date From");
+    //                     $sheet->cell('D3',$datefrom);
+    //                     $sheet->cell('C4',"Date To");
+    //                     $sheet->cell('D4',$dateto);
+    //                     $sheet->setHeight(1,30);
 
-                        $sheet->row(1, function ($row) {
-                            $row->setFontFamily('Calibri');
-                            $row->setBackground('##ADD8E6');
-                            $row->setFontSize(15);
-                            $row->setAlignment('center');
-                            $row->setFontWeight('bold');
-                        });
+    //                     $sheet->row(1, function ($row) {
+    //                         $row->setFontFamily('Calibri');
+    //                         $row->setBackground('##ADD8E6');
+    //                         $row->setFontSize(15);
+    //                         $row->setAlignment('center');
+    //                         $row->setFontWeight('bold');
+    //                     });
                        
-                        $sheet->setStyle(array(
-                                'font' => array(
-                                'name'      =>  'Calibri',
-                                'size'      =>  10
-                            )
-                        ));
+    //                     $sheet->setStyle(array(
+    //                             'font' => array(
+    //                             'name'      =>  'Calibri',
+    //                             'size'      =>  10
+    //                         )
+    //                     ));
 
                          
 
-                        $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                        ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                        ->select(
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.yieldingno as yieldingno'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.twoyield as twoyield'),
-                                                DB::raw('y.poqty as poqty'),
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('SUM(p.qty) as qty'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput")
-                                            )
-                                        ->groupBy('p.mod')
+    //                     $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
+    //                                     ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
+    //                                     ->select(
+    //                                             DB::raw('y.family as family'),
+    //                                             DB::raw('y.device as device'),
+    //                                             DB::raw('y.yieldingno as yieldingno'),
+    //                                             DB::raw('y.pono as pono'),
+    //                                             DB::raw('y.twoyield as twoyield'),
+    //                                             DB::raw('y.poqty as poqty'),
+    //                                             DB::raw('p.mod as `mod`'),
+    //                                             DB::raw('y.toutput as toutput'),
+    //                                             DB::raw('SUM(p.qty) as qty'),
+    //                                             DB::raw('p.classification as classification'),
+    //                                             DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput")
+    //                                         )
+    //                                     ->groupBy('p.mod')
 
-                                        ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                        ->where('y.prodtype',$prodtype)
-                                        ->where('p.classification','<>','NDF')
-                                        ->get();
+    //                                     ->whereBetween('p.productiondate', [$datefrom, $dateto])
+    //                                     ->where('y.prodtype',$prodtype)
+    //                                     ->where('p.classification','<>','NDF')
+    //                                     ->get();
 
-                        if($prodtype == '') {
-                            $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                            ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                            ->select(
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.yieldingno as yieldingno'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.twoyield as twoyield'),
-                                                DB::raw('y.poqty as poqty'),
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.qty as qty'),
-                                                DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput")
-                                            )
-                                            ->groupBy('y.pono')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else {
-                            $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                            ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                            ->select(
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.yieldingno as yieldingno'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.twoyield as twoyield'),
-                                                DB::raw('y.poqty as poqty'),
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.qty as qty'),
-                                                DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput")
-                                            )
-                                            ->groupBy('y.pono')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->where('y.prodtype',$prodtype)
-                                            ->get();
-                        }
+    //                     if($prodtype == '') {
+    //                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
+    //                                         ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
+    //                                         ->select(
+    //                                             DB::raw('y.family as family'),
+    //                                             DB::raw('y.device as device'),
+    //                                             DB::raw('y.yieldingno as yieldingno'),
+    //                                             DB::raw('y.pono as pono'),
+    //                                             DB::raw('y.twoyield as twoyield'),
+    //                                             DB::raw('y.poqty as poqty'),
+    //                                             DB::raw('p.mod as `mod`'),
+    //                                             DB::raw('y.toutput as toutput'),
+    //                                             DB::raw('p.qty as qty'),
+    //                                             DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput")
+    //                                         )
+    //                                         ->groupBy('y.pono')
+    //                                         ->whereBetween('p.productiondate', [$datefrom, $dateto])
+    //                                         ->get();
+    //                     } else {
+    //                         $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
+    //                                         ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
+    //                                         ->select(
+    //                                             DB::raw('y.family as family'),
+    //                                             DB::raw('y.device as device'),
+    //                                             DB::raw('y.yieldingno as yieldingno'),
+    //                                             DB::raw('y.pono as pono'),
+    //                                             DB::raw('y.twoyield as twoyield'),
+    //                                             DB::raw('y.poqty as poqty'),
+    //                                             DB::raw('p.mod as `mod`'),
+    //                                             DB::raw('y.toutput as toutput'),
+    //                                             DB::raw('p.qty as qty'),
+    //                                             DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput")
+    //                                         )
+    //                                         ->groupBy('y.pono')
+    //                                         ->whereBetween('p.productiondate', [$datefrom, $dateto])
+    //                                         ->where('y.prodtype',$prodtype)
+    //                                         ->get();
+    //                     }
 
-                        $row = 6;
-                        $ModHold = [];
-                        $countMH = 12;
-                        foreach ($Outdatass as $key => $val) { //GET MOD
-                            $ModHold[$countMH] = $val->mod;
-                            $countMH++;
-                        }
+    //                     $row = 6;
+    //                     $ModHold = [];
+    //                     $countMH = 12;
+    //                     foreach ($Outdatass as $key => $val) { //GET MOD
+    //                         $ModHold[$countMH] = $val->mod;
+    //                         $countMH++;
+    //                     }
 
-                        $ModHoldcount = count($ModHold);
-                        $modFixx = array_unique($ModHold);
-                        $ponoHold = [];
-                        $countpono = 3;
-                        foreach ($Outdata as $key => $val) { //GET PONO
-                            $ponoHold[$countpono] = $val->pono;
-                            $countpono = $countpono+2;
-                        }
+    //                     $ModHoldcount = count($ModHold);
+    //                     $modFixx = array_unique($ModHold);
+    //                     $ponoHold = [];
+    //                     $countpono = 3;
+    //                     foreach ($Outdata as $key => $val) { //GET PONO
+    //                         $ponoHold[$countpono] = $val->pono;
+    //                         $countpono = $countpono+2;
+    //                     }
 
-                        $ponocount = count($ponoHold);
-                        $ponoFixx = array_unique($ponoHold);
+    //                     $ponocount = count($ponoHold);
+    //                     $ponoFixx = array_unique($ponoHold);
 
-                        $arrayLetter = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ");
+    //                     $arrayLetter = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ");
 
-                        $con = count($arrayLetter)/3;
-                        $r=1;
+    //                     $con = count($arrayLetter)/3;
+    //                     $r=1;
 
-                        for($x=0;$x<$con;$x++){
+    //                     for($x=0;$x<$con;$x++){
                             
-                            $sheet->setColumnFormat(array(
-                                $arrayLetter[$r] => '0%'
-                            ));
-                            $r=$r+2;
-                        }
+    //                         $sheet->setColumnFormat(array(
+    //                             $arrayLetter[$r] => '0%'
+    //                         ));
+    //                         $r=$r+2;
+    //                     }
 
-                        $lete = 0;
-                        $defe = 12; 
-                        $rowMaintain = 12;
+    //                     $lete = 0;
+    //                     $defe = 12; 
+    //                     $rowMaintain = 12;
                             
 
-                        $counter = 0;
-                        $last = '';
+    //                     $counter = 0;
+    //                     $last = '';
 
-                        foreach ($Outdata as $key => $val) {
-                            $row = 6;
-                            $sheet->cell($arrayLetter[$lete].$row, $val->device);
-                            $ov1 = $arrayLetter[$lete].$row;
-                            $l = $lete+1;
-                            $ov2 = $arrayLetter[$l].$row;
-                            $sheet->mergeCells("$ov1:$ov2");
-                            $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $counter++;
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $row++;
-                            $sheet->cell($arrayLetter[$lete].$row, $val->pono);
-                            $ov1 = $arrayLetter[$lete].$row;
-                            $l = $lete+1;
-                            $ov2 = $arrayLetter[$l].$row;
-                            $sheet->mergeCells("$ov1:$ov2");
-                            $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $row++;
-                            // $sheet->cell($arrayLetter[$lete].$row, $val->poqty);
-                            $ov1 = $arrayLetter[$lete].$row;
-                            $l = $lete+1;
-                            $ov2 = $arrayLetter[$l].$row;
-                            $sheet->mergeCells("$ov1:$ov2");
-                            $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
-                            $row++;
-                            $sheet->cell($arrayLetter[$lete].$row, $val->accumulatedoutput);
-                            $ov1 = $arrayLetter[$lete].$row;
-                            $l = $lete+1;
-                            $ov2 = $arrayLetter[$l].$row;
-                            $sheet->mergeCells("$ov1:$ov2");
-                            $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
-                            $row++;    
-                            $sheet->cell($arrayLetter[$lete].$row, $val->twoyield/100);
-                            $ov1 = $arrayLetter[$lete].$row;
-                            $l = $lete+1;
-                            $ov2 = $arrayLetter[$l].$row;
-                            $sheet->mergeCells("$ov1:$ov2");
-                            $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
-                            $sheet->setColumnFormat(array($arrayLetter[$lete].$row => '0%' ));
-                            $row++;
-                            $sheet->cell($arrayLetter[$lete].$row, "QTY");
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $lete2 = $lete + 1;
-                            $sheet->cell($arrayLetter[$lete2].$row, "Rate");
-                            $sheet->getStyle($arrayLetter[$lete2].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $last = $lete;
-                            $lete2 = $lete + 2;
-                            $row++;
-                            $lete = $lete+2;
-                            $chester = $arrayLetter[$lete];
-                        }
+    //                     foreach ($Outdata as $key => $val) {
+    //                         $row = 6;
+    //                         $sheet->cell($arrayLetter[$lete].$row, $val->device);
+    //                         $ov1 = $arrayLetter[$lete].$row;
+    //                         $l = $lete+1;
+    //                         $ov2 = $arrayLetter[$l].$row;
+    //                         $sheet->mergeCells("$ov1:$ov2");
+    //                         $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $counter++;
+    //                         $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $row++;
+    //                         $sheet->cell($arrayLetter[$lete].$row, $val->pono);
+    //                         $ov1 = $arrayLetter[$lete].$row;
+    //                         $l = $lete+1;
+    //                         $ov2 = $arrayLetter[$l].$row;
+    //                         $sheet->mergeCells("$ov1:$ov2");
+    //                         $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $row++;
+    //                         // $sheet->cell($arrayLetter[$lete].$row, $val->poqty);
+    //                         $ov1 = $arrayLetter[$lete].$row;
+    //                         $l = $lete+1;
+    //                         $ov2 = $arrayLetter[$l].$row;
+    //                         $sheet->mergeCells("$ov1:$ov2");
+    //                         $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
+    //                         $row++;
+    //                         $sheet->cell($arrayLetter[$lete].$row, $val->accumulatedoutput);
+    //                         $ov1 = $arrayLetter[$lete].$row;
+    //                         $l = $lete+1;
+    //                         $ov2 = $arrayLetter[$l].$row;
+    //                         $sheet->mergeCells("$ov1:$ov2");
+    //                         $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
+    //                         $row++;    
+    //                         $sheet->cell($arrayLetter[$lete].$row, $val->twoyield/100);
+    //                         $ov1 = $arrayLetter[$lete].$row;
+    //                         $l = $lete+1;
+    //                         $ov2 = $arrayLetter[$l].$row;
+    //                         $sheet->mergeCells("$ov1:$ov2");
+    //                         $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
+    //                         $sheet->setColumnFormat(array($arrayLetter[$lete].$row => '0%' ));
+    //                         $row++;
+    //                         $sheet->cell($arrayLetter[$lete].$row, "QTY");
+    //                         $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $lete2 = $lete + 1;
+    //                         $sheet->cell($arrayLetter[$lete2].$row, "Rate");
+    //                         $sheet->getStyle($arrayLetter[$lete2].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $last = $lete;
+    //                         $lete2 = $lete + 2;
+    //                         $row++;
+    //                         $lete = $lete+2;
+    //                         $chester = $arrayLetter[$lete];
+    //                     }
 
-                        $lete++;
-                        $row = 6;
-                        $sheet->setColumnFormat(array($arrayLetter[$lete] => '0' ));
-                        $sheet->cell($arrayLetter[$lete].$row, "OVERALL");
-                        $ovc1 =$arrayLetter[$lete].$row;
-                        $ov1 = $arrayLetter[$lete].$row;
-                        $l = $lete+1;
-                        $ovc2 = $arrayLetter[$l].$row;
-                        $ov2 = $arrayLetter[$l].$row;
-                        $sheet->mergeCells("$ov1:$ov2");
-                        $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
-                        $colorStart = $arrayLetter[$lete].$row;
-                        $row = $row+2;
-                        $Start = 'C'.$row;
-                        $end = $arrayLetter[$last].$row;
-                        $sheet->cell($arrayLetter[$lete].$row, "=SUM($Start:$end)");
-                        $ov1 = $arrayLetter[$lete].$row;
-                        $l = $lete+1;
-                        $ov2 = $arrayLetter[$l].$row;
-                        $sheet->mergeCells("$ov1:$ov2");
-                        $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
-                        $row++;
-                        $Start = 'C'.$row;
-                        $end = $arrayLetter[$last].$row;
-                        $sheet->cell($arrayLetter[$lete].$row, "=SUM($Start:$end)");
-                        $ov1 = $arrayLetter[$lete].$row;
-                        $l = $lete+1;
-                        $ov2 = $arrayLetter[$l].$row;
-                        $sheet->mergeCells("$ov1:$ov2");
-                        $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
-                        $row++;
-                        $Start = 'C'.$row;
-                        $end = $arrayLetter[$last].$row;
-                        $sheet->cell($arrayLetter[$lete].$row, "=SUM($Start:$end)/$counter");
-                        $ov1 = $arrayLetter[$lete].$row;
-                        $l = $lete+1;
-                        $ov2 = $arrayLetter[$l].$row;
-                        $sheet->mergeCells("$ov1:$ov2");
-                        $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $sheet->setColumnFormat(array($arrayLetter[$lete].$row => '0%' ));
-                        $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
-                        $row++;
-                        $sheet->cell($arrayLetter[$lete].$row, "QTY");
-                        $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $leter = $lete+1;
-                        $sheet->cell($arrayLetter[$leter].$row, "Rates");
-                        $sheet->cells($arrayLetter[$leter].$row, function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->getStyle($arrayLetter[$leter].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $row++;
+    //                     $lete++;
+    //                     $row = 6;
+    //                     $sheet->setColumnFormat(array($arrayLetter[$lete] => '0' ));
+    //                     $sheet->cell($arrayLetter[$lete].$row, "OVERALL");
+    //                     $ovc1 =$arrayLetter[$lete].$row;
+    //                     $ov1 = $arrayLetter[$lete].$row;
+    //                     $l = $lete+1;
+    //                     $ovc2 = $arrayLetter[$l].$row;
+    //                     $ov2 = $arrayLetter[$l].$row;
+    //                     $sheet->mergeCells("$ov1:$ov2");
+    //                     $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $colorStart = $arrayLetter[$lete].$row;
+    //                     $row = $row+2;
+    //                     $Start = 'C'.$row;
+    //                     $end = $arrayLetter[$last].$row;
+    //                     $sheet->cell($arrayLetter[$lete].$row, "=SUM($Start:$end)");
+    //                     $ov1 = $arrayLetter[$lete].$row;
+    //                     $l = $lete+1;
+    //                     $ov2 = $arrayLetter[$l].$row;
+    //                     $sheet->mergeCells("$ov1:$ov2");
+    //                     $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $row++;
+    //                     $Start = 'C'.$row;
+    //                     $end = $arrayLetter[$last].$row;
+    //                     $sheet->cell($arrayLetter[$lete].$row, "=SUM($Start:$end)");
+    //                     $ov1 = $arrayLetter[$lete].$row;
+    //                     $l = $lete+1;
+    //                     $ov2 = $arrayLetter[$l].$row;
+    //                     $sheet->mergeCells("$ov1:$ov2");
+    //                     $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $row++;
+    //                     $Start = 'C'.$row;
+    //                     $end = $arrayLetter[$last].$row;
+    //                     $sheet->cell($arrayLetter[$lete].$row, "=SUM($Start:$end)/$counter");
+    //                     $ov1 = $arrayLetter[$lete].$row;
+    //                     $l = $lete+1;
+    //                     $ov2 = $arrayLetter[$l].$row;
+    //                     $sheet->mergeCells("$ov1:$ov2");
+    //                     $sheet->getStyle("$ov1:$ov2")->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $sheet->setColumnFormat(array($arrayLetter[$lete].$row => '0%' ));
+    //                     $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $row++;
+    //                     $sheet->cell($arrayLetter[$lete].$row, "QTY");
+    //                     $sheet->cells($arrayLetter[$lete].$row, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $leter = $lete+1;
+    //                     $sheet->cell($arrayLetter[$leter].$row, "Rates");
+    //                     $sheet->cells($arrayLetter[$leter].$row, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $sheet->getStyle($arrayLetter[$leter].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $row++;
                        
                          
                      
-                        //==================================================================DESIGN===================================================
+    //                     //==================================================================DESIGN===================================================
                         
-                        $Start = "A6";
-                        $aa = 6;
-                        $end = "$chester$aa";
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#00CCFF'); });
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
+    //                     $Start = "A6";
+    //                     $aa = 6;
+    //                     $end = "$chester$aa";
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#00CCFF'); });
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
 
-                        $Start = "A7";
-                        $aa = 7;
-                        $end = "$chester$aa";
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#00CCFF'); });
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
+    //                     $Start = "A7";
+    //                     $aa = 7;
+    //                     $end = "$chester$aa";
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#00CCFF'); });
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
 
-                        $Start = "B8";
-                        $aa = 8;
-                        $end = "$chester$aa";
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#969696'); });
+    //                     $Start = "B8";
+    //                     $aa = 8;
+    //                     $end = "$chester$aa";
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#969696'); });
 
-                        $Start = "B9";
-                        $aa = 9;
-                        $end = "$chester$aa";
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#969696'); });
+    //                     $Start = "B9";
+    //                     $aa = 9;
+    //                     $end = "$chester$aa";
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#969696'); });
 
-                        $Start = "B10";
-                        $aa = 10;
-                        $end = "$chester$aa";
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#969696'); });
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
+    //                     $Start = "B10";
+    //                     $aa = 10;
+    //                     $end = "$chester$aa";
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#969696'); });
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
 
-                        $Start = "A11";
-                        $aa = 11;
-                        $end = "$chester$aa";
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#FFFF00'); });
+    //                     $Start = "A11";
+    //                     $aa = 11;
+    //                     $end = "$chester$aa";
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
+    //                     $sheet->cells("$Start:$end", function($cells) {$cells->setBackground('#FFFF00'); });
                        
-                        $sheet->cells("A8:A10", function($cells) {$cells->setBackground('#FFCC99'); });
+    //                     $sheet->cells("A8:A10", function($cells) {$cells->setBackground('#FFCC99'); });
 
 
-                        //==================================================================DESIGN===================================================
-                        $lete = 0;
-                        $defe = 12; 
+    //                     //==================================================================DESIGN===================================================
+    //                     $lete = 0;
+    //                     $defe = 12; 
                         
-                        foreach ($Outdatass as $key => $val) {
-                            $moDD = $val->mod;
-                            $letes = $val->pono;
-                            $roww = array_search($moDD, $ModHold);
-                            $lete = array_search($letes, $ponoHold);
-                            $lete = $lete - 3;
-                            $sheet->cell($arrayLetter[$lete].$roww, $val->qty);
-                            $sheet->getStyle($arrayLetter[$lete].$roww)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
-                            $lete2 = $lete + 1;
-                            $rates = (($val->qty / $val->poqty)*100);
+    //                     foreach ($Outdatass as $key => $val) {
+    //                         $moDD = $val->mod;
+    //                         $letes = $val->pono;
+    //                         $roww = array_search($moDD, $ModHold);
+    //                         $lete = array_search($letes, $ponoHold);
+    //                         $lete = $lete - 3;
+    //                         $sheet->cell($arrayLetter[$lete].$roww, $val->qty);
+    //                         $sheet->getStyle($arrayLetter[$lete].$roww)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
+    //                         $lete2 = $lete + 1;
+    //                         $rates = (($val->qty / $val->poqty)*100);
                              
-                            $sheet->cell($arrayLetter[$lete2].$roww, $rates/1000);
-                            $sheet->getStyle($arrayLetter[$lete2].$roww)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
+    //                         $sheet->cell($arrayLetter[$lete2].$roww, $rates/1000);
+    //                         $sheet->getStyle($arrayLetter[$lete2].$roww)->getAlignment()->applyFromArray(array('horizontal' => 'center'));  
                           
-                            $sheet->cell('A'.$defe, $ModHold[$defe]);
-                            $defe++; 
-                        }
-                        //original end}
-                        $row = $row+2;
+    //                         $sheet->cell('A'.$defe, $ModHold[$defe]);
+    //                         $defe++; 
+    //                     }
+    //                     //original end}
+    //                     $row = $row+2;
                         
-                        $sheet->cell('A'.$defe, "Total Defects");
-                        $sheet->cells('A'.$defe, function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->cells('A'.$defe, function($cells) {$cells->setBackground('#99CC00'); });
-                        $lete = 0;
-                        $row = $row-1;
-                        $rowa = $row+1;
-                        $rowMaintain =11;
-                        $rowss = $rowMaintain + $ModHoldcount;
-                        $rows1 = $rowss +1;
-                        $ponocount = $ponocount*2;
+    //                     $sheet->cell('A'.$defe, "Total Defects");
+    //                     $sheet->cells('A'.$defe, function($cells) {$cells->setFontWeight('bold'); });
+    //                     $sheet->cells('A'.$defe, function($cells) {$cells->setBackground('#99CC00'); });
+    //                     $lete = 0;
+    //                     $row = $row-1;
+    //                     $rowa = $row+1;
+    //                     $rowMaintain =11;
+    //                     $rowss = $rowMaintain + $ModHoldcount;
+    //                     $rows1 = $rowss +1;
+    //                     $ponocount = $ponocount*2;
                           
-                        $sheet->cells('B'.$rows1, function($cells) {$cells->setBackground('#99CC00'); });
+    //                     $sheet->cells('B'.$rows1, function($cells) {$cells->setBackground('#99CC00'); });
 
-                        for($x = 0; $x < $ponocount; $x++) {
-                            $Start = $arrayLetter[$lete].$rowMaintain;
-                            $end = $arrayLetter[$lete].$rowss;
-                            $sheet->cell($arrayLetter[$lete].$rows1, "=SUM($Start:$end)");
-                            $sheet->cells($arrayLetter[$lete].$rows1, function($cells) {$cells->setBackground('#99CC00'); });
-                            $sheet->getStyle($arrayLetter[$lete].$rows1)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells($arrayLetter[$lete].$rows1, function($cells) {$cells->setFontWeight('bold'); }); 
-                            $lete++;
-                        }
-                        $sheet->cell('A6',"Device Name:");
+    //                     for($x = 0; $x < $ponocount; $x++) {
+    //                         $Start = $arrayLetter[$lete].$rowMaintain;
+    //                         $end = $arrayLetter[$lete].$rowss;
+    //                         $sheet->cell($arrayLetter[$lete].$rows1, "=SUM($Start:$end)");
+    //                         $sheet->cells($arrayLetter[$lete].$rows1, function($cells) {$cells->setBackground('#99CC00'); });
+    //                         $sheet->getStyle($arrayLetter[$lete].$rows1)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->cells($arrayLetter[$lete].$rows1, function($cells) {$cells->setFontWeight('bold'); }); 
+    //                         $lete++;
+    //                     }
+    //                     $sheet->cell('A6',"Device Name:");
 
-                        $sheet->cell('A7',"PO Number:");
-                        $sheet->cell('A8',"Total Input:");
-                        $sheet->cell('A9',"Total Output");
-                        $sheet->cell('A10',"Total Yield");
-                        $sheet->cell('A11',"Defects:");
+    //                     $sheet->cell('A7',"PO Number:");
+    //                     $sheet->cell('A8',"Total Input:");
+    //                     $sheet->cell('A9',"Total Output");
+    //                     $sheet->cell('A10',"Total Yield");
+    //                     $sheet->cell('A11',"Defects:");
 
-                        //=========================================OVERALL TOTAL==========================
-                        $tempqty=0;
-                        $temprate=0;
-                        $s=0;
-                        $s1 = 1;
-                        $st = 12;
+    //                     //=========================================OVERALL TOTAL==========================
+    //                     $tempqty=0;
+    //                     $temprate=0;
+    //                     $s=0;
+    //                     $s1 = 1;
+    //                     $st = 12;
                        
-                        for($y = 0; $y < $ModHoldcount; $y++) {
-                            $temprate = 0;
-                            $tempqty = 0;
-                            $s = 0;
-                            $s1 = 1;
+    //                     for($y = 0; $y < $ModHoldcount; $y++) {
+    //                         $temprate = 0;
+    //                         $tempqty = 0;
+    //                         $s = 0;
+    //                         $s1 = 1;
 
-                            for($x = 0; $x < $counter; $x++) {
-                                $temprate += $sheet->getcell($arrayLetter[$s1].$st)->getCalculatedValue();
-                                $tempqty += $sheet->getcell($arrayLetter[$s].$st)->getCalculatedValue();
-                                $s = $s+2;
-                                $s1 = $s1+2;
-                            }
-                            $s++;
-                            $s1++;
+    //                         for($x = 0; $x < $counter; $x++) {
+    //                             $temprate += $sheet->getcell($arrayLetter[$s1].$st)->getCalculatedValue();
+    //                             $tempqty += $sheet->getcell($arrayLetter[$s].$st)->getCalculatedValue();
+    //                             $s = $s+2;
+    //                             $s1 = $s1+2;
+    //                         }
+    //                         $s++;
+    //                         $s1++;
 
-                            $sheet->cell($arrayLetter[$s].$st, $tempqty);
-                            $sheet->getStyle($arrayLetter[$s].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells($arrayLetter[$s].$st, function($cells) {$cells->setFontWeight('bold'); }); 
-                            $sheet->cell($arrayLetter[$s1].$st, $temprate);
-                            $sheet->getStyle($arrayLetter[$s1].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells($arrayLetter[$s1].$st, function($cells) {$cells->setFontWeight('bold'); }); 
-                            $sheet->setColumnFormat(array($arrayLetter[$s1].$st => '0%'));
-                            $st++;
-                        }
+    //                         $sheet->cell($arrayLetter[$s].$st, $tempqty);
+    //                         $sheet->getStyle($arrayLetter[$s].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->cells($arrayLetter[$s].$st, function($cells) {$cells->setFontWeight('bold'); }); 
+    //                         $sheet->cell($arrayLetter[$s1].$st, $temprate);
+    //                         $sheet->getStyle($arrayLetter[$s1].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                         $sheet->cells($arrayLetter[$s1].$st, function($cells) {$cells->setFontWeight('bold'); }); 
+    //                         $sheet->setColumnFormat(array($arrayLetter[$s1].$st => '0%'));
+    //                         $st++;
+    //                     }
 
-                        $os = 11;
-                        $minus = $st-1;
-                        $Start = $arrayLetter[$s].$os;
-                        $end = $arrayLetter[$s].$minus;
-                        $Start2 = $arrayLetter[$s1].$os;
-                        $end2 = $arrayLetter[$s1].$minus;
-                        $st;  
-                        $sheet->cell($arrayLetter[$s].$st, "=SUM($Start:$end)");
-                        $sheet->cell($arrayLetter[$s1].$st, "=SUM($Start2:$end2)");
-                        $l1 = $arrayLetter[$s].$st;
-                        $l2 = $arrayLetter[$s1].$st;
-                        $sheet->cells("$ovc1:$l1", function($cells) {$cells->setBackground('#99CC00'); });
-                        $sheet->cells("$ovc2:$l2", function($cells) {$cells->setBackground('#99CC00'); });
+    //                     $os = 11;
+    //                     $minus = $st-1;
+    //                     $Start = $arrayLetter[$s].$os;
+    //                     $end = $arrayLetter[$s].$minus;
+    //                     $Start2 = $arrayLetter[$s1].$os;
+    //                     $end2 = $arrayLetter[$s1].$minus;
+    //                     $st;  
+    //                     $sheet->cell($arrayLetter[$s].$st, "=SUM($Start:$end)");
+    //                     $sheet->cell($arrayLetter[$s1].$st, "=SUM($Start2:$end2)");
+    //                     $l1 = $arrayLetter[$s].$st;
+    //                     $l2 = $arrayLetter[$s1].$st;
+    //                     $sheet->cells("$ovc1:$l1", function($cells) {$cells->setBackground('#99CC00'); });
+    //                     $sheet->cells("$ovc2:$l2", function($cells) {$cells->setBackground('#99CC00'); });
                        
 
-                        $sheet->setColumnFormat(array($arrayLetter[$s1].$st => '0%'));
-                        $sheet->getStyle($arrayLetter[$s1].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $sheet->cells($arrayLetter[$s1].$st, function($cells) {$cells->setFontWeight('bold'); }); 
-                        $sheet->getStyle($arrayLetter[$s].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        $sheet->cells($arrayLetter[$s].$st, function($cells) {$cells->setFontWeight('bold'); }); 
+    //                     $sheet->setColumnFormat(array($arrayLetter[$s1].$st => '0%'));
+    //                     $sheet->getStyle($arrayLetter[$s1].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $sheet->cells($arrayLetter[$s1].$st, function($cells) {$cells->setFontWeight('bold'); }); 
+    //                     $sheet->getStyle($arrayLetter[$s].$st)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
+    //                     $sheet->cells($arrayLetter[$s].$st, function($cells) {$cells->setFontWeight('bold'); }); 
 
-                        $lete = 0;
-                        $nine=9;
-                        $twenty = 20;
-                        $eight = 8;
+    //                     $lete = 0;
+    //                     $nine=9;
+    //                     $twenty = 20;
+    //                     $eight = 8;
 
-                        for($x = 0; $x < $ponocount/2; $x++){
-                            $g = $sheet->getcell($arrayLetter[$lete].$nine)->getCalculatedValue();
-                            $g2 = $sheet->getcell($arrayLetter[$lete].$twenty)->getCalculatedValue();
-                            $sheet->cell($arrayLetter[$lete].$eight, $g+$g2);
-                            $lete=$lete+2;
-                        }
+    //                     for($x = 0; $x < $ponocount/2; $x++){
+    //                         $g = $sheet->getcell($arrayLetter[$lete].$nine)->getCalculatedValue();
+    //                         $g2 = $sheet->getcell($arrayLetter[$lete].$twenty)->getCalculatedValue();
+    //                         $sheet->cell($arrayLetter[$lete].$eight, $g+$g2);
+    //                         $lete=$lete+2;
+    //                     }
+    //                 });
+    //             })->download('xls');
+    //         } else {
+    //             $e = 'No data found.';
+    //             return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
+    //         }
+            
+            
+    //     } catch (Exception $e) {
+    //         return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
+    //     }
+    // }
+
+    public function summaryReport(Request $req)
+    {
+        Excel::create('Defect_Summary_Report', function($excel) use($req)
+        {
+            $excel->sheet('Sheet1', function($sheet) use($req)
+            {
+
+                $date_cond = '';
+                $ptype_cond = '';
+                $family_cond = '';
+                $series_cond = '';
+                $device_cond = '';
+                $po_cond = '';
+                $datefrom = '';
+                $dateto = '';
+                $fams = [];
+
+                if ($req->datefrom !== '') {
+                    $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+                    $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
+
+                    $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+                }
+
+                if ($req->ptype !== '') {
+                    $ptype_cond = " AND y.prodtype='".$req->ptype."'";
+                }
+
+                if ($req->family !== '') {
+                    $family_cond = " AND y.family='".$req->family."'";
+                }
+
+                if ($req->series !== '') {
+                    $series_cond = " AND y.series='".$req->series."'";
+                }
+
+                if ($req->device !== '') {
+                    $device_cond = " AND y.device like '%".$req->device."%'";
+                }
+
+                if ($req->po !== '') {
+                    $po_cond = " AND y.pono='".$req->po."'";
+                }
+
+                $families = DB::connection($this->mysql)
+                                ->select("select y.family
+                                        from tbl_yielding_performance as y
+                                        inner join tbl_yielding_pya as p
+                                        on y.pono = p.pono
+                                        where 1=1".$date_cond.
+                                        $ptype_cond.
+                                        $family_cond.
+                                        $series_cond.
+                                        $device_cond.
+                                        $po_cond."
+                                        group by y.family");
+
+
+                foreach ($families as $key => $fam) {
+                    array_push($fams, $fam->family);
+                }
+
+                $sheet->setAutoSize(true);
+                $sheet->setCellValue('A1', 'Defect Summary Per Family');
+                $sheet->mergeCells('A1:D1');
+
+                $sheet->setHeight(1,30);
+                $sheet->row(1, function ($row) {
+                    $row->setFontFamily('Calibri');
+                    $row->setFontSize(15);
+                });
+
+                $sheet->cell('A3',"DATE");
+
+                $sheet->cell('C3',"From");
+                $sheet->cell('D3',$datefrom);
+                $sheet->cell('C4',"To");
+                $sheet->cell('D4',$dateto);
+
+                $sheet->setHeight(3,20);
+                $sheet->setHeight(4,20);
+
+                $sheet->cell('A6',"No.");
+                $sheet->cell('B6',"Defectives");
+
+                $cols = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
+
+                $lastColKey = '';
+                $nextCol = '';
+
+                $defect_data = DB::connection($this->mysql)
+                                ->select(
+                                    DB::raw(
+                                        "CALL GetDefectSummary(
+                                            '".$datefrom."',
+                                            '".$dateto."',
+                                            '".$req->po."',
+                                            '".$req->family."',
+                                            '".$req->ptype."',
+                                            '".$req->series."',
+                                            '".$req->device."')"
+                                        )
+                                );
+
+                $defects = json_decode(json_encode($defect_data), true);
+
+                $row = 7;
+                $defect_names = [];
+
+                foreach ($defects as $key => $df) {
+                    $defect_names[$row] = $df['mod'];
+                    $row++;
+                }
+
+                $rows = array_keys($defect_names);
+
+                
+                foreach ($fams as $famkey => $family) {
+                    $sheet->cell($cols[$famkey].'6',$family);
+
+                    $no = 1;
+                    foreach ($defects as $key => $df) {
+                        $sheet->cell('A'.$rows[$key],$no);
+                        $sheet->cell('B'.$rows[$key],$defect_names[$rows[$key]]);
+                        $sheet->cell($cols[$famkey].$rows[$key],($df[$family] == 0)? '0.00' : $df[$family]);
+                        $sheet->setHeight($rows[$key],20);
+                        $no++;
+                    }
+
+                    $lastColKey = $famkey;
+                }
+
+                $nextCol = $cols[$lastColKey+1];
+                $sheet->cell($nextCol.'6','TOTAL');
+
+                foreach ($defects as $key => $df) {
+                    $sheet->cell($nextCol.$rows[$key], function($cell) use($df) {
+                        $cell->setValue($df['TOTAL']);
+                        $cell->setFont([
+                            'bold'       =>  true,
+                        ]);
                     });
-                })->download('xls');
-            } else {
-                $e = 'No data found.';
-                return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-            }
-            
-            
-        } catch (Exception $e) {
-            return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-        }
+                }
+
+
+                $sheet->cells('A6:'.$nextCol.'6', function($cells) {
+                    $cells->setFont([
+                        'family'     => 'Calibri',
+                        'size'       => '11',
+                        'bold'       =>  true,
+                    ]);
+                    // Set all borders (top, right, bottom, left)
+                    $cells->setBorder('solid', 'solid', 'solid', 'solid');
+                });
+
+                $sheet->setHeight(6, 20);
+            });
+        })->download('xls');
     }
 
     public function defectSummary(Request $req)
@@ -799,6 +959,9 @@ class YieldPerformanceReportController extends Controller
                 $sheet->cell('C4',"To");
                 $sheet->cell('D4',$dateto);
 
+                $sheet->setHeight(3,20);
+                $sheet->setHeight(4,20);
+
                 $sheet->cell('A6',"No.");
                 $sheet->cell('B6',"Defectives");
 
@@ -807,53 +970,60 @@ class YieldPerformanceReportController extends Controller
                 $lastColKey = '';
                 $nextCol = '';
 
+                $defect_data = DB::connection($this->mysql)
+                                ->select(
+                                    DB::raw(
+                                        "CALL GetDefectSummary(
+                                            '".$datefrom."',
+                                            '".$dateto."',
+                                            '".$req->po."',
+                                            '".$req->family."',
+                                            '".$req->ptype."',
+                                            '".$req->series."',
+                                            '".$req->device."')"
+                                        )
+                                );
+
+                $defects = json_decode(json_encode($defect_data), true);
+
+                $row = 7;
+                $defect_names = [];
+
+                foreach ($defects as $key => $df) {
+                    $defect_names[$row] = $df['mod'];
+                    $row++;
+                }
+
+                $rows = array_keys($defect_names);
+
+                
                 foreach ($fams as $famkey => $family) {
                     $sheet->cell($cols[$famkey].'6',$family);
+
+                    $no = 1;
+                    foreach ($defects as $key => $df) {
+                        $sheet->cell('A'.$rows[$key],$no);
+                        $sheet->cell('B'.$rows[$key],$defect_names[$rows[$key]]);
+                        $sheet->cell($cols[$famkey].$rows[$key],($df[$family] == 0)? '0.00' : $df[$family]);
+                        $sheet->setHeight($rows[$key],20);
+                        $no++;
+                    }
+
                     $lastColKey = $famkey;
                 }
 
-                $defects = DB::connection($this->mysql)
-                            ->select("select p.`mod` as defects
-                                    from tbl_yielding_performance as y
-                                    inner join tbl_yielding_pya as p
-                                    on y.pono = p.pono
-                                    where p.`mod` <> '' ".$date_cond.
-                                    $ptype_cond.
-                                    $series_cond.
-                                    $device_cond.
-                                    $po_cond."
-                                    group by p.`mod`");
+                $nextCol = $cols[$lastColKey+1];
+                $sheet->cell($nextCol.'6','TOTAL');
 
-                $no = 1;
-                $row = 7;
-                
                 foreach ($defects as $key => $df) {
-                    $sheet->cell('A'.$row,$no);
-                    $sheet->cell('B'.$row,$df->defects);
-
-                    // if ($family == $df->family) {
-                        // $dt = DB::connection($this->mysql)
-                        //         ->select("select SUM(p.qty) as qty
-                        //             from tbl_yielding_performance as y
-                        //             inner join tbl_yielding_pya as p
-                        //             on y.pono = p.pono
-                        //             where p.`mod` = '".$df->defects."' ".$date_cond.
-                        //             $ptype_cond.
-                        //             $series_cond.
-                        //             $device_cond.
-                        //             $po_cond."
-                        //             and y.family = '".$family."'");
-
-                        // $sheet->cell($cols[$famkey].$row,($dt[0]->qty == 0)? '00.0':$dt[0]->qty);
-                    // }
-
-                    $row++;
-                    $no++;
+                    $sheet->cell($nextCol.$rows[$key], function($cell) use($df) {
+                        $cell->setValue($df['TOTAL']);
+                        $cell->setFont([
+                            'bold'       =>  true,
+                        ]);
+                    });
                 }
 
-                $nextCol = $cols[$lastColKey+1];
-
-                $sheet->cell($nextCol.'6',"Total");
 
                 $sheet->cells('A6:'.$nextCol.'6', function($cells) {
                     $cells->setFont([
@@ -868,308 +1038,6 @@ class YieldPerformanceReportController extends Controller
                 $sheet->setHeight(6, 20);
             });
         })->download('xls');
-
-    }
-
-    public function defectsummaryRpt(Request $request)
-    {
-
-        try
-        { 
-            $dt = Carbon::now();
-            $date = substr($dt->format('Ymd'), 2);
-            $path = public_path().'/Yielding_Performance_Data_Check/export';
-            $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-            $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-            $ptype = $request->ptype;
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])
-                        ->where('y.prodtype',$ptype)
-                        ->count();
-            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])
-                        ->count();
-            if ($check > 0 || $check1 > 0) {
-                Excel::create('Defect_Summary_Report_'.$date, function($excel) use($request)
-                {
-                    $excel->sheet('Sheet1', function($sheet) use($request)
-                    {
-
-                        $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-                        $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-                        $ptype = $request->ptype;
-                        $option = $request->option;
-                        $ptype = $request->ptype;
-
-                        $sheet->setAutoSize(true);
-                        $sheet->setCellValue('A1', 'Defect Summary Per Family');
-                        $sheet->mergeCells('A1:D1');
-                        $sheet->cell('A3',"DATE");
-                        $date = date("Y-m-d");
-                        $sheet->cell('B3',$date);
-                        $sheet->cell('E3',"Date Froms");
-                        $sheet->cell('F3',$datefrom);
-                        $sheet->cell('E4',"Date To");
-                        $sheet->cell('F4',$dateto);
-                        
-                      
-                        $sheet->setHeight(1,30);
-                        $sheet->row(1, function ($row) {
-                            $row->setFontFamily('Calibri');
-                            $row->setBackground('##ADD8E6');
-                            $row->setFontSize(15);
-                            $row->setAlignment('left');
-                        });
-
-                        $sheet->setStyle(array(
-                            'font' => array(
-                                'name'      =>  'Calibri',
-                                'size'      =>  10
-                            )
-                        ));
-                       
-                        $sheet->cell('B6',"Defectives");
-                        $sheet->cells('B6', function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->getStyle('B6')->getAlignment()->setTextRotation(90);
-
-                        $Outdata = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                    ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                    ->select(
-                                            DB::raw('y.family as family'),
-                                            DB::raw('y.device as device'),
-                                            DB::raw('y.yieldingno as yieldingno'),
-                                            DB::raw('y.ywomng as ywomng'),
-                                            DB::raw('y.pono as pono'),
-                                            DB::raw('y.twoyield as twoyield'),
-                                            DB::raw('y.poqty as poqty'),
-                                            DB::raw('p.mod as `mod`'),
-                                            DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput"),
-                                            DB::raw("COUNT(p.mod) as `mod`"),
-                                            DB::raw("SUM(y.poqty) as sumpoqty")
-                                        )
-                                    ->groupBy('p.mod')
-                                    ->orderBy('y.family')
-                                    ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                    ->get();
-
-                        $Outdatass = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                        ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                        ->select(DB::raw('y.family as family'))
-                                        ->groupBy('y.family')
-                                        ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                        ->get();
-
-                        $arrayLetter = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
-
-                        if ($ptype == "Test Socket") {
-                            $lete = 0;
-                            $deff = 0;
-                            $defe = 0;
-                            $modOfD = [];
-
-                            $row = 2;
-                            foreach ($Outdata as $key => $val) {
-                                $modOfD[$row] = $val->mod;
-                                $row++;
-                            }
-
-                            $Start = "B6";
-                            $end = $arrayLetter[$row];
-                            $a = 6;
-                            $sheet->cells("$Start:$end$a", function($cells) {$cells->setFontWeight('bold'); });
-                            $defe = 6;
-                            $y = 2;
-                            $countmod = count($modOfD);
-
-                            for($x = 0 ; $x < $countmod; $x++){
-                                $sheet->cell($arrayLetter[$x].$defe, $modOfD[$y]);
-                                $sheet->getStyle($arrayLetter[$x].$defe)->getAlignment()->setTextRotation(90);
-                                $y++;
-                            }
-
-                            $last = $y;
-                            $defe = 7;
-
-                            foreach ($Outdatass as $key => $val) {
-                                $fams[$defe] = $val->family;
-                                $defe++;
-                            }
-
-                            $defe = 7;
-                            $countfam = count($fams);
-
-                            for($x = 0 ; $x < $countfam; $x++){
-                                $sheet->cell('B'.$defe, $fams[$defe]);
-                                $defe++;
-                            }
-
-                            $Start = "B7";
-                            $end = "B$defe";
-                            $sheet->cells("$Start:$end", function($cells) {$cells->setFontWeight('bold'); });
-                            $sheet->cell('B'.$defe, "TOTAL");
-                            $l = $defe;
-
-                            foreach ($Outdata as $key => $val) {
-                                $famtemp = $val->family;
-                                $modtemp = $val->mod;
-                                $key = array_search($famtemp, $fams);
-                                $key2 = array_search($modtemp, $modOfD);
-                                $key2 = $key2 - 2;
-                                $sheet->cell($arrayLetter[$key2].$key, $val->wew);
-                            }
-
-                            $defe = 7;
-                            $last2 = $l-1;
-
-                            for($x=0;$x<$countmod;$x++)
-                            {
-                                $start = $arrayLetter[$x].$defe;
-                                $end = $arrayLetter[$x].$last2;
-                                $sheet->setCellValue($arrayLetter[$x].$l, "=SUM($start:$end)");
-                                $sheet->cells($arrayLetter[$x].$l, function($cells) {$cells->setFontWeight('bold'); });
-                            }
-                        } else {
-                            $sheet->cell('B6',"Defects");
-                            $sheet->cell('B7',"PNG");
-                            $sheet->cell('B8',"MNG");
-                            $sheet->cell('B9',"TOTAL");
-                            $sheet->cells('B6:B9', function($cells) {$cells->setFontWeight('bold'); });
-
-                            $row = 0;
-                            $modofD = [];
-
-                            foreach ($Outdata as $key => $val) {
-                                $modOfD[$row] = $val->mod;
-                                $row++;
-                            }
-
-                            $countmod = count($modOfD);
-                            $y=0;
-                            $defe = 6;
-
-                            for($x = 0 ; $x < $countmod; $x++){
-                                $sheet->cell($arrayLetter[$x].$defe, $modOfD[$y]);
-                                $sheet->getStyle($arrayLetter[$x].$defe)->getAlignment()->setTextRotation(90);
-                                $sheet->cells($arrayLetter[$x].$defe, function($cells) {$cells->setFontWeight('bold'); });
-                                $y++;
-                            }
-                            $sheet->getStyle('B6')->getAlignment()->setTextRotation(0);
-                            $PNGC = [];
-                            for($x=0;$x<$countmod;$x++) {
-                                $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                                ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                                ->select(
-                                                    DB::raw("COUNT(*) as wew"),
-                                                    DB::raw('p.mod')
-                                                )
-                                                ->where('p.mod',$modOfD[$x])
-                                                ->where('p.classification','like','%Production%')
-                                                ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                                ->orderBy('y.family')
-                                                ->get();
-
-                                foreach ($Outdatas as $key => $value) {
-                                    $PNGC[$x]  = $value->wew;
-                                }
-                            }
-
-                            $MNGC = [];
-                            for($x=0;$x<$countmod;$x++)
-                             {
-                                $Outdatas = DB::connection($this->mysql)->table('tbl_yielding_performance as y')
-                                                ->join('tbl_yielding_pya as p','p.pono','=','y.pono')
-                                                ->select(
-                                                    DB::raw("COUNT(*) as wew"),
-                                                    DB::raw('p.mod')
-                                                )
-                                                ->where('p.mod',$modOfD[$x])
-                                                ->where('p.classification','like','%Material%')
-                                                ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                                ->orderBy('y.family')
-                                                ->get();
-                                foreach ($Outdatas as $key => $value) {
-                                    $MNGC[$x] = $value->wew;
-                                }
-                            }
-
-
-                            $defe=7;
-                            for($x = 0 ; $x < $countmod; $x++){
-                                $sheet->cell($arrayLetter[$x].$defe, $PNGC[$x]);
-                            }
-
-                            $defe=8;
-                            for($x = 0 ; $x < $countmod; $x++){
-                                $sheet->cell($arrayLetter[$x].$defe, $MNGC[$x]);
-                            }
-
-                            $defe=9;
-                            $seven = 7;
-                            $eight = 8;
-                            for($x = 0 ; $x < $countmod; $x++) {
-                                $start = $arrayLetter[$x].$seven;
-                                $end = $arrayLetter[$x].$eight;
-                                $sheet->setCellValue($arrayLetter[$x].$defe, "=SUM($start:$end)");
-                            }
-
-
-                            $sheet->cell('A12',"Total Input:");
-                            $sheet->cell('A13',"Total Output");
-                            $sheet->cell('A14',"Total PNG");
-                            $sheet->cell('A15',"Total MNG");
-                            $sheet->cell('A16',"Yield W/o MNG");
-                            $sheet->cell('A17',"Total Yield");
-                            $sheet->cells("A17", function($cells) {$cells->setFontColor('#FF0000'); });
-                            $sheet->cells('A12:A17', function($cells) {$cells->setFontWeight('bold'); }); 
-                            $sheet->cells("A12:A17", function($cells) {$cells->setBackground('#CCFFCC'); });
-
-                            foreach ($Outdata as $key => $val) {
-                        
-                                $sheet->cell('B12', $val->sumpoqty);
-                                $sheet->cell('B13', $val->accumulatedoutput);
-                                $start = $arrayLetter[0].$seven;
-                                $end = $arrayLetter[$countmod].$seven;
-                                $sheet->setCellValue('B14', "=SUM($start:$end)");
-                                $start = $arrayLetter[0].$eight;
-                                $end = $arrayLetter[$countmod].$eight;
-                                $sheet->setCellValue('B15', "=SUM($start:$end)");
-                                $sheet->cell('B16', $val->ywomng);
-                                $sheet->cell('B17', $val->twoyield);
-                            }
-                            $sheet->getStyle('B12:B17')->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells('B12:B17', function($cells) {$cells->setFontWeight('bold'); }); 
-                            $sheet->setColumnFormat(array(
-                                'B16' => '0%',
-                                'B17' => '0%',
-                            ));
-                            $sheet->cells("B17", function($cells) {$cells->setFontColor('#FF0000'); });
-                        }
-
-                     
-                        $a  = $sheet->getcell('B13')->getCalculatedValue();
-                        $a1 = $sheet->getcell('B14')->getCalculatedValue();
-                        $a2 = $sheet->getcell('B15')->getCalculatedValue();
-                        $sheet->cell('B12', $a+$a1+$a2);
-                    });
-                })->download('xls');
-            } else {
-                $e = 'No data found.';
-                return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-            }
-
-
-
-        } catch (Exception $e) {
-            return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-        }
     }
 
     public function yieldsumfamRpt(Request $request)
