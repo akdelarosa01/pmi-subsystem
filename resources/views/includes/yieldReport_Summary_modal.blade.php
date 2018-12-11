@@ -3,7 +3,7 @@
 		  <div class="modal-dialog " gray-gallery">
 			   <div class="modal-content ">
 					<div class="modal-header">
-						 <h4 class="summaryrpt-title">Yield Performance Summary Report</h4>
+						 <h4>Yield Performance Summary Report</h4>
 					</div>
 					<div class="modal-body">
 						 <div class="row">
@@ -23,6 +23,12 @@
 											 </div>
 										</div>
 										<hr>
+										<div class="form-group">
+											 <label class="control-label col-sm-3">P.O.</label>
+											 <div class="col-sm-9">
+												  <input type="text" class="form-control input-sm" name="srpo" id="srpo">
+											 </div>
+										</div>
 										<div class="form-group">
 											 <label class="control-label col-sm-3">Production Type</label>
 											 <div class="col-sm-9">
@@ -61,12 +67,7 @@
                                                   <input type="text" class="form-control input-sm" id="srdevice" name="srdevice">
                                              </div>
 										</div>
-										<div class="form-group">
-											 <label class="control-label col-sm-3">P.O.</label>
-											 <div class="col-sm-9">
-												  <input type="text" class="form-control input-sm" name="srpo" id="srpo">
-											 </div>
-										</div>
+										
 										<div class="form-group pull-right">
 											 <div class="col-sm-12">
 												  <button type="button" onclick="javascript:summaryREpt();"  class="btn green-jungle input-sm">Export to Excel</button>
