@@ -722,162 +722,244 @@ class YieldPerformanceReportController extends Controller
 
     public function summaryReport(Request $req)
     {
-        Excel::create('Defect_Summary_Report', function($excel) use($req)
-        {
-            $excel->sheet('Sheet1', function($sheet) use($req)
-            {
+        $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+        $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
 
-                $date_cond = '';
-                $ptype_cond = '';
-                $family_cond = '';
-                $series_cond = '';
-                $device_cond = '';
-                $po_cond = '';
-                $datefrom = '';
-                $dateto = '';
-                $fams = [];
+        $details = DB::connection($this->mysql)
+                        ->select(
+                            DB::raw(
+                                "CALL GetYieldPerformanceReport(
+                                    '".$datefrom."',
+                                    '".$dateto."',
+                                    '".$req->po."',
+                                    '".$req->family."',
+                                    '".$req->ptype."',
+                                    '".$req->series."',
+                                    '".$req->device."')"
+                                )
+                        );
+        return dd($details);
+        // Excel::create('Yield_Performance_Report', function($excel) use($req)
+        // {
+        //     $excel->sheet('Sheet1', function($sheet) use($req)
+        //     {
 
-                if ($req->datefrom !== '') {
-                    $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
-                    $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
+        //         $date_cond = '';
+        //         $ptype_cond = '';
+        //         $family_cond = '';
+        //         $series_cond = '';
+        //         $device_cond = '';
+        //         $po_cond = '';
+        //         $datefrom = '';
+        //         $dateto = '';
+        //         $fams = [];
 
-                    $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
-                }
+        //         if ($req->datefrom !== '') {
+        //             $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+        //             $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
 
-                if ($req->ptype !== '') {
-                    $ptype_cond = " AND y.prodtype='".$req->ptype."'";
-                }
+        //             $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+        //         }
 
-                if ($req->family !== '') {
-                    $family_cond = " AND y.family='".$req->family."'";
-                }
+        //         if ($req->ptype !== '') {
+        //             $ptype_cond = " AND y.prodtype='".$req->ptype."'";
+        //         }
 
-                if ($req->series !== '') {
-                    $series_cond = " AND y.series='".$req->series."'";
-                }
+        //         if ($req->family !== '') {
+        //             $family_cond = " AND y.family='".$req->family."'";
+        //         }
 
-                if ($req->device !== '') {
-                    $device_cond = " AND y.device like '%".$req->device."%'";
-                }
+        //         if ($req->series !== '') {
+        //             $series_cond = " AND y.series='".$req->series."'";
+        //         }
 
-                if ($req->po !== '') {
-                    $po_cond = " AND y.pono='".$req->po."'";
-                }
+        //         if ($req->device !== '') {
+        //             $device_cond = " AND y.device like '%".$req->device."%'";
+        //         }
 
-                $families = DB::connection($this->mysql)
-                                ->select("select y.family
-                                        from tbl_yielding_performance as y
-                                        inner join tbl_yielding_pya as p
-                                        on y.pono = p.pono
-                                        where 1=1".$date_cond.
-                                        $ptype_cond.
-                                        $family_cond.
-                                        $series_cond.
-                                        $device_cond.
-                                        $po_cond."
-                                        group by y.family");
+        //         if ($req->po !== '') {
+        //             $po_cond = " AND y.pono='".$req->po."'";
+        //         }
+
+        //         $families = DB::connection($this->mysql)
+        //                         ->select("select y.family
+        //                                 from tbl_yielding_performance as y
+        //                                 inner join tbl_yielding_pya as p
+        //                                 on y.pono = p.pono
+        //                                 where 1=1".$date_cond.
+        //                                 $ptype_cond.
+        //                                 $family_cond.
+        //                                 $series_cond.
+        //                                 $device_cond.
+        //                                 $po_cond."
+        //                                 group by y.family");
 
 
-                foreach ($families as $key => $fam) {
-                    array_push($fams, $fam->family);
-                }
+        //         foreach ($families as $key => $fam) {
+        //             array_push($fams, $fam->family);
+        //         }
 
-                $sheet->setAutoSize(true);
-                $sheet->setCellValue('A1', 'Defect Summary Per Family');
-                $sheet->mergeCells('A1:D1');
+        //         $sheet->setAutoSize(true);
+        //         $sheet->setCellValue('A1', 'Yield Performance Report');
+        //         $sheet->mergeCells('A1:C1');
 
-                $sheet->setHeight(1,30);
-                $sheet->row(1, function ($row) {
-                    $row->setFontFamily('Calibri');
-                    $row->setFontSize(15);
-                });
+        //         $sheet->setHeight(1,30);
+        //         $sheet->row(1, function ($row) {
+        //             $row->setFontFamily('Calibri');
+        //             $row->setFontSize(15);
+        //         });
 
-                $sheet->cell('A3',"DATE");
+        //         $sheet->cell('A3', function($cell) {
+        //             $cell->setValue("Inclusive Date");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(3,20);
 
-                $sheet->cell('C3',"From");
-                $sheet->cell('D3',$datefrom);
-                $sheet->cell('C4',"To");
-                $sheet->cell('D4',$dateto);
+        //         $sheet->cell('A4', function($cell) {
+        //             $cell->setValue("From:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(4,20);
+        //         $sheet->cell('C4',$datefrom);
 
-                $sheet->setHeight(3,20);
-                $sheet->setHeight(4,20);
+        //         $sheet->cell('A5', function($cell) {
+        //             $cell->setValue("To:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(5,20);
+        //         $sheet->cell('C5',$dateto);
 
-                $sheet->cell('A6',"No.");
-                $sheet->cell('B6',"Defectives");
+        //         $sheet->cell('A6', function($cell) {
+        //             $cell->setValue("Product Type:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(6,20);
+        //         $sheet->cell('B6',$req->ptype);
 
-                $cols = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
+        //         $sheet->cell('A7', function($cell) {
+        //             $cell->setValue("Family:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(7,20);
+        //         $sheet->cell('B7',$req->family);
 
-                $lastColKey = '';
-                $nextCol = '';
+        //         $sheet->cell('A8', function($cell) {
+        //             $cell->setValue("Series Name:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(8,20);
+        //         $sheet->cell('B8',$req->series);
 
-                $defect_data = DB::connection($this->mysql)
-                                ->select(
-                                    DB::raw(
-                                        "CALL GetDefectSummary(
-                                            '".$datefrom."',
-                                            '".$dateto."',
-                                            '".$req->po."',
-                                            '".$req->family."',
-                                            '".$req->ptype."',
-                                            '".$req->series."',
-                                            '".$req->device."')"
-                                        )
-                                );
+        //         $sheet->cell('A9', function($cell) {
+        //             $cell->setValue("Device Name:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(9,20);
+        //         $sheet->cell('B9',$req->device);
 
-                $defects = json_decode(json_encode($defect_data), true);
+        //         $sheet->cell('A10', function($cell) {
+        //             $cell->setValue("PO Number:");
+        //             $cell->setFont([
+        //                 'italic'       =>  true,
+        //             ]);
+        //         });
+        //         $sheet->setHeight(10,20);
+        //         $sheet->cell('B10',$req->po);
 
-                $row = 7;
-                $defect_names = [];
+        //         $sheet->setMergeColumn([
+        //             'columns' => ['A'],
+        //             'rows' => [
+        //                 [11,12]
+        //             ]
+        //         ]);
 
-                foreach ($defects as $key => $df) {
-                    $defect_names[$row] = $df['mod'];
-                    $row++;
-                }
+        //         // $cols = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
 
-                $rows = array_keys($defect_names);
+        //         // $lastColKey = '';
+        //         // $nextCol = '';
+
+        //         // $defect_data = DB::connection($this->mysql)
+        //         //                 ->select(
+        //         //                     DB::raw(
+        //         //                         "CALL GetDefectSummary(
+        //         //                             '".$datefrom."',
+        //         //                             '".$dateto."',
+        //         //                             '".$req->po."',
+        //         //                             '".$req->family."',
+        //         //                             '".$req->ptype."',
+        //         //                             '".$req->series."',
+        //         //                             '".$req->device."')"
+        //         //                         )
+        //         //                 );
+
+        //         // $defects = json_decode(json_encode($defect_data), true);
+
+        //         // $row = 7;
+        //         // $defect_names = [];
+
+        //         // foreach ($defects as $key => $df) {
+        //         //     $defect_names[$row] = $df['mod'];
+        //         //     $row++;
+        //         // }
+
+        //         // $rows = array_keys($defect_names);
 
                 
-                foreach ($fams as $famkey => $family) {
-                    $sheet->cell($cols[$famkey].'6',$family);
+        //         // foreach ($fams as $famkey => $family) {
+        //         //     $sheet->cell($cols[$famkey].'6',$family);
 
-                    $no = 1;
-                    foreach ($defects as $key => $df) {
-                        $sheet->cell('A'.$rows[$key],$no);
-                        $sheet->cell('B'.$rows[$key],$defect_names[$rows[$key]]);
-                        $sheet->cell($cols[$famkey].$rows[$key],($df[$family] == 0)? '0.00' : $df[$family]);
-                        $sheet->setHeight($rows[$key],20);
-                        $no++;
-                    }
+        //         //     $no = 1;
+        //         //     foreach ($defects as $key => $df) {
+        //         //         $sheet->cell('A'.$rows[$key],$no);
+        //         //         $sheet->cell('B'.$rows[$key],$defect_names[$rows[$key]]);
+        //         //         $sheet->cell($cols[$famkey].$rows[$key],($df[$family] == 0)? '0.00' : $df[$family]);
+        //         //         $sheet->setHeight($rows[$key],20);
+        //         //         $no++;
+        //         //     }
 
-                    $lastColKey = $famkey;
-                }
+        //         //     $lastColKey = $famkey;
+        //         // }
 
-                $nextCol = $cols[$lastColKey+1];
-                $sheet->cell($nextCol.'6','TOTAL');
+        //         // $nextCol = $cols[$lastColKey+1];
+        //         // $sheet->cell($nextCol.'6','TOTAL');
 
-                foreach ($defects as $key => $df) {
-                    $sheet->cell($nextCol.$rows[$key], function($cell) use($df) {
-                        $cell->setValue($df['TOTAL']);
-                        $cell->setFont([
-                            'bold'       =>  true,
-                        ]);
-                    });
-                }
+        //         // foreach ($defects as $key => $df) {
+        //         //     $sheet->cell($nextCol.$rows[$key], function($cell) use($df) {
+        //         //         $cell->setValue($df['TOTAL']);
+        //         //         $cell->setFont([
+        //         //             'bold'       =>  true,
+        //         //         ]);
+        //         //     });
+        //         // }
 
 
-                $sheet->cells('A6:'.$nextCol.'6', function($cells) {
-                    $cells->setFont([
-                        'family'     => 'Calibri',
-                        'size'       => '11',
-                        'bold'       =>  true,
-                    ]);
-                    // Set all borders (top, right, bottom, left)
-                    $cells->setBorder('solid', 'solid', 'solid', 'solid');
-                });
+        //         // $sheet->cells('A6:'.$nextCol.'6', function($cells) {
+        //         //     $cells->setFont([
+        //         //         'family'     => 'Calibri',
+        //         //         'size'       => '11',
+        //         //         'bold'       =>  true,
+        //         //     ]);
+        //         //     // Set all borders (top, right, bottom, left)
+        //         //     $cells->setBorder('solid', 'solid', 'solid', 'solid');
+        //         // });
 
-                $sheet->setHeight(6, 20);
-            });
-        })->download('xls');
+        //         // $sheet->setHeight(6, 20);
+        //     });
+        // })->download('xls');
     }
 
     public function defectSummary(Request $req)
@@ -929,7 +1011,7 @@ class YieldPerformanceReportController extends Controller
                                         from tbl_yielding_performance as y
                                         inner join tbl_yielding_pya as p
                                         on y.pono = p.pono
-                                        where 1=1".$date_cond.
+                                        where p.mod <> ''".$date_cond.
                                         $ptype_cond.
                                         $family_cond.
                                         $series_cond.
@@ -1004,7 +1086,13 @@ class YieldPerformanceReportController extends Controller
                     foreach ($defects as $key => $df) {
                         $sheet->cell('A'.$rows[$key],$no);
                         $sheet->cell('B'.$rows[$key],$defect_names[$rows[$key]]);
-                        $sheet->cell($cols[$famkey].$rows[$key],($df[$family] == 0)? '0.00' : $df[$family]);
+
+                        // if (!isset($df[$family])) {
+                        //     $sheet->cell($cols[$famkey].$rows[$key],'0.00');
+                        // } else {
+                            $sheet->cell($cols[$famkey].$rows[$key],($df[$family] == 0)? '0.00' : $df[$family]);
+                        // }
+                        
                         $sheet->setHeight($rows[$key],20);
                         $no++;
                     }

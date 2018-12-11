@@ -2199,7 +2199,7 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => '/summaryRpt'
             ]);
              Route::get('/summaryREpt', [
-                'uses' => 'Yielding\YieldPerformanceReportController@summaryREpt',
+                'uses' => 'Yielding\YieldPerformanceReportController@summaryReport',
                 'name' => '/summaryREpt'
             ]);
             Route::get('/defectsummaryRpt', [
