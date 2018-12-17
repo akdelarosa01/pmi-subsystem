@@ -725,6 +725,230 @@ class YieldPerformanceReportController extends Controller
         })->download('xls');
     }
 
+    public function yieldsumRpt(Request $req)
+    {
+        $date_cond = '';
+        $ptype_cond = '';
+        $fams = [];
+
+        if ($req->datefrom !== '') {
+            $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+            $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
+
+            $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+        }
+
+        if ($req->prodtype !== '') {
+            $ptype_cond = " AND y.prodtype='".$req->prodtype."'";
+        }
+
+        $families = DB::connection($this->mysql)
+                        ->select("select y.family
+                                from tbl_yielding_performance as y
+                                inner join tbl_yielding_pya as p
+                                on y.pono = p.pono
+                                where 1=1".$date_cond.
+                                $ptype_cond."
+                                group by y.family");
+
+        if (count((array)$families) > 0) {
+            Excel::create('Yield_Performance_Summary_Report', function($excel) use($req)
+            {
+                $excel->sheet('Sheet1', function($sheet) use($req)
+                {
+
+                    $date_cond = '';
+                    $ptype_cond = '';
+                    $fams = [];
+
+                    if ($req->datefrom !== '') {
+                        $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+                        $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
+
+                        $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+                    }
+
+                    if ($req->prodtype !== '') {
+                        $ptype_cond = " AND y.prodtype='".$req->prodtype."'";
+                    }
+
+                    $sheet->setAutoSize(true);
+                    $sheet->setCellValue('A1', 'Yield Performance Summary per Family - '.$req->prodtype);
+                    $sheet->mergeCells('A1:G1');
+
+                    $sheet->setHeight(1,30);
+                    $sheet->row(1, function ($row) {
+                        $row->setFontFamily('Calibri');
+                        $row->setFontSize(15);
+                    });
+
+                    $sheet->cell('A3',"DATE");
+
+                    $sheet->cell('B3',"From");
+                    $sheet->cell('C3',$datefrom);
+                    $sheet->cell('B4',"To");
+                    $sheet->cell('C4',$dateto);
+
+                    $sheet->setHeight(3,20);
+                    $sheet->setHeight(4,20);
+
+                    $sheet->cell('A6',"Family");
+
+                    $sheet->cell('A13', function($cell) {
+                        $cell->setValue("Target Yield");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#fff9ae');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $cols = ["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP"];
+
+                    $lastColKey = 0;
+                    $nextCol = '';
+
+                    $families = DB::connection($this->mysql)
+                                    ->select("select y.family
+                                            from tbl_yielding_performance as y
+                                            inner join tbl_yielding_pya as p
+                                            on y.pono = p.pono
+                                            where 1=1".$date_cond.
+                                            $ptype_cond."
+                                            group by y.family");
+
+
+                    foreach ($families as $key => $fam) {
+                        array_push($fams, $fam->family);
+                    }
+
+                    $data = DB::connection($this->mysql)
+                                    ->select(
+                                        DB::raw(
+                                            "CALL GetYieldPerformanceSummary(
+                                                '".$datefrom."',
+                                                '".$dateto."',
+                                                '".$req->prodtype."')"
+                                            )
+                                    );
+
+                    $totals = json_decode(json_encode($data), true);
+
+                    $row = 7;
+                    $total_names = [];
+
+                    foreach ($totals as $key => $tn) {
+                        $total_names[$row] = $tn['Input'];
+                        $row++;
+                    }
+
+                    $rows = array_keys($total_names);
+
+                    
+                    foreach ($fams as $famkey => $family) {
+                        $sheet->cell($cols[$famkey].'6', function($cell) use($family) {
+                            $cell->setValue($family);
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+
+                        foreach ($totals as $key => $tl) {
+                            $sheet->cell('A'.$rows[$key], function($cell) use($total_names,$rows,$key){
+                                $cell->setValue($total_names[$rows[$key]]);
+                                $cell->setFont([
+                                    'family'     => 'Calibri',
+                                    'size'       => '11',
+                                    'bold'       =>  true,
+                                ]);
+                                $cell->setBackground('#fff9ae');
+                                $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                            });
+
+                            if ($total_names[$rows[$key]] == 'Yield w/o MNG' || $total_names[$rows[$key]] == 'Total Yield(%)') {
+                                $sheet->cell($cols[$famkey].$rows[$key], function($cell) use($tl,$rows,$key,$family){
+                                    $cell->setValue(($tl[$family] == 0)? '0.00%' : number_format($tl[$family],2).'%');
+                                    $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                                });
+                                $sheet->setHeight($rows[$key],20);
+                            } else {
+                                $sheet->cell($cols[$famkey].$rows[$key], function($cell) use($tl,$rows,$key,$family){
+                                    $cell->setValue(($tl[$family] == 0)? '0.00' : $tl[$family]);
+                                    $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                                });
+                                $sheet->setHeight($rows[$key],20);
+                            }
+                        }
+
+                        $sheet->cell($cols[$famkey].'13', number_format($req->target_yield,2).'%');
+
+                        $lastColKey = $famkey;
+                    }
+
+                    $nextCol = $cols[$lastColKey+1];
+
+                    $sheet->cell($nextCol.'6','TOTAL');
+
+                    foreach ($totals as $key => $tl) {
+                        if ($total_names[$rows[$key]] == 'Yield w/o MNG' || $total_names[$rows[$key]] == 'Total Yield(%)') {
+
+                            $sheet->cell($nextCol.$rows[$key], function($cell) use($tl) {
+                                $cell->setValue(number_format($tl['TOTAL'],2) . '%');
+                                $cell->setFont([
+                                    'family'     => 'Calibri',
+                                    'size'       => '11',
+                                    'bold'       =>  true,
+                                ]);
+                                $cell->setBackground('#77ab59');
+                                $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                            });
+                        } else {
+                            $sheet->cell($nextCol.$rows[$key], function($cell) use($tl) {
+                                $cell->setValue($tl['TOTAL']);
+                                $cell->setFont([
+                                    'family'     => 'Calibri',
+                                    'size'       => '11',
+                                    'bold'       =>  true,
+                                ]);
+                                $cell->setBackground('#77ab59');
+                                $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                            });
+                        }
+                    }
+                    $sheet->cells('A6:'.$nextCol.'6', function($cells) {
+                        $cells->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cells->setBackground('#63ace5');
+                        $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $sheet->setHeight(6, 20);
+
+                    $sheet->cells('A13:'.$nextCol.'13', function($cells) {
+                        $cells->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cells->setFontColor('#940000');
+                        $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $sheet->setHeight(13, 20);
+                });
+            })->download('xls');
+        } else {
+        }
+    }
+
     public function yieldsumfamRpt(Request $request)
     {
         try
@@ -1033,976 +1257,7 @@ class YieldPerformanceReportController extends Controller
         }
     }
 
-    public function yieldsumRpt(Request $request)
-    {
-        $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-        $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-        $prodtype = $request->prodtype;
-        $family = $request->family;
-        $series = $request->series;
-        $device = $request->device;
-        $pono = $request->pono;
-
-        try
-        { 
-            $dt = Carbon::now();    
-            $date = substr($dt->format('Ymd'), 2);
-            $path = public_path().'/Yielding_Performance_Data_Check/export';
-            $check = 1;
-            if ($check > 0) {
-                Excel::create('Yield_Summary_Report_'.$date, function($excel) use($request)
-                {
-                    $excel->sheet('Sheet1', function($sheet) use($request)
-                    {
-                        $sheet->setAutoSize(true);
-                        $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-                        $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-                        $prodtype = $request->prodtype;
-                        $family = $request->family;
-                        $series = $request->series;
-                        $device = $request->device;
-                        $pono = $request->pono;
-                        $info;
-
-                        $arrayLetter = array("B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
-
-                        if (isset($request->pono)) {
-                            $info = DB::connection($this->mysql)->table("tbl_yielding_performance")
-                                    ->where('pono',$request->pono)->first();
-
-                            if (count((array)$info) > 0) {
-                                $prodtype = $info->prodtype;
-                                $family = $info->family;
-                                $series = $info->series;
-                                $device = $info->device;
-                            }
-                        }
-                        
-
-                        $sheet->setCellValue('A1', 'Yield Performance Report');
-                        $sheet->mergeCells('A1:E1');
-                        $sheet->cell('A3',"DATE");
-                        $date = date("Y-m-d");
-                        $sheet->cell('B3',$date);
-                        $sheet->cell('E3',"Date Froms");
-                        $sheet->cell('F3',$datefrom);
-                        $sheet->cell('E4',"Date To");
-                        $sheet->cell('F4',$dateto);
-                        $sheet->setCellValue('A6',"PRODUCT TYPE:");
-                        $sheet->setCellValue('B6',$prodtype);
-                        $sheet->setCellValue('A7',"FAMILY: ");
-                        $sheet->setCellValue('B7',$family);
-                        $sheet->setCellValue('A8',"Series Name: ");
-
-                        if ($series == null) {
-                            $series = '';
-                        }
-
-                        $sheet->setCellValue('B8',$series);
-                        $sheet->setCellValue('A9',"Device Name: ");
-                        $sheet->setCellValue('B9',$device);
-                        $sheet->setCellValue('A10',"PO NUMBER: ");
-                        $sheet->setCellValue('B10',$pono);
-                        $sheet->cells('B6:B10', function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->getStyle('B6:B10')->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        
-                        $sheet->setHeight(1,30);
-                        $sheet->row(1, function ($row) {
-                            $row->setFontFamily('Calibri');
-                            $row->setBackground('##ADD8E6');
-                            $row->setFontSize(15);
-                            $row->setAlignment('center');
-                            $row->setFontWeight('bold');
-
-                        });
-
-                        $sheet->setStyle(array(
-                            'font' => array(
-                                'name'      =>  'Calibri',
-                                'size'      =>  10
-                            )
-                        ));
-
-                        if ($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(DB::raw('p.mod as `mod`'),DB::raw('p.productiondate as productiondate'))
-                                            ->groupBy('p.mod')
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->where('y.device',$device)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '' && $prodtype != '' && $family != '' && $series != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(DB::raw('p.mod as `mod`'),DB::raw('p.productiondate as productiondate'))
-                                            ->groupBy('p.mod')
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-
-                        } else if ($pono != '' && $prodtype != '' && $family != '') {
-                                $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                                ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                                ->select(DB::raw('p.mod as `mod`'),DB::raw('p.productiondate as productiondate'))
-                                                ->groupBy('p.mod')
-                                                ->where('y.family',$family)
-                                                ->where('y.prodtype',$prodtype)
-                                                ->where('y.pono',$pono)
-                                                ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                                ->get();
-
-                        } else if ($pono != '' && $prodtype != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(DB::raw('p.mod as `mod`'),DB::raw('p.productiondate as productiondate'))
-                                            ->groupBy('p.mod')
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.pono',$pono)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-
-                        } else if ($pono != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(DB::raw('p.mod as `mod`'),DB::raw('p.productiondate as productiondate'))
-                                            ->groupBy('p.mod')
-                                            ->where('y.pono',$pono)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(DB::raw('p.mod as `mod`'),DB::raw('p.productiondate as productiondate'))
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        }
-                        
-
-                        $row=12;
-                        $sheet->setCellValue('A12',"DEFECTS");
-                        $sheet->cells('A12', function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->mergeCells('A12:A13');
-                        
-
-                        $modOfD = [];
-                        $defe = 14;
-
-                        foreach ($Outdata as $key => $val) {
-                            $modOfD[$defe] = $val->mod;
-                            $defe++;
-                        }
-
-                        $fff = 14;
-                        $c = count($modOfD)+14;
-                        
-                        for($x = 14 ; $x < $c; $x++){
-                            $sheet->setCellValue('A'.$fff,$modOfD[$x]);
-                            $fff++;
-                        }
-
-                        if ($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != ''){
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate')
-                                            )
-                                            ->orderBy('p.productiondate')
-                                            ->groupBy('p.productiondate')
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->where('y.device',$device)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-
-                        } else if ($pono != '' && $prodtype != '' && $family != '' && $series != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate')
-                                            )
-                                            ->orderBy('p.productiondate')
-                                            ->groupBy('p.productiondate')
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '' && $prodtype != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate')
-                                            )
-                                            ->orderBy('p.productiondate')
-                                            ->groupBy('p.productiondate')
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.pono',$pono)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '') {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate')
-                                            )
-                                            ->orderBy('p.productiondate')
-                                            ->groupBy('p.productiondate')
-                                            ->where('y.pono',$pono)
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else {
-                            $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate')
-                                            )
-                                            ->orderBy('p.productiondate')
-                                            ->groupBy('p.productiondate')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        }
-
-
-
-                        $ches = $fff;
-                        $twelve = 12;
-                        $x=0;
-                        $aa=0;
-                        $dateholder = [];
-                        $da = "";
-
-                        foreach ($Outdata as $key => $val) {  
-                            $d = $val->productiondate;
-                            $datess = explode("-", $d);
-                            switch ($datess[1]) {
-                                case '01':
-                                    $da = "Jan-".$datess[2];
-                                break;
-                                case '02':
-                                    $da = "Feb-".$datess[2];
-                                break;
-                                case '03':
-                                    $da = "Mar-".$datess[2];
-                                break;
-                                case '04':
-                                    $da = "Apr-".$datess[2];
-                                break;
-                                case '05':
-                                    $da = "May-".$datess[2];
-                                break;
-                                case '06':
-                                    $da = "Jun-".$datess[2];
-                                break;
-                                case '07':
-                                    $da = "Jul-".$datess[2];
-                                break;
-                                case '08':
-                                    $da = "Aug-".$datess[2];
-                                break;
-                                case '09':
-                                    $da = "Sep-".$datess[2];
-                                break;
-                                case '10':
-                                    $da = "Oct-".$datess[2];
-                                break;
-                                case '11':
-                                    $da = "Nov-".$datess[2];
-                                break;
-                                case '12':
-                                    $da = "Dec-".$datess[2];
-                                break;
-                            }
-
-                            $sheet->setCellValue($arrayLetter[$x].$twelve,$da);
-                            $ot1 = $arrayLetter[$x].$twelve;
-                            $y1=$x+1;
-                            $ot2 = $arrayLetter[$y1].$twelve;
-                            $sheet->mergeCells("$ot1:$ot2");
-                            $sheet->getStyle($arrayLetter[$x].$twelve)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells($arrayLetter[$x].$twelve, function($cells) {$cells->setFontWeight('bold'); });
-                             
-                            $dateholder[$aa] = $val->productiondate;
-                            $plus = $twelve+1;
-                            $sheet->setCellValue($arrayLetter[$x].$plus,"PNG");
-                            $sheet->getStyle($arrayLetter[$x].$plus)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells($arrayLetter[$x].$plus, function($cells) {$cells->setFontWeight('bold'); });
-                            $s = $x+1;
-                            $sheet->setCellValue($arrayLetter[$s].$plus,"MNG");
-                            $sheet->getStyle($arrayLetter[$s].$plus)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $sheet->cells($arrayLetter[$s].$plus, function($cells) {$cells->setFontWeight('bold'); });
-                            $x = $x+2;
-                            $aa=$aa+2;
-                        }
-
-                        $twelve =12;
-                        $endA = $arrayLetter[$x].$twelve;
-                        $sheet->cells("A12:$endA", function($cells) {$cells->setBackground('#00FFFF'); });
-                        $twelve =13;
-                        $endA = $arrayLetter[$x].$twelve;
-                        $sheet->cells("A12:$endA", function($cells) {$cells->setBackground('#00FFFF'); });
-
-
-                        if ($pono != '' && $prodtype != '' && $family != '' && $series != null && $device != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->where('y.device',$device)
-                                            ->where('p.classification',"Production NG (PNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-
-                        } else if ($pono != '' && $prodtype != '' && $family != '' && $series != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->where('p.classification',"Production NG (PNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '' && $prodtype != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.pono',$pono)
-                                            ->where('p.classification',"Production NG (PNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.pono',$pono)
-                                            ->where('p.classification',"Production NG (PNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('p.classification',"Production NG (PNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        }
-                      
-                           
-                        foreach ($Outdatas as $key => $value) {
-                            $a = $value->productiondate;
-                            $b = $value->mod;
-                            $key1 = array_search($a, $dateholder);
-                            $key2 = array_search($b, $modOfD);
-                            $sheet->setCellValue($arrayLetter[$key1].$key2,$value->classificationCount);
-                            $sheet->getStyle($arrayLetter[$key1].$key2)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        }
-
-                        if ($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->where('y.device',$device)
-                                            ->where('p.classification',"Material NG (MNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '' && $prodtype != '' && $family != '' && $series != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.family',$family)
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.series',$series)
-                                            ->where('y.pono',$pono)
-                                            ->where('p.classification',"Material NG (MNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if ($pono != '' && $prodtype != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.prodtype',$prodtype)
-                                            ->where('y.pono',$pono)
-                                            ->where('p.classification',"Material NG (MNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else if($pono != '') {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('y.pono',$pono)
-                                            ->where('p.classification',"Material NG (MNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        } else {
-                            $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                            ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                            ->select(
-                                                DB::raw('p.mod as `mod`'),
-                                                DB::raw('y.family as family'),
-                                                DB::raw('y.prodtype as prodtype'),
-                                                DB::raw('y.series as series'),
-                                                DB::raw('y.device as device'),
-                                                DB::raw('y.pono as pono'),
-                                                DB::raw('y.toutput as toutput'),
-                                                DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                DB::raw('p.classification as classification'),
-                                                DB::raw('p.productiondate as productiondate'),
-                                                DB::raw("COUNT(*) as classificationCount")
-                                            )
-                                            ->where('p.classification',"Material NG (MNG)")
-                                            ->groupBy('p.mod')
-                                            ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                            ->get();
-                        }
-                          
-                           
-
-                        foreach ($Outdatas as $key => $value) {
-                            $a = $value->productiondate;
-                            $b = $value->mod;
-                            $key1 = array_search($a, $dateholder);
-                            $key2 = array_search($b, $modOfD);
-                            $key1 = $key1+1;
-                            $sheet->setCellValue($arrayLetter[$key1].$key2,$value->classificationCount);
-                            $sheet->getStyle($arrayLetter[$key1].$key2)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        }
-                            
-                        $out = $ches+1;
-                        $y=0;
-                        for ($x=0;$x<count($dateholder);$x++) {
-                            $ywmng = $ches + 4;
-                            $twoyieldd = $ches + 5;
-
-                            if ($pono != '' && $prodtype != '' && $family != '' && $series != '' && $device != '') {
-                                $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                                ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                                ->select(
-                                                    DB::raw('p.mod as `mod`'),
-                                                    DB::raw('y.family as family'),
-                                                    DB::raw('y.prodtype as prodtype'),
-                                                    DB::raw('y.series as series'),
-                                                    DB::raw('y.device as device'),
-                                                    DB::raw('y.pono as pono'),
-                                                    DB::raw('y.toutput as toutput'),
-                                                    DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                    DB::raw('p.classification as classification'),
-                                                    DB::raw('p.productiondate as productiondate'),
-                                                    DB::raw('y.ywomng as ywomng'),
-                                                    DB::raw('y.twoyield as twoyield')
-                                                )
-                                                ->where('y.family',$family)
-                                                ->where('y.prodtype',$prodtype)
-                                                ->where('y.series',$series)
-                                                ->where('y.pono',$pono)
-                                                ->where('y.device',$device)
-                                                ->where('p.classification','like','%PNG%')
-                                                ->orwhere('p.classification','like','%MNG%')
-                                                ->where('p.productiondate', $dateholder[$y])
-                                                ->get();
-                            } else if ($pono != '' && $prodtype != '' && $family != '' && $series != '') {
-                                $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                                ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                                ->select(
-                                                    DB::raw('p.mod as `mod`'),
-                                                    DB::raw('y.family as family'),
-                                                    DB::raw('y.prodtype as prodtype'),
-                                                    DB::raw('y.series as series'),
-                                                    DB::raw('y.device as device'),
-                                                    DB::raw('y.pono as pono'),
-                                                    DB::raw('y.toutput as toutput'),
-                                                    DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                    DB::raw('p.classification as classification'),
-                                                    DB::raw('p.productiondate as productiondate'),
-                                                    DB::raw('y.ywomng as ywomng'),
-                                                    DB::raw('y.twoyield as twoyield')
-                                                )
-                                                ->where('y.family',$family)
-                                                ->where('y.prodtype',$prodtype)
-                                                ->where('y.series',$series)
-                                                ->where('y.pono',$pono)
-                                                ->where('p.classification','like','%PNG%')
-                                                ->orwhere('p.classification','like','%MNG%')
-                                                ->where('p.productiondate', $dateholder[$y])
-                                                ->get();
-                            } else if($pono != '' && $prodtype != '') {
-                                $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                                ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                                ->select(
-                                                    DB::raw('p.mod as `mod`'),
-                                                    DB::raw('y.family as family'),
-                                                    DB::raw('y.prodtype as prodtype'),
-                                                    DB::raw('y.series as series'),
-                                                    DB::raw('y.device as device'),
-                                                    DB::raw('y.pono as pono'),
-                                                    DB::raw('y.toutput as toutput'),
-                                                    DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                    DB::raw('p.classification as classification'),
-                                                    DB::raw('p.productiondate as productiondate'),
-                                                    DB::raw('y.ywomng as ywomng'),
-                                                    DB::raw('y.twoyield as twoyield')
-                                                )
-                                                ->where('y.prodtype',$prodtype)
-                                                ->where('y.pono',$pono)
-                                                ->where('p.classification','like','%PNG%')
-                                                ->orwhere('p.classification','like','%MNG%')
-                                                ->where('p.productiondate', $dateholder[$y])
-                                                ->get();
-                            } else if($pono != '') {
-                                $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                                ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                                ->select(
-                                                    DB::raw('p.mod as `mod`'),
-                                                    DB::raw('y.family as family'),
-                                                    DB::raw('y.prodtype as prodtype'),
-                                                    DB::raw('y.series as series'),
-                                                    DB::raw('y.device as device'),
-                                                    DB::raw('y.pono as pono'),
-                                                    DB::raw('y.toutput as toutput'),
-                                                    DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                    DB::raw('p.classification as classification'),
-                                                    DB::raw('p.productiondate as productiondate'),
-                                                    DB::raw('y.ywomng as ywomng'),
-                                                    DB::raw('y.twoyield as twoyield')
-                                                )
-                                                ->where('y.pono',$pono)
-                                                ->where('p.classification','like','%PNG%')
-                                                ->orwhere('p.classification','like','%MNG%')
-                                                ->where('p.productiondate', $dateholder[$y])
-                                                ->get();
-                            } else {
-                                $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                                ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                                ->select(
-                                                    DB::raw('p.mod as `mod`'),
-                                                    DB::raw('y.family as family'),
-                                                    DB::raw('y.prodtype as prodtype'),
-                                                    DB::raw('y.series as series'),
-                                                    DB::raw('y.device as device'),
-                                                    DB::raw('y.pono as pono'),
-                                                    DB::raw('y.toutput as toutput'),
-                                                    DB::raw('p.accumulatedoutput as accumulatedoutput'),
-                                                    DB::raw('p.classification as classification'),
-                                                    DB::raw('p.productiondate as productiondate'),
-                                                    DB::raw('y.ywomng as ywomng'),
-                                                    DB::raw('y.twoyield as twoyield')
-                                                )
-                                                ->where('p.classification','like','%PNG%')
-                                                ->orwhere('p.classification','like','%MNG%')
-                                                ->where('p.productiondate', $dateholder[$y])
-                                                ->get();
-                            }
-
-                            foreach ($Outdata as $key => $value) {
-                                $sheet->setCellValue($arrayLetter[$y].$out,$value->accumulatedoutput);
-                                $ot1 = $arrayLetter[$y].$out;
-                                $y1=$y+1;
-                                $ot2 = $arrayLetter[$y1].$out;
-                                $sheet->mergeCells("$ot1:$ot2");
-                                $sheet->getStyle($arrayLetter[$y].$out)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                                $sheet->setCellValue($arrayLetter[$y].$ywmng,$value->ywomng/100);
-                                $ot1 = $arrayLetter[$y].$ywmng;
-                                $y1=$y+1;
-                                $ot2 = $arrayLetter[$y1].$ywmng;
-                                $sheet->mergeCells("$ot1:$ot2");
-                                $sheet->getStyle($arrayLetter[$y].$ywmng)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                                $sheet->setColumnFormat(array($arrayLetter[$y].$ywmng => '0%' ));
-                                $sheet->setCellValue($arrayLetter[$y].$twoyieldd,$value->twoyield/100);
-                                $ot1 = $arrayLetter[$y].$twoyieldd;
-                                $y1=$y+1;
-                                $ot2 = $arrayLetter[$y1].$twoyieldd;
-                                $sheet->mergeCells("$ot1:$ot2");
-                                $sheet->getStyle($arrayLetter[$y].$twoyieldd)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                                $sheet->setColumnFormat(array($arrayLetter[$y].$twoyieldd => '0%' ));
-                            }
-
-                            $y=$y+2;
-                        }
-                            
-                        $a=count($dateholder);
-                        $first = $ches-3;
-                        $last = $fff-1;
-                        $PNG = $last + 3;
-                        $skipPNG = 0;
-                        for ($x=0;$x<$a;$x++) {
-                            $start1 = $arrayLetter[$skipPNG].$first;
-                            $end = $arrayLetter[$skipPNG].$last;
-                            $sheet->cell($arrayLetter[$skipPNG].$PNG, "=SUM($start1:$end)"); 
-                            $ot1 = $arrayLetter[$skipPNG].$PNG;
-                            $y1=$skipPNG+1;
-                            $ot2 = $arrayLetter[$y1].$PNG;
-                            $sheet->mergeCells("$ot1:$ot2");  
-                             //PNG
-                            $sheet->getStyle($arrayLetter[$skipPNG].$PNG)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipPNG = $skipPNG+2;
-                        }
-
-                        $first = $ches-3;
-                        $last = $fff-1;
-                        $MNG = $last + 4;
-                        $skipMNG = 1;
-                        $skipPNG = 0;
-                        for ($x=0;$x<$a;$x++) {
-                            $start1 = $arrayLetter[$skipMNG].$first;
-                            $end = $arrayLetter[$skipMNG].$last;
-                            $sheet->cell($arrayLetter[$skipPNG].$MNG, "=SUM($start1:$end)");
-                            $ot1 = $arrayLetter[$skipPNG].$MNG;
-                            $y1=$skipPNG+1;
-                            $ot2 = $arrayLetter[$y1].$MNG;
-                            $sheet->mergeCells("$ot1:$ot2");    
-                             //MNG
-                            $sheet->getStyle($arrayLetter[$skipPNG].$MNG)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipMNG = $skipMNG+2;
-                            $skipPNG = $skipPNG+2;
-                        }
-
-                        $skipper = 0;
-                        $inp = $fff;
-                       
-                        for ($x=0;$x<$a;$x++) {
-                            $c = $inp+1;
-                            $start = $arrayLetter[$skipper].$c;
-                            $b = $inp+3;
-                            $end = $arrayLetter[$skipper].$b;
-                           
-                            $sheet->cell($arrayLetter[$skipper].$inp, "=SUM($start:$end)"); //INPUT
-                            $ot1 = $arrayLetter[$skipper].$inp;
-                            $y1=$skipper+1;
-                            $ot2 = $arrayLetter[$y1].$inp;
-                            $sheet->mergeCells("$ot1:$ot2"); 
-                            $sheet->getStyle($arrayLetter[$skipper].$inp)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipper = $skipper+2;
-                        }
-
-                        $defe = $ches;
-                        $start = $defe;
-                        $sheet->cell('A'.$defe, "INPUT"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "OUTPUT"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "PRODUCTION-NG"); 
-                        $defe++; 
-                        $sheet->cell('A'.$defe, "MATERIAL-NG"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "Yield w/o MNG(%)"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "TOTAL Yield(%)"); 
-                        $end = $defe;
-                       
-                        $s = "A$start";
-                        $e = "A$end";
-                        $sheet->cells("$s:$e", function($cells) {$cells->setBackground('#FFCC00'); });
-                        $sheet->cells("$s:$e", function($cells) {$cells->setFontWeight('bold'); });
-
-                        $defe = $defe + 5;
-                        $start = $defe;
-                        $sheet->cell('A'.$defe, "TOTAL INPUT"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "TOTAL OUTPUT"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "TOTAL PRODUCTION-NG"); 
-                        $defe++; 
-                        $sheet->cell('A'.$defe, "TOTAL MATERIAL-NG"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "Yield w/o MNG(%)"); 
-                        $defe++;
-                        $sheet->cell('A'.$defe, "TOTAL Yield(%)"); 
-                        $end = $defe;
-                        $s = "A$start";
-                        $e = "A$end";
-                        $sheet->cells("$s:$e", function($cells) {$cells->setBackground('#00FF00'); });
-                        $sheet->cells("$s:$e", function($cells) {$cells->setFontWeight('bold'); });
-
-                        $totalInput = $fff+10;
-                        $sumTI=0;
-                        $skipper = 0;
-
-                        for ($x=0;$x<$a;$x++) {
-                            $sumTI = $sumTI+$sheet->getcell($arrayLetter[$skipper].$fff)->getCalculatedValue();
-                            $sheet->cell('B'.$totalInput, $sumTI); 
-                            $sheet->cells('B'.$totalInput, function($cells) {$cells->setFontWeight('bold'); });
-                            $sheet->getStyle('B'.$totalInput)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipper = $skipper+2;
-                        }
-
-                        //FOR TOTAL INPUT
-                      
-
-                        $totalInput = $fff+11;
-                        $sumTO=0;
-                        $skipper = 0;
-                        $f1 = $fff+1;
-
-                        for ($x=0;$x<$a;$x++) {
-                            $sumTO = $sumTO+$sheet->getcell($arrayLetter[$skipper].$f1)->getCalculatedValue();
-                            $sheet->cell('B'.$totalInput, $sumTO); 
-                            $sheet->cells('B'.$totalInput, function($cells) {$cells->setFontWeight('bold'); });
-                            $sheet->getStyle('B'.$totalInput)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipper = $skipper+2;
-                        }
-                        //FOR TOTAL OUTPUT
-                      
-
-                        $totalInput = $fff+12;
-                        $sumPNG=0;
-                        $skipper = 0;
-                        $f1 = $fff+2;
-
-                        for ($x=0;$x<$a;$x++) {
-                            $sumPNG = $sumPNG+$sheet->getcell($arrayLetter[$skipper].$f1)->getCalculatedValue();
-                            $sheet->cell('B'.$totalInput, $sumPNG);
-                            $sheet->cells('B'.$totalInput, function($cells) {$cells->setFontWeight('bold'); }); 
-                            $sheet->getStyle('B'.$totalInput)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipper = $skipper+2;
-                        }
-                        //FORPNG
-                      
-
-                        $totalInput = $fff+13;
-                        $sumMNG=0;
-                        $skipper = 0;
-                        $f1 = $fff+3;
-
-                        for($x=0;$x<$a;$x++) {
-                            $sumMNG = $sumMNG+$sheet->getcell($arrayLetter[$skipper].$f1)->getCalculatedValue();
-                            $sheet->cell('B'.$totalInput, $sumMNG); 
-                            $sheet->cells('B'.$totalInput, function($cells) {$cells->setFontWeight('bold'); });
-                            $sheet->getStyle('B'.$totalInput)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $skipper = $skipper+2;
-                        }
-                        //FORMNG
-                      
-                        $totalInput = $fff+14;
-                        $sumYWM=0;
-                        $skipper = 0;
-                        $f1 = $fff+4;
-
-                        for ($x=0;$x<$a;$x++) {
-                            $sumYWM = $sumYWM+$sheet->getcell($arrayLetter[$skipper].$f1)->getCalculatedValue();
-                            // $sheet->cell('B'.$totalInput, $sumYWM); 
-                            $skipper = $skipper+2;
-                        }
-
-                        $a = count($dateholder);
-
-                        if ($a == 0) {
-                            $a = 1;
-                        }
-
-                        $sheet->cell('B'.$totalInput, ($sumYWM/$a));
-                        $sheet->cells('B'.$totalInput, function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->getStyle('B'.$totalInput)->getAlignment()->applyFromArray(array('horizontal' => 'center'));
-                        $sheet->setColumnFormat(array('B'.$totalInput => '0%' ));
-
-                        //YWMNG
-
-                        $totalInput = $fff+15;
-                        $sumTY=0;
-                        $skipper = 0;
-                        $f1 = $fff+5;
-                        for ($x=0;$x<$a;$x++) {
-                            $sumTY = $sumTY+$sheet->getcell($arrayLetter[$skipper].$f1)->getCalculatedValue();
-                            // $sheet->cell('B'.$totalInput, $sumYWM);
-                            $skipper = $skipper+2;
-                        }
-                        $sheet->cell('B'.$totalInput, ($sumTY/$a));
-                        $sheet->cells('B'.$totalInput, function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->getStyle('B'.$totalInput)->getAlignment()->applyFromArray(array('horizontal' => 'center'));
-                        $sheet->setColumnFormat(array('B'.$totalInput => '0%' ));
-
-                        //YWMNG
-                    });
-                })->download('xls');
-            } else{
-                $e = 'No data found.';
-                return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-            }
-
-        } catch (Exception $e) {
-            return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-        }
-    }
+    
 
     public function loadchart(Request $request)
     {
@@ -2030,6 +1285,31 @@ class YieldPerformanceReportController extends Controller
         $family = $request->family;
         $table = DB::connection($this->mysql)->table('tbl_seriesregistration')->select('series')->where('family',$family)->get();
         return $table;
+    }
+
+    public function getYieldTargetForReport(Request $req)
+    {
+        $data = [];
+
+        $datefrom = $this->com->convertDate($req->date_from,'Y-m-d');
+        $dateto = $this->com->convertDate($req->date_to,'Y-m-d');
+
+        $target = DB::connection($this->mysql)
+                    ->select("SELECT yield FROM tbl_targetregistration
+                            where '".$datefrom."' between datefrom and dateto
+                            and '".$dateto."' between datefrom and dateto
+                            and ptype = '".$req->prod_type."'");
+        if (count((array)$target) > 0) {
+            $data = [
+                'target_yield' => $target[0]->yield
+            ];
+        } else {
+            $data = [
+                'target_yield' => 0.00
+            ];
+        }
+
+        return response()->json($data);
     }
 
 }

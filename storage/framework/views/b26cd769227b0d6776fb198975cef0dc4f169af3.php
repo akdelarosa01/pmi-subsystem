@@ -125,6 +125,8 @@
      var yieldsumRptURL = "<?php echo e(url('/yieldsumRpt')); ?>";
 
      var searchPOdetailsURL = "<?php echo e(url('/searchPOdetails')); ?>";
+
+     var getYieldTargetURL = "<?php echo e(url('/getYieldTargetForReport')); ?>";
 </script>
 <script type="text/javascript"src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yielding_performance_report.js')); ?>"></script>
 <script type="text/javascript" src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js')); ?>"></script>

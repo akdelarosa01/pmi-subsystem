@@ -3,7 +3,7 @@
           <div class="modal-dialog gray-gallery">
                <div class="modal-content ">
                     <div class="modal-header">
-                         <h4 class="yieldpsrpt-title"></h4>
+                         <h4>Yield Performance Summary Report</h4>
                     </div>
                     <div class="modal-body">
                          <div class="row">
@@ -23,13 +23,7 @@
                                                   <input type="text" class="form-control input-sm date-picker" name="ypsr-dateto" id="ypsr-dateto">
                                              </div>
                                         </div>
-                                        <hr>
-                                        <div class="form-group">
-                                             <label class="control-label col-sm-3">Target Yield</label>
-                                             <div class="col-sm-9">
-                                                  <input type="text" class="form-control input-sm" name="ypsr-targetyield" id="ypsr-targetyield">
-                                             </div>
-                                        </div>
+
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Product Type</label>
                                              <div class="col-sm-9">
@@ -38,8 +32,18 @@
                                                        <option value="TEST SOCKET">TEST SOCKET</option>
                                                        <option value="BURN-IN">BURN-IN</option>
                                                  </Select>
-                                             </div>     
+                                             </div>
                                         </div>
+                                        
+                                        <hr>
+
+                                        <div class="form-group">
+                                             <label class="control-label col-sm-3">Target Yield</label>
+                                             <div class="col-sm-9">
+                                                  <input type="text" class="form-control input-sm" name="ypsr-targetyield" id="ypsr-targetyield">
+                                             </div>
+                                        </div>
+                                        
                                         <div class="form-group pull-right">
                                              <div class="col-sm-12">
                                                   <button type="button" onclick="javascript:yieldsumRpt();"  class="btn green-jungle input-sm">Export to Excel</button>

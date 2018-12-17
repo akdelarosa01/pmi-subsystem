@@ -1,8 +1,5 @@
 PMI
-1. Yield Performance
-	- Fix Reports GUI
-	- FIx Reports Modals
-	- Fix reports JS
-2. Fix Defect Summary Report
-SITP
-1. Edit vids
+1. Displaying of Yield Target
+	- Displaying of Yield Target
+	- Fix functions in JS
+	- fix Functions in Controller

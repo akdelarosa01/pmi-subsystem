@@ -125,6 +125,8 @@
      var yieldsumRptURL = "{{ url('/yieldsumRpt') }}";
 
      var searchPOdetailsURL = "{{ url('/searchPOdetails') }}";
+
+     var getYieldTargetURL = "{{ url('/getYieldTargetForReport') }}";
 </script>
 <script type="text/javascript"src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/yielding_performance_report.js') }}"></script>
 <script type="text/javascript" src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/YieldReportsJS/YPDefectSummaryReport.js') }}"></script>

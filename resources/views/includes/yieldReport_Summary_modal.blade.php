@@ -3,7 +3,7 @@
 		  <div class="modal-dialog " gray-gallery">
 			   <div class="modal-content ">
 					<div class="modal-header">
-						 <h4>Yield Performance Summary Report</h4>
+						 <h4>Yield Performance Report</h4>
 					</div>
 					<div class="modal-body">
 						 <div class="row">

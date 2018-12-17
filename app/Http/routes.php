@@ -2243,6 +2243,11 @@ Route::group(['middleware' => 'web'], function () {
                 'uses' => 'Yielding\YieldPerformanceReportController@records',
                 'name' => '/report-records'
             ]);
+
+            Route::get('/getYieldTargetForReport', [
+                'uses' => 'Yielding\YieldPerformanceReportController@getYieldTargetForReport',
+                'name' => '/getYieldTargetForReport'
+            ]);
             
         /*YIELD PERFORMANCE*/
             // Route::post('/yieldperformance', [
