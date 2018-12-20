@@ -2998,28 +2998,28 @@ class OrderDataCheckController extends Controller
 
     private function getUnmatchUsage($code,$kcode,$usage,$db)
     {
-        return [
-            $code,$kcode,$usage,$db
-        ];
-        // $unmatch = [];
-        // foreach ($code as $key => $value) {
-        //     $ok = DB::connection($this->mssql)
-        //             ->select("SELECT CODE, KCODE, SIYOU
-        //                     FROM XPRTS
-        //                     WHERE CODE = '".$value."'
-        //                     AND KCODE = '".$kcode[$key]."'");
-        //     if (count((array)$ok) > 0) {
-        //         $query = DB::connection($this->mssql)
-        //                     ->select("SELECT CODE, KCODE, SIYOU
-        //                             FROM XPRTS
-        //                             WHERE CODE = '".$value."'
-        //                             AND KCODE = '".$kcode[$key]."'");
-        //         array_push($unmatch, $query);
-        //         //$unmatch[] = $query[0];
-        //     }
+        // return [
+        //     $code,$kcode,$usage,$db
+        // ];
+        $unmatch = [];
+        foreach ($code as $key => $value) {
+            $ok = DB::connection($this->mssql)
+                    ->select("SELECT CODE, KCODE, SIYOU
+                            FROM XPRTS
+                            WHERE CODE = '".$value."'
+                            AND KCODE = '".$kcode[$key]."'");
+            if (count((array)$ok) > 0) {
+                $query = DB::connection($this->mssql)
+                            ->select("SELECT CODE, KCODE, SIYOU
+                                    FROM XPRTS
+                                    WHERE CODE = '".$value."'
+                                    AND KCODE = '".$kcode[$key]."'");
+                //array_push($unmatch, $query);
+                $unmatch[] = $query[0];
+            }
 
-        // }
-        // return $unmatch;
+        }
+        return $unmatch;
     }
 
     private function getUnmatchSupplier($code,$db)
