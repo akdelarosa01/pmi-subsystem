@@ -3432,18 +3432,18 @@ class OrderDataCheckController extends Controller
 
                     DB::connection($this->mysql)->table('unmatch_usgts')
                         ->insert([
-                            po => $po_unmatch_usage[$key],
-                            productcode => $code,
-                            productname => $name_unmatch_usage[$key],
-                            partcode => $kcode_unmatch_usage[$key],
-                            partname => $pname_unmatch_usage[$key],
-                            supplier => $vendor_unmatch_usage[$key],
-                            kcode => $uUsage[$key]->KCODE,
-                            error => $error,
-                            lv => $divusage_unmatch_usage[$key],
-                            usg => $usage_unmatch_usage[$key],
-                            siyou => $usage,
-                            error_usg => $error_usg,
+                            'po' => $po_unmatch_usage[$key],
+                            'productcode' => $code,
+                            'productname' => $name_unmatch_usage[$key],
+                            'partcode' => $kcode_unmatch_usage[$key],
+                            'partname' => $pname_unmatch_usage[$key],
+                            'supplier' => $vendor_unmatch_usage[$key],
+                            'kcode' => $uUsage[$key]->KCODE,
+                            'error' => $error,
+                            'lv' => $divusage_unmatch_usage[$key],
+                            'usg' => $usage_unmatch_usage[$key],
+                            'siyou' => $usage,
+                            'error_usg' => $error_usg,
                         ]);
                 } catch (Exception $e) {
 
