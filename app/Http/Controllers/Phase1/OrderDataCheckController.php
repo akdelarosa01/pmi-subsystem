@@ -833,11 +833,10 @@ class OrderDataCheckController extends Controller
     private function getUsage($code,$kcode,$usage,$db)
     {
         $count = DB::connection($this->mssql)
-                    ->table('XPRTS')
-                    ->select('CODE','KCODE','SIYOU')
-                    ->where('CODE',$code)
-                    ->where('KCODE',$kcode)
-                    ->count();
+                    ->select("SELECT CODE, KCODE, SIYOU
+                            FROM XPRTS
+                            WHERE CODE = '".$code."'
+                            AND KCODE = '".$kcode."'");
         return $count;
     }
 
@@ -2733,7 +2732,7 @@ class OrderDataCheckController extends Controller
         foreach ($get as $key => $bom) {
             if ($this->check_BOM($bom->code,$db) > 0) {
 
-                if ($this->getUsage($bom->code,$bom->kcode,$bom->usages,$db)) {
+                if (count((array)$this->getUsage($bom->code,$bom->kcode,$bom->usages,$db)) > 0) {
 
                 } else {
                     $unmatch_usage++;
