@@ -836,7 +836,8 @@ class OrderDataCheckController extends Controller
                     ->select("SELECT CODE, KCODE, SIYOU
                             FROM XPRTS
                             WHERE CODE = '".$code."'
-                            AND KCODE = '".$kcode."'");
+                            AND KCODE = '".$kcode."'
+                            AND SIYOU = '".$usage."'");
         return $count;
     }
 
@@ -2746,7 +2747,19 @@ class OrderDataCheckController extends Controller
                     $DivUnmatchUsage[] = $bom->div_usage;
                 }
             } else {
+                if (count((array)$this->getUsage($bom->code,$bom->kcode,$bom->usages,$db)) > 0) {
 
+                } else {
+                    $unmatch_usage++;
+                    $CodeUnmatchUsage[] = $bom->code;
+                    $UsageUnmatchUsage[] = $bom->usages;
+                    $KcodeUnmatchUsage[] = $bom->kcode;
+                    $NameUnmatchUsage[] = $bom->name;
+                    $PnameUnmatchUsage[] = $bom->partsname;
+                    $POUnmatchUsage[] = $bom->po;
+                    $VendorUnmatchUsage[] = $bom->vendor;
+                    $DivUnmatchUsage[] = $bom->div_usage;
+                }
             }
         }
 
