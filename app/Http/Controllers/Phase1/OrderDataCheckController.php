@@ -3010,12 +3010,13 @@ class OrderDataCheckController extends Controller
                             AND KCODE = '".$kcode[$key]."'");
             if (count((array)$ok) > 0) {
                 $query = DB::connection($this->mssql)
-                            ->select("SELECT CODE, KCODE, SIYOU
-                                    FROM XPRTS
-                                    WHERE CODE = '".$value."'
-                                    AND KCODE = '".$kcode[$key]."'");
-                //array_push($unmatch, $query);
-                $unmatch[] = $query[0];
+                            ->table('XPRTS')
+                            ->select('CODE', 'KCODE', 'SIYOU')
+                            ->where('CODE',$value)
+                            ->where('KCODE',$kcode[$key])
+                            ->first();
+                array_push($unmatch, $query);
+                //$unmatch[] = $query;
             }
 
         }
