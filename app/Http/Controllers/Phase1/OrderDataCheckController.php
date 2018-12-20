@@ -174,7 +174,7 @@ class OrderDataCheckController extends Controller
 
         $uUsage = $this->getUnmatchUsage($Usage['code_unmatch_usage'],$Usage['kcode_unmatch_usage'],$Usage['usage_unmatch_usage'],$db);
 
-        return dd($uUsage);
+        // return dd($uUsage);
         //echo "<pre>",print_r($uBOM),"</pre>";
         $uSupplier = $this->getUnmatchSupplier($Item['unmatchSupplierCode'],$db);
         $uPartName = $this->getUnmatchPartName($Item['code_unmatch_partName'],$Item['name_unmatch_partName'],$db);
