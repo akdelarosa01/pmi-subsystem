@@ -3421,8 +3421,10 @@ class OrderDataCheckController extends Controller
                     $usage = (isset($uUsage[$key]->SIYOU))? $uUsage[$key]->SIYOU : "";
                     $error = 0;
                     $error_usg = 0;
+                    $ypics_kcode = (isset($uUsage[$key]->KCODE))? $uUsage[$key]->KCODE : "";
+                    $kcode = (isset($kcode_unmatch_usage[$key]))? $kcode_unmatch_usage[$key] : "";
 
-                    if ($kcode_unmatch_usage[$key] != $uUsage[$key]->KCODE) {
+                    if ($kcode != $ypics_kcode) {
                         $error = 1;
                     }
 
