@@ -3440,7 +3440,7 @@ class OrderDataCheckController extends Controller
                             'partcode' => $kcode_unmatch_usage[$key],
                             'partname' => $pname_unmatch_usage[$key],
                             'supplier' => $vendor_unmatch_usage[$key],
-                            'kcode' => $uUsage[$key]->KCODE,
+                            'kcode' => $kcode,
                             'error' => $error,
                             'lv' => $divusage_unmatch_usage[$key],
                             'usg' => $usage_unmatch_usage[$key],
