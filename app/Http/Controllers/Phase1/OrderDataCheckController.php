@@ -2986,22 +2986,24 @@ class OrderDataCheckController extends Controller
 
     private function getUnmatchUsage($code,$kcode,$usage,$db)
     {
+        // return [
+        //     $code,$kcode,$usage,$db
+        // ];
         $unmatch = [];
         foreach ($code as $key => $value) {
             $ok = DB::connection($this->mssql)
-                    ->table('XPRTS')
-                    ->select('CODE','KCODE','SIYOU')
-                    ->where('CODE',$value)
-                    ->where('KCODE',$kcode[$key])
-                    ->count();
-            if ($ok > 0) {
+                    ->select("SELECT CODE, KCODE, SIYOU
+                            FROM XPRTS
+                            WHERE CODE = '".$value."'
+                            AND KCODE = '".$kcode[$key]."'");
+            if (count((array)$ok) > 0) {
                 $query = DB::connection($this->mssql)
-                        ->table('XPRTS')
-                        ->select('CODE','KCODE','SIYOU')
-                        ->where('CODE',$value)
-                        ->where('KCODE',$kcode[$key])
-                        ->get();
-                $unmatch[] = $query[0];
+                            ->select("SELECT CODE, KCODE, SIYOU
+                                    FROM XPRTS
+                                    WHERE CODE = '".$value."'
+                                    AND KCODE = '".$kcode[$key]."'");
+                array_push($unmatch, $query);
+                //$unmatch[] = $query[0];
             }
 
         }
@@ -3401,7 +3403,7 @@ class OrderDataCheckController extends Controller
     private function umatchUsageInsertDB($uUsage,$po_unmatch_usage,$code_unmatch_usage,$name_unmatch_usage,$kcode_unmatch_usage,$pname_unmatch_usage,$vendor_unmatch_usage,$usage_unmatch_usage,$divusage_unmatch_usage)
     {
         //echo "<pre>",print_r($code_unmatch_usage),"</pre>";
-        if ($uUsage != null) {
+        if (count($uUsage) > 0) {
             foreach (array_unique($code_unmatch_usage) as $key => $code) {
                 try {
                     $usage = (isset($uUsage[$key]->SIYOU))? $uUsage[$key]->SIYOU : "";
