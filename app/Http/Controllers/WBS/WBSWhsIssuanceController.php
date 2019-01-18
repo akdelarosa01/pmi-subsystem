@@ -523,7 +523,7 @@ class WBSWhsIssuanceController extends Controller
 
         if ($this->com->checkIfExistObject($summary) > 0) {
         	$request = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
-    						->where('issuance_no',$req->issuance_no)
+    						->where('issuance_no',$summary->issuance_no)
     						->select(
     							DB::raw("SUM(issued_qty_t) as total_served_qty")
 							)->get();
