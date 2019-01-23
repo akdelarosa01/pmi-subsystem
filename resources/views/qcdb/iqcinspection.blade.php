@@ -1147,9 +1147,9 @@
         var month = date.getMonth();
         var year = date.getFullYear();
 
-        // if (month < 3) {
-        //     year = year - 1;
-        // }
+        if (month < 3) {
+            year = year - 1;
+        }
 
         $('#fy').val(year);
     }
@@ -2106,9 +2106,9 @@
         var month = date.getMonth();
         var year = date.getFullYear();
 
-        // if (month < 3) {
-        //     year = year - 1;
-        // }
+        if (month < 3) {
+            year = year - 1;
+        }
 
         $('#fy_man').val(year);
     }

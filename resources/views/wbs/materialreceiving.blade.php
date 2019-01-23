@@ -545,6 +545,7 @@
         });
 
         $('#btn_filter').on('click', function() {
+            $('#loading').modal('show');
             $('#tbl_search_body').html('');
             var tbl_search = '';
             var url = '{{url("/wbsmrsearch")}}';
@@ -567,6 +568,7 @@
                 type: "GET",
                 data: data,
             }).done( function(data, textStatus, jqXHR) {
+                $('#loading').modal('hide');
                 var status = '';
                 var iqc_status = '';
                 $.each(data, function(index, x) {
