@@ -305,6 +305,8 @@
    			// $('#invoice_no').prop('readonly',false);
 			// $('#partcode').prop('readonly',true);
 			// $('#lot_no').prop('readonly',true);
+			// 
+			getFiscalYear();
 
 			getDropdowns();
 			getIQCworkWeek();
@@ -329,6 +331,7 @@
 			// $('#lot_no').prop('readonly',true);
 
 			getDropdowns_man();
+			getFiscalYear();
 
 			$('#no_defects_label_man').hide();
 			$('#no_of_defects_man').hide();
@@ -542,6 +545,7 @@
 
 			openModeOfDefects();
 			getIQCworkWeek();
+			getFiscalYear();
 
 			$('#IQCresultModal').modal('show');
 		});
