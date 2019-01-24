@@ -316,7 +316,7 @@
                                     <?php $url = "/whs-issuance"; $icon = "fa fa-cubes"; ?>
                                     @if ($access->read_write != "0")
                                     <li>
-                                        <a href="{{ url($url) }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
+                                        <a href="{{ url('/whs-issuance') }}"><i class="{{ $icon }}" ></i> {{ $access->program_name }}</a>
                                     </li>
                                     @endif
                                 @elseif ($access->program_code == "3026")

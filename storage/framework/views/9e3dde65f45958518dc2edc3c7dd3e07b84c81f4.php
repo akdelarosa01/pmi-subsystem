@@ -313,10 +313,10 @@
                                     </li>
                                     <?php endif; ?>
                                 <?php elseif($access->program_code == "3025"): ?>
-                                    <?php $url = "/wbswhsmatissuance"; $icon = "fa fa-cubes"; ?>
+                                    <?php $url = "/whs-issuance"; $icon = "fa fa-cubes"; ?>
                                     <?php if($access->read_write != "0"): ?>
                                     <li>
-                                        <a href="<?php echo e(url($url)); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
+                                        <a href="<?php echo e(url('/whs-issuance')); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
                                     </li>
                                     <?php endif; ?>
                                 <?php elseif($access->program_code == "3026"): ?>
@@ -389,6 +389,45 @@
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             
+                        </ul>
+                    </li>
+                <?php endif; ?>
+
+                <?php if(in_array("Engineering Yielding Performance",$progclass)): ?>
+                    <li>
+                        <a href="javascript:;" ><i class="fa fa-road" ></i> <span class="title">Engineering Yielding Performance</span><span class="arrow "></span></a>
+                        <ul class="sub-menu">
+                        <?php foreach($userProgramAccess as $access): ?>
+                            <?php if($access->program_code == "6001"): ?>
+                                <?php $url = "/addnewYieldperformance"; $icon = "fa fa-pencil-square-o";?>
+                                <?php if($access->read_write != "0"): ?>
+                                    <li>
+                                        <a href="<?php echo e(url($url)); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
+                                    </li>
+                                <?php endif; ?>
+                            <?php elseif($access->program_code == "6002"): ?>
+                                <?php $url = "/poregistration"; $icon = "fa fa-cube"; ?>
+                                <?php if($access->read_write != "0"): ?>
+                                    <li>
+                                        <a href="<?php echo e(url($url)); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
+                                    </li>
+                                <?php endif; ?>
+                             <?php elseif($access->program_code == "6003"): ?>
+                                <?php $url = "/targetyieldperformance"; $icon = "fa fa-bullseye"; ?>
+                                <?php if($access->read_write != "0"): ?>
+                                    <li>
+                                        <a href="<?php echo e(url($url)); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
+                                    </li>
+                                <?php endif; ?>
+                            <?php elseif($access->program_code == "6004"): ?>
+                                <?php $url = "/ReportYieldPerformance"; $icon = "fa fa-area-chart"; ?>
+                                <?php if($access->read_write != "0"): ?>
+                                    <li>
+                                        <a href="<?php echo e(url($url)); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                         </ul>
                     </li>
                 <?php endif; ?>
