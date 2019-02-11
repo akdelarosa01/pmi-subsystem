@@ -51,7 +51,7 @@ class WBSInventoryController extends Controller
     public function inventory_list()
     {
         $inv = DB::connection($this->mysql)->table('tbl_wbs_inventory')
-                    ->orderBy('received_date')
+                    ->orderBy('received_date','desc')
                     ->where('deleted',0)
                     ->select([
                         'id',
@@ -103,6 +103,7 @@ class WBSInventoryController extends Controller
                                     data-qty="'.$data->qty.'"
                                     data-lot_no="'.$data->lot_no.'"
                                     data-location="'.$data->location.'"
+                                    data-received_date="'.$data->received_date.'"
                                     data-supplier="'.$data->supplier.'"
                                     data-not_for_iqc="'.$data->not_for_iqc.'"
                                     data-iqc_status="'.$data->iqc_status.'"
@@ -154,6 +155,7 @@ class WBSInventoryController extends Controller
                         'location' => $req->location,
                         'supplier' => $req->supplier,
                         'iqc_status' => $req->status,
+                        'received_date' => $this->com->convertDate($req->received_date,'Y-m-d'),
                         'update_user' => Auth::user()->user_id,
                         'updated_at' => date('Y-m-d h:i:s'),
                     ]);

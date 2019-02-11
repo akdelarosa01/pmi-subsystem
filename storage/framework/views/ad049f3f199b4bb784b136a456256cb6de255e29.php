@@ -249,7 +249,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2">
-                        <img src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/images/ajax-loader.gif') }}" class="img-responsive">
+                        <img src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/images/ajax-loader.gif')); ?>" class="img-responsive">
                     </div>
                 </div>
             </div>

@@ -60,6 +60,7 @@ $( function() {
 		$('#qty').val($(this).attr('data-qty'));
 		$('#location').val($(this).attr('data-location'));
 		$('#supplier').val($(this).attr('data-supplier'));
+		$('#received_date').val($(this).attr('data-received_date'));
 		$('#status').val($(this).attr('data-iqc_status'));
 		
 	});

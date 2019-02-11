@@ -1,19 +1,17 @@
-@extends('layouts.master')
-
-@section('title')
+<?php $__env->startSection('title'); ?>
 	WBS | Pricon Microelectronics, Inc.
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 	<?php $state = ""; $readonly = ""; ?>
-	@foreach ($userProgramAccess as $access)
-		@if ($access->program_code == Config::get('constants.MODULE_CODE_WBS'))  <!-- Please update "2001" depending on the corresponding program_code -->
-			@if ($access->read_write == "2")
+	<?php foreach($userProgramAccess as $access): ?>
+		<?php if($access->program_code == Config::get('constants.MODULE_CODE_WBS')): ?>  <!-- Please update "2001" depending on the corresponding program_code -->
+			<?php if($access->read_write == "2"): ?>
 			<?php $state = "disabled"; $readonly = "readonly"; ?>
-			@endif
-		@endif
-	@endforeach
+			<?php endif; ?>
+		<?php endif; ?>
+	<?php endforeach; ?>
 	
 	<div class="page-content">
 
@@ -21,7 +19,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<!-- BEGIN EXAMPLE TABLE PORTLET-->
-				@include('includes.message-block')
+				<?php echo $__env->make('includes.message-block', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 				<div class="portlet box blue" >
 					<div class="portlet-title">
 						<div class="caption">
@@ -81,7 +79,7 @@
                             		<div class="form-group">
                             			<label for="" class="control-label col-sm-3">Created Date</label>
                             			<div class="col-sm-9">
-                            				<input type="text" class="form-control input-sm" value="{{date('Y-m-d')}}" data-date-format="yyyy-mm-dd" id="createddate" name="createddate" readonly>
+                            				<input type="text" class="form-control input-sm" value="<?php echo e(date('Y-m-d')); ?>" data-date-format="yyyy-mm-dd" id="createddate" name="createddate" readonly>
                             			</div>
                             		</div>
                             		<div class="form-group">
@@ -93,7 +91,7 @@
                             		<div class="form-group">
                             			<label for="" class="control-label col-sm-3">Updated Date</label>
                             			<div class="col-sm-9">
-                            				<input type="text" class="form-control input-sm" value="{{date('Y-m-d')}}" data-date-format="yyyy-mm-dd" id="updateddate" name="updateddate" readonly>
+                            				<input type="text" class="form-control input-sm" value="<?php echo e(date('Y-m-d')); ?>" data-date-format="yyyy-mm-dd" id="updateddate" name="updateddate" readonly>
                             			</div>
                             		</div>
                         		</div>
@@ -157,23 +155,24 @@
 		<!-- END PAGE CONTENT-->
 	</div>
 
-    @include('includes.material_disposition_modal')
-    @include('includes.modals')
+    <?php echo $__env->make('includes.material_disposition_modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('includes.modals', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('script')
+<?php $__env->startPush('script'); ?>
 	<script type="text/javascript">
-		var token = "{{ Session::token() }}";
-        var getItemCodeURL = "{{ url('/matdis-search-item') }}";
-        var saveLotNosURL = "{{url('/matdis-save-item')}}";
-        var getAllDataURL = "{{url('/matdis-get-data')}}";
-        var getSearchedMaterialsURL = "{{url('/matdis-get-searched-materials')}}";
-        var exportMaterialURL = "{{url('/matdis-get-data-export')}}";
+		var token = "<?php echo e(Session::token()); ?>";
+        var getItemCodeURL = "<?php echo e(url('/matdis-search-item')); ?>";
+        var saveLotNosURL = "<?php echo e(url('/matdis-save-item')); ?>";
+        var getAllDataURL = "<?php echo e(url('/matdis-get-data')); ?>";
+        var getSearchedMaterialsURL = "<?php echo e(url('/matdis-get-searched-materials')); ?>";
+        var exportMaterialURL = "<?php echo e(url('/matdis-get-data-export')); ?>";
   
 
 
 	</script>
-	<script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js') }}" type="text/javascript"></script>
-    <script src="{{ asset(config('constants.PUBLIC_PATH').'assets/global/scripts/materialdisposition.js') }}" type="text/javascript"></script>
-@endpush
+	<script src="<?php echo e(asset(config('constants.PUBLIC_PATH').'assets/global/scripts/common.js')); ?>" type="text/javascript"></script>
+    <script src="<?php echo e(asset(config('constants.PUBLIC_PATH').'assets/global/scripts/materialdisposition.js')); ?>" type="text/javascript"></script>
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

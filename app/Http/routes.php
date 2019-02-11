@@ -703,29 +703,48 @@ Route::group(['middleware' => 'web'], function () {
 
         /* Material Disposistion */
             Route::get('/wbsmaterialdisposition', [
-                'uses' => 'WBS\WBSMaterialDispositionController@getMatDisposistion',
+                'uses' => 'WBS\WBSMaterialDispositionController@index',
                 'name' => 'wbsmaterialdisposition'
             ]);
-            Route::post('/dispositionsave', [
-                'uses' => 'WBS\WBSMaterialDispositionController@dispositionsave',
-                'name' => 'dispositionsave'
+
+            Route::get('/matdis-search-item', [
+                'uses' => 'WBS\WBSMaterialDispositionController@search_item',
+                'name' => 'matdis-search-item'
             ]);
-            Route::get('/wbsdispositiongetrows', [
-                'uses' => 'WBS\WBSMaterialDispositionController@wbsdispositiongetrows',
-                'name' => 'wbsdispositiongetrows'
+
+            //bago//
+            Route::post('/matdis-save-item',[
+
+                'uses' => 'WBS\WBSMaterialDispositionController@save_item',
+                'name' => 'matdis-save-item'
             ]);
-            Route::post('/deleteDisposition', [
-                'uses' => 'WBS\WBSMaterialDispositionController@deleteDisposition',
-                'name' => 'deleteDisposition'
+             Route::get('/matdis-get-data',[
+
+                'uses' => 'WBS\WBSMaterialDispositionController@get_item',
+                'name' => 'matdis-get-data'
             ]);
-            Route::get('/dispositionExportToExcel', [
-                'uses' => 'WBS\WBSMaterialDispositionController@dispositionExportToExcel',
-                'name' => 'dispositionExportToExcel'
+
+
+             Route::get('/matdis-get-searched-materials',[
+
+                'uses' => 'WBS\WBSMaterialDispositionController@get_searched_materials',
+                'name' => 'matdis-get-searched-materials'
             ]);
-            Route::get('/itemcodechange', [
-                'uses' => 'WBS\WBSMaterialDispositionController@itemcodechange',
-                'name' => 'itemcodechange'
+
+             Route::get('/matdis-get-data-export',[
+
+                'uses' => 'WBS\WBSMaterialDispositionController@get_data_export',
+                'name' => 'matdis-get-data-export'
             ]);
+
+
+
+           
+
+            
+
+            ///////// Dito maglalagay ng route
+
 
         /*Production Material Return*/
             Route::get('/wbsprodmatreturn', [

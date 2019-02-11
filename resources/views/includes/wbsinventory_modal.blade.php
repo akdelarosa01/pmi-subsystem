@@ -71,6 +71,24 @@
 						</div>
 					</div>
 
+
+					 <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Recieved Date</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm date-picker clear" data-date-format="yyyy-mm-dd" id="received_date" name="received_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+						<label for="inputcode" class="col-md-3 control-label">Updated By</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control validate" id="update_user" name="update_user">
+							<span class="help-block">
+                                <strong id="item_code_msg"></strong>
+                            </span>
+						</div>
+					</div>
+
 					<div class="form-group">
 						<label for="inputcode" class="col-md-3 control-label"></label>
 						<div class="col-md-9">
