@@ -43,7 +43,7 @@ class WBSMaterialDispositionController extends Controller
         }
         else
         {
-            $dispositions = $this->com->getDropdownById(47);
+            $dispositions = $this->com->getDropdownById(48);
             return view('wbs.materialdisposition',[
                 'userProgramAccess' => $userProgramAccess,
                 'dispositions' => $dispositions
