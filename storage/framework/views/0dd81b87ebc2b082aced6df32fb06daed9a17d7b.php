@@ -1,3 +1,120 @@
+<div id="lot_no_modal" class="modal fade" role="dialog" data-backdrop="static">
+   
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content blue">
+            <div class="modal-header">
+                <button type="button" class="close"data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Lot Numbers</h5>
+            </div>
+            <div class="modal-body">
+                <table class="table table-condensed table-bordered table-checkable" id="tbl_lotno">
+                    <thead>
+                        <td width="5%">
+                            <input type="checkbox" class="check_all">
+                        </td>
+                        <td>Item Code</td>
+                        <td>Item Name</td>
+                        <td>Lot No.</td>
+                        <td>Qty</td>
+                    </thead>
+                    <tbody id="tbl_lotno_body"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                    <?php /* <button type="submit" class="btn btn-success" <?php echo e($state); ?>><i class="fa fa-save"></i> Save</button> */ ?>
+                    <button type="button" class="btn btn-success btn-sm" id="btn_select_lot">Select</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+            </div>
+        </div>
+            
+    </div>
+</div>
+
+
+<div id="edit_lot_no_modal" class="modal fade" role="dialog" data-backdrop="static">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content blue">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Lot Numbers</h5>
+            </div>
+            <form class="form-horizontal">
+                <div class="modal-body">
+                    <input type="hidden" class="form-control input-sm" id="lot_id" name="lot_id"/>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Item Code</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm clear" id="edit_item" name="edit_item" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Item Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm clear" id="edit_item_desc" name="edit_item_desc" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Qty</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm clear" id="edit_qty" name="edit_qty" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Lot No</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm clear" id="edit_lot_no" name="edit_lot_no" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Exp Date</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm date-picker clear" data-date-format="yyyy-mm-dd" id="edit_exp_date" name="edit_exp_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Disposition</label>
+                        <div class="col-sm-9">
+                            <select class="form-control input-sm clear" id="edit_disposition" name="edit_disposition">
+                                <option value=""></option>
+                                <?php foreach($dispositions as $status): ?>
+                                    <option value="<?php echo e($status->description); ?>"><?php echo e($status->description); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Remarks</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control input-sm clear" id="edit_remarks" name="edit_remarks" style="resize: none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <?php /* <button type="submit" class="btn btn-success" <?php echo e($state); ?>><i class="fa fa-save"></i> Save</button> */ ?>
+                    <button type="button" class="btn btn-success btn-sm" id="btn_save_edited">save</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                </div>
+            </form>
+                
+        </div>
+
+    </div>
+</div>
+
 
 <!-- Add Batch Modal -->
 <div id="batchItemModal" class="modal fade" role="dialog" data-backdrop="static">
@@ -153,20 +270,23 @@
 </div>
 
 <!-- Search Modal -->
-<div id="searchModal" class="modal fade" role="dialog" data-backdrop="static">
+<div id="modal_search" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-full">
         <!-- Modal content-->
         <div class="modal-content blue">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+               
                 <h4 class="modal-title">Search</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-5">
                         <form class="form-horizontal">
-                            <div class="form-group">
-                                <label for="inputcode" class="col-md-3 control-label">Receive Date</label>
+
+                                      
+                            
+                         <div class="form-group">
+                                <label for="inputcode" class="col-md-3 control-label">Transaction Date</label>
                                 <div class="col-md-7">
                                     <div class="input-group input-large date-picker input-daterange" data-date="<?php echo date("m/d/Y"); ?>" data-date-format="mm/dd/yyyy">
                                         <input type="text" class="form-control input-sm reset" name="srch_from" id="srch_from"/>
@@ -175,56 +295,31 @@
                                     </div>
                                 </div>
                             </div>
+                                    
                             <div class="form-group">
-                                <label for="inputname" class="col-md-3 control-label">Invoice No</label>
-                                <div class="col-md-7">
-                                    <input type="text" class="form-control input-sm reset" id="srch_invoiceno" placeholder="Invoice No" name="srch_invoiceno" autofocus <?php echo($readonly); ?> />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputname" class="col-md-3 control-label">Invoice Date</label>
-                                <div class="col-md-7">
-                                    <div class="input-group input-large date-picker input-daterange" data-date="<?php echo date("m/d/Y"); ?>" data-date-format="mm/dd/yyyy">
-                                        <input type="text" class="form-control input-sm reset" name="srch_invfrom" id="srch_invfrom"/>
-                                        <span class="input-group-addon"> to </span>
-                                        <input type="text" class="form-control input-sm reset" name="srch_invto" id="srch_invto"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
+                                <input type="hidden" name="id" id="id">
                                 <label for="inputname" class="col-md-3 control-label">Item Code</label>
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control input-sm reset" id="srch_item" placeholder="Item Code" name="srch_item" <?php echo($readonly); ?> />
+                                    <input type="text" class="form-control input-sm reset" id="srch_item"  name="srch_item"> 
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="inputname" class="col-md-3 control-label">Status</label>
-                                <div class="col-md-7">
-                                    <label><input type="checkbox" class="checkboxes" value="Open" id="srch_open" name="Open" checked="checked"/>Open</label>
-                                    <label><input type="checkbox" class="checkboxes" value="Close" id="srch_close" name="Close"/>Close</label>
-                                    <label><input type="checkbox" class="checkboxes" value="Cancelled" id="srch_cancelled" name="Cancelled"/>Cancelled</label>
-                                </div>
-                            </div>
+                            
                         </form>
                     </div>
                     <div class="col-md-7" style="height:400px; overflow: auto;">
-                        <table class="table table-striped table-bordered table-hover table-responsive sortable">
+                        <table class="table table-striped table-bordered table-hover table-responsive sortable" id="tbl_search">
                             <thead>
                                 <tr>
                                     <td></td>
-                                    <td>Transaction No.</td>
-                                    <td>Receive Date</td>
-                                    <td>Invoice No.</td>
-                                    <td>Invoice Date</td>
-                                    <td>Code</td>
-                                    <td>Lot No.</td>
-                                    <td>Qty</td>
-                                    <td>Invoice Status</td>
-                                    <td>IQC status</td>
+                                    <td>Transaction No</td>
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
                                     <td>Created By</td>
                                     <td>Created Date</td>
                                     <td>Updated By</td>
                                     <td>Updated Date</td>
+                              
+                
                                 </tr>
                             </thead>
                             <tbody id="tbl_search_body">
@@ -236,7 +331,7 @@
             <div class="modal-footer">
                 <a href="javascript:;" class="btn blue-madison input-sm" id="btn_filter"><i class="glyphicon glyphicon-filter"></i> Filter</a>
                 <a href="javascript:;" class="btn green input-sm" id="btn_reset"><i class="glyphicon glyphicon-repeat"></i> Reset</a>
-                <a href="javascript:;" class="btn btn-danger input-sm" data-dismiss="modal"><i class="fa fa-times"></i> Close</a>
+                <a href="javascript:;" class="btn btn-danger input-sm" id="close_btn" data-dismiss="modal"><i class="fa fa-times"></i> Close</a>
             </div>
         </div>
     </div>
@@ -249,7 +344,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2">
-                        <img src="{{ asset(Config::get('constants.PUBLIC_PATH').'assets/images/ajax-loader.gif') }}" class="img-responsive">
+                        <img src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/images/ajax-loader.gif')); ?>" class="img-responsive">
                     </div>
                 </div>
             </div>
@@ -290,5 +385,51 @@
                 <button type="button" data-dismiss="modal" id="confirmno" class="btn btn-danger">No</button>
             </div>
         </div>
+    </div>
+</div>
+
+
+
+
+<div id="export_data_modal" class="modal fade" role="dialog" data-backdrop="static">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content blue">
+            <div class="modal-header">
+            
+                <h5 class="modal-title">Export Data</h5>
+            </div>
+            <form class="form-horizontal">
+                <div class="modal-body">
+                    <input type="hidden" class="form-control input-sm" id="lot_id" name="lot_id"/>
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-2">From:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control input-sm date-picker" type="text" name="from" id="from">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-sm-2 ">To:</label>
+                        <div class="col-sm-10">
+                             <input class="form-control input-sm date-picker" type="text" name="to" id="to">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <?php /* <button type="submit" class="btn btn-success" <?php echo e($state); ?>><i class="fa fa-save"></i> Save</button> */ ?>
+                   <button type="button" id="btn_excel" class="btn btn-success">
+                        <i class="fa fa-file-excel-o"></i> Excel
+                    </button>
+                    <button type="button" id="btn_close" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                </div>
+            </form>
+                
+        </div>
+
     </div>
 </div>
