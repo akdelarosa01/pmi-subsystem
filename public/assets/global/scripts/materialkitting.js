@@ -277,10 +277,23 @@ $( function() {
 			$('#iss_qty').val($(this).attr('data-qty'));
 			$('#iss_location').val($(this).attr('data-location'));
 
-			$('#iss_lotno').prop('readonly', false);
-			$('#iss_qty').prop('readonly', false);
-			$('#iss_location').prop('readonly', false);
-			$('#iss_remarks').prop('readonly', false);
+
+			if(parseFloat($(this).attr('data-qty')) <= parseFloat($('#iss_kitqty').val()))
+			{
+
+				$('#iss_lotno').prop('readonly', true);
+				$('#iss_qty').prop('readonly', true);
+				$('#iss_location').prop('readonly', false);
+				$('#iss_remarks').prop('readonly', false);
+			} 
+
+			if (parseFloat($(this).attr('data-qty')) > parseFloat($('#iss_kitqty').val())) {
+				$('#iss_lotno').prop('readonly', true);
+				$('#iss_qty').prop('readonly',false);
+				$('#iss_location').prop('readonly', false);
+				$('#iss_remarks').prop('readonly', false);
+			}
+
 		}
 	});
 
@@ -435,9 +448,23 @@ $( function() {
 		$('#iss_qty').val($(this).attr('data-issuedqty'));
 		$('#iss_location').val($(this).attr('data-location'));
 		$('#iss_remarks').val($(this).attr('data-remarks'));
-		$('#iss_item').prop('readonly', true);
-		$('#iss_lotno').prop('readonly', true);
-		$('#iss_qty').prop('readonly', false);
+
+		if ($('#iss_kitqty').val() <= $('#iss_qty').val()) {
+
+			$('#iss_item').prop('readonly', true);
+			$('#iss_lotno').prop('readonly', true);
+			$('#iss_qty').prop('readonly', true);	
+
+
+		}else{
+
+			$('#iss_item').prop('readonly', true);
+			$('#iss_lotno').prop('readonly', true);
+			$('#iss_qty').prop('readonly', false);
+		}
+		// $('#iss_item').prop('readonly', true);
+		// $('#iss_lotno').prop('readonly', true);
+		// $('#iss_qty').prop('readonly', false);
 		$('#iss_save_status').val('EDIT');
 		$('#iss_id').val($(this).attr('data-id'));
 		$('#iss_detail_id').val($(this).attr('data-detailid'));
@@ -991,14 +1018,22 @@ function getFifoTable(data) {
 	var tbl_fifo_body = '';
 	$('#tbl_fifo_body').html('');
 	var cnt = 1;
+
 	$.each(data, function(i, x) {
 		var lot_no = x.lot_no;
 		if (x.lot_no == null) {
 			lot_no = '';
 		}
+
+		var blocked = '';
+
+		if (cnt > 1) {
+			blocked = 'disabled'; 
+		}
+
 		tbl_fifo_body = '<tr>'+
 							'<td width="7.28%">'+
-								'<button class="btn green btn-sm showfifoitem" data-rowcount="'+cnt+'" data-id="'+x.id+'" data-item="'+x.item+'" '+
+								'<button class="btn green btn-sm showfifoitem" data-rowcount="'+cnt+'" '+blocked+' data-id="'+x.id+'" data-item="'+x.item+'" '+
 									'data-item_desc="'+x.item_desc+'" data-qty="'+x.qty+'" data-lot_no="'+lot_no+'" '+
 									'data-location="'+x.location+'" data-receive_date="'+x.receive_date+'" data-kit_qty="'+x.kit_qty+'">'+
 									'<i class="fa fa-edit"></i>'+

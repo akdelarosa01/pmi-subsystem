@@ -1325,7 +1325,7 @@ class WBSMaterialReceivingController extends Controller
                         $sheet->cell('E'.$row, "RECEIVED BY:");
                         $sheet->cell('F'.$row, "");
                     });
-                })->download('xls');
+                })->download('xlsx');
             } else {
                 $message = "Please batch Invoice Items first.";
                 return redirect('/materialreceiving')->with(['err_message' => $message]);
