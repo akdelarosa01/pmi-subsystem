@@ -72,6 +72,7 @@
 								<label class="control-label col-sm-3">Issued Qty.</label>
 								<div class="col-sm-8">
 									<input type="text" class="form-control iss_clear input-sm" id="iss_qty" name="iss_qty">
+									<input type="hidden" class="form-control iss_clear input-sm" id="iss_selected_qty" name="iss_selected_qty">
 								</div>
 							</div>
 							<div class="form-group">
