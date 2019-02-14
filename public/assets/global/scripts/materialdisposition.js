@@ -224,6 +224,7 @@ $(function(){
 
 function ViewState() {
 	$('#transaction_code').prop('readonly',false);
+	$('.btn_edit_lot').prop('readonly',true);
 	$('#item').prop('readonly',true);
 	$('#btn_add').show();
 	$('#btn_save').hide();
@@ -248,6 +249,7 @@ function AddState() {
 function EditState(){
 	$('#transaction_code').prop('readonly',false);
 	$('#item').prop('readonly',false);
+	$('.btn_edit_lot').prop('disabled', false);
 	$('#btn_add').hide();
 	$('#btn_save').hide();
 	$('#btn_edit').hide();
@@ -306,6 +308,11 @@ function lotNumberTable(arr) {
 
 
 function SelectItem(lot_nos){	
+
+
+
+
+
 	$('#tbl_items').dataTable().fnClearTable();
 	$('#tbl_items').dataTable().fnDestroy();
 	$('#tbl_items').dataTable({
