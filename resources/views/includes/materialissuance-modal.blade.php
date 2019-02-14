@@ -1,3 +1,5 @@
+
+
 <!-- add details -->
 <div id="editIssuanceModal" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog gray-gallery modal-xl">
