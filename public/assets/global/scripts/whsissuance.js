@@ -320,6 +320,7 @@ function makeViewDetailsTable(arr) {
 			{ data: 'issuedqty' },
 			{ data: 'requestqty' },
 			{ data: 'servedqty' },
+			{ data: 'remarks' },
 			{ data: 'last_served_date' },
         ]
     });
