@@ -256,25 +256,11 @@ return [
             'engine' => null,
         ],
 
-        'mysqlmrpts' => [
+        'mysqlyieldts' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '192.168.200.50'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'pmi_mrp_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-            'engine' => null,
-        ],
-
-        'mysqlsssts' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'pmi_sss_ts'),
+            'database' => env('DB_DATABASE', 'pmi_yielding'),
             'username' => env('DB_USERNAME', 'do.arca'),
             'password' => env('DB_PASSWORD', 'P@55w0rd'),
             'charset' => 'utf8',

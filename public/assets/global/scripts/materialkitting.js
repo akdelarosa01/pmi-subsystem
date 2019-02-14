@@ -245,7 +245,7 @@ $( function() {
 		$('.iss_clear').val('');
 		$('#iss_item').prop('readonly', false);
 		$('#iss_lotno').prop('readonly', true);
-		$('#iss_qty').prop('readonly', true);
+		$('#iss_qty').prop('readonly', false);
 		$('#iss_location').prop('readonly', true);
 		$('#iss_remarks').prop('readonly', true);
 		$('#tbl_fifo_body').html('');
@@ -258,6 +258,7 @@ $( function() {
 		getItemAndLotnumFifo();
 	});
 
+	
 	$('#tbl_fifo_body').on('click', '.showfifoitem', function(event) {
 		if ($(this).attr('data-rowcount') != 1) {
 			$('#frid').val($(this).attr('data-id'));
@@ -277,23 +278,9 @@ $( function() {
 			$('#iss_qty').val($(this).attr('data-qty'));
 			$('#iss_location').val($(this).attr('data-location'));
 
+			$('#iss_lotno').prop('readonly', true);
 
-			if(parseFloat($(this).attr('data-qty')) <= parseFloat($('#iss_kitqty').val()))
-			{
-
-				$('#iss_lotno').prop('readonly', true);
-				$('#iss_qty').prop('readonly', true);
-				$('#iss_location').prop('readonly', false);
-				$('#iss_remarks').prop('readonly', false);
-			} 
-
-			if (parseFloat($(this).attr('data-qty')) > parseFloat($('#iss_kitqty').val())) {
-				$('#iss_lotno').prop('readonly', true);
-				$('#iss_qty').prop('readonly',false);
-				$('#iss_location').prop('readonly', false);
-				$('#iss_remarks').prop('readonly', false);
-			}
-
+			$('#iss_selected_qty').val($(this).attr('data-qty'));
 		}
 	});
 
@@ -305,109 +292,114 @@ $( function() {
 		rowcount++;
 		var iss_qty = parseFloat($('#iss_qty').val());
 		var kit_qty = parseFloat($('#iss_kitqty').val());
+		var selected_qty = parseFloat($('#iss_selected_qty').val());
 
-		// if (iss_qty > kit_qty) {
-		// 	msg("Issued quantity is larger than kit quantity.",'failed');
-		// } else {
-			var data = {
-					_token: token,
-					issuanceno: $('#issuanceno').val(),
-					item: $('#iss_item').val(),
-					qty: $('#iss_qty').val(),
-					iss_save_status: $('#iss_save_status').val()
-				};
+		if (selected_qty < iss_qty) {
+			msg("Issued quantity is larger than selected quantity based on lot number.",'failed');
+		} else {
+			if (iss_qty > kit_qty) {
+				msg("Issued quantity is larger than kit quantity.",'failed');
+			} else {
+				var data = {
+						_token: token,
+						issuanceno: $('#issuanceno').val(),
+						item: $('#iss_item').val(),
+						qty: $('#iss_qty').val(),
+						iss_save_status: $('#iss_save_status').val()
+					};
 
-			$.ajax({
-				url: checkIssuedQtyURL,
-				type: 'GET',
-				dataType: 'JSON',
-				data: data,
-			}).done(function(data,textStatus,jqXHR) {
-				if (data.save_status == 'ADD') {
-					if ($('#iss_item').val() != '' && data.status == 'success') {
-						var row = '<tr id="'+rowcount+'">'+
-							 		'<td width="3.09%">'+
-							 			'<input type="checkbox" id="chkIssDetail'+rowcount+'" data-inpt="issDetail'+rowcount+'" data-tr="'+rowcount+'" class="iss_checkboxes" value="'+$('#iss_qty').val()+'"/>'+
-							 		'</td>'+
-							 		'<td width="6.09%">'+
-									'<a href="javascript:;" class="btn btn-success btn-sm edit_detail_btn" data-id="'+$('#iss_id').val()+'"'+
-										'data-code="'+$('#iss_item').val()+'" data-name="'+$('#iss_item_desc').val()+'" data-kitqty="'+$('#iss_item_desc').val()+'"'+
-										'data-issuedqty="'+$('#iss_qty').val()+'" data-lotno="'+$('#iss_lotno').val()+'" data-location="'+$('#iss_location').val()+'"'+
-										'data-remarks="'+$('#iss_remarks').val()+'" data-detailid="'+rowcount+'"><i class="fa fa-edit"></i></a>'+
+				$.ajax({
+					url: checkIssuedQtyURL,
+					type: 'GET',
+					dataType: 'JSON',
+					data: data,
+				}).done(function(data,textStatus,jqXHR) {
+					if (data.save_status == 'ADD') {
+						if ($('#iss_item').val() != '' && data.status == 'success') {
+							var row = '<tr id="'+rowcount+'">'+
+								 		'<td width="3.09%">'+
+								 			'<input type="checkbox" id="chkIssDetail'+rowcount+'" data-inpt="issDetail'+rowcount+'" data-tr="'+rowcount+'" class="iss_checkboxes" value="'+$('#iss_qty').val()+'"/>'+
+								 		'</td>'+
+								 		'<td width="6.09%">'+
+										'<a href="javascript:;" class="btn btn-success btn-sm edit_detail_btn" data-id="'+$('#iss_id').val()+'"'+
+											'data-code="'+$('#iss_item').val()+'" data-name="'+$('#iss_item_desc').val()+'" data-kitqty="'+$('#iss_item_desc').val()+'"'+
+											'data-issuedqty="'+$('#iss_qty').val()+'" data-lotno="'+$('#iss_lotno').val()+'" data-location="'+$('#iss_location').val()+'"'+
+											'data-remarks="'+$('#iss_remarks').val()+'" data-detailid="'+rowcount+'"><i class="fa fa-edit"></i></a>'+
 
-										'<input type="hidden" id="iss_db_id'+rowcount+'" name="iss_db_id[]" value="'+$('#iss_id').val()+'"/>'+
-							 		'</td>'+
-							 		'<td width="6.09%" id="issdetailid-'+rowcount+'">'+
-										rowcount+
-										'<input type="hidden" id="issdetailid'+rowcount+'" name="issdetailid[]" value="'+rowcount+'"/>'+
-									'</td>'+
-							 		'<td width="12.09%" id="item-'+rowcount+'">'+
-										$('#iss_item').val()+
-										'<input type="hidden" id="item'+rowcount+'" name="issitem[]" value="'+$('#iss_item').val()+'"/>'+
-									'</td>'+
-							 		'<td width="18.09%" id="item_desc-'+rowcount+'">'+
-										$('#iss_item_desc').val()+
-										'<input type="hidden" id="item_desc'+rowcount+'" name="issitemdesc[]" value="'+$('#iss_item_desc').val()+'"/>'+
-									'</td>'+
-							 		'<td width="6.09%" id="kit_qty-'+rowcount+'">'+
-										$('#iss_kitqty').val()+
-										'<input type="hidden" id="kit_qty'+rowcount+'" name="isskit_qty[]"value="'+$('#iss_kitqty').val()+'" />'+
-									'</td>'+
-							 		'<td width="6.09%" id="issued_qty-'+rowcount+'">'+
-										$('#iss_qty').val()+
-										'<input type="hidden" id="issued_qty'+rowcount+'" name="ississued_qty[]" value="'+$('#iss_qty').val()+'"/>'+
-									'</td>'+
-							 		'<td width="12.09%" id="lot_no-'+rowcount+'">'+
-										$('#iss_lotno').val()+
-										'<input type="hidden" id="lot_no'+rowcount+'" name="isslot_no[]" value="'+$('#iss_lotno').val()+'"/>'+
-									'</td>'+
-							 		'<td width="9.09%" id="location-'+rowcount+'">'+
-										$('#iss_location').val()+
-										'<input type="hidden" id="location'+rowcount+'" name="isslocation[]" value="'+$('#iss_location').val()+'"/>'+
-									'</td>'+
-							 		'<td width="15.09%" id="remarks-'+rowcount+'">'+
-										$('#iss_remarks').val()+
-										'<input type="hidden" id="remarks'+rowcount+'" name="issremarks[]" value="'+$('#iss_remarks').val()+'"/>'+
-										'<input type="hidden" id="issfifoid'+rowcount+'" name="issfifoid[]" value="'+$('#fifoid').val()+'"/>'+
-									'</td>'+
-									'<td width="6.09%" id="barcode-'+rowcount+'">'+
-										'<a href="javascript:;" class="btn input-sm grey-gallery barcodebtn" data-detailid="'+rowcount+'" '+
-											'data-item="'+$('#iss_item').val()+'" data-item_desc="'+$('#iss_item_desc').val()+'" data-kit_qty="'+$('#iss_item_desc').val()+'" '+
-											'data-issued_qty="'+$('#iss_qty').val()+'" data-lot_no="'+$('#iss_lotno').val()+'" data-location="'+$('#iss_location').val()+'" '+
-											'data-id="'+$('#fifoid').val()+'" data-issueno="'+$('#issuanceno').val()+'">'+
-											'<i class="fa fa-barcode"></i>'+
-										'</a>'+
-									'</td>'+
-							'</tr>';
-						$('#tbl_issuance_body').append(row);
+											'<input type="hidden" id="iss_db_id'+rowcount+'" name="iss_db_id[]" value="'+$('#iss_id').val()+'"/>'+
+								 		'</td>'+
+								 		'<td width="6.09%" id="issdetailid-'+rowcount+'">'+
+											rowcount+
+											'<input type="hidden" id="issdetailid'+rowcount+'" name="issdetailid[]" value="'+rowcount+'"/>'+
+										'</td>'+
+								 		'<td width="12.09%" id="item-'+rowcount+'">'+
+											$('#iss_item').val()+
+											'<input type="hidden" id="item'+rowcount+'" name="issitem[]" value="'+$('#iss_item').val()+'"/>'+
+										'</td>'+
+								 		'<td width="18.09%" id="item_desc-'+rowcount+'">'+
+											$('#iss_item_desc').val()+
+											'<input type="hidden" id="item_desc'+rowcount+'" name="issitemdesc[]" value="'+$('#iss_item_desc').val()+'"/>'+
+										'</td>'+
+								 		'<td width="6.09%" id="kit_qty-'+rowcount+'">'+
+											$('#iss_kitqty').val()+
+											'<input type="hidden" id="kit_qty'+rowcount+'" name="isskit_qty[]"value="'+$('#iss_kitqty').val()+'" />'+
+										'</td>'+
+								 		'<td width="6.09%" id="issued_qty-'+rowcount+'">'+
+											$('#iss_qty').val()+
+											'<input type="hidden" id="issued_qty'+rowcount+'" name="ississued_qty[]" value="'+$('#iss_qty').val()+'"/>'+
+										'</td>'+
+								 		'<td width="12.09%" id="lot_no-'+rowcount+'">'+
+											$('#iss_lotno').val()+
+											'<input type="hidden" id="lot_no'+rowcount+'" name="isslot_no[]" value="'+$('#iss_lotno').val()+'"/>'+
+										'</td>'+
+								 		'<td width="9.09%" id="location-'+rowcount+'">'+
+											$('#iss_location').val()+
+											'<input type="hidden" id="location'+rowcount+'" name="isslocation[]" value="'+$('#iss_location').val()+'"/>'+
+										'</td>'+
+								 		'<td width="15.09%" id="remarks-'+rowcount+'">'+
+											$('#iss_remarks').val()+
+											'<input type="hidden" id="remarks'+rowcount+'" name="issremarks[]" value="'+$('#iss_remarks').val()+'"/>'+
+											'<input type="hidden" id="issfifoid'+rowcount+'" name="issfifoid[]" value="'+$('#fifoid').val()+'"/>'+
+										'</td>'+
+										'<td width="6.09%" id="barcode-'+rowcount+'">'+
+											'<a href="javascript:;" class="btn input-sm grey-gallery barcodebtn" data-detailid="'+rowcount+'" '+
+												'data-item="'+$('#iss_item').val()+'" data-item_desc="'+$('#iss_item_desc').val()+'" data-kit_qty="'+$('#iss_item_desc').val()+'" '+
+												'data-issued_qty="'+$('#iss_qty').val()+'" data-lot_no="'+$('#iss_lotno').val()+'" data-location="'+$('#iss_location').val()+'" '+
+												'data-id="'+$('#fifoid').val()+'" data-issueno="'+$('#issuanceno').val()+'">'+
+												'<i class="fa fa-barcode"></i>'+
+											'</a>'+
+										'</td>'+
+								'</tr>';
+							$('#tbl_issuance_body').append(row);
+						} else {
+							msg("Total Issued quantity is larger than Required quantity.",'failed');
+						}
 					} else {
-						msg("Total Issued quantity is larger than Required quantity.",'failed');
+						$('#issued_qty-'+$('#iss_detail_id').val()).html(
+							$('#iss_qty').val()+
+							'<input type="hidden" id="issued_qty'+$('#iss_detail_id').val()+'" name="ississued_qty[]" value="'+$('#iss_qty').val()+'"/>'
+						);
+						$('#lot_no-'+$('#iss_detail_id').val()).html(
+							$('#iss_lotno').val()+
+							'<input type="hidden" id="lot_no'+$('#iss_detail_id').val()+'" name="isslot_no[]" value="'+$('#iss_lotno').val()+'"/>'
+						);
+						$('#location-'+$('#iss_detail_id').val()).html(
+							$('#iss_location').val()+
+							'<input type="hidden" id="location'+$('#iss_detail_id').val()+'" name="isslocation[]" value="'+$('#iss_location').val()+'"/>'
+						);
+						$('#remarks-'+$('#iss_detail_id').val()).html(
+							$('#iss_remarks').val()+
+							'<input type="hidden" id="remarks'+$('#iss_detail_id').val()+'" name="issremarks[]" value="'+$('#iss_remarks').val()+'"/>'+
+							'<input type="hidden" id="issfifoid'+$('#iss_detail_id').val()+'" name="issfifoid[]" value="'+$('#fifoid').val()+'"/>'
+						);
 					}
-				} else {
-					$('#issued_qty-'+$('#iss_detail_id').val()).html(
-						$('#iss_qty').val()+
-						'<input type="hidden" id="issued_qty'+$('#iss_detail_id').val()+'" name="ississued_qty[]" value="'+$('#iss_qty').val()+'"/>'
-					);
-					$('#lot_no-'+$('#iss_detail_id').val()).html(
-						$('#iss_lotno').val()+
-						'<input type="hidden" id="lot_no'+$('#iss_detail_id').val()+'" name="isslot_no[]" value="'+$('#iss_lotno').val()+'"/>'
-					);
-					$('#location-'+$('#iss_detail_id').val()).html(
-						$('#iss_location').val()+
-						'<input type="hidden" id="location'+$('#iss_detail_id').val()+'" name="isslocation[]" value="'+$('#iss_location').val()+'"/>'
-					);
-					$('#remarks-'+$('#iss_detail_id').val()).html(
-						$('#iss_remarks').val()+
-						'<input type="hidden" id="remarks'+$('#iss_detail_id').val()+'" name="issremarks[]" value="'+$('#iss_remarks').val()+'"/>'+
-						'<input type="hidden" id="issfifoid'+$('#iss_detail_id').val()+'" name="issfifoid[]" value="'+$('#fifoid').val()+'"/>'
-					);
-				}
-			}).fail(function(data,textStatus,jqXHR) {
-				msg("There was an error while check issued quantity.",'error');
-			});
-			
-			$('#addIssuanceDetailsModal').modal('hide');
-		//}
+				}).fail(function(data,textStatus,jqXHR) {
+					msg("There was an error while check issued quantity.",'error');
+				});
+				
+				$('#addIssuanceDetailsModal').modal('hide');
+			}
+		}
 	});
 
 	$('#btn_search').on('click', function() {
@@ -449,19 +441,17 @@ $( function() {
 		$('#iss_location').val($(this).attr('data-location'));
 		$('#iss_remarks').val($(this).attr('data-remarks'));
 
-		if ($('#iss_kitqty').val() <= $('#iss_qty').val()) {
+		$('#iss_item').prop('readonly', true);
+		$('#iss_lotno').prop('readonly', true);
 
-			$('#iss_item').prop('readonly', true);
-			$('#iss_lotno').prop('readonly', true);
-			$('#iss_qty').prop('readonly', true);	
+		// if ($('#iss_kitqty').val() <= $('#iss_qty').val()) {
 
+			
+		// 	$('#iss_qty').prop('readonly', true);
 
-		}else{
-
-			$('#iss_item').prop('readonly', true);
-			$('#iss_lotno').prop('readonly', true);
-			$('#iss_qty').prop('readonly', false);
-		}
+		// }else{
+		// 	$('#iss_qty').prop('readonly', false);
+		// }
 		// $('#iss_item').prop('readonly', true);
 		// $('#iss_lotno').prop('readonly', true);
 		// $('#iss_qty').prop('readonly', false);
