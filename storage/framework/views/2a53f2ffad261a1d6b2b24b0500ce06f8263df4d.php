@@ -491,15 +491,19 @@
 
 			if ($(this).attr('data-judgement') == "Special Accept") {
 				$('#msg_special_accept').removeAttr('hidden');
+				$('#btn_savemodal').attr('disabled','true');
 			} else {
+				$('#btn_savemodal').removeAttr('disabled');
 				$('#msg_special_accept').attr('hidden','true');
 			}
 			
 			//check if the judgement is rejected
 			if ($(this).attr('data-judgement') == "Rejected") {
 				$('#btn_special_accept').removeClass('hidden');
+				$('#btn_special_accept').show();
 			}else{
 				$('#btn_special_accept').addClass('hidden');
+				$('#btn_special_accept').hide();
 			}
 
 			$('#IQCresultModal').modal('show');
@@ -529,9 +533,10 @@
 						msg(data.msg,'success');
 						//clear();
 						// $('#IQCresultModal').modal('hide');
-						getIQCInspection(getIQCInspectionURL);
+						getIQCInspection("<?php echo e(url('/iqcdbgetiqcdata')); ?>");
 						getOnGoing();
 						$('#msg_special_accept').removeAttr('hidden');
+						$('#btn_special_accept').hide();
 					} else{
 						msg(data.msg,'failed');
 					}

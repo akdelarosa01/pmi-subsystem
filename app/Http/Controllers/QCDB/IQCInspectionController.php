@@ -274,8 +274,11 @@ class IQCInspectionController extends Controller
             'msg' => "Item Already Accepted."
         ];
 
-        $check_duplicate = DB::connection($this->mysql)->table('iqc_inspections')->where('lot_no', $lots)->where('judgement', 'Special Accept')->count();
-
+        $check_duplicate = DB::connection($this->mysql)->table('iqc_inspections')
+                            ->where('lot_no', $lots)
+                            ->where('invoice_no', $req->invoice_no)
+                            ->where('judgement', 'Special Accept')
+                            ->count();
         if ($check_duplicate <= 0) {
                 
             foreach ($array_lots as $key => $lot) {
