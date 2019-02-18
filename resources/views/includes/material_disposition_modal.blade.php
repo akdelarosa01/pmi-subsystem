@@ -64,7 +64,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-3">Qty</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm clear" id="edit_qty" name="edit_qty" readonly>
+                            <input type="text" class="form-control input-sm clear" id="edit_qty" name="edit_qty" readonly >
                         </div>
                     </div>
 
