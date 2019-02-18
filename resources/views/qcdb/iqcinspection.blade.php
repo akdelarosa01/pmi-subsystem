@@ -129,6 +129,7 @@
 	                                                    <input type="checkbox" class="group-checkable iqc_checkall" />
 	                                                </td>
 	                                                <td></td>
+													<td>Judgement</td>
 	                                                <td>Invoice No.</td>
 									                <td>Inspector</td>
 													<td>Date Inspected</td>
@@ -157,7 +158,6 @@
 													<td>No. of Defects</td>
 													<td>Remarks</td>
 													<td>Classification</td>
-													<td>Judgement</td>
 												</tr>
 	                                        </thead>
 	                                        <tbody id="tblforiqcinspection">
@@ -491,8 +491,61 @@
 
 			openModeOfDefects();
 
+			if ($(this).attr('data-judgement') == "Special Accept") {
+				$('#msg_special_accept').removeAttr('hidden');
+			} else {
+				$('#msg_special_accept').attr('hidden','true');
+			}
+			
+			//check if the judgement is rejected
+			if ($(this).attr('data-judgement') == "Rejected") {
+				$('#btn_special_accept').removeClass('hidden');
+			}else{
+				$('#btn_special_accept').addClass('hidden');
+			}
+
 			$('#IQCresultModal').modal('show');
 		});
+		//Special Accept button clicked
+		$('#btn_special_accept').on('click',function() {
+			$('#loading').modal('show');
+			if (requiredFields(':input.required') == true) {
+				var url = "{{url('/iqcspecialaccept')}}";
+				var token = $('meta[name=csrf-token]').attr("content");
+				var batching = 0;
+
+				if ($('#is_batching').is(":checked")) {
+					batching = 1;
+				}
+				$('#batching').val(batching);
+				
+				$.ajax({
+					url: url,
+					type: "POST",
+					dataType: "JSON",
+					data: $('#frm_iqc_inspection').serialize()
+				}).done( function(data,textStatus,jqXHR) {
+					$('#loading').modal('hide');
+
+					if (data.return_status == 'success') {
+						msg(data.msg,'success');
+						//clear();
+						// $('#IQCresultModal').modal('hide');
+						getIQCInspection(getIQCInspectionURL);
+						getOnGoing();
+						$('#msg_special_accept').removeAttr('hidden');
+					} else{
+						msg(data.msg,'failed');
+					}
+				}).fail( function(data,textStatus,jqXHR) {
+					$('#loading').modal('hide');
+					msg("There's some error while processing.",'failed');
+				});
+			} else {
+				$('#loading').modal('hide');
+				msg("Please fill out all required fields.",'failed');
+			}	
+    	});
 
 		$('#tblforongoing').on('click','.btn_editongiong',function() {
 			getDropdowns();
@@ -877,7 +930,8 @@
                 {data: function(data){
                         return '<input type="checkbox" class="iqc_checkitems" value="'+data.id+'"/>';
                 },orderable: false, searchable:false, name:"id" },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+				{ data: 'action', name: 'action', orderable: false, searchable: false },
+				{ data: 'judgement', name: 'judgement'},
                 { data: 'invoice_no', name: 'invoice_no'},
                 { data: 'inspector', name: 'inspector'},
 				{ data: 'date_ispected', name: 'date_ispected'},
@@ -907,12 +961,11 @@
 				{ data: 'sample_size', name: 'sample_size' },
 				{ data: 'no_of_defects', name: 'no_of_defects' },
 				{ data: 'remarks', name: 'remarks' },
-				{ data: 'classification', name: 'classification' },
-				{ data: 'judgement', name: 'judgement'}
+				{ data: 'classification', name: 'classification' }
             ],
             aoColumnDefs: [
                 {
-                    aTargets:[30], // You actual column with the string 'America'
+                    aTargets:[2], // You actual column with the string 'America'
                     fnCreatedCell: function(nTd, sData, oData, iRow, iCol) {
                         $(nTd).css('font-weight', '700');
                         if(sData == "Accepted") {
@@ -926,7 +979,11 @@
                         if(sData == "On-going") {
                             $(nTd).css('background-color', '#3598dc');
                             $(nTd).css('color', '#fff');
-                        }
+						}
+						if(sData == "Special Accept") {
+							$(nTd).css('background-color', '#ff844c');
+							$(nTd).css('color', '#fff');
+                   		}
                     },
                 }
             ],

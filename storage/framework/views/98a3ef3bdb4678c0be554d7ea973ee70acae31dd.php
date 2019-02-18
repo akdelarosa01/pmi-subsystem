@@ -5,7 +5,9 @@
 			<div class="modal-header">
 				<h4 class="modal-title">IQC Inspection Result</h4>
 			</div>
-			<form class=form-horizontal>
+			<form class=form-horizontal id="frm_iqc_inspection">
+				<?php echo e(csrf_field()); ?>
+
 				 <div class="modal-body">
 					<div class="row">
 						<div class="col-md-6">
@@ -213,6 +215,7 @@
 								<div class="col-sm-9">
 									<input type="text" class="form-control input-sm clear actual" id="judgement" name="judgement" readonly>
 									<div id="er_judgement"></div>
+									<label class="text-success" id="msg_special_accept" style="margin-top:10px;" hidden>Special Accept</label>
 								</div>
 							</div>
 						</div>
@@ -273,6 +276,7 @@
 
 				</div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-primary hidden" id="btn_special_accept"><i class="fa fa-check"></i>Special Accept</button>
 					<button type="button" onclick="javascript:saveInspection();" class="btn btn-success" id="btn_savemodal"><i class="fa fa-floppy-disk-o"></i>Save</button>
 					<button type="button" class="btn grey-gallery" id="btn_clearmodal"><i class="fa fa-eraser"></i>Clear</button>
 					<a href="javascript:;" data-dismiss="modal"  class="btn btn-danger btn_backModal"><i class="fa fa-reply"></i>Back</a>
@@ -1062,14 +1066,35 @@
                                     <span class="input-group-addon">Group By</span>
                                     <select class="form-control input-sm show-tick" name="field1" id="field1">
                                         <option value=""></option>
+										<option value="invoice_no">Invoice No</option>
+										<option value="inspector">Inspector</option>
+										<option value="date_ispected">Date Inspected</option>
+										<option value="time_ins_from">Inspection Time</option>
 										<option value="app_no">Application Ctrl No</option>
+										<option value="app_date">App Date</option>
+										<option value="app_time">App Time</option>
 										<option value="fy">FY</option>
 										<option value="ww">WW</option>
 										<option value="submission">Submission</option>
 										<option value="partcode">Part Code</option>
 										<option value="partname">Part Name</option>
 										<option value="supplier">Supplier</option>
+										<option value="lot_no">Lot No</option>
 										<option value="aql">AQL</option>
+										<option value="lot_qty">Lot Qty</option>
+										<option value="type_of_inspection">Types of Inspection</option>
+										<option value="severity_of_inspection">Severity of Inspection</option>
+										<option value="inspection_lvl">Inspection Level</option>
+										<option value="accept">Accept</option>
+										<option value="reject">Reject</option>
+										<option value="shift">Shift</option>
+										<option value="lot_inspected">Lot Inspected</option>
+										<option value="lot_accepted">Lot Accepted</option>
+										<option value="sample_size">Sample Size</option>
+										<option value="no_of_defects">No. of Defects</option>
+										<option value="remarks">Remarks</option>
+										<option value="classification">Classification</option>
+										<option value="judgement">Judgement</option>
                                     </select>
                                 </div>
                             </div>
@@ -1093,15 +1118,36 @@
                                 <div class="input-group">
                                     <span class="input-group-addon">Group By</span>
                                     <select class="form-control input-sm show-tick" name="field2" id="field2">
-                                        <option value=""></option>
+										<option value=""></option>
+										<option value="invoice_no">Invoice No</option>
+										<option value="inspector">Inspector</option>
+										<option value="date_ispected">Date Inspected</option>
+										<option value="time_ins_from">Inspection Time</option>
 										<option value="app_no">Application Ctrl No</option>
+										<option value="app_date">App Date</option>
+										<option value="app_time">App Time</option>
 										<option value="fy">FY</option>
 										<option value="ww">WW</option>
 										<option value="submission">Submission</option>
 										<option value="partcode">Part Code</option>
 										<option value="partname">Part Name</option>
 										<option value="supplier">Supplier</option>
+										<option value="lot_no">Lot No</option>
 										<option value="aql">AQL</option>
+										<option value="lot_qty">Lot Qty</option>
+										<option value="type_of_inspection">Types of Inspection</option>
+										<option value="severity_of_inspection">Severity of Inspection</option>
+										<option value="inspection_lvl">Inspection Level</option>
+										<option value="accept">Accept</option>
+										<option value="reject">Reject</option>
+										<option value="shift">Shift</option>
+										<option value="lot_inspected">Lot Inspected</option>
+										<option value="lot_accepted">Lot Accepted</option>
+										<option value="sample_size">Sample Size</option>
+										<option value="no_of_defects">No. of Defects</option>
+										<option value="remarks">Remarks</option>
+										<option value="classification">Classification</option>
+										<option value="judgement">Judgement</option>
                                     </select>
                                 </div>
                             </div>
@@ -1125,16 +1171,36 @@
                                 <div class="input-group">
                                     <span class="input-group-addon">Group By</span>
                                     <select class="form-control input-sm show-tick" name="field3" id="field3">
-                                        <option value=""></option>
-                                        <option value=""></option>
+										<option value=""></option>
+										<option value="invoice_no">Invoice No</option>
+										<option value="inspector">Inspector</option>
+										<option value="date_ispected">Date Inspected</option>
+										<option value="time_ins_from">Inspection Time</option>
 										<option value="app_no">Application Ctrl No</option>
+										<option value="app_date">App Date</option>
+										<option value="app_time">App Time</option>
 										<option value="fy">FY</option>
 										<option value="ww">WW</option>
 										<option value="submission">Submission</option>
 										<option value="partcode">Part Code</option>
 										<option value="partname">Part Name</option>
 										<option value="supplier">Supplier</option>
+										<option value="lot_no">Lot No</option>
 										<option value="aql">AQL</option>
+										<option value="lot_qty">Lot Qty</option>
+										<option value="type_of_inspection">Types of Inspection</option>
+										<option value="severity_of_inspection">Severity of Inspection</option>
+										<option value="inspection_lvl">Inspection Level</option>
+										<option value="accept">Accept</option>
+										<option value="reject">Reject</option>
+										<option value="shift">Shift</option>
+										<option value="lot_inspected">Lot Inspected</option>
+										<option value="lot_accepted">Lot Accepted</option>
+										<option value="sample_size">Sample Size</option>
+										<option value="no_of_defects">No. of Defects</option>
+										<option value="remarks">Remarks</option>
+										<option value="classification">Classification</option>
+										<option value="judgement">Judgement</option>
                                     </select>
                                 </div>
                             </div>
