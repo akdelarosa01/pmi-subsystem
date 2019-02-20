@@ -65,8 +65,9 @@ class WBSMaterialDispositionController extends Controller
 
         if (count((array)$item) > 0) {
             $lot = DB::connection($this->mysql)->table('tbl_wbs_inventory')
-                        ->select('id','item','item_desc','lot_no','qty')
+                        ->select('id','item','item_desc','lot_no','qty', DB::raw("qty as current_qty"))
                         ->where('item',$req->item)
+                        ->where('qty','>',0)
                         ->get();
 
             $data = [
@@ -78,19 +79,94 @@ class WBSMaterialDispositionController extends Controller
         }
     }
 
+
     public function save_item(Request $req)
     {
         $data = [
             'msg' => 'Saving failed.',
-            'status' => 'failed',
+            'status' => 'failed'
         ];
+        
+        $check = DB::connection($this->mysql)->table('tbl_wbs_material_disposition')
+                    ->where('id',$req->transaction_id)
+                    ->count();
 
-        $transaction_code = $this->com->getTransCode('MAT_DIS');
+        if ($check > 0) { // update
+            $info = DB::connection($this->mysql)->table('tbl_wbs_material_disposition')
+                    ->where('id',$req->transaction_id)
+                    ->update([
+                        'item' => $req->item,
+                        'item_desc'=> $req->item_desc,
+                        'updated_at' => date('Y-m-d H:i:s'),
+                        'update_user' => Auth::user()->user_id
+                    ]);
+
+            if ($info) {
+                // items collection
+                 $items = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                    ->select('inv_id','qty')
+                    ->where('desposition_id',$req->transaction_id)
+                    ->get();
+
+                //items  may mga item
+                foreach ($items as $key => $item) {
+
+                    DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                        ->where('id',$item->inv_id)
+                        ->increment('qty',$item->qty);
+                }        
 
 
-        $info = DB::connection($this->mysql)->table('tbl_wbs_material_disposition')
+                // select * item from tbl_wbs_material_disposition_details na corresponding sa desposition_id
+
+                //loop items then 
+                // yun qty plus sa inv qty
+
+
+                DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                   ->where('desposition_id',$req->transaction_id)->delete();
+
+                foreach ($req->lot_nos as $key => $value) {
+                    $wbsdetails  = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                        ->insert([
+                            'desposition_id' => $req->transaction_id,
+                            'transaction_code' => $req->transaction_code,
+                            'item' => $value['item'],
+                            'item_desc'=> $value['item_desc'],
+                            'qty' =>$value['qty'],
+                            'lot_no' => $value['lot_no'],
+                            'exp_date' => ($value['exp_date'] == "")? "0000-00-00" : $this->com->convertDate($value['exp_date'],'Y-m-d'),
+                            'disposition'=>$value['disposition'],
+                            'remarks'=>$value['remarks'],
+                            'inv_id'=>$value['inv_id'],
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'updated_at' => date('Y-m-d H:i:s'),
+                            'create_user' => Auth::user()->user_id,
+                            'update_user' => Auth::user()->user_id
+                        ]);
+
+
+                    DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                        ->where('id',$value['inv_id'])
+                        ->decrement('qty',$value['qty']);
+
+
+                }
+
+
+                $data = [
+                    'msg' => 'Successfully saved.',
+                    'status' => 'success',
+                ];
+            }
+
+        } else {
+            $transaction_code = $this->com->getTransCode('MAT_DIS');
+
+
+            $info = DB::connection($this->mysql)->table('tbl_wbs_material_disposition')   
                     ->insert([
-                        'transaction_code' => $transaction_code,
+                        'transaction_code' => $transaction_code, 
                         'item' => $req->item,
                         'item_desc'=> $req->item_desc,
                         'created_at' => date('Y-m-d H:i:s'),
@@ -98,12 +174,17 @@ class WBSMaterialDispositionController extends Controller
                         'create_user' => Auth::user()->user_id,
                         'update_user' => Auth::user()->user_id
                     ]);
-        if ($info) {
-            $lastInsertedID = $this->LastInsertedID();
 
-            foreach ($req->lot_nos as $key => $value) {
+            if ($info) {
 
-                    DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                $lastInsertedID = $this->LastInsertedID();
+                
+
+                DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                    ->where('desposition_id',$lastInsertedID)->delete();
+
+                foreach ($req->lot_nos as $key => $value) {
+                     DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
                         ->insert([
                             'desposition_id' => $lastInsertedID,
                             'transaction_code' => $transaction_code,
@@ -111,28 +192,27 @@ class WBSMaterialDispositionController extends Controller
                             'item_desc'=> $value['item_desc'],
                             'qty' =>$value['qty'],
                             'lot_no' => $value['lot_no'],
-                            'exp_date' => $this->com->convertDate($value['exp_date'],'Y-m-d'),
+                            'exp_date' => ($value['exp_date'] == "")? "0000-00-00" : $this->com->convertDate($value['exp_date'],'Y-m-d'),
                             'disposition'=>$value['disposition'],
                             'remarks'=>$value['remarks'],
+                            'inv_id'=>$value['inv_id'],
                             'created_at' => date('Y-m-d H:i:s'),
                             'updated_at' => date('Y-m-d H:i:s'),
                             'create_user' => Auth::user()->user_id,
                             'update_user' => Auth::user()->user_id
                         ]);
+                }
 
-                
+                $data = [
+                    'msg' => 'Successfully saved.',
+                    'status' => 'success',
+                ];
             }
 
-            $data = [
-                'msg' => 'Successfully saved.',
-                'status' => 'success'
-
-            ];
-
-            
+           
         }
 
-        return response()->json($data);
+           return response()->json($data); 
 
     }
 
@@ -143,6 +223,26 @@ class WBSMaterialDispositionController extends Controller
                     ->first();
 
         return $query->id;
+    }
+
+    public function get_current_qty(Request $req)
+    {
+        $current_qty = 0;
+
+        $item = DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                    ->select('qty')
+                    ->where('id',$req->id)
+                    ->first();
+
+        if (count((array)$item) > 0) {
+            $current_qty = $item->qty;
+        }
+
+        $data = [
+            'current_qty' => $current_qty
+        ];
+
+        return response()->json($data);
     }
 
 
@@ -173,6 +273,7 @@ class WBSMaterialDispositionController extends Controller
                                     DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
                                     DB::raw("IFNULL(disposition,'') AS disposition"),
                                     DB::raw("IFNULL(remarks,'') AS remarks"),
+                                    DB::raw("IFNULL(inv_id,0) AS inv_id"),
                                     DB::raw("IFNULL(create_user,'') AS create_user"),
                                     DB::raw("IFNULL(update_user,'') AS update_user"),
                                     DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
@@ -256,6 +357,7 @@ class WBSMaterialDispositionController extends Controller
                                 DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
                                 DB::raw("IFNULL(disposition,'') AS disposition"),
                                 DB::raw("IFNULL(remarks,'') AS remarks"),
+                                DB::raw("IFNULL(inv_id,0) AS inv_id"),
                                 DB::raw("IFNULL(create_user,'') AS create_user"),
                                 DB::raw("IFNULL(update_user,'') AS update_user"),
                                 DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
@@ -304,6 +406,7 @@ class WBSMaterialDispositionController extends Controller
                                     DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
                                     DB::raw("IFNULL(disposition,'') AS disposition"),
                                     DB::raw("IFNULL(remarks,'') AS remarks"),
+                                    DB::raw("IFNULL(inv_id,0) AS inv_id"),
                                     DB::raw("IFNULL(create_user,'') AS create_user"),
                                     DB::raw("IFNULL(update_user,'') AS update_user"),
                                     DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
@@ -359,6 +462,7 @@ class WBSMaterialDispositionController extends Controller
                                     DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
                                     DB::raw("IFNULL(disposition,'') AS disposition"),
                                     DB::raw("IFNULL(remarks,'') AS remarks"),
+                                    DB::raw("IFNULL(inv_id,0) AS inv_id"),
                                     DB::raw("IFNULL(create_user,'') AS create_user"),
                                     DB::raw("IFNULL(update_user,'') AS update_user"),
                                     DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
@@ -412,6 +516,7 @@ class WBSMaterialDispositionController extends Controller
                                 DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
                                 DB::raw("IFNULL(disposition,'') AS disposition"),
                                 DB::raw("IFNULL(remarks,'') AS remarks"),
+                                DB::raw("IFNULL(inv_id,0) AS inv_id"),
                                 DB::raw("IFNULL(create_user,'') AS create_user"),
                                 DB::raw("IFNULL(update_user,'') AS update_user"),
                                 DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),

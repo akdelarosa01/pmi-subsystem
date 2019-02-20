@@ -34,7 +34,7 @@
 
 	                                    <label class="control-label col-md-3">Transaction No.</label>
 	                                    <div class="col-md-9">
-	                                        <input type="hidden" class="form-control input-sm" id="id" name="id"/>
+	                                        <input type="hidden" class="form-control clear input-sm" id="id" name="id"/>
 	                                        <div class="input-group">
 	                                            <input type="text" class="form-control input-sm add" id="transaction_code" name="transaction_code">
 
@@ -57,7 +57,7 @@
                                                 <input type="text" class="form-control input-sm clear" id="item" name="item" readonly>
 
                                                 <span class="input-group-btn">
-                                                    <button type="button" id="btn_search_item" class="btn blue input-sm"><i class="fa fa-search"></i></button>
+                                                    <button type="button" disabled="" id="btn_search_item" class="btn blue input-sm"><i class="fa fa-search"></i></button>
                                                 </span>
                                             </div>
                             			</div>
@@ -158,7 +158,6 @@
     <?php echo $__env->make('includes.material_disposition_modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <?php echo $__env->make('includes.modals', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('script'); ?>
@@ -169,7 +168,7 @@
         var getAllDataURL = "<?php echo e(url('/matdis-get-data')); ?>";
         var getSearchedMaterialsURL = "<?php echo e(url('/matdis-get-searched-materials')); ?>";
         var exportMaterialURL = "<?php echo e(url('/matdis-get-data-export')); ?>";
-  
+        var getCurrentQtyURL = "<?php echo e(url('/matdis-get-current-qty')); ?>";
 
 
 	</script>
