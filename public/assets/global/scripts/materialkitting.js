@@ -516,7 +516,7 @@ function viewState() {
 	$('#btn_save').hide();
 
 	if ($('#status').val() === 'Cancelled' || $('#status').val() === 'C') {
-		$('#btn_edit').hide();
+		$('#btn_edit').show();
 		$('#btn_cancel').hide();
 		// $('#btn_kittinglist').hide();
 		$('#btn_print').hide();

@@ -60,13 +60,31 @@
                         </div>
                     </div>
 
+                      <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Current Qty</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm clear" id="edit_current_qty" name="edit_current_qty" readonly>
+                        </div>
+                    </div> 
+
 
                     <div class="form-group">
                         <label for="" class="control-label col-sm-3">Qty</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm clear" id="edit_qty" name="edit_qty" readonly >
+                            <input type="text" class="form-control input-sm clear" id="edit_qty" name="edit_qty">
                         </div>
-                    </div>
+                    </div>  
+
+                   
+
+
+                     <?php /*   <div class="form-group">
+                        <label for="" class="control-label col-sm-3">Qty</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm clear" id="edit_qty" name="edit_qty"  >
+                        </div>
+                    </div>  */ ?>
+
 
                     <div class="form-group">
                         <label for="" class="control-label col-sm-3">Lot No</label>
@@ -106,7 +124,7 @@
                 <div class="modal-footer">
                     <?php /* <button type="submit" class="btn btn-success" <?php echo e($state); ?>><i class="fa fa-save"></i> Save</button> */ ?>
                     <button type="button" class="btn btn-success btn-sm" id="btn_save_edited">save</button>
-                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn_close_edited" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 </div>
             </form>
                 

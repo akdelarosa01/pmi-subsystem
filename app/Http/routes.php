@@ -737,6 +737,12 @@ Route::group(['middleware' => 'web'], function () {
                 'name' => 'matdis-get-data-export'
             ]);
 
+             Route::get('/matdis-get-current-qty',[
+
+                'uses' => 'WBS\WBSMaterialDispositionController@get_current_qty',
+                'name' => 'matdis-get-current-qty'
+            ]);
+
 
 
            
