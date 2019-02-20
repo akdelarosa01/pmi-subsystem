@@ -744,6 +744,14 @@ Route::group(['middleware' => 'web'], function () {
             ]);
 
 
+            Route::post('/matdis-delete-item',[
+                'uses' => 'WBS\WBSMaterialDispositionController@delete_item',
+                'name' => 'matdis-delete-item'
+            ]);
+
+
+
+
 
            
 

@@ -91,7 +91,7 @@ class WBSMaterialDispositionController extends Controller
                     ->where('id',$req->transaction_id)
                     ->count();
 
-        if ($check > 0) { // update
+        if ($check > 0) { // check kung may laman pag meron update nya. 
             $info = DB::connection($this->mysql)->table('tbl_wbs_material_disposition')
                     ->where('id',$req->transaction_id)
                     ->update([
@@ -102,15 +102,15 @@ class WBSMaterialDispositionController extends Controller
                     ]);
 
             if ($info) {
-                // items collection
+                // items collection 
                  $items = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
                     ->select('inv_id','qty')
                     ->where('desposition_id',$req->transaction_id)
                     ->get();
 
-                //items  may mga item
+                //ano yung mga item
                 foreach ($items as $key => $item) {
-
+                    //pag nag update kung ano yung unang mong binawas i aad nya muna yon bago ulit sya magbawas.
                     DB::connection($this->mysql)->table('tbl_wbs_inventory')
                         ->where('id',$item->inv_id)
                         ->increment('qty',$item->qty);
@@ -656,13 +656,40 @@ class WBSMaterialDispositionController extends Controller
                 
             });
         })->download('xlsx');
-
-
-
     }
 
+    public function delete_item(Request $req)
+    {
+        $ids = explode(',', $req->ids);
 
+        $data = [
+                'msg' => 'Deleting failed.',
+                'status' => 'failed'
+            ];
 
+        foreach ($ids as $key => $id) {
+            $inv = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                    ->where('id',$id)
+                    ->select('inv_id','qty')
+                    ->first();
+
+            DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                 ->where('id',$inv->inv_id)
+                 ->increment('qty',$inv->qty);
+
+            DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                    ->where('id',$id)
+                    ->delete();
+
+            $data = [
+                'msg' => 'Successfully Deleted.',
+                'status' => 'success'
+            ];
+
+        }
+
+        return response()->json($data);
+    }
 }
 
 

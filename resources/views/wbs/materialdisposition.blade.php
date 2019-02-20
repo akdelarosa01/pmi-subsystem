@@ -107,6 +107,9 @@
                         				<table class="table table-bordered table-hover table-striped table-responsive" id="tbl_items">
                                 			<thead>
                                 				<tr>
+                                                    <td style="width: 5%;">
+                                                        <input type="checkbox" class="check_all_items">
+                                                    </td>
                                 					<td style="width: 8%;"></td>
                                 					<td>Item Code</td>
                                 					<td>Item Name</td>
@@ -121,6 +124,19 @@
                                 				<!-- content here! -->
                                 			</tbody>
                                 		</table>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <button type="button" class="btn btn-sm red" id="btn_delete">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        
+
                         			</div>
                         		</div>
                         	</div>
@@ -137,10 +153,11 @@
                                 <button type="button" class="btn btn-sm blue" id="btn_edit">
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
-                                <button type="button" class="btn btn-sm grey-gallery" id="btn_search">
+
+                                <button type="button" class="btn btn-sm blue-madison" id="btn_search">
                                     <i class="fa fa-search"></i> Search
                                 </button>
-								<button type="button" class="btn btn-sm red" id="btn_disregard">
+								<button type="button" class="btn btn-sm grey-gallery" id="btn_disregard">
 									<i class="fa fa-thumbs-o-down"></i> Disregard
 								</button>
 								<button type="button" class="btn btn-sm purple" id="btn_export">
@@ -171,6 +188,7 @@
         var getSearchedMaterialsURL = "{{url('/matdis-get-searched-materials')}}";
         var exportMaterialURL = "{{url('/matdis-get-data-export')}}";
         var getCurrentQtyURL = "{{url('/matdis-get-current-qty')}}";
+        var DeleteItemURL = "{{url('/matdis-delete-item')}}";
 
 
 	</script>
