@@ -1,3 +1,4 @@
+
 <!-- Add Batch Modal -->
 <div id="batchItemModal" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-md">

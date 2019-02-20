@@ -27,7 +27,6 @@ return [
     */
 
     'default' => env('DB_CONNECTION', 'common'),//mysql
-
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -43,7 +42,6 @@ return [
     | choice installed on your machine before you begin development.
     |
     */
-
     'connections' => [
 
         'common' => [
@@ -361,6 +359,7 @@ return [
 
     ],
 
+    
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table
