@@ -107,7 +107,7 @@ class WBSMaterialDispositionController extends Controller
                 // items collection 
                  $items = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
                     ->select('inv_id','qty')
-                    ->where('desposition_id',$req->transaction_id)
+                    ->where('disposition_id',$req->transaction_id)
                     ->get();
 
                 //ano yung mga item
@@ -120,19 +120,19 @@ class WBSMaterialDispositionController extends Controller
                 }        
 
 
-                // select * item from tbl_wbs_material_disposition_details na corresponding sa desposition_id
+                // select * item from tbl_wbs_material_disposition_details na corresponding sa disposition_id
 
                 //loop items then 
                 // yun qty plus sa inv qty
 
 
                 DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                   ->where('desposition_id',$req->transaction_id)->delete();
+                   ->where('disposition_id',$req->transaction_id)->delete();
 
                 foreach ($req->lot_nos as $key => $value) {
                     $wbsdetails  = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
                         ->insert([
-                            'desposition_id' => $req->transaction_id,
+                            'disposition_id' => $req->transaction_id,
                             'transaction_code' => $req->transaction_code,
                             'item' => $value['item'],
                             'item_desc'=> $value['item_desc'],
@@ -185,12 +185,12 @@ class WBSMaterialDispositionController extends Controller
                 
 
                 DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                    ->where('desposition_id',$lastInsertedID)->delete();
+                    ->where('disposition_id',$lastInsertedID)->delete();
 
                 foreach ($req->lot_nos as $key => $value) {
                      DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
                         ->insert([
-                            'desposition_id' => $lastInsertedID,
+                            'disposition_id' => $lastInsertedID,
                             'transaction_code' => $transaction_code,
                             'item' => $value['item'],
                             'item_desc'=> $value['item_desc'],
@@ -205,6 +205,11 @@ class WBSMaterialDispositionController extends Controller
                             'create_user' => Auth::user()->user_id,
                             'update_user' => Auth::user()->user_id
                         ]);
+
+                    DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                        ->where('id',$value['inv_id'])
+                        ->where('deleted',0)
+                        ->decrement('qty',$value['qty']);
                 }
 
                 $data = [
@@ -267,24 +272,27 @@ class WBSMaterialDispositionController extends Controller
                         ->first();
 
             if ($this->com->checkIfExistObject($info) > 0) {
-                $details = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                                ->where('transaction_code',$info->transaction_code)
-                                ->select('id',
-                                    DB::raw("IFNULL(desposition_id,'') AS desposition_id"),
-                                    DB::raw("IFNULL(item,'') AS item"),
-                                    DB::raw("IFNULL(item_desc,'') AS item_desc"),
-                                    DB::raw("IFNULL(qty,'') AS qty"),
-                                    DB::raw("IFNULL(lot_no,'') AS lot_no"),
-                                    DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
-                                    DB::raw("IFNULL(disposition,'') AS disposition"),
-                                    DB::raw("IFNULL(remarks,'') AS remarks"),
-                                    DB::raw("IFNULL(inv_id,0) AS inv_id"),
-                                    DB::raw("IFNULL(create_user,'') AS create_user"),
-                                    DB::raw("IFNULL(update_user,'') AS update_user"),
-                                    DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
-                                    DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"),
-                                    DB::raw("DATE_FORMAT(issued_date, '%m/%d/%Y') as issued_date"))
-                                ->get();
+                $details = DB::connection($this->mysql)->select(
+                                    "SELECT mdd.id as id, 
+                                        IFNULL(mdd.disposition_id,'') AS disposition_id, 
+                                        IFNULL(mdd.item,'') AS item, 
+                                        IFNULL(mdd.item_desc,'') AS item_desc, 
+                                        IFNULL(mdd.qty,'') AS qty, 
+                                        IFNULL(mdd.lot_no,'') AS lot_no, 
+                                        DATE_FORMAT(mdd.exp_date, '%Y-%m-%d') as exp_date, 
+                                        IFNULL(mdd.disposition,'') AS disposition, 
+                                        IFNULL(mdd.remarks,'') AS remarks, 
+                                        IFNULL(i.qty,'') as current_qty, 
+                                        IFNULL(mdd.inv_id,0) AS inv_id, 
+                                        IFNULL(mdd.create_user,'') AS create_user, 
+                                        IFNULL(mdd.update_user,'') AS update_user, 
+                                        DATE_FORMAT(mdd.created_at, '%m/%d/%Y %h:%i %p') as created_at, 
+                                        DATE_FORMAT(mdd.updated_at, '%m/%d/%Y %h:%i %p') as updated_at 
+                                    FROM tbl_wbs_material_disposition_details as mdd
+                                    JOIN tbl_wbs_inventory as i
+                                    ON i.id = mdd.inv_id
+                                    WHERE mdd.disposition_id = '".$info->id."'"
+                                );
 
                 return $data = [
                                 'info' => $info,
@@ -351,23 +359,27 @@ class WBSMaterialDispositionController extends Controller
                         ->first();
 
         if ($this->com->checkIfExistObject($info) > 0) {
-            $details = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                            ->where('transaction_code',$info->transaction_code)
-                            ->select('id',
-                                DB::raw("IFNULL(desposition_id,'') AS desposition_id"),
-                                DB::raw("IFNULL(item,'') AS item"),
-                                DB::raw("IFNULL(item_desc,'') AS item_desc"),
-                                DB::raw("IFNULL(qty,'') AS qty"),
-                                DB::raw("IFNULL(lot_no,'') AS lot_no"),
-                                DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
-                                DB::raw("IFNULL(disposition,'') AS disposition"),
-                                DB::raw("IFNULL(remarks,'') AS remarks"),
-                                DB::raw("IFNULL(inv_id,0) AS inv_id"),
-                                DB::raw("IFNULL(create_user,'') AS create_user"),
-                                DB::raw("IFNULL(update_user,'') AS update_user"),
-                                DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
-                                DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"))
-                        ->get();
+            $details = DB::connection($this->mysql)->select(
+                                    "SELECT mdd.id as id, 
+                                        IFNULL(mdd.disposition_id,'') AS disposition_id, 
+                                        IFNULL(mdd.item,'') AS item, 
+                                        IFNULL(mdd.item_desc,'') AS item_desc, 
+                                        IFNULL(mdd.qty,'') AS qty, 
+                                        IFNULL(mdd.lot_no,'') AS lot_no, 
+                                        DATE_FORMAT(mdd.exp_date, '%Y-%m-%d') as exp_date, 
+                                        IFNULL(mdd.disposition,'') AS disposition, 
+                                        IFNULL(mdd.remarks,'') AS remarks, 
+                                        IFNULL(i.qty,'') as current_qty, 
+                                        IFNULL(mdd.inv_id,0) AS inv_id, 
+                                        IFNULL(mdd.create_user,'') AS create_user, 
+                                        IFNULL(mdd.update_user,'') AS update_user, 
+                                        DATE_FORMAT(mdd.created_at, '%m/%d/%Y %h:%i %p') as created_at, 
+                                        DATE_FORMAT(mdd.updated_at, '%m/%d/%Y %h:%i %p') as updated_at 
+                                    FROM tbl_wbs_material_disposition_details as mdd
+                                    JOIN tbl_wbs_inventory as i
+                                    ON i.id = mdd.inv_id
+                                    WHERE mdd.disposition_id = '".$info->id."'"
+                                );
 
             return $data = [
                             'info' => $info,
@@ -400,23 +412,27 @@ class WBSMaterialDispositionController extends Controller
 
             if ($this->com->checkIfExistObject($info) > 0) {
 
-                $details =  DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                                ->where('transaction_code',$info->transaction_code)
-                                ->select('id',
-                                    DB::raw("IFNULL(desposition_id,'') AS desposition_id"),
-                                    DB::raw("IFNULL(item,'') AS item"),
-                                    DB::raw("IFNULL(item_desc,'') AS item_desc"),
-                                    DB::raw("IFNULL(qty,'') AS qty"),
-                                    DB::raw("IFNULL(lot_no,'') AS lot_no"),
-                                    DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
-                                    DB::raw("IFNULL(disposition,'') AS disposition"),
-                                    DB::raw("IFNULL(remarks,'') AS remarks"),
-                                    DB::raw("IFNULL(inv_id,0) AS inv_id"),
-                                    DB::raw("IFNULL(create_user,'') AS create_user"),
-                                    DB::raw("IFNULL(update_user,'') AS update_user"),
-                                    DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
-                                    DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"))
-                                ->get();
+                $details = DB::connection($this->mysql)->select(
+                                    "SELECT mdd.id as id, 
+                                        IFNULL(mdd.disposition_id,'') AS disposition_id, 
+                                        IFNULL(mdd.item,'') AS item, 
+                                        IFNULL(mdd.item_desc,'') AS item_desc, 
+                                        IFNULL(mdd.qty,'') AS qty, 
+                                        IFNULL(mdd.lot_no,'') AS lot_no, 
+                                        DATE_FORMAT(mdd.exp_date, '%Y-%m-%d') as exp_date, 
+                                        IFNULL(mdd.disposition,'') AS disposition, 
+                                        IFNULL(mdd.remarks,'') AS remarks, 
+                                        IFNULL(i.qty,'') as current_qty, 
+                                        IFNULL(mdd.inv_id,0) AS inv_id, 
+                                        IFNULL(mdd.create_user,'') AS create_user, 
+                                        IFNULL(mdd.update_user,'') AS update_user, 
+                                        DATE_FORMAT(mdd.created_at, '%m/%d/%Y %h:%i %p') as created_at, 
+                                        DATE_FORMAT(mdd.updated_at, '%m/%d/%Y %h:%i %p') as updated_at 
+                                    FROM tbl_wbs_material_disposition_details as mdd
+                                    JOIN tbl_wbs_inventory as i
+                                    ON i.id = mdd.inv_id
+                                    WHERE mdd.disposition_id = '".$info->id."'"
+                                );
 
                 return $data = [
                                 'info' => $info,
@@ -456,23 +472,27 @@ class WBSMaterialDispositionController extends Controller
                         ->first();
 
             if ($this->com->checkIfExistObject($info) > 0) {
-                $details =  DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                                ->where('transaction_code',$info->transaction_code)
-                                ->select('id',
-                                    DB::raw("IFNULL(desposition_id,'') AS desposition_id"),
-                                    DB::raw("IFNULL(item,'') AS item"),
-                                    DB::raw("IFNULL(item_desc,'') AS item_desc"),
-                                    DB::raw("IFNULL(qty,'') AS qty"),
-                                    DB::raw("IFNULL(lot_no,'') AS lot_no"),
-                                    DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
-                                    DB::raw("IFNULL(disposition,'') AS disposition"),
-                                    DB::raw("IFNULL(remarks,'') AS remarks"),
-                                    DB::raw("IFNULL(inv_id,0) AS inv_id"),
-                                    DB::raw("IFNULL(create_user,'') AS create_user"),
-                                    DB::raw("IFNULL(update_user,'') AS update_user"),
-                                    DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
-                                    DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"))
-                                ->get();
+                $details = DB::connection($this->mysql)->select(
+                                    "SELECT mdd.id as id, 
+                                        IFNULL(mdd.disposition_id,'') AS disposition_id, 
+                                        IFNULL(mdd.item,'') AS item, 
+                                        IFNULL(mdd.item_desc,'') AS item_desc, 
+                                        IFNULL(mdd.qty,'') AS qty, 
+                                        IFNULL(mdd.lot_no,'') AS lot_no, 
+                                        DATE_FORMAT(mdd.exp_date, '%Y-%m-%d') as exp_date, 
+                                        IFNULL(mdd.disposition,'') AS disposition, 
+                                        IFNULL(mdd.remarks,'') AS remarks, 
+                                        IFNULL(i.qty,'') as current_qty, 
+                                        IFNULL(mdd.inv_id,0) AS inv_id, 
+                                        IFNULL(mdd.create_user,'') AS create_user, 
+                                        IFNULL(mdd.update_user,'') AS update_user, 
+                                        DATE_FORMAT(mdd.created_at, '%m/%d/%Y %h:%i %p') as created_at, 
+                                        DATE_FORMAT(mdd.updated_at, '%m/%d/%Y %h:%i %p') as updated_at 
+                                    FROM tbl_wbs_material_disposition_details as mdd
+                                    JOIN tbl_wbs_inventory as i
+                                    ON i.id = mdd.inv_id
+                                    WHERE mdd.disposition_id = '".$info->id."'"
+                                );
 
                 return $data = [
                                 'info' => $info,
@@ -510,23 +530,27 @@ class WBSMaterialDispositionController extends Controller
                         ->first();
 
         if ($this->com->checkIfExistObject($info) > 0) {
-            $details = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                            ->where('transaction_code',$info->transaction_code)
-                            ->select('id',
-                                DB::raw("IFNULL(desposition_id,'') AS desposition_id"),
-                                DB::raw("IFNULL(item,'') AS item"),
-                                DB::raw("IFNULL(item_desc,'') AS item_desc"),
-                                DB::raw("IFNULL(qty,'') AS qty"),
-                                DB::raw("IFNULL(lot_no,'') AS lot_no"),
-                                DB::raw("DATE_FORMAT(exp_date, '%Y-%m-%d') as exp_date"),
-                                DB::raw("IFNULL(disposition,'') AS disposition"),
-                                DB::raw("IFNULL(remarks,'') AS remarks"),
-                                DB::raw("IFNULL(inv_id,0) AS inv_id"),
-                                DB::raw("IFNULL(create_user,'') AS create_user"),
-                                DB::raw("IFNULL(update_user,'') AS update_user"),
-                                DB::raw("DATE_FORMAT(created_at, '%m/%d/%Y %h:%i %p') as created_at"),
-                                DB::raw("DATE_FORMAT(updated_at, '%m/%d/%Y %h:%i %p') as updated_at"))
-                        ->get();
+            $details = DB::connection($this->mysql)->select(
+                                    "SELECT mdd.id as id, 
+                                        IFNULL(mdd.disposition_id,'') AS disposition_id, 
+                                        IFNULL(mdd.item,'') AS item, 
+                                        IFNULL(mdd.item_desc,'') AS item_desc, 
+                                        IFNULL(mdd.qty,'') AS qty, 
+                                        IFNULL(mdd.lot_no,'') AS lot_no, 
+                                        DATE_FORMAT(mdd.exp_date, '%Y-%m-%d') as exp_date, 
+                                        IFNULL(mdd.disposition,'') AS disposition, 
+                                        IFNULL(mdd.remarks,'') AS remarks, 
+                                        IFNULL(i.qty,'') as current_qty, 
+                                        IFNULL(mdd.inv_id,0) AS inv_id, 
+                                        IFNULL(mdd.create_user,'') AS create_user, 
+                                        IFNULL(mdd.update_user,'') AS update_user, 
+                                        DATE_FORMAT(mdd.created_at, '%m/%d/%Y %h:%i %p') as created_at, 
+                                        DATE_FORMAT(mdd.updated_at, '%m/%d/%Y %h:%i %p') as updated_at 
+                                    FROM tbl_wbs_material_disposition_details as mdd
+                                    JOIN tbl_wbs_inventory as i
+                                    ON i.id = mdd.inv_id
+                                    WHERE mdd.disposition_id = '".$info->id."'"
+                                );
 
             return $data = [
                             'info' => $info,
@@ -697,53 +721,3 @@ class WBSMaterialDispositionController extends Controller
         return response()->json($data);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /* public function display_get_materials(Request $req)
-    {
-
-        $query  = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
-                    ->where('transaction_code',$req->transaction_code)
-                    ->get();
-        if(count((array)$query) >0){
-            return response()->json($query);
-
-        }else{
-
-            $data = [
-
-                'msg' => 'No transaction found.',
-                'status'=> 'failed'
-            ];
-
-            return response()->json($data);
-        }
-    }*/
-

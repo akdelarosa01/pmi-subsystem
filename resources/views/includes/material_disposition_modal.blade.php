@@ -96,7 +96,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-3">Exp Date</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm date-picker clear" data-date-format="yyyy-mm-dd" id="edit_exp_date" name="edit_exp_date">
+                            <input type="text" class="form-control input-sm clear" id="edit_exp_date" name="edit_exp_date">
                         </div>
                     </div>
 

@@ -1,5 +1,6 @@
 var lot_nos = [];
 $(function() {
+    $('#edit_exp_date').inputmask("9999-99-99",{ "placeholder": "YYYY-MM-DD" });
     getAllData();
     ViewState();
     checkAllCheckboxesInTable('.check_all', '.check_lot');
@@ -107,7 +108,7 @@ $(function() {
         $('#edit_item_desc').val($(this).attr('data-item_desc'));
         // $('#qty').val($(this).attr('data-qty'));
         $('#edit_qty').val($(this).attr('data-qty'));
-        $('#edit_current_qty').val(getCurrentQty($(this).attr('data-inv_id')));
+        $('#edit_current_qty').val($(this).attr('data-current_qty'));
         // $('#edit_qty').val($(this).attr('data-qty'));
         $('#edit_lot_no').val($(this).attr('data-lot_no'));
         $('#edit_exp_date').val($(this).attr('data-exp_date'));
