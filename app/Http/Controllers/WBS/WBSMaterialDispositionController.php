@@ -61,12 +61,14 @@ class WBSMaterialDispositionController extends Controller
         $item = DB::connection($this->mysql)->table('tbl_wbs_inventory')
                     ->select('item_desc')
                     ->where('item',$req->item)
+                    ->where('deleted',0)
                     ->first();
 
         if (count((array)$item) > 0) {
             $lot = DB::connection($this->mysql)->table('tbl_wbs_inventory')
                         ->select('id','item','item_desc','lot_no','qty', DB::raw("qty as current_qty"))
                         ->where('item',$req->item)
+                        ->where('deleted',0)
                         ->where('qty','>',0)
                         ->get();
 
@@ -112,6 +114,7 @@ class WBSMaterialDispositionController extends Controller
                 foreach ($items as $key => $item) {
                     //pag nag update kung ano yung unang mong binawas i aad nya muna yon bago ulit sya magbawas.
                     DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                        ->where('deleted',0)
                         ->where('id',$item->inv_id)
                         ->increment('qty',$item->qty);
                 }        
@@ -148,6 +151,7 @@ class WBSMaterialDispositionController extends Controller
 
                     DB::connection($this->mysql)->table('tbl_wbs_inventory')
                         ->where('id',$value['inv_id'])
+                        ->where('deleted',0)
                         ->decrement('qty',$value['qty']);
 
 
@@ -231,6 +235,7 @@ class WBSMaterialDispositionController extends Controller
 
         $item = DB::connection($this->mysql)->table('tbl_wbs_inventory')
                     ->select('qty')
+                    ->where('deleted',0)
                     ->where('id',$req->id)
                     ->first();
 
@@ -675,6 +680,7 @@ class WBSMaterialDispositionController extends Controller
 
             DB::connection($this->mysql)->table('tbl_wbs_inventory')
                  ->where('id',$inv->inv_id)
+                 ->where('deleted',0)
                  ->increment('qty',$inv->qty);
 
             DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
