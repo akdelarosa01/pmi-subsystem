@@ -126,6 +126,10 @@ class WBSIqcController extends Controller
                             if ($data->iqc_status == 3) {
                                 return "On-going";
                             }
+
+                            if ($data->iqc_status == 4) {
+                                return "Special Accept";
+                            }
                         })
                         ->editColumn('app_date', function ($data) {
                             return $data->app_date.' '.$data->app_time;
@@ -164,6 +168,11 @@ class WBSIqcController extends Controller
             case '3':
                 $for_kit = '0';
                 $judgement = 'On-going';
+                break;
+
+            case '4':
+                $for_kit = '1';
+                $judgement = 'Special Accept';
                 break;
 
             default:
@@ -256,6 +265,11 @@ class WBSIqcController extends Controller
             case '3':
                 $for_kit = '0';
                 $judgement = 'On-going';
+                break;
+
+            case '4':
+                $for_kit = '1';
+                $judgement = 'Special Accept';
                 break;
 
             default:
@@ -569,6 +583,10 @@ class WBSIqcController extends Controller
 
                             if ($data->iqc_status == 3) {
                                 return "On-going";
+                            }
+
+                            if ($data->iqc_status == 4) {
+                                return "Special Accept";
                             }
                         })
                         ->addColumn('action', function ($data) {
