@@ -77,27 +77,6 @@ class WBSInventoryController extends Controller
                         ->editColumn('id', function($data) {
                             return $data->id;
                         })
-                        ->editColumn('iqc_status', function($data) {
-                            if ($data->iqc_status == 1) {
-                                return 'Accept';
-                            }
-
-                            if ($data->iqc_status == 2) {
-                                return 'Reject';
-                            }
-
-                            if ($data->iqc_status == 3) {
-                                return 'On-going';
-                            }
-
-                            if ($data->iqc_status == 4) {
-                                return 'Special Accept';
-                            }
-
-                            if ($data->iqc_status == 0) {
-                                return 'Pending';
-                            }
-                        })
                         ->addColumn('action', function($data) {
                             return '<button class="btn btn-sm btn-primary btn_edit" data-id="'.$data->id.'"
                                     data-wbs_mr_id="'.$data->wbs_mr_id.'"
