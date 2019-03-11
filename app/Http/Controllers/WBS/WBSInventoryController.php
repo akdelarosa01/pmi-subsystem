@@ -90,6 +90,10 @@ class WBSInventoryController extends Controller
                                 return 'On-going';
                             }
 
+                            if ($data->iqc_status == 4) {
+                                return 'Special Accept';
+                            }
+
                             if ($data->iqc_status == 0) {
                                 return 'Pending';
                             }
@@ -271,6 +275,10 @@ class WBSInventoryController extends Controller
 
                         case 3:
                             $status = 'On-going';
+                            break;
+
+                        case 4:
+                            $status = 'Special Accept';
                             break;
                     }
 
