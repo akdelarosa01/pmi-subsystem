@@ -146,6 +146,7 @@ WBS | Pricon Microelectronics, Inc.
 	                                <option value="1">Accepted</option>
 	                                <option value="2">Reject</option>
 	                                <option value="3">On-going</option>
+                                    <option value="4">Special Accept</option>
 	                            </select>
 	                        </div>
 	                    </div>
