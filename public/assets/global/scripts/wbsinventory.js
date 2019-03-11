@@ -111,7 +111,7 @@ function inventoryTable(url) {
             }
 
             if (data.iqc_status == 4) {
-                $(row).css('background-color', '#f58561');
+                $(row).css('background-color', '#ff844c');
                 $(row).css('color', '#fff');
             }
         }
