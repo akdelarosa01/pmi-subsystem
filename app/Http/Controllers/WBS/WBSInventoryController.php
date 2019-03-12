@@ -329,17 +329,10 @@ class WBSInventoryController extends Controller
                         case 3:
                             $status = 'On-going';
                             break;
-<<<<<<< HEAD
                         case 4:
                         $status = 'Special Accept';
                           break;        
 
-=======
-
-                        case 4:
-                            $status = 'Special Accept';
-                            break;
->>>>>>> da7954715787e3bfc4c1021d222ea781a35ecd68
                     }
 
                     $sheet->cell('I' . $row, $status);
