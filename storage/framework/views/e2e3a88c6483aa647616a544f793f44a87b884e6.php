@@ -178,6 +178,7 @@
                                 <option value="1">Accept</option>
                                 <option value="2">Reject</option>
                                 <option value="3">On-going</option>
+                                <option value="4">Special Accept</option>
                             </select>
                             <span class="help-block">
                                 <strong id="status_msg"></strong>
