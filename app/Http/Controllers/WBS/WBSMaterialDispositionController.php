@@ -57,7 +57,7 @@ class WBSMaterialDispositionController extends Controller
             'item_desc' => '',
             'lot_no' => ''
         ];
-
+        //select item 
         $item = DB::connection($this->mysql)->table('tbl_wbs_inventory')
                     ->select('item_desc')
                     ->where('item',$req->item)
