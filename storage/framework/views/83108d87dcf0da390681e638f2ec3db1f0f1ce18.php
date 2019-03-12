@@ -492,7 +492,7 @@ WBS | Pricon Microelectronics, Inc.
                             }
 
                             if(sData == "Special Accept") {
-                                $(nTd).css('background-color', '#3598dc');
+                                $(nTd).css('background-color', '#f58561');
                                 $(nTd).css('color', '#fff');
                             }
                         },

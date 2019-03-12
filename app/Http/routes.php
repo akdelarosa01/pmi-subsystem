@@ -3267,6 +3267,7 @@ Route::group(['middleware' => 'web'], function () {
     // WBS Inventory
     Route::get('/wbs-inventory', 'WBS\WBSInventoryController@index');
     Route::get('/wbs-inventory-list', 'WBS\WBSInventoryController@inventory_list');
+    Route::get('/wbs-inventory-search', 'WBS\WBSInventoryController@inventory_search');
     Route::post('/wbs-inventory-delete', 'WBS\WBSInventoryController@deleteselected');
     Route::post('/wbs-inventory-save', 'WBS\WBSInventoryController@savedata');
     Route::get('/wbs-inventory-excel', 'WBS\WBSInventoryController@inventory_excel');
