@@ -654,14 +654,13 @@ class WBSMaterialDispositionController extends Controller
 
                 $row = 7;
 
-                $from = $this->com->convertDate($req->from,'Y-m-d');
-                $to = $this->com->convertDate($req->to,'Y-m-d');
+                $from = $this->com->convertDate($req->from." 00:00:00",'Y-m-d H:i:s');
+                $to = $this->com->convertDate($req->to." 23:59:59",'Y-m-d H:i:s');
                 //$created_at = $this->com->convertDate($req->created_at,'Y-m-d');
 
-                $data = DB::connection($this->mysql)->select(
-                            "SELECT * FROM tbl_wbs_material_disposition_details
-                            WHERE created_at BETWEEN '".$from."' and '".$to."'"
-                        );
+                $data = DB::connection($this->mysql)->table('tbl_wbs_material_disposition_details')
+                            ->whereBetween('created_at', [$from,$to])
+                            ->get();
 
                 foreach ($data as $key => $md) {
                     $sheet->setHeight($row, 20);

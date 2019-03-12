@@ -330,8 +330,8 @@ class WBSInventoryController extends Controller
                             $status = 'On-going';
                             break;
                         case 4:
-                        $status = 'Special Accept';
-                          break;        
+                            $status = 'Special Accept';
+                              break;        
 
                     }
 

@@ -425,7 +425,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-2">From:</label>
                         <div class="col-sm-10">
-                            <input class="form-control input-sm date-picker" type="text" name="from" id="from">
+                            <input class="form-control input-sm " type="text" name="from" id="from">
                         </div>
                     </div>
 
@@ -433,7 +433,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-2 ">To:</label>
                         <div class="col-sm-10">
-                             <input class="form-control input-sm date-picker" type="text" name="to" id="to">
+                             <input class="form-control input-sm " type="text" name="to" id="to">
                         </div>
                     </div>
                 </div>

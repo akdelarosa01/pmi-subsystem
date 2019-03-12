@@ -1,6 +1,8 @@
 var lot_nos = [];
 $(function() {
     $('#edit_exp_date').inputmask("9999-99-99",{ "placeholder": "YYYY-MM-DD" });
+    $('#from').datepicker();
+    $('#to').datepicker();
     getAllData();
     ViewState();
     checkAllCheckboxesInTable('.check_all', '.check_lot');
