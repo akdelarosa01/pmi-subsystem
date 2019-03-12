@@ -263,6 +263,7 @@ class IQCInspectionController extends Controller
     {
         $judgement = $req->judgement;
         $lots = $req->lot_no;
+        $wbs_inventory;
 
         $query = false;
         
@@ -287,22 +288,67 @@ class IQCInspectionController extends Controller
                 $status = 4;
                 $kitting = 1;
 
-                DB::connection($this->wbs)->table('tbl_wbs_inventory')
+                // DB::connection($this->wbs)->table('tbl_wbs_inventory')
+                //     ->where('invoice_no',$req->invoice_no)
+                //     ->where('item',$req->partcodelbl)
+                //     ->where('lot_no',$lot)
+                //     ->update([
+                //         'iqc_status' => $status,
+                //         'for_kitting' => $kitting,
+                //         'iqc_result' => $req->remarks,
+                //         'judgement' => 'Special Accept',
+                //         'ins_date' => $this->formatDate($req->date_inspected,'m/d/Y'),
+                //         'ins_time' => $req->time_ins_to,
+                //         'ins_by' => $req->inspector,
+                //         'update_user' => Auth::user()->user_id,
+                //         'updated_at' => Carbon::now(),
+                //     ]);
+                $wbs_inventory = DB::connection($this->wbs)->table('tbl_wbs_inventory')
                     ->where('invoice_no',$req->invoice_no)
                     ->where('item',$req->partcodelbl)
                     ->where('lot_no',$lot)
-                    ->update([
-                        'iqc_status' => $status,
-                        'for_kitting' => $kitting,
-                        'iqc_result' => $req->remarks,
-                        'judgement' => 'Special Accept',
-                        'ins_date' => $this->formatDate($req->date_inspected,'m/d/Y'),
-                        'ins_time' => $req->time_ins_to,
-                        'ins_by' => $req->inspector,
+                    ->first();
+
+                DB::connection($this->wbs)->table('tbl_wbs_inventory')
+                    ->insert([
+                        'app_by' => $wbs_inventory->app_by,
+                        'app_date' => $wbs_inventory->app_date,
+                        'app_time'  => $wbs_inventory->app_time,
+                        'box' => $wbs_inventory->box,
+                        'box_qty' => $wbs_inventory->box_qty,
+                        'create_pg' => $wbs_inventory->create_pg,
+                        'create_user' => $wbs_inventory->create_user,
+                        'created_at' => $wbs_inventory->created_at,
+                        'deleted' => $wbs_inventory->deleted,
+                        'drawing_num' => $wbs_inventory->drawing_num,
+                        'for_kitting' => $wbs_inventory->for_kitting,
+                        'ins_by' => $wbs_inventory->ins_by,
+                        'ins_date' => $wbs_inventory->ins_date,
+                        'ins_time' => $wbs_inventory->ins_time,
+                        'invoice_no' => $wbs_inventory->invoice_no,
+                        'iqc_result' => $wbs_inventory->iqc_result,
+                        'iqc_status' => 4,
+                        'is_printed' => $wbs_inventory->is_printed,
+                        'item' => $wbs_inventory->item,
+                        'item_desc' => $wbs_inventory->item_desc,
+                        'judgement' => "Special Accept",
+                        'loc_batch_id' => $wbs_inventory->loc_batch_id,
+                        'location' => $wbs_inventory->location,
+                        'lot_no' => $wbs_inventory->lot_no,
+                        'mat_batch_id' => $wbs_inventory->mat_batch_id,
+                        'not_for_iqc' => $wbs_inventory->not_for_iqc,
+                        'plating_date' => $wbs_inventory->plating_date,
+                        'pressed_date' => $wbs_inventory->pressed_date,
+                        'qty' => $wbs_inventory->qty,
+                        'received_date' => $wbs_inventory->received_date,
+                        'supplier' => $wbs_inventory->supplier,
+                        'update_pg' => $wbs_inventory->update_pg,
                         'update_user' => Auth::user()->user_id,
                         'updated_at' => Carbon::now(),
+                        'wbs_mr_id' => $wbs_inventory->wbs_mr_id
                     ]);
             }
+            
             DB::connection($this->mysql)->table('iqc_inspections')
             ->insert([
                 'invoice_no' => $req->invoice_no,

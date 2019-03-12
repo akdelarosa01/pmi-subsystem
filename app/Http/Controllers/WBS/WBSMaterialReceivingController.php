@@ -338,17 +338,36 @@ class WBSMaterialReceivingController extends Controller
                                 'updated_at' => date('Y-m-d h:i:s a')
                             ]);
 
-                        DB::connection($this->mysql)->table('tbl_wbs_inventory')
-                            ->where('mat_batch_id',$batchdata->id[$key])
-                            ->update([
-                                'qty' => str_replace(',','',$batchdata->qty[$key]),
-                                'box' => $batchdata->box[$key],
-                                'box_qty' => str_replace(',','',$batchdata->box_qty[$key]),
-                                'lot_no' => $batchdata->lot_no[$key],
-                                'supplier' => strtoupper($batchdata->supplier[$key]),
-                                'update_user' => Auth::user()->user_id,
-                                'updated_at' => date('Y-m-d h:i:s a')
-                            ]);
+                        $check = DB::connection($this->mysql)->table('tbl_wbs_material_receiving_batch')
+                                    ->where('id',$batchdata->id[$key])->first();
+
+                        if (floatval($check->qty) !== floatval(str_replace(',','',$batchdata->box_qty[$key]))) {
+                            DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                                ->where('mat_batch_id',$batchdata->id[$key])
+                                ->update([
+                                    //'qty' => str_replace(',','',$batchdata->qty[$key]),
+                                    'box' => $batchdata->box[$key],
+                                    'box_qty' => str_replace(',','',$batchdata->box_qty[$key]),
+                                    'lot_no' => $batchdata->lot_no[$key],
+                                    'supplier' => strtoupper($batchdata->supplier[$key]),
+                                    'update_user' => Auth::user()->user_id,
+                                    'updated_at' => date('Y-m-d h:i:s a')
+                                ]);
+                        } else {
+                            DB::connection($this->mysql)->table('tbl_wbs_inventory')
+                                ->where('mat_batch_id',$batchdata->id[$key])
+                                ->update([
+                                    'qty' => str_replace(',','',$batchdata->qty[$key]),
+                                    'box' => $batchdata->box[$key],
+                                    'box_qty' => str_replace(',','',$batchdata->box_qty[$key]),
+                                    'lot_no' => $batchdata->lot_no[$key],
+                                    'supplier' => strtoupper($batchdata->supplier[$key]),
+                                    'update_user' => Auth::user()->user_id,
+                                    'updated_at' => date('Y-m-d h:i:s a')
+                                ]);
+                        }
+
+                            
 
                         $this->UpdateCalculateQty($mrdata->receive_no,$item,str_replace(',','',$batchdata->qty[$key]));
                     } else {
