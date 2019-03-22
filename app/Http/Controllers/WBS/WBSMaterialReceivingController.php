@@ -1690,7 +1690,7 @@ class WBSMaterialReceivingController extends Controller
         $data = DB::connection($this->mssql)
                 ->table('XSACT as S')
                 ->join('XHEAD as H', 'H.CODE', '=','S.CODE')
-                ->leftJoin(DB::raw('(SELECT z.CODE, z.RACKNO FROM XZAIK z WHERE z.JYOGAI = 0) AS Z'), 'Z.CODE', '=','S.CODE')
+                ->leftJoin(DB::raw("(SELECT z.CODE, z.RACKNO FROM XZAIK z WHERE z.JYOGAI = 0 and HOKAN = 'WHS100') AS Z"), 'Z.CODE', '=','S.CODE')
                 ->select('S.CODE as code','H.NAME as name', 'Z.RACKNO as rackno')
                 ->where('S.INVOICE_NUM', '=', $req->invoice_no)
                 ->where('S.CODE', '=', $req->itemcode)
