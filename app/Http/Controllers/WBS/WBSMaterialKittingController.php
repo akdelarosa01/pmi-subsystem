@@ -672,10 +672,23 @@ class WBSMaterialKittingController extends Controller
                                     ->where('issue_no',$kitinfo->issuance_no)
                                     ->where('po',$kitinfo->po_no)
                                     ->get();
-                    $kitissuance = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance')
-                                    ->where('issue_no',$kitinfo->issuance_no)
-                                    ->where('po',$kitinfo->po_no)
-                                    ->get();
+                    $kitissuance = DB::connection($this->mysql)
+                                        ->select("SELECT i.id,
+                                                    i.issue_no,
+                                                    i.po,
+                                                    i.detailid,
+                                                    i.item,
+                                                    i.item_desc,
+                                                    i.kit_qty,
+                                                    i.issued_qty,
+                                                    i.lot_no,
+                                                    i.location,
+                                                    i.remarks
+                                            FROM pmi_wbs_ts.tbl_wbs_kit_issuance as i
+                                            join tbl_wbs_material_kitting_details as d
+                                            on d.issue_no = i.issue_no and d.item = i.item
+                                            where i.issue_no = '".$kitinfo->issuance_no."'
+                                            and i.po = '".$kitinfo->po_no."'");
 
                     return $data = [
                                     'status' => 'success',
@@ -764,10 +777,23 @@ class WBSMaterialKittingController extends Controller
                                 ->where('issue_no',$kitinfo->issuance_no)
                                 ->where('po',$kitinfo->po_no)
                                 ->get();
-            	$kitissuance = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance')
-                                ->where('issue_no',$kitinfo->issuance_no)
-                                ->where('po',$kitinfo->po_no)
-                                ->get();
+            	$kitissuance = DB::connection($this->mysql)
+                                    ->select("SELECT i.id,
+                                                    i.issue_no,
+                                                    i.po,
+                                                    i.detailid,
+                                                    i.item,
+                                                    i.item_desc,
+                                                    i.kit_qty,
+                                                    i.issued_qty,
+                                                    i.lot_no,
+                                                    i.location,
+                                                    i.remarks
+                                            FROM pmi_wbs_ts.tbl_wbs_kit_issuance as i
+                                            join tbl_wbs_material_kitting_details as d
+                                            on d.issue_no = i.issue_no and d.item = i.item
+                                            where i.issue_no = '".$kitinfo->issuance_no."'
+                                            and i.po = '".$kitinfo->po_no."'");
 
                 return $data = [
 		                	'kitinfo' => $kitinfo,
@@ -816,10 +842,23 @@ class WBSMaterialKittingController extends Controller
                             ->where('issue_no',$kitinfo->issuance_no)
                             ->where('po',$kitinfo->po_no)
                             ->get();
-            $kitissuance = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance')
-                            ->where('issue_no',$kitinfo->issuance_no)
-                            ->where('po',$kitinfo->po_no)
-                            ->get();
+            $kitissuance = DB::connection($this->mysql)
+                                ->select("SELECT i.id,
+                                                i.issue_no,
+                                                i.po,
+                                                i.detailid,
+                                                i.item,
+                                                i.item_desc,
+                                                i.kit_qty,
+                                                i.issued_qty,
+                                                i.lot_no,
+                                                i.location,
+                                                i.remarks
+                                        FROM pmi_wbs_ts.tbl_wbs_kit_issuance as i
+                                        join tbl_wbs_material_kitting_details as d
+                                        on d.issue_no = i.issue_no and d.item = i.item
+                                        where i.issue_no = '".$kitinfo->issuance_no."'
+                                        and i.po = '".$kitinfo->po_no."'");
 
             $data = [
                 	'kitinfo' => $kitinfo,
@@ -866,10 +905,23 @@ class WBSMaterialKittingController extends Controller
                                 ->where('issue_no',$kitinfo->issuance_no)
                                 ->where('po',$kitinfo->po_no)
                                 ->get();
-            	$kitissuance = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance')
-                                    ->where('issue_no',$kitinfo->issuance_no)
-                                    ->where('po',$kitinfo->po_no)
-                                    ->get();
+            	$kitissuance = DB::connection($this->mysql)
+                                    ->select("SELECT i.id,
+                                                    i.issue_no,
+                                                    i.po,
+                                                    i.detailid,
+                                                    i.item,
+                                                    i.item_desc,
+                                                    i.kit_qty,
+                                                    i.issued_qty,
+                                                    i.lot_no,
+                                                    i.location,
+                                                    i.remarks
+                                            FROM pmi_wbs_ts.tbl_wbs_kit_issuance as i
+                                            join tbl_wbs_material_kitting_details as d
+                                            on d.issue_no = i.issue_no and d.item = i.item
+                                            where i.issue_no = '".$kitinfo->issuance_no."'
+                                            and i.po = '".$kitinfo->po_no."'");
 
                 return $data = [
 		                	'kitinfo' => $kitinfo,
@@ -918,10 +970,23 @@ class WBSMaterialKittingController extends Controller
                             ->where('issue_no',$kitinfo->issuance_no)
                             ->where('po',$kitinfo->po_no)
                             ->get();
-            $kitissuance = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance')
-                                ->where('issue_no',$kitinfo->issuance_no)
-                                ->where('po',$kitinfo->po_no)
-                                ->get();
+            $kitissuance = DB::connection($this->mysql)
+                                ->select("SELECT i.id,
+                                                i.issue_no,
+                                                i.po,
+                                                i.detailid,
+                                                i.item,
+                                                i.item_desc,
+                                                i.kit_qty,
+                                                i.issued_qty,
+                                                i.lot_no,
+                                                i.location,
+                                                i.remarks
+                                        FROM pmi_wbs_ts.tbl_wbs_kit_issuance as i
+                                        join tbl_wbs_material_kitting_details as d
+                                        on d.issue_no = i.issue_no and d.item = i.item
+                                        where i.issue_no = '".$kitinfo->issuance_no."'
+                                        and i.po = '".$kitinfo->po_no."'");
 
             $data = [
                 	'kitinfo' => $kitinfo,
@@ -1651,95 +1716,6 @@ class WBSMaterialKittingController extends Controller
 
         // return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
     }
-
-    // public function transferSlip(Request $req)
-    // {
-    //     $id = trim($req['id']);
-    //     $cur_id = '';
-    //     $issuance_no = '';
-    //     $max_id = '';
-
-    //     $dt = Carbon::now();
-    //     $date = substr($dt->format('  M j, Y A'), 2);
-    //     $company_info = $this->com->getCompanyInfo();
-
-    //     $mk_data = $this->getKitInfoByID($id);
-
-    //     if (count((array)$mk_data) > 0) {
-    //         $issuanceno = $mk_data->issuance_no;
-    //         $pono       = $mk_data->po_no;
-    //         $devicecode = $mk_data->device_code;
-    //         $devicename = $mk_data->device_name;
-    //         $poqty      = $mk_data->po_qty;
-    //         $kitqty     = $mk_data->kit_qty;
-    //         $kitno      = $mk_data->kit_no;
-    //         $preparedby = $mk_data->prepared_by;
-    //         $createdat  = $mk_data->created_at;
-    //         $status     = $mk_data->status;
-
-    //         if ($status == 'O') {
-    //          $status = 'Open';
-    //         }
-
-    //         if ($status == 'C') {
-    //          $status = 'Cancelled';
-    //         }
-
-    //         if ($status == 'X') {
-    //          $status = 'Closed';
-    //         }
-            
-
-    //         $mk_details_data = DB::connection($this->mysql)->table('tbl_wbs_kit_issuance AS I')
-    //                         ->leftJoin('tbl_wbs_material_kitting_details as D', 'D.issue_no', '=', 'I.issue_no')
-    //                         ->where('I.issue_no',$issuanceno)
-    //                         ->whereRaw('I.item = D.item')
-    //                         ->select('I.item'
-    //                                 , 'I.item_desc'
-    //                                 , DB::raw('FORMAT(D.usage,2) AS `usage`')
-    //                                 , DB::raw('FORMAT(D.rqd_qty,2) AS rqd_qty')
-    //                                 , DB::raw('FORMAT(SUM(I.issued_qty),2) AS issued_qty')
-    //                                 , 'I.lot_no')
-    //                         ->groupBy('I.item','I.item_desc','D.usage','D.rqd_qty','I.issued_qty','I.lot_no')
-    //                         ->orderBy('D.id')
-    //                         ->get();
-    //         $data = [
-    //             'issuanceno' => $issuanceno,
-    //             'pono' => $pono,
-    //             'devicecode' => $devicecode,
-    //             'devicename' => $devicename,
-    //             'poqty' => $poqty,
-    //             'kitqty' => $kitqty,
-    //             'kitno' => $kitno,
-    //             'preparedby' => $preparedby,
-    //             'createdat' => $createdat,
-    //             'status' => $status,
-    //             'mk_details_data' => $mk_details_data
-    //         ];
-
-    //         $page_header_html = view()->make('pdf.material_issuance_sheet_header', $data)->render();
-    //         $page_footer_html = view()->make('pdf.material_issuance_sheet_footer', $data)->render();
-
-    //         $options = [
-    //             'orientation' => 'landscape',
-    //             'encoding' => 'UTF-8',
-    //             'margin-top' => '55mm',
-    //             'margin-left' => 3,
-    //             'margin-right' => 3,
-    //             'margin-bottom' => '30mm',
-    //             'header-html' => $page_header_html,
-    //             'footer-html'   => $page_footer_html
-    //         ];
-
-
-    //         $pdf = PDF::loadView('pdf.material_issuance_sheet', $data)
-    //                 ->setPaper('A4')
-    //                 ->setOptions($options)
-    //                 ->setOption('footer-left','Page [page] from [topage]');
-
-    //         return $pdf->inline('Material_Issuance_Sheet_'.$issuanceno.'_'.$pono);
-    //     }
-    // }
 
     public function postDeleteKitDetails(Request $req)
     {
