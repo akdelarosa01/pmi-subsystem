@@ -43,14 +43,14 @@ $(function(e) {
     $('#classification').change(function(){
         if($(this).val() == "NDF"){
             $('#mod').attr('disabled',true);
-            $('#qty').attr('disabled',true);
-            $('#remarks').attr('disabled',true);
+            $('#qty').attr('readonly',true);
+            $('#remarks').attr('readonly',true);
             $('#er5').html(""); 
             
         }else{
             $('#mod').attr('disabled',false);
-            $('#qty').attr('disabled',false);
-            $('#remarks').attr('disabled',false);
+            $('#qty').attr('readonly',false);
+            $('#remarks').attr('readonly',false);
         }
             $('#qty').val("0");
     });
