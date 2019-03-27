@@ -949,311 +949,584 @@ class YieldPerformanceReportController extends Controller
         }
     }
 
-    public function yieldsumfamRpt(Request $request)
+    public function yieldsumfamRpt(Request $req)
     {
-        try
-        { 
-            $dt = Carbon::now();
-            $date = substr($dt->format('Ymd'), 2);
-            $path = public_path().'/Yielding_Performance_Data_Check/export';
-            $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-            $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-            $yieldtarget = $request->yieldtarget;
-            $chosen = $request->chosen;
-            $ptype = $request->ptype;
+        $date_cond = '';
+        $ptype_cond = '';
+        $fams = [];
 
-            $check = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])
-                        ->where('y.prodtype',$ptype)
-                        ->count();
+        if ($req->datefrom !== '') {
+            $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+            $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
 
-            $check1 = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])
-                        ->count();
+            $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+        }
 
-            $check2 = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                        ->join('tbl_targetregistration as r', function($join) {
-                            $join->where('r.ptype','=','y.prodtype');
-                            $join->where('p.productiondate','>=','r.datefrom');
-                            $join->where('p.productiondate','<=','r.dateto');
-                        })
-                        ->whereBetween('p.productiondate', [
-                            $this->com->convertDate($datefrom,'Y-m-d'), 
-                            $this->com->convertDate($dateto,'Y-m-d')
-                        ])
-                        ->where('r.yield',$yieldtarget)
-                        ->count();
+        if ($req->prodtype !== '') {
+            $ptype_cond = " AND y.prodtype='".$req->prodtype."'";
+        }
 
-            if ($check > 0 || $check1 > 0 || $check2) {
-            
-                Excel::create('Yield_Summary_Family_Report_'.$date, function($excel) use($request)
+        if ($req->family !== '') {
+            $family_cond = " AND y.family='".$req->family."'";
+        }
+
+        $families = DB::connection($this->mysql)
+                        ->select("select y.family
+                                from tbl_yielding_performance as y
+                                inner join tbl_yielding_pya as p
+                                on y.pono = p.pono
+                                where 1=1".$date_cond.
+                                $ptype_cond.$family_cond."
+                                group by y.family");
+
+        if (count((array)$families) > 0) {
+            Excel::create('Summary_per_Family_Report', function($excel) use($req)
+            {
+                $excel->sheet('Sheet1', function($sheet) use($req)
                 {
-                    $excel->sheet('Sheet1', function($sheet) use($request)
-                    {
-                        $sheet->setAutoSize(true);
-                        $datefrom = $this->com->convertDate($request->datefrom,'Y-m-d');
-                        $dateto = $this->com->convertDate($request->dateto,'Y-m-d');
-                        $yieldtarget = $request->yieldtarget;
-                        $chosen = $request->chosen;
-                        $ptype = $request->ptype;
+
+                    $date_cond = '';
+                    $ptype_cond = '';
+                    $fams = [];
+
+                    if ($req->datefrom !== '') {
+                        $datefrom = $this->com->convertDate($req->datefrom,'Y-m-d');
+                        $dateto = $this->com->convertDate($req->dateto,'Y-m-d');
+
+                        $date_cond = " AND p.productiondate BETWEEN '".$datefrom."' AND '".$dateto."'";
+                    }
+
+                    if ($req->prodtype !== '') {
+                        $ptype_cond = " AND y.prodtype='".$req->prodtype."'";
+                    }
+
+                    if ($req->family !== '') {
+                        $family_cond = " AND y.family='".$req->family."'";
+                    }
+
+                    $sheet->setAutoSize(true);
+                    $sheet->mergeCells('A1:G1');
+                    $sheet->cell('A1', function($cell) use($req) {
+                        $cell->setValue($req->family.' YIELD SUMMARY - '.date('Ymd'));
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '15',
+                            'bold'       =>  true,
+                            'italic'     =>  true
+                        ]);
+                    });
+
+                    $cols = ["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP"];
+                    $colsd = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP"];
+
+                    $lastColKey = 0;
+                    $nextCol = '';
+
+                    $families = DB::connection($this->mysql)
+                                    ->select("select y.family
+                                            from tbl_yielding_performance as y
+                                            inner join tbl_yielding_pya as p
+                                            on y.pono = p.pono
+                                            where 1=1".$date_cond.
+                                            $ptype_cond.$family_cond."
+                                            group by y.family");
 
 
-                        $Outdata = DB::connection($this->mysql)->table('tbl_targetregistration')
-                                        ->select('dppm','yield')
-                                        ->where('yield',$yieldtarget)
-                                        ->get();
+                    foreach ($families as $key => $fam) {
+                        array_push($fams, $fam->family);
+                    }
 
-                        $tardppm = 0;
-                        foreach ($Outdata as $key => $value) {
-                            $tardppm = $value->dppm;
+                    DB::connection($this->mysql)
+                        ->select(
+                            DB::raw(
+                                "CALL GetYieldSummaryPerFamily(
+                                    '".$datefrom."',
+                                    '".$dateto."',
+                                    '".$req->prodtype."',
+                                    '".$req->family."')"
+                                )
+                        );
+
+                    $yieldsummary_query = DB::connection($this->mysql)->select("SELECT * FROM YieldSummaryPerFamily");
+                    $defects_query = DB::connection($this->mysql)->select("SELECT * FROM DefectList");
+
+                    $yield_arr = json_decode(json_encode($yieldsummary_query), true);
+                    $defects_arr = json_decode(json_encode($defects_query), true);
+
+                    $device = [];
+                    $po = [];
+                    $tinput = [];
+                    $toutput = [];
+                    $totalyield = [];
+                    $defects = [];
+                    $defects_all = [];
+                    $defectrows = [];
+                    $defect_rows = [];
+                    $rows = 9;
+
+                    foreach ($yield_arr as $key => $y) {
+                        array_push($device, $y['device']);
+                        array_push($po, $y['pono']);
+                        array_push($tinput, $y['tinput']);
+                        array_push($toutput, $y['toutput']);
+                        array_push($totalyield, $y['totalyield']);
+
+                        foreach ($defects_arr as $key => $d) {
+                            $count = 1;
+                            if (isset($y[$d['DefectID']])) {
+
+                                if ($d['Defect'] !== '') {
+                                    array_push($defects, [
+                                        'defect' => $d['Defect'],
+                                        'qty' => ($y[$d['DefectID']] == 0)? '0.00' : $y[$d['DefectID']],
+                                        'rate' => floatval(($y[$d['DefectID']]/$y['tinput'])*100),
+                                        'po' => $y['pono']
+                                    ]);
+
+                                    array_push($defectrows, $d['Defect']);
+                                }
+                            }
+                             
                         }
-                    
-                        $sheet->setCellValue('A1', 'Yield Target Summary Per Family - '. $ptype);
-                        $sheet->mergeCells('A1:E1');
-                        $sheet->cell('A3',"DATE");
-                        $date = date("Y-m-d");
-                        $sheet->cell('B3',$date);
-                        $sheet->cell('E3',"Date Froms");
-                        $sheet->cell('F3',$datefrom);
-                        $sheet->cell('E4',"Date To");
-                        $sheet->cell('F4',$dateto);
-                        $sheet->cell('A6',"Yield Target");
-                        $sheet->cell('B6',$yieldtarget);
-                        $sheet->cell('A7',"DPPM Target");
-                        $sheet->cell('B7',$tardppm);
-                        $sheet->getStyle('B6:B7')->getAlignment()->applyFromArray(array('horizontal' => 'center'));
-                        $sheet->cells('B6:B7', function($cells) {$cells->setFontWeight('bold'); }); 
-                        $sheet->cell('A8',"Family");
-                        $sheet->cell('A9',"Input");
-                        $sheet->cell('A10',"Output");
-                        $sheet->cell('A11',"Production NG");
-                        $sheet->cell('A12',"Material NG");
-                        $sheet->cell('A13',"Yield W/o MNG");
-                        $sheet->cell('A14',"Total Yield (%)");
-                        $sheet->cell('A15',"DPPM");
-                        $sheet->setHeight(1,30);
+                    }
 
-                        $sheet->row(1, function ($row) {
-                            $row->setFontFamily('Calibri');
-                            $row->setBackground('##ADD8E6');
-                            $row->setFontSize(15);
-                            $row->setAlignment('left');
+                    foreach (array_unique($defectrows) as $key => $defect) {
+                        $defect_rows[$rows] = $defect;
+                        $rows++;
+                    }
+
+                    foreach ($defect_rows as $key => $dr) {
+                        foreach ($defects as $key => $df) {
+                            if ($dr == $df['defect']) {
+                                array_push($defects_all, [
+                                    $df['defect'] => [
+                                        'po' => $df['po'],
+                                        'qty' => $df['qty'],
+                                        'rate' => $df['rate']
+                                    ]
+                                ]);
+                            }
+                        }
+                    }
+
+                    $sheet->cell('A3', function($cell) {
+                        $cell->setValue("Device Name");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#baddff');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $colcount = 0;
+                    foreach ($device as $key => $dv) {
+                        $sheet->mergeCells($cols[$colcount].'3:'.$cols[$colcount+1].'3');
+                        $sheet->cell($cols[$colcount].'3', function($cell) use($dv) {
+                            $cell->setValue($dv);
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#baddff');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                        $colcount = $colcount+2;
+                    }
+
+                    $sheet->cell('A4', function($cell) {
+                        $cell->setValue("P.O. Number");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#baddff');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $colcount = 0;
+                    foreach ($po as $key => $p) {
+                        $sheet->mergeCells($cols[$colcount].'4:'.$cols[$colcount+1].'4');
+                        $sheet->cell($cols[$colcount].'4', function($cell) use($p) {
+                            $cell->setValue($p);
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#baddff');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                        $colcount = $colcount+2;
+                    }
+
+                    $sheet->mergeCells($cols[$colcount].'3:'.$cols[$colcount+1].'4');
+
+                    $sheet->cell($cols[$colcount].'3', function($cell) {
+                        $cell->setValue("OVERALL");
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $sheet->cell('A5', function($cell) {
+                        $cell->setValue("Total Input");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  false,
+                        ]);
+                        $cell->setBackground('#FFCC99');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $colcount = 0;
+                    $total_tinput = 0;
+                    foreach ($tinput as $key => $ti) {
+                        $sheet->mergeCells($cols[$colcount].'5:'.$cols[$colcount+1].'5');
+                        $sheet->cell($cols[$colcount].'5', function($cell) use($ti) {
+                            $cell->setValue($ti);
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  false,
+                            ]);
+                            $cell->setBackground('#a1a1a1');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                        $colcount = $colcount+2;
+                        $total_tinput += intval($ti);
+                    }
+
+                    $sheet->mergeCells($cols[$colcount].'5:'.$cols[$colcount+1].'5');
+
+                    $sheet->cell($cols[$colcount].'5', function($cell) use($total_tinput) {
+                        $cell->setValue($total_tinput);
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $sheet->cell('A6', function($cell) {
+                        $cell->setValue("Total Output");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  false,
+                        ]);
+                        $cell->setBackground('#FFCC99');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $colcount = 0;
+                    $total_toutput = 0;
+
+                    foreach ($toutput as $key => $to) {
+                        $sheet->mergeCells($cols[$colcount].'6:'.$cols[$colcount+1].'6');
+                        $sheet->cell($cols[$colcount].'6', function($cell) use($to) {
+                            $cell->setValue($to);
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  false,
+                            ]);
+                            $cell->setBackground('#a1a1a1');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                        $colcount = $colcount+2;
+                        $total_toutput += intval($to);
+                    }
+
+                    $sheet->mergeCells($cols[$colcount].'6:'.$cols[$colcount+1].'6');
+
+                    $sheet->cell($cols[$colcount].'6', function($cell) use($total_toutput) {
+                        $cell->setValue($total_toutput);
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $sheet->cell('A7', function($cell) {
+                        $cell->setValue("Total Yield");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  false,
+                        ]);
+                        $cell->setBackground('#FFCC99');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $colcount = 0;
+
+                    foreach ($totalyield as $key => $ty) {
+                        $sheet->mergeCells($cols[$colcount].'7:'.$cols[$colcount+1].'7');
+                        $sheet->cell($cols[$colcount].'7', function($cell) use($ty){
+                            $cell->setValue(number_format($ty,2).'%');
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#a1a1a1');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
                         });
 
-                        $sheet->setStyle(array(
-                            'font' => array(
-                                'name'      =>  'Calibri',
-                                'size'      =>  10
-                            )
-                        ));
+                        $sheet->cell($cols[$colcount].'8', function($cell) use($ty){
+                            $cell->setValue("Qty");
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#f4ebab');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
 
-                        $row = 2;
-                        $datefrom = $request->datefrom;
-                        $dateto = $request->dateto;
-                        $yieldtarget = $request->yieldtarget;
-                        $Outdata = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                    ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                    ->select(
-                                        DB::raw('y.family as family'),
-                                        DB::raw("SUM(p.accumulatedoutput) as accumulatedoutput"),
-                                        DB::raw('y.toutput as toutput'),
-                                        DB::raw('y.ywomng as ywomng'),
-                                        DB::raw('y.tpng as tpng')
-                                    )
-                                    ->groupBy('y.family')
-                                    ->orderBy('y.family')
-                                    ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                    ->get();
+                        $sheet->cell($cols[$colcount+1].'8', function($cell) use($ty){
+                            $cell->setValue("Rate");
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#f4ebab');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                        $colcount = $colcount+2;
+                    }
 
-                        $arrayLetter = array("C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","AB","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP");
-                        $modOfFam = [];
-                        $fff = 0;
-                        foreach ($Outdata as $key => $val) {
-                            $modOfFam[$fff] = $val->family;
-                            $fff++;
-                        }
+                    $total_totalyield = number_format((intval($total_tinput) / intval($total_toutput))*100,2).'%';
 
-                        $Start = "A8";
-                        $aa = 8;
-                        $end = $arrayLetter[$fff];
-                        $sheet->cells("$Start:$end$aa", function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->cells("$Start:$end$aa", function($cells) {$cells->setBackground('#3366FF'); });
-                        $sheet->cells('A9:A15', function($cells) {$cells->setBackground('#FFFF00'); });
-                        $sheet->cells('A9:A15', function($cells) {$cells->setFontWeight('bold'); });
-                        $Fams = array_unique($modOfFam);
-                        $newFams = array_values($Fams);
-                        $countFam = count($Fams);
+                    $sheet->mergeCells($cols[$colcount].'7:'.$cols[$colcount+1].'7');
 
-                        $defe = 7;
-                        $lete = 0;
-                        for($x=0;$x<$countFam;$x++)
-                        {
-                            $row = 8;
-                            $sheet->cell($arrayLetter[$lete].$row, $newFams[$x]); //family row
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $lete++; 
-                        }//FOR FAMILY
-                        $nine = 9;
-                        $fift = 15;
-                        $start = $arrayLetter[$lete].$nine;
-                        $end = $arrayLetter[$lete].$fift;
-                        $sheet->cells("$start:$end", function($cells) {$cells->setFontWeight('bold'); });
-                        $sheet->cell($arrayLetter[$lete].$row, "TOTAL");
-                        $TO = [];
-                        $tpng = [];
-                        $row = 9;
-                        $lete = 0;
-                        foreach ($Outdata as $key => $val) {
-                            $sheet->cell($arrayLetter[$lete].$row,"0.0");
-                            $sheet->cell($arrayLetter[$lete].$row, $val->toutput);
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $tpng[$lete] = $val->tpng;
-                            $TO[$lete] = $val->toutput;
-                            $lete++; 
-                        }
-                        $ACO = [];
-                        $row++;
-                        $lete = 0;
-                        foreach ($Outdata as $key => $val) {
+                    $sheet->cell($cols[$colcount].'7', function($cell) use($total_totalyield) {
+                        $cell->setValue($total_totalyield);
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
 
-                            $sheet->cell($arrayLetter[$lete].$row, $val->accumulatedoutput);
-                            $sheet->getStyle($arrayLetter[$lete].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            $ACO[$lete] = $val->accumulatedoutput;
-                            $lete++; 
-                        }
-                        $row++;
-                        //FOR PRODUCTIOM
-                        $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                    ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                    ->select(
-                                        DB::raw("COUNT(*) as classificationCount"),
-                                        DB::raw('y.family as family')
-                                    )
-                                    ->groupBy('y.family')
-                                    ->orderBy('y.family')
-                                    ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                    ->get();
-                              // for($x=0;$x<$countFam;$x++)
-                              // {
-                              //   $sheet->cell($arrayLetter[$x].$row, '0.0');
-                              //   $sheet->getStyle($arrayLetter[$x].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                              // }//zero filler
-                        $lete = 0;
-                            
-                        foreach ($Outdatas as $key => $val) {
-                           
-                            if (in_array($val->family, $newFams)) {
-                                $key = array_search($val->family, $newFams);
-                                $sheet->cell($arrayLetter[$key].$row, $val->classificationCount);
-                                $sheet->getStyle($arrayLetter[$key].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));
+                    $sheet->cell($cols[$colcount].'8', function($cell) use($ty){
+                        $cell->setValue("Qty");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
 
-                                $privateRow = $row + 4;
-                                $png = $val->classificationCount;
-                                $dppm = ($png/($TO[$lete]+$tpng[$lete]))*1000000;
-                                $percent = (round((float)$dppm));
-                                $sheet->cell($arrayLetter[$key].$privateRow, $percent);
-                                $sheet->getStyle($arrayLetter[$key].$privateRow)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                                $sheet->setColumnFormat(array(
-                                    $arrayLetter[$key].$privateRow => '0%'
-                                ));
+                    $sheet->cell($cols[$colcount+1].'8', function($cell) use($ty){
+                        $cell->setValue("Rate");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+
+                    $sheet->cell('A8', function($cell) {
+                        $cell->setValue("Defects");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#f4ebab');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $lastdefect = '';
+
+                    foreach ($defect_rows as $key => $dfr) {
+                        $sheet->cell('A'.$key, function($cell) use($dfr) {
+                            $cell->setValue($dfr);
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  false,
+                            ]);
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                    }
+
+                    $colcount = 0;
+                    $row = 9;
+                    $total_right_qty_arr = [];
+                    $total_down_qty_arr = [];
+                    $po_qty = 0;
+
+                    foreach ($po as $key => $p) {
+                        foreach ($defect_rows as $rkey => $dfr) {
+                            foreach ($defects as $key => $df) {
+                                if ($dfr == $df['defect'] && $p == $df['po']) {
+                                    $total_right_qty_arr[$rkey] = (isset($total_right_qty_arr[$rkey]))? $total_right_qty_arr[$rkey] + $df['qty']: 0 + $df['qty'];
+
+                                    $sheet->cell($cols[$colcount].$rkey, function($cell) use($df) {
+                                        $cell->setValue($df['qty']);
+                                        $cell->setFont([
+                                            'family'     => 'Calibri',
+                                            'size'       => '11',
+                                            'bold'       =>  false,
+                                        ]);
+                                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                                    });
+
+                                    $sheet->cell($cols[$colcount+1].$rkey, function($cell) use($df) {
+                                        $cell->setValue(number_format(floatval($df['rate']),2).'%');
+                                        $cell->setFont([
+                                            'family'     => 'Calibri',
+                                            'size'       => '11',
+                                            'bold'       =>  false,
+                                        ]);
+                                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                                    });
+                                    $total_down_qty_arr[$df['po']] = (isset($total_down_qty_arr[$df['po']]))? $total_down_qty_arr[$df['po']] + $df['qty']: 0 + $df['qty'];
+                                }
                             }
                             
-                            $lete++; 
-                        }
-
-                        $row++;
-                       
-                        //FOR MATERIALS
-                        $Outdatas = DB::connection($this->mysql)->table("tbl_yielding_performance as y")
-                                        ->join('tbl_yielding_pya as p','y.pono','=','p.pono')
-                                        ->select(
-                                            DB::raw("COUNT(*) as classificationCount"),
-                                            DB::raw('y.family as family')
-                                        )
-                                        ->groupBy('y.family')
-                                        ->orderBy('y.family')
-                                        ->where('p.classification','like','%Material%')
-                                        ->whereBetween('p.productiondate', [$datefrom, $dateto])
-                                        ->get();
-                        for($x=0;$x<$countFam;$x++) {
-                            $sheet->cell($arrayLetter[$x].$row, '0.0');
-                            $sheet->getStyle($arrayLetter[$x].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));
-                        } //zero filler
-                        $lete = 0;
-                        foreach ($Outdatas as $key => $val) {
-                            if (in_array($val->family, $newFams)) {
-                                $indexs = array_search($val->family, $newFams);
-                                $sheet->cell($arrayLetter[$indexs].$row, $val->classificationCount);
-                                $sheet->getStyle($arrayLetter[$indexs].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                            }
-                           
-                            $lete++; 
-                        }
-                        $row++;
-                        //TOTAL yield percentage
-                        
-                        $outputrow = 10;
-                        $PNGrow = 11;
-                        for($x=0;$x<$countFam;$x++)
-                        {
-                          
-                            $out = $arrayLetter[$x].$outputrow;
-                            $png = $arrayLetter[$x].$PNGrow;
-                            $sheet->setCellValue($arrayLetter[$x].$row, "=(($out/($out + $png)))");
-                            $x1 = $x+1;
-                            $sheet->setColumnFormat(array($arrayLetter[$x].$row => '0%'));
-                            $sheet->getStyle($arrayLetter[$x].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                           
-                        }
-                        $row++;
-                        //FOR TOTAL YIELD %
-                        for($x=0;$x<$countFam;$x++)
-                        {
-
-                            $Ypercent = (($TO[$x] / $ACO[$x]) * 100);
-                            $percent = (round((float)$Ypercent))/100;
-                            $sheet->cell($arrayLetter[$x].$row,$percent);
-                            $sheet->setColumnFormat(array(
-                                $arrayLetter[$x].$row => '0%'
-                            ));
-                            $sheet->getStyle($arrayLetter[$x].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center')); 
-                        }
-                        //TO TOTAL ALL
-                        $row=9;
-                        $last = $countFam-1;
-                        $per = 13;
-
-                        for($x=1;$x<=7;$x++)
-                        {
-                            $start = "B".$row;
-                            $end = $arrayLetter[$last].$row;
-                            $sheet->setCellValue($arrayLetter[$countFam].$row, "=SUM($start:$end)");
-                            $sheet->getStyle($arrayLetter[$countFam].$row)->getAlignment()->applyFromArray(array('horizontal' => 'center'));
-                            if ($per < 15) {
-                                $sheet->setColumnFormat(array(
-                                    $arrayLetter[$countFam].$per => '0%'
-                                ));
-                                $per++;
-                            }
                             $row++;
                         }
+
+                        $colcount = $colcount+2;
+                    }
+
+                    foreach ($defect_rows as $rkey => $dfr) {
+                        $sheet->cell($cols[$colcount].$rkey, function($cell) use($total_right_qty_arr,$rkey) {
+                            $cell->setValue($total_right_qty_arr[$rkey]);
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#87d7b2');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+
+                        $sheet->cell($cols[$colcount+1].$rkey, function($cell) use($total_right_qty_arr,$total_tinput,$rkey) {
+                            $rate = ($total_right_qty_arr[$rkey]/$total_tinput)*100;
+                            $cell->setValue(number_format($rate,2).'%');
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#87d7b2');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+                    }
+
+                    $overall_total_qty = 0;
+                    $rows = 9;
+                    foreach ($total_right_qty_arr as $key => $qty) {
+                        $overall_total_qty += $qty;
+                        $rows++;
+                    }
+
+                    $sheet->cell($cols[$colcount].$rows, function($cell) use($overall_total_qty) {
+                        $cell->setValue($overall_total_qty);
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
                     });
-                })->download('xls');
-            } else {
-                $e = 'No data found.';
-                return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
-            }
-        } catch (Exception $e) {
-            return redirect(url('/ReportYieldPerformance'))->with(['err_message' => $e]);
+
+                    $sheet->cell($cols[$colcount+1].$rows, function($cell) use($overall_total_qty,$total_tinput) {
+                        $rate = ($overall_total_qty/$total_tinput)*100;
+                        $cell->setValue(number_format($rate,2).'%');
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+                    $sheet->cell('A'.$rows, function($cell) {
+                        $cell->setValue("Total Defects");
+                        $cell->setFont([
+                            'family'     => 'Calibri',
+                            'size'       => '11',
+                            'bold'       =>  true,
+                        ]);
+                        $cell->setBackground('#87d7b2');
+                        $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                    });
+
+
+                    $colcount = 0;
+                    foreach ($po as $key => $p) {
+                        $sheet->cell($cols[$colcount].$rows, function($cell) use($total_down_qty_arr,$p) {
+                            $cell->setValue($total_down_qty_arr[$p]);
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#87d7b2');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+
+                        $sheet->cell($cols[$colcount+1].$rows, function($cell) use($total_down_qty_arr,$p,$total_tinput) {
+                            $rate = ($total_down_qty_arr[$p]/$total_tinput)*100;
+                            $cell->setValue(number_format($rate,2).'%');
+                            $cell->setFont([
+                                'family'     => 'Calibri',
+                                'size'       => '11',
+                                'bold'       =>  true,
+                            ]);
+                            $cell->setBackground('#87d7b2');
+                            $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+
+                        $colcount = $colcount + 2;
+                    }
+                });
+            })->download('xls');
+        } else {
+
         }
     }
 

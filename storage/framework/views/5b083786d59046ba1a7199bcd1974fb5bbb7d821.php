@@ -27,17 +27,22 @@
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Product</label>
                                              <div class="col-sm-9">
-                                                  <Select class="form-control input-sm " id="ysf-ptype" name="ysf-ptype">
+                                                  <select class="form-control input-sm " id="ysf-ptype" name="ysf-ptype">
                                                        <option value=""></option>
                                                        <option value="TEST SOCKET">TEST SOCKET</option>
                                                        <option value="BURN-IN">BURN-IN</option>
-                                                  </Select>
+                                                  </select>
                                              </div>     
                                         </div>
                                         <div class="form-group">
                                              <label class="control-label col-sm-3">Family</label>
                                              <div class="col-sm-9">
-                                                  <Select class="form-control input-sm " id="ysf-ptype" name="ysf-ptype"></Select>
+                                                  <select class="form-control input-sm" id="ysf-family" name="ysf-family">
+                                                       <option value=""></option>
+                                                       <?php foreach($family as $family): ?>
+                                                            <option value="<?php echo e($family->description); ?>"><?php echo e($family->description); ?></option>
+                                                       <?php endforeach; ?>
+                                                  </select>
                                              </div>     
                                         </div>
                                         <hr>

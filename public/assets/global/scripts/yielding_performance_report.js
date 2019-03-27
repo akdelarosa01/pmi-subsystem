@@ -16,7 +16,7 @@ $( function(e) {
      $('#btnxport-summaryrpt').click(function(){
           $('#summaryrpt_Modal').modal('show');
           $('#Export-Modal').modal('hide');
-          $('.summaryrpt-title').html("Summary Report");
+          $('.summaryrpt-title').html("Yield Performance Summary Report");
      });
      $('#btnxport-defectsummaryrpt').click(function(){
           $('#defectsummaryrpt_Modal').modal('show');
@@ -26,12 +26,12 @@ $( function(e) {
      $('#btnxport-yieldpsrpt').click(function(){
           $('#yieldpsrpt_Modal').modal('show');
           $('#Export-Modal').modal('hide');
-          $('.yieldpsrpt-title').html("Yield Performance Summary Report");
+          $('.yieldpsrpt-title').html("Yield Performance Summary/Family");
      });
      $('#btnxport-yieldsfrpt').click(function(){
           $('#yieldsfrpt_Modal').modal('show');
           $('#Export-Modal').modal('hide');
-          $('.yieldsfrpt-title').html("Yield Summary Report");
+          $('.yieldsfrpt-title').html("Summary Report per Family");
      });
      $('#btnxport').click(function(){
           $('#Export-Modal').modal('show');
