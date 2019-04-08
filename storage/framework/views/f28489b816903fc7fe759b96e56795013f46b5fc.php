@@ -145,6 +145,7 @@ WBS | Pricon Microelectronics, Inc.
 	                                <option value="1">Accepted</option>
 	                                <option value="2">Reject</option>
 	                                <option value="3">On-going</option>
+                                    <option value="4">Special Accept</option>
 	                            </select>
 	                        </div>
 	                    </div>
@@ -487,6 +488,11 @@ WBS | Pricon Microelectronics, Inc.
                             }
                             if(sData == "On-going") {
                                 $(nTd).css('background-color', '#3598dc');
+                                $(nTd).css('color', '#fff');
+                            }
+
+                            if(sData == "Special Accept") {
+                                $(nTd).css('background-color', '#f58561');
                                 $(nTd).css('color', '#fff');
                             }
                         },

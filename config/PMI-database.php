@@ -172,6 +172,8 @@ return [
             'engine' => null,
         ],
 
+        
+
         'mysqlwbsts' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -247,6 +249,20 @@ return [
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_yf'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+	'mysqlyieldts' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '192.168.200.50'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'pmi_yielding'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',

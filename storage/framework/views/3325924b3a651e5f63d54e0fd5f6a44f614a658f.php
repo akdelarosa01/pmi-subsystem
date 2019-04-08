@@ -96,7 +96,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-3">Exp Date</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm date-picker clear" data-date-format="yyyy-mm-dd" id="edit_exp_date" name="edit_exp_date">
+                            <input type="text" class="form-control input-sm clear" id="edit_exp_date" name="edit_exp_date">
                         </div>
                     </div>
 
@@ -425,7 +425,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-2">From:</label>
                         <div class="col-sm-10">
-                            <input class="form-control input-sm date-picker" type="text" name="from" id="from">
+                            <input class="form-control input-sm " type="text" name="from" id="from">
                         </div>
                     </div>
 
@@ -433,7 +433,7 @@
                     <div class="form-group">
                         <label for="" class="control-label col-sm-2 ">To:</label>
                         <div class="col-sm-10">
-                             <input class="form-control input-sm date-picker" type="text" name="to" id="to">
+                             <input class="form-control input-sm " type="text" name="to" id="to">
                         </div>
                     </div>
                 </div>

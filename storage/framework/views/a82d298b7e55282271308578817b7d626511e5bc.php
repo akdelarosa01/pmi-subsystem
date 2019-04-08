@@ -181,6 +181,7 @@
 	<?php /* <script src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/datetime.js')); ?>" type="text/javascript"></script> */ ?>
 	<script src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/admin/pages/scripts/components-form-tools.js')); ?>"></script>
 	<script src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/admin/pages/scripts/components-pickers.js')); ?>"></script>
+	<script src="<?php echo e(asset(Config::get('constants.PUBLIC_PATH').'assets/global/scripts/csrf_token.js')); ?>" type="text/javascript"></script>
 	<!-- END PAGE LEVEL SCRIPTS -->
 
 	<!-- The basic File Upload plugin -->
