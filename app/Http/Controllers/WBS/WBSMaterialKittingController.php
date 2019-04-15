@@ -1821,7 +1821,7 @@ class WBSMaterialKittingController extends Controller
         	$data = DB::connection($this->mysql)->table('tbl_wbs_inventory as i')
 		                ->join('tbl_wbs_material_kitting_details as k','i.item','=','k.item')
 		                // ->join('tbl_wbs_material_receiving_batch as r','i.invoice_no','=','r.invoice_no')
-		                ->whereRaw("i.qty > 0 AND i.for_kitting='1' AND k.issue_no='".$req->issuanceno."'".$lotno_cond.$item_cond) //i.item=r.item AND 
+		                ->whereRaw("i.qty > 0 AND i.iqc_status in(1,4) AND k.issue_no='".$req->issuanceno."'".$lotno_cond.$item_cond) //i.item=r.item AND i.for_kitting='1'
                         ->where('i.deleted',0)
 		                ->select(DB::raw('i.id as id'),
                             DB::raw('i.item as item'),
@@ -1858,7 +1858,7 @@ class WBSMaterialKittingController extends Controller
         	$data = DB::connection($this->mysql)->table('tbl_wbs_inventory as i')
 		                ->join('tbl_wbs_material_kitting_details as k','i.item','=','k.item')
 		                // ->join('tbl_wbs_material_receiving_batch as r','i.invoice_no','=','r.invoice_no')
-		                ->whereRaw("i.qty > 0 AND i.for_kitting='1' AND k.issue_no='".$req->issuanceno."'".$item_cond)//i.item=r.item AND 
+		                ->whereRaw("i.qty > 0 AND i.iqc_status in(1,4) AND k.issue_no='".$req->issuanceno."'".$item_cond)//i.item=r.item AND i.for_kitting='1'
                         ->where('i.deleted',0)
 		                ->select(DB::raw('i.id as id'),
                             DB::raw('i.item as item'),
