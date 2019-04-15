@@ -54,6 +54,23 @@ $( function() {
 		$('#status').val($(this).attr('data-iqc_status'));
 	});
 
+    $('#btn_refresh').on('click', function() {
+        $('#loading').modal('show');
+        $.ajax({
+            url: refreshInventoryURL,
+            type: 'POST',
+            dataType: 'json',
+        }).done(function(data, textStatus, xhr) {
+            msg(data.msg,data.status);
+            inventoryTable(inventoryListURL);
+        }).fail(function(xhr, textStatus, errorThrown) {
+            console.log("error");
+        }).always(function() {
+            $('#loading').modal('hide');
+        });
+        
+    });
+
 });
 
 
