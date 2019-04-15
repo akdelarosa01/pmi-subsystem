@@ -347,4 +347,28 @@ class WBSInventoryController extends Controller
             });
         })->download('xls');
     }
+
+    public function refresh_inventory()
+    {
+        DB::connection($this->mysql)
+            ->select("update tbl_wbs_inventory
+                    set for_kitting = 1
+                    where iqc_status in(1,4)");
+
+        DB::connection($this->mysql)
+            ->select("update tbl_wbs_material_receiving_batch
+                    set for_kitting = 1
+                    where iqc_status in(1,4)");
+
+        DB::connection($this->mysql)
+            ->select("update tbl_wbs_local_receiving_batch
+                    set for_kitting = 1
+                    where iqc_status in(1,4)");
+
+
+        return $data = [
+            'msg' => 'Successfully updated.',
+            'status' => 'success'
+        ];
+    }
 }

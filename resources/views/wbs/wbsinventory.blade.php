@@ -87,9 +87,9 @@ $readonly = "readonly";?>
 
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            {{-- <button class="btn btn-sm green" id="btn_add">
-                        			<i class="fa fa-plus"></i> Add
-                        		</button> --}}
+                            <button class="btn btn-sm green" id="btn_refresh">
+                    			<i class="fa fa-refresh"></i> Refresh Inventory
+                    		</button>
 
                             <button class="btn btn-sm red" id="btn_delete" {{ $state }}>
                                 <i class="fa fa-trash"></i> Delete
@@ -119,6 +119,7 @@ $readonly = "readonly";?>
 var token = '{{ Session::token() }}';
 var inventoryListURL = "{{ url('/wbs-inventory-list') }}";
 var inventorySearchURL = "{{ url('/wbs-inventory-search') }}";
+var refreshInventoryURL = "{{ url('/wbs-inventory-refresh') }}";
 
 var deleteselected = "{{ url('/wbs-inventory-delete') }}";
 var getPartcodeSearchURL = "{{url('/iqcdbgetitemsearch')}}";
