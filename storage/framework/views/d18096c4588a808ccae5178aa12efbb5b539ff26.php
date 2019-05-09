@@ -8096,13 +8096,13 @@
         <table width="100%" class="font16">
             <tbody>
                 <tr>
-                    <td width="30px"></td>
+                    <td width="20px"></td>
 
-                    <td width="80px"></td>
+                    <td width="50px"></td>
 
                     <td width="40px" class="text-center"><?php echo e($dt->prepared_by); ?></td>
 
-                    <td width="40px" class="text-center">J. FABABIER</td>
+                    <td width="40px" class="text-center">A. M. NUEVA</td>
 
                     <td width="40px" class="text-center">E.S. MOLINA</td>
                 </tr>
