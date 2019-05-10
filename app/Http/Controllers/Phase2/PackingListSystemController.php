@@ -522,16 +522,28 @@ class PackingListSystemController extends Controller
                         if (strlen($row[1]) == 15 || substr($row[1],0,2) == 'SJ' || substr($row[1],0,2) == 'ES' || substr($row[1],0,2) == 'PO') {
                             $unitprice = $row[4];
                         } else {
-                            if ($this->checkBUNR($row[1]) == 'PACKAGING') {
-                                $unitprice = $row[4];
-                            } else {
-                                $markup = DB::connection($this->common)->table('invoicing_markup')
-                                            ->where('prod_line',Auth::user()->productline)
-                                            ->select('multiplier')->first();
 
-                                $percent = $row[4]*$markup->multiplier;
-                                $unitprice = $row[4]+ $percent;
-                            }
+                             $code = $row[1];
+                             $isInXtank = DB::connection($this->mssql)->table('XTANK')
+                                     ->select('CODE')
+                                     ->where('CODE',$code)
+                                    ->get();
+                                    
+                             if (count($isInXtank) > 0){
+                                    if ($this->checkBUNR($row[1]) == 'PACKAGING') {
+                                        $unitprice = $row[4];
+                                    } else {
+                                        $markup = DB::connection($this->common)->table('invoicing_markup')
+                                                    ->where('prod_line',Auth::user()->productline)
+                                                    ->select('multiplier')->first();
+
+                                        $percent = $row[4]*$markup->multiplier;
+                                        $unitprice = $row[4]+ $percent;
+                                    }
+                              }else{
+                                  $unitprice = $row[4];
+                              }
+
                         }
                         $amt = $row[5] * $unitprice;
                         DB::connection($this->mysql)->table('ypics_invoicingdetails')
@@ -627,16 +639,38 @@ class PackingListSystemController extends Controller
                         if (strlen($row[1]) == 15 || substr($row[1],0,2) == 'SJ' || substr($row[1],0,2) == 'ES' || substr($row[1],0,2) == 'PO') {
                             $unitprice = $row[4];
                         } else {
-                            if ($this->checkBUNR($row[1]) == 'PACKAGING') {
-                                $unitprice = $row[4];
-                            } else {
-                                $markup = DB::connection($this->common)->table('invoicing_markup')
-                                            ->where('prod_line',Auth::user()->productline)
-                                            ->select('multiplier')->first();
 
-                                $percent = $row[4]*$markup->multiplier;
-                                $unitprice = $row[4]+ $percent;
-                            }
+                               $code = $row[1];
+                             $isInXtank = DB::connection($this->mssql)->table('XTANK')
+                                     ->select('CODE')
+                                     ->where('CODE',$code)
+                                    ->get();
+                                    
+                             if (count($isInXtank) > 0){
+                                    if ($this->checkBUNR($row[1]) == 'PACKAGING') {
+                                        $unitprice = $row[4];
+                                    } else {
+                                        $markup = DB::connection($this->common)->table('invoicing_markup')
+                                                    ->where('prod_line',Auth::user()->productline)
+                                                    ->select('multiplier')->first();
+
+                                        $percent = $row[4]*$markup->multiplier;
+                                        $unitprice = $row[4]+ $percent;
+                                    }
+                              }else{
+                                  $unitprice = $row[4];
+                              }
+
+                            // if ($this->checkBUNR($row[1]) == 'PACKAGING') {
+                            //     $unitprice = $row[4];
+                            // } else {
+                            //     $markup = DB::connection($this->common)->table('invoicing_markup')
+                            //                 ->where('prod_line',Auth::user()->productline)
+                            //                 ->select('multiplier')->first();
+
+                            //     $percent = $row[4]*$markup->multiplier;
+                            //     $unitprice = $row[4]+ $percent;
+                            // }
                         }
                         $amt = $row[5] * $unitprice;
 
@@ -736,7 +770,7 @@ class PackingListSystemController extends Controller
                 }
                 $message = "Packing List Successfully Updated.";
             }
-
+             
             $output = $message;
             return $selecteditem;
         // }
