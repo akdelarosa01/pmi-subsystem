@@ -31,6 +31,7 @@
 		}
 		.to {
 			font-size: 16px;
+			/*FONT-SIZE: 14PX;*/
 			/*border:1px solid;*/
 			height: 130px;
 		}
@@ -89,11 +90,12 @@
 			</div>
 			<br>
 
-
+{{--  font-size: 16px; --}}
 			<div class="row" style="font-size: 16px;">
 				<div class="col-xs-6">
 					<div class="row" style="margin-top: 15px">
 						<div class="col-xs-offset-1 col-xs-5">
+						{{-- style="font-size: 15px; --}}
 							<span class="text-center" style="font-size: 15px;">{{ $carrier_name }}</span>
 						</div>
 						<div class="col-xs-offset-1 col-xs-5">
@@ -102,7 +104,8 @@
 					</div>
 					<br>
 					<br>
-					<div class="row">
+					<div class="row">  
+					{{-- style="font-size: 15px; --}}
 						<div class="col-xs-offset-1 col-xs-5" style="font-size: 15px;">
 							<span class="text-center">{{ $port_loading }}</span>
 						</div>
@@ -116,6 +119,7 @@
 
 				<div class="col-xs-6">
 					<div class="row">
+					{{-- style="font-size: 15px; --}}
 						<div class="col-xs-offset-1 col-xs-11" style="font-size: 15px;">
 							FROM:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ nl2br($from) }}<br>
 							TO:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ nl2br($to) }}<br>
@@ -143,7 +147,7 @@
 				</div>
 
 				{{-- P.O. Details --}}
-
+{{-- style="font-size: 16px; --}}
 				<div class="row" style="font-size: 16px;">
 					<div class="col-xs-12">
 						<div class="row item_details">
@@ -174,23 +178,24 @@
 					</div>
 				</div>
 
-
+{{-- font-size: 16px; --}}
 				<div class="row" style="font-size: 16px;">
 					<div class="col-xs-offset-1 col-xs-4">
-						<h4><strong>CASEMARK:</strong></h4>
+						<h5><strong>CASEMARK:</strong></h5>
 						<p><?php echo nl2br($case_marks); ?></p>
 					</div>
 					<div class="col-xs-4">
-						<h4><strong>NOTE/HIGHLIGHT:</strong></h4>
+						<h5><strong>NOTE/HIGHLIGHT:</strong></h5>
 						<p><?php echo nl2br($note); ?></p>
 					</div>
 					<div class="col-xs-3">
-						<h4><strong>GROSS WEIGHT:</strong></h4>
+						<h5><strong>GROSS WEIGHT:</strong></h5>
 						<p>{{ $grsweight }}</p>
 					</div>
 				</div>
 			</div>
 		</div>
+		{{--  style="font-size: 16px;"--}}
 		<div class="row" style="font-size: 16px;">
 			<div class="col-xs-offset-1 col-xs-2">
 				<strong>Prepared By:<br> {{ $preparedBy }}</strong>

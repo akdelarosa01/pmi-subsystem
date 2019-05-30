@@ -87,9 +87,9 @@ $readonly = "readonly";?>
 
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <?php /* <button class="btn btn-sm green" id="btn_add">
-                        			<i class="fa fa-plus"></i> Add
-                        		</button> */ ?>
+                            <button class="btn btn-sm green" id="btn_refresh">
+                    			<i class="fa fa-refresh"></i> Refresh Inventory
+                    		</button>
 
                             <button class="btn btn-sm red" id="btn_delete" <?php echo e($state); ?>>
                                 <i class="fa fa-trash"></i> Delete
@@ -119,6 +119,7 @@ $readonly = "readonly";?>
 var token = '<?php echo e(Session::token()); ?>';
 var inventoryListURL = "<?php echo e(url('/wbs-inventory-list')); ?>";
 var inventorySearchURL = "<?php echo e(url('/wbs-inventory-search')); ?>";
+var refreshInventoryURL = "<?php echo e(url('/wbs-inventory-refresh')); ?>";
 
 var deleteselected = "<?php echo e(url('/wbs-inventory-delete')); ?>";
 var getPartcodeSearchURL = "<?php echo e(url('/iqcdbgetitemsearch')); ?>";

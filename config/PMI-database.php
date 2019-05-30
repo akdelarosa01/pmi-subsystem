@@ -260,7 +260,7 @@ return [
 
 	'mysqlyieldts' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yielding'),
             'username' => env('DB_USERNAME', 'root'),

@@ -8014,14 +8014,14 @@
             <li class="liDetails"><?php echo e($details1->no_of_packaging); ?></li>
         </ul>
     </div>
-    <div style="height:25px"></div>
+    <div style="height:24px"></div>
 
-    <div class="detailsmarksno font16">
+    <div class="detailsmarksno font16" style="font-size: 11px!important;">
         <?php echo nl2br($details1->case_marks);?>
     </div>
 
     <br>
-    <div style="height: 50px;"></div>
+    <div style="height: 48px;"></div>
 
     <div class="list">
         <table class="table table-borderless" style="margin-top:30px;">
@@ -8091,18 +8091,18 @@
     <br>
     <div class="zerorated font16" style="margin-bottom:20px">ZERO RATED</div>
     <br>
-    <div style="height:45px"></div>
+    <div style="height:40px"></div>
     <div class="font16">
         <table width="100%" class="font16">
             <tbody>
                 <tr>
-                    <td width="30px"></td>
+                    <td width="20px"></td>
 
-                    <td width="80px"></td>
+                    <td width="50px"></td>
 
                     <td width="40px" class="text-center"><?php echo e($dt->prepared_by); ?></td>
 
-                    <td width="40px" class="text-center">J. FABABIER</td>
+                    <td width="40px" class="text-center">A. M. NUEVA</td>
 
                     <td width="40px" class="text-center">E.S. MOLINA</td>
                 </tr>

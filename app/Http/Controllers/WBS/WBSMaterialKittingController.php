@@ -1136,6 +1136,7 @@ class WBSMaterialKittingController extends Controller
 
             return $pdf->inline('KittingList_'.$req->po);
 
+
         }
         
     }
