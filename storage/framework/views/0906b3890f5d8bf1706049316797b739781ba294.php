@@ -399,10 +399,13 @@
                         <ul class="sub-menu">
                         <?php foreach($userProgramAccess as $access): ?>
                             <?php if($access->program_code == "6001"): ?>
-                                <?php $url = "/addnewYieldperformance"; $icon = "fa fa-pencil-square-o";?>
+                                <?php $url = "/addnewYieldperformance"; $url2 = "/ReworkYieldperformance"; $icon = "fa fa-pencil-square-o";?>                             
                                 <?php if($access->read_write != "0"): ?>
                                     <li>
                                         <a href="<?php echo e(url($url)); ?>"><i class="<?php echo e($icon); ?>" ></i> <?php echo e($access->program_name); ?></a>
+                                    </li>
+                                     <li>
+                                        <a href="<?php echo e(url($url2)); ?>"><i class="<?php echo e($icon); ?>" ></i>Rework Yield Perfomance</a>
                                     </li>
                                 <?php endif; ?>
                             <?php elseif($access->program_code == "6002"): ?>

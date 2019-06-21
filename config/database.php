@@ -27,6 +27,7 @@ return [
     */
 
     'default' => env('DB_CONNECTION', 'common'),//mysql
+
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -42,15 +43,16 @@ return [
     | choice installed on your machine before you begin development.
     |
     */
+
     'connections' => [
 
         'common' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_common'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -60,11 +62,11 @@ return [
 
         'mysqlts' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -74,11 +76,11 @@ return [
 
         'mysqlcn' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_cn'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -88,11 +90,11 @@ return [
 
         'mysqlyf' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yf'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -102,11 +104,11 @@ return [
 
         'mysqlpps' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -116,11 +118,11 @@ return [
 
         'mysqlmold' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -130,11 +132,11 @@ return [
 
         'mysqlstockqueryts' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_stockquery_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -144,11 +146,11 @@ return [
 
         'mysqlstockquerycn' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_stockquery_cn'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -158,11 +160,11 @@ return [
 
         'mysqlstockqueryyf' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_stockquery_yf'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -170,13 +172,15 @@ return [
             'engine' => null,
         ],
 
+        
+
         'mysqlwbsts' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_wbs_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -186,11 +190,11 @@ return [
 
         'mysqlwbscn' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_wbs_cn'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -200,11 +204,11 @@ return [
 
         'mysqlwbsyf' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_wbs_yf'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -214,11 +218,11 @@ return [
 
         'mysqltrafficts' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_ts'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -228,11 +232,11 @@ return [
 
         'mysqltrafficcn' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_cn'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -242,11 +246,11 @@ return [
 
         'mysqltrafficyf' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_traffic_yf'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -254,13 +258,41 @@ return [
             'engine' => null,
         ],
 
-        'mysqlyieldts' => [
+    'mysqlyieldts' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '192.168.200.50'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'pmi_yielding'),
-            'username' => env('DB_USERNAME', 'do.arca'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'mysqlmrpts' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'pmi_mrp_ts'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'mysqlsssts' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'pmi_sss_ts'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'password'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
@@ -298,68 +330,67 @@ return [
 
         'sqlsrvcn' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', '192.168.200.33'),
+            'host' => env('DB_HOST', '192.168.3.247'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'cn_v4'),
             'username' => env('DB_USERNAME', 'sa'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'password' => env('DB_PASSWORD', 'Pr1c0N'),
             'prefix' => '',
         ],
 
         'sqlsrvbu' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', '192.168.200.33'),
+            'host' => env('DB_HOST', '192.168.3.247'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'password' => env('DB_PASSWORD', 'Pr1c0N'),
             'prefix' => '',
         ],
 
         'sqlsrvts' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', '192.168.200.33'),
+            'host' => env('DB_HOST', '192.168.3.247'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'password' => env('DB_PASSWORD', 'Pr1c0N'),
             'prefix' => '',
         ],
 
         'sqlsrvyf' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', '192.168.200.33'),
+            'host' => env('DB_HOST', '192.168.3.247'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'yf_v4'),
             'username' => env('DB_USERNAME', 'sa'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'password' => env('DB_PASSWORD', 'Pr1c0N'),
             'prefix' => '',
         ],
 
 
         'sqlsrvpps' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', '192.168.200.33'),
+            'host' => env('DB_HOST', '192.168.3.247'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'password' => env('DB_PASSWORD', 'Pr1c0N'),
             'prefix' => '',
         ],
 
         'sqlsrvmold' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', '192.168.200.33'),
+            'host' => env('DB_HOST', '192.168.3.247'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'bu2_v4'),
             'username' => env('DB_USERNAME', 'sa'),
-            'password' => env('DB_PASSWORD', 'P@55w0rd'),
+            'password' => env('DB_PASSWORD', 'Pr1c0N'),
             'prefix' => '',
         ],
 
     ],
 
-    
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table

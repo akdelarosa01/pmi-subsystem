@@ -2815,7 +2815,7 @@
 		.table {
 		    width: 100%;
 		    max-width: 100%;
-		    margin-bottom: 20px
+		    /*margin-bottom: 20px*/
 		}
 
 		.table>tbody>tr>td,
@@ -2824,8 +2824,8 @@
 		.table>tfoot>tr>th,
 		.table>thead>tr>td,
 		.table>thead>tr>th {
-		    padding: 8px;
-		    line-height: 1.42857143;
+		    /*padding: 8px;
+		    line-height: 1.42857143;*/
 		    vertical-align: top;
 		    border-top: 1px solid #ddd
 		}
@@ -7844,18 +7844,14 @@
 		        display: none!important
 		    }
 		}
-
-
-
-
-
-        .tdDetails {
-            height:10px;
+    </style>
+    <style type="text/css">
+    	.tdDetails {
+            padding: 0px;
+            margin: 0px;
         }
         .list {
-            height:auto;
             min-height:470px;
-            height:auto !important;
             height:480px;
             margin-bottom:0px;
             margin-left: 15px;
@@ -7878,6 +7874,9 @@
         }
         .addresses {
             margin-left: 5px;
+            margin-top: 10px;
+            height: 50px;
+            /*border: 1px solid;*/
         }
         
         .font18 {
@@ -7917,21 +7916,21 @@
             width:43%;
             display:inline;
             margin-bottom:20px;
-            margin-left:25px;
+            margin-left:50px;
         }
         .detailsdiv2 {
             float:left;
             width:22%;
             display:inline;
             margin-bottom:20px;
-            margin-left:25px;
+            margin-left:50px;
         }
         .marksno {
             float:left;
-            width:33%;
+            width:35%;
             display:inline;
             margin-bottom:20px;
-            margin-left:27px;
+            margin-left:50px;
 
         }
         .detailsdetails {
@@ -7947,6 +7946,8 @@
             margin-top:15px;
             margin-left:73%;
             width:29%;
+            min-height: 95px;
+            min-height: 95px;
         }
         .text-center {
             text-align:center;
@@ -7991,9 +7992,10 @@
     </div>
     <br>
     <br>
-    <div style="height:110px"></div>
+    <div style="height:40px;"></div>
     <br>
-    <div class="details detailsdiv1 font16" >
+
+    <div class="details detailsdiv1 font16">
         <ul class="nodesign detailsdetails1 font16">
             <li class="liDetails">{{$details1->shippedfrom}}</li>
             <li class="liDetails">{{$details1->shipto}}</li>
@@ -8012,12 +8014,15 @@
             <li class="liDetails">{{$details1->no_of_packaging}}</li>
         </ul>
     </div>
-    <div style="height:25px"></div>
-    <div class="detailsmarksno font16" >
+    <div style="height:24px"></div>
+
+    <div class="detailsmarksno font16" style="font-size: 11px!important;">
         <?php echo nl2br($details1->case_marks);?>
     </div>
+
     <br>
-    <div style="height: 10px"></div>
+    <div style="height: 48px;"></div>
+
     <div class="list">
         <table class="table table-borderless" style="margin-top:30px;">
             <thead>
@@ -8045,9 +8050,9 @@
 
                 ?>
                         <tr>
-                            <th width="15%" class="tdDetails">{{$dt->po_no}}</th>
+                            <th width="15%" class="tdDetails" style="padding-left:30px">{{$dt->po_no}}</th>
 
-                            <th width="33%" class="tdDetails">{{$dt->description}}</th>
+                            <th width="33%" class="tdDetails" style="padding-left:30px">{{$dt->description}}</th>
 
                             <th width="14%" class="tdDetails">{{$draftship}}</th>
 
@@ -8062,7 +8067,7 @@
 
                 ?>
                 <tr>
-                    <td colspan="2" tdDetails><h3>Control # {{$details1->packinglist_ctrl}}</h3></td>
+                    <td colspan="2" class="tdDetails" style="padding-left:20px" ><h3>Control # {{$details1->packinglist_ctrl}}</h3></td>
 
                     <td><b>TOTAL &nbsp &nbsp</b></td>
 
@@ -8073,7 +8078,7 @@
                     <td style="border-top: 3px solid !important" class="tdDetails"><b><small> USD</small> {{number_format($tot_amt,2)}}</b></td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="tdDetails"><b>NOTE / HIGHLIGHT:</b>
+                    <td colspan="3" class="tdDetails" style="padding-left:20px"><b>NOTE / HIGHLIGHT:</b>
                         </br>
                         <b>{{$details1->note_hightlight}}</b>
                     <td>
@@ -8086,20 +8091,20 @@
     <br>
     <div class="zerorated font16" style="margin-bottom:20px">ZERO RATED</div>
     <br>
-    <div style="height:45px"></div>
+    <div style="height:20px"></div>
     <div class="font16">
         <table width="100%" class="font16">
             <tbody>
                 <tr>
-                    <td width="30px"></td>
+                    <td width="20px"></td>
 
-                    <td width="80px"></td>
+                    <td width="50px"></td>
 
                     <td width="40px" class="text-center">{{$dt->prepared_by}}</td>
 
-                    <td width="40px" class="text-center">J. FABABIER</td>
+                    <td width="40px" class="text-center">A. M. NUEVA</td>
 
-                    <td width="40px" class="text-center">G.C. VELARDE</td>
+                    <td width="40px" class="text-center">E.S. MOLINA</td>
                 </tr>
             </tbody>
         </table>

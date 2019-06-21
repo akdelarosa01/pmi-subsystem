@@ -272,6 +272,14 @@ class YieldPerformanceReportController extends Controller
         return $pdf->inline('Yielding_Performance_'.date('Y-m-d'));
     }
 
+
+
+
+
+
+
+
+
     public function summaryReport(Request $req)
     {
         Excel::create('Yield_Performance_Report', function($excel) use($req)
@@ -431,6 +439,7 @@ class YieldPerformanceReportController extends Controller
                     $cell->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
+
                 $dateColums = [
                     ['B','C'],['D','E'],['F','G'],['H','I'],['J','K'],["L","M"],["N","O"],
                     ["P","Q"],["R","S"],["T","U"],["V","W"],["X","Y"],["Z","AA"],["AB","AC"],
@@ -455,13 +464,24 @@ class YieldPerformanceReportController extends Controller
                                             '".$req->po."',
                                             '".$req->family."',
                                             '".$req->ptype."',
-                                            '".$req->series."',
+                                            '".$req->series."',                            
                                             '".$req->device."')"
+
                                         )
                                 );
+                // dd($defect_data);
+
+             // $pya = DB::connection($this->mysql)->table('tbl_yielding_pya')
+             //            ->where('pono','=',$req->po)
+             //            ->select('remarks')
+             //            ->orderBY('productiondate','DESC')
+             //            ->get();
 
                 $defects = json_decode(json_encode($defect_data), true);
+                // dd($defects);
 
+                 // $rework = json_decode(json_encode($rewok_ng), true);
+                
                 $row = 13;
                 $defect_names = [];
 
@@ -473,11 +493,20 @@ class YieldPerformanceReportController extends Controller
                 $rows = array_keys($defect_names);
                 $lastColKey = 0;
 
+
+            
                 foreach ($covereddates as $datekey => $dt) {
+
+                     // $lastRow = count($dt);
+                     // echo "<br>";
+                     // echo "$lastRow";
+
+                    $rowCounter = 0;
                     $sheet->cells($dt[0].'11:'.$dt[1].'11', function($cells) {
                         $cells->setBackground('#63ace5');
                         $cells->setBorder('thin', 'thin', 'thin', 'thin');
                     });
+
                     $sheet->cells($dt[0].'12:'.$dt[1].'12', function($cells) {
                         $cells->setBackground('#63ace5');
                         $cells->setBorder('thin', 'thin', 'thin', 'thin');
@@ -485,29 +514,56 @@ class YieldPerformanceReportController extends Controller
 
                     $sheet->mergeCells($dt[0].'11:'.$dt[1].'11');
                     $sheet->cell($dt[0].'11',$dates[$datekey]);
-                    $sheet->cell($dt[0].'12','PNG');
-                    $sheet->cell($dt[1].'12','MNG');
+                    $sheet->cell($dt[1].'11','');
+                    $sheet->cell($dt[0].'12','PNG ');
+                    $sheet->cell($dt[1].'12','MNG ');
                     $sheet->setHeight(11,20);
                     $sheet->setHeight(12,20);
 
-                    foreach ($defects as $key => $df) {
-                        $totals = $defect_names[$rows[$key]];
 
-                        if ($totals == 'Input' || $totals == 'Output' || $totals == 'Production - NG' || $totals == 'Material - NG' || $totals == 'Yield w/o MNG(%)' || $totals == 'TotalYield(%)') {
-                            $sheet->mergeCells($dt[0].$rows[$key].':'.$dt[1].$rows[$key]);
+                    
+                   
+                    foreach ($defects as $key => $df) 
+                    {
+                          // $countcol = count($df);
 
-                            $sheet->cell('A'.$rows[$key], function($cell) use($totals){
-                                $cell->setValue($totals);
-                                $cell->setBackground('#fff9ae');
-                                $cell->setBorder('thin', 'thin', 'thin', 'thin');
-                            });
+                          // echo "<bt>";
+                          // echo "$countcol";
+                       // dd($defects);
+                        $totals = $df['mod'];
+                        if ($totals == 'Input' || $totals == 'Output' || $totals == 'Production - NG' || $totals == 'Material - NG' || $totals == 'Yield w/o MNG(%)' || $totals == 'TotalYield(%)'  || $totals == 'TotalYield(%)2ndPassed') {
+                            if($totals != 'TotalYield(%)2ndPassed'){
 
-                            $sheet->cells($dt[0].$rows[$key].':'.$dt[1].$rows[$key], function($cells) {
-                                $cells->setBackground('#fff9ae');
-                                $cells->setBorder('thin', 'thin', 'thin', 'thin');
-                            });
-                            $sheet->cell($dt[0].$rows[$key],($df[$dates[$datekey].'_PNG'] == 0)? '0.00' : $df[$dates[$datekey].'_PNG']);
+                                $sheet->mergeCells($dt[0].$rows[$key].':'.$dt[1].$rows[$key]);
+
+                                $sheet->cell('A'.$rows[$key], function($cell) use($totals){
+                                    $cell->setValue($totals);
+                                    $cell->setBackground('#fff9ae');
+                                    $cell->setBorder('thin', 'thin', 'thin', 'thin');
+                                   // $sheet->cell($nextCol[0].$rows[$key],$df['TOTAL_PNG'] + $df['TOTAL_MNG']);
+                                    // $sheet->cell($nextCol[1].$rows[$key],$df['REWORK']);
+                                });
+
+
+                                $sheet->cells($dt[0].$rows[$key].':'.$dt[1].$rows[$key], function($cells) {
+                                    $cells->setBackground('#FFFFFF');
+                                    $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                                });
+
+
+                                $sheet->cells($dt[0].$rows[$key], function($cells) {
+                                    $cells->setBackground('#FFFFFF');
+                                    $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                                });
+
+                                $sheet->cell($dt[0].$rows[$key],($df[$dates[$datekey].'_PNG'] == 0)? '0.00' : $df[$dates[$datekey].'_PNG']
+                                // $sheet->cell($nextCol[0].$rows[$key],$df[$dates][$datekey]['REWORK']);  
+
+                            );   
+                            }
+
                         } else {
+                            // echo "$totals<br>";
                             $sheet->cell('A'.$rows[$key], function($cell) use($totals){
                                 $cell->setValue($totals);
                                 $cell->setBorder('thin', 'thin', 'thin', 'thin');
@@ -522,48 +578,248 @@ class YieldPerformanceReportController extends Controller
                         
                         $sheet->setHeight($rows[$key],20);
                     }
+                    
 
                     $lastColKey = $datekey;
                 }
 
-                $nextCol = $dateColums[$lastColKey+1];
-                $sheet->cell($nextCol[0].'11','TOTAL');
-                $sheet->cell($nextCol[0].'12','PNG');
-                $sheet->cell($nextCol[1].'12','MNG');
+
+                
+                 $nextCol = $dateColums[$lastColKey+1];
+                 // $countcol = count($nextCol);
+
+                 // echo "<bt>";
+                 //  echo "$countcol";
+                
+                // $test = count($nextCol)+2;
+                // $sheet->cell($nextCol[0].'11','A');
+                // $sheet->cell('B'.$lastRow,"Last Row B");
+
+                // $sheet->cell($nextCol[0].'11','sads');
+                //  $sheet->cell($nextCol[1].'11','sads');
+                $currIndex =  array_search($nextCol, $dateColums);
+
+
+                $sheet->cell($nextCol[0].'11','      ');
+                $sheet->cell($nextCol[1].'11','TOTAL');
+                $sheet->cell($dateColums[$currIndex+1][0].'11','AFTER REWORK');
+
+                $sheet->cell($nextCol[0].'11','      ');  
+                 $sheet->cell($nextCol[0].'16','TOTAL:');    
+                $sheet->cell($nextCol[1].'12','NG');
+                $sheet->cell($dateColums[$currIndex+1][0].'12','NG');
+                $sheet->setHeight(11,20);
+                $sheet->setHeight(12,20);
+
+
+                 $sheet->cell($nextCol[0].'11',function($cells){
+                    $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                    // $cells->setBackground('#63ace5');
+                 }); 
+
+                  $sheet->cell($nextCol[0].'12',function($cells){
+                    $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                    // $cells->setBackground('#63ace5');
+                 }); 
+
+
+                 $sheet->cell($dateColums[$currIndex+1][0],function($cells){
+
+                 }); 
 
                 $sheet->cells($nextCol[0].'11:'.$nextCol[1].'11', function($cells) {
-                    $cells->setBackground('#63ace5');
+                    $cells->setBackground('#FFFF00');
                     $cells->setBorder('thin', 'thin', 'thin', 'thin');
                 });
                 $sheet->cells($nextCol[0].'12:'.$nextCol[1].'12', function($cells) {
-                    $cells->setBackground('#63ace5');
+                    $cells->setBackground('##FFFF00');
                     $cells->setBorder('thin', 'thin', 'thin', 'thin');
                 });
 
+
+
+                $sheet->cells($dateColums[$currIndex+1][0].'11', function($cells) {
+                    $cells->setBackground('##FFFF00');
+                    $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                 });
+
+
+                $sheet->cells($dateColums[$currIndex+1][0].'12', function($cells) {
+                    $cells->setBackground('##FFFF00');
+                    $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                 });
+
+
+
+
+
+
+                // dd($defects);
+                foreach ($defects as $key => $df) {
+                    $totals = $defect_names[$rows[$key]];
+                    if ($totals == 'Input'  || $totals == 'Output' || $totals == 'Production - NG' || $totals == 'Material - NG' || $totals == 'Yield w/o MNG(%)' || $totals == 'TotalYield(%)' || $totals == 'TotalYield(%)2ndPassed' ) {
+
+                            if(!  ($totals == 'Output' || $totals == 'Production - NG' || $totals == 'Material - NG' || $totals == 'Yield w/o MNG(%)' || $totals == 'TotalYield(%)' || $totals == 'TotalYield(%)2ndPassed' )){ 
+
+                            // $sheet->cells($nextCol[0].':'.$nextCol[1]);    
+                            // $sheet->cells($nextCol[0].$rows[$key].':'.$nextCol[1].$rows[$key], function($cells) {
+
+                            // $sheet->cell($nextCol[0].$rows[$key],'=SUM(B26,B27)');
+                            // $sheet->cell($nextCol[1].$rows[$key],$df['REWORK']);
+                            // $cells->setBorder('thin', 'thin', 'thin', 'thin');
+
+                            // // dd($sheet);                                               
+                            // });                         
+                             // $sheet->cell('P1','=SUM(P4,P10)');                           
+                             // $sheet->setCellValue('H2','=SUM(G2*F2)');
+                             $currIndex =  array_search($nextCol, $dateColums);
+                            //echo "<br>nextCol[0] : $nextCol[0].rows[key] : $rows[$key] ---- nextCol[1]: $nextCol[1].rows[key]: $rows[$key]";
+                             $sheet->cells($nextCol[0].$rows[$key].':'.$nextCol[1].$rows[$key], function($cells) {
+                             $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                            });
+
+                              $sheet->cell($nextCol[1].$rows[$key],'=SUM(B26,B27)');
+
+
+                            $sheet->cells($dateColums[$currIndex+1][0].$rows[$key], function($cells) {
+                            $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                            });
+
+
+                              $sheet->cell($dateColums[$currIndex+1][0].$rows[$key],$df['REWORK']);
+
+
+                             }
+
+                    } else {
+                        // echo "<br>";
+                        // echo "$rows[$key]";
+                        $currIndex =  array_search($nextCol, $dateColums);
+                        $sheet->cells($nextCol[0].$rows[$key].':'.$nextCol[1].$rows[$key], function($cells) {
+                             $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+
+                         $sheet->cell($nextCol[1].$rows[$key],$df['TOTAL_PNG'] + $df['TOTAL_MNG']);
+
+                          $sheet->cells($dateColums[$currIndex+1][0].$rows[$key], function($cells) {
+                             $cells->setBorder('thin', 'thin', 'thin', 'thin');
+                        });
+
+                         $sheet->cell($dateColums[$currIndex+1][0].$rows[$key],$df['REWORK']);
+                         // $sheet->cell($nextCol[1].$rows[$key],($df['TOTAL_MNG'] == 0)? '0.00' : );
+                         
+                    }
+                    $sheet->setHeight($rows[$key],20);
+                }
+
+
+
+
+
+                $lastRow = count($defects)+1+3+10;
+                 // echo "<br>";
+                 // echo "$lastRow";
+                $sheet->cell('A'.$lastRow,"Last Row A");
+                $sheet->cell('B'.$lastRow,"Last Row B");
+                // $h = "hello";
+                $total_text = array("Input"=>"Total Input","Output"=>"Total Output","Production - NG"=>"Total PNG","Material - NG"=>"Total MNG","Yield w/o MNG(%)"=>"Total Yield w/o MNG(%)","TotalYield(%)"=>"TotalYield(%)(1st Passed)","TotalYield(%)2ndPassed"=>"TotalYield(%)(2nd Passed)");
+                // echo "$h";
                 foreach ($defects as $key => $df) {
                     $totals = $defect_names[$rows[$key]];
 
-                    if ($totals == 'Input' || $totals == 'Output' || $totals == 'Production - NG' || $totals == 'Material - NG' || $totals == 'Yield w/o MNG(%)' || $totals == 'TotalYield(%)') {
 
-                        $sheet->mergeCells($nextCol[0].$rows[$key].':'.$nextCol[1].$rows[$key]);
-                        $sheet->cells($nextCol[0].$rows[$key].':'.$nextCol[1].$rows[$key], function($cells) {
-                            $cells->setBackground('#fff9ae');
+                    if ($totals == 'Input' || $totals == 'Output' || $totals == 'Production - NG' || $totals == 'Material - NG' || $totals == 'Yield w/o MNG(%)' || $totals == 'TotalYield(%)' || $totals == 'TotalYield(%)2ndPassed') {
+
+
+                        $sheet->mergeCells('B'.$lastRow.':'.'C'.$lastRow);
+                        $sheet->cells('B'.$lastRow.':'.'C'.$lastRow, function($cells) {
+                            $cells->setBackground('#ffffff');
                             $cells->setBorder('thin', 'thin', 'thin', 'thin');
                         });
-                        $sheet->cell($nextCol[0].$rows[$key],($df['TOTAL_PNG'] == 0)? '0.00' : $df['TOTAL_PNG']);
-                    } else {
-                        $sheet->cells($nextCol[0].$rows[$key].':'.$nextCol[1].$rows[$key], function($cells) {
-                            $cells->setBorder('thin', 'thin', 'thin', 'thin');
-                        });
-                        $sheet->cell($nextCol[0].$rows[$key],($df['TOTAL_PNG'] == 0)? '0.00' : $df['TOTAL_PNG']);
-                        $sheet->cell($nextCol[1].$rows[$key],($df['TOTAL_MNG'] == 0)? '0.00' : $df['TOTAL_MNG']);
-                    }
 
-                    $sheet->setHeight($rows[$key],20);
+                            $sheet->cell('A'.$lastRow,$total_text[$totals]);
+                            $sheet->cells('A'.$lastRow, function($cells) {
+                            $cells->setBackground('#AFFFA9');
+                            });
+
+                         $sheet->cell('B'.$lastRow,($df['TOTAL_PNG'] == 0)? '0.00' : $df['TOTAL_PNG']);
+                         $sheet->setBorder('A'.$lastRow, 'thin');
+                         $sheet->setBorder('B'.$lastRow, 'thin');
+
+                         $lastRow++;
+                         
+                    } 
+
+                    $sheet->setHeight($lastRow,20);
                 }
+
             });
-        })->download('xls');
+          })->download('xls');
+        // });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function defectSummary(Request $req)
     {

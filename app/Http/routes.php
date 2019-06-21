@@ -2505,7 +2505,35 @@ Route::group(['middleware' => 'web'], function () {
             Route::get('/addnewYieldperformance', [
                 'uses' => 'Yielding\AddnewYieldingPerformanceController@getYieldPerformance',
                 'name' => 'addnewYieldperformance'
+
+
+            //DITO LALAGAY YUNG SA REWORK YIELD PERFORMANC
+
             ]);
+             Route::get('/ReworkYieldperformance', [
+                'uses' => 'Yielding\ReworkYieldPerformanceController@GetReworkYieldPerformance',
+                'name' => 'ReworkYieldperformance'
+            ]);
+
+
+
+             Route::get('/GetPoDetails', [
+                'uses' => 'Yielding\ReworkYieldPerformanceController@GetPoDetails',
+                'name' => 'GetPoDetails'
+            ]);
+
+
+              Route::post('/rework-yield', [
+                'uses' => 'Yielding\ReworkYieldPerformanceController@ReworkyieldPerformanceUpdate',
+                'name' => 'rework-yield'
+            ]);
+
+
+
+
+
+             //SA LOOB
+                       
             Route::get('/displaypya', [
                 'uses' => 'Yielding\AddnewYieldingPerformanceController@displaypya',
                 'name' => 'displaypya'
@@ -3272,6 +3300,5 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/wbs-inventory-delete', 'WBS\WBSInventoryController@deleteselected');
     Route::post('/wbs-inventory-save', 'WBS\WBSInventoryController@savedata');
     Route::get('/wbs-inventory-excel', 'WBS\WBSInventoryController@inventory_excel');
-
 
 
