@@ -89,14 +89,19 @@ $( function() {
 		$('#edit_item_desc').val($(this).attr('data-item_desc'));
 		$('#edit_pmr_detail_id').val($(this).attr('data-pmr_detail_id'));
 		$('#edit_request_qty').val($(this).attr('data-request_qty'));
+		$('#total_request_qty_hidden').val($(this).attr('data-total_request_qty'));
+		$('#issued_qty_t_hidden').val($(this).attr('data-issued_qty_t'));
 		$('#edit_served_qty').val($(this).attr('data-servedqty'));
 		$('#edit_lot_no').val($(this).attr('data-lot_no'));
+		$('#old_issued_qty').val($(this).attr('data-issued_qty_t'));
 
-		var issue_qty = parseFloat($(this).attr('data-request_qty')) - parseFloat($(this).attr('data-servedqty'));
+		var issue_qty =  parseFloat($(this).attr('data-total_request_qty')) - parseFloat($(this).attr('data-servedqty'));
 
-		$('#edit_issued_qty').val(issue_qty);
+		$('#edit_issued_qty').val($(this).attr('data-issued_qty_t'));
+
+		$('#remaining_issued_qty').val(issue_qty);
 		$('#edit_location').val($(this).attr('data-location'));
-
+		
 		$('#editIssuanceModal').modal('show');
 	});
 
@@ -112,25 +117,84 @@ $( function() {
 
 	$('#btn_update_details').on('click', function() {
 		var detail_id = parseFloat($('#edit_detail_id').val());
-		var total_issued = parseFloat($('#edit_served_qty').val()) + parseFloat($('#edit_issued_qty').val());
+		var total_issued = 0;
+		// var totalrequest = parseFloat($('#totalrequestqty').val());
+	 	var total_request_qty = parseFloat($('#total_request_qty_hidden').val());
+	 	total_issued = parseFloat($('#edit_served_qty').val()) - parseFloat($('#old_issued_qty').val());
+		total_issued = total_issued + parseFloat($('#edit_issued_qty').val());
 
-
-		if (total_issued > $('#edit_request_qty').val()) {
+		if (total_issued > total_request_qty) {
 			msg("Issue quantity is greater than request qty.",'failed');
+
 		} else if ($('#edit_lot_no').val() == '') {
+
 			msg("Please specify a Lot Number.",'failed');
 		} else {
+			var partNos = [];
+			// var newissuance = [];
 			for (var i = issuance.length - 1; i >= 0; --i) {
-				if (issuance[i].detail_id == detail_id) {
-					issuance[i].issued_qty_t = $('#edit_issued_qty').val();
-					issuance[i].lot_no = $('#edit_lot_no').val();
-					issuance[i].inv_id = $('#edit_inv_id').val();
-				}
+				partNos.push(issuance[i].item);
+				// if (issuance[i].detail_id == detail_id) {
+				// 	issuance[i].issued_qty_t = $('#edit_issued_qty').val();
+				// 	issuance[i].total_request_qty = $('#total_request_qty_hidden').val();
+				// 	issuance[i].lot_no = $('#edit_lot_no').val();
+				// 	issuance[i].inv_id = $('#edit_inv_id').val();
+				// 	issuance[i].servedqty = total_issued;
+					
+				// }
 			}
+			var counter = 0;
+			var served_qty_per_item = [];
+			var served_qty_per_item2 = [];
 
+			$.each(partNos, function(i, val) {
+				 // var ind = partNos.indexOf($('#edit_item').val());
+
+				 if (val == $('#edit_item').val()) {
+				 	var  issued_qty_t = "";
+				 	if (issuance[i].detail_id == $('#edit_detail_id').val()) {
+				 		issued_qty_t = $('#edit_issued_qty').val();
+				 	}else{
+				 		issued_qty_t = issuance[i].issued_qty_t; 
+				 	}
+				 	var newissuance = {
+				 		'detail_id': issuance[i].detail_id,
+						'id': issuance[i].id,
+						'inv_id':$('#edit_inv_id').val(),
+						'issuance_no': issuance[i].issuance_no,
+						'issued_qty_o': issuance[i].issued_qty_o,
+						'issued_qty_t': issued_qty_t,
+						'item': issuance[i].item,
+						'item_desc': issuance[i].item_desc,
+						'location': issuance[i].location,
+						'lot_no': $('#edit_lot_no').val(),
+						'pmr_detail_id': issuance[i].pmr_detail_id,
+						'request_no': issuance[i].request_no,
+						'request_qty': issuance[i].request_qty,
+						'servedqty': total_issued
+				 		};
+					issuance.splice(i, 1, newissuance);
+					// var newtotal_req_qty = parseFloat($('#total_request_qty_hidden').val()) - parseFloat($('#old_issued_qty').val());
+					// newtotal_req_qty = newtotal_req_qty + parseFloat($('#edit_issued_qty').val());
+					served_qty_per_item.push(issuance[i].item,total_issued,total_issued);
+				 }
+				 else{
+				 	served_qty_per_item.push(issuance[i].item,issuance[i].servedqty,issuance[i].issued_qty_t);
+				 }
+				 counter++;
+				 var rem = counter % 1;
+				 if (rem == 0) {
+				 	served_qty_per_item2.push(served_qty_per_item);
+				 	served_qty_per_item = [];
+				 	counter = 0;
+				 }
+			});
+			console.log("counter:" + counter);
+
+			console.log("issuance");
 			console.log(issuance);
 
-			makeIssuanceTable(issuance,total_issued);
+			makeIssuanceTable(issuance,served_qty_per_item2);
 			$('#editIssuanceModal').modal('hide');
 		}
 	});
@@ -327,6 +391,7 @@ function makeViewDetailsTable(arr) {
 }
 
 function makeIssuanceTable(arr,served_qty_per_item) {
+	console.log("datatable initialization:");
 	console.log(served_qty_per_item);
 	$('#tbl_issuance').dataTable().fnClearTable();
     $('#tbl_issuance').dataTable().fnDestroy();
@@ -344,6 +409,7 @@ function makeIssuanceTable(arr,served_qty_per_item) {
             { data: function(x) {
 
             	var servedqty = 0;
+            	var total_request_qty = 0;
 
             	if ($.isArray(served_qty_per_item)) {
             		$.each(served_qty_per_item, function(i, xx) {
@@ -355,10 +421,12 @@ function makeIssuanceTable(arr,served_qty_per_item) {
 	            		if (serves[0] == x.item) {
 	            			console.log(xx.item);
 	            			servedqty = serves[1];
+	            			total_request_qty =  serves[2];
 	            		}
 	            	});
             	} else {
             		servedqty = (x.servedqty == undefined)? x.issued_qty_t : x.servedqty;
+            		total_request_qty =(x.total_request_qty == undefined)? served_qty_per_item : x.total_request_qty;
             	}
 
             	
@@ -372,6 +440,7 @@ function makeIssuanceTable(arr,served_qty_per_item) {
 							"data-issued_qty_t='"+x.issued_qty_t+"'"+
 							"data-location='"+x.location+"'"+
 							"data-lot_no='"+x.lot_no+"'"+
+							"data-total_request_qty='"+total_request_qty+"'"+
 							"data-servedqty='"+servedqty+"'>"+
                 			"<i class='fa fa-edit'></i>"+
                 		"</button>";

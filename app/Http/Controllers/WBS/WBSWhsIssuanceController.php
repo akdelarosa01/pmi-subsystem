@@ -200,7 +200,8 @@ class WBSWhsIssuanceController extends Controller
 				                    ->where('transno',$req->transno)
 				                    ->select(
 				                    	DB::raw("code as item"),
-										DB::raw("SUM(servedqty) as served_qty")
+										DB::raw("SUM(servedqty) as served_qty"),
+										DB::raw('SUM(requestqty) as total_request_qty')
 									)
 									->groupBy('code')
 									->get();
@@ -496,7 +497,7 @@ class WBSWhsIssuanceController extends Controller
 											->where('issuance_no',$summary->issuance_no)
 											->select('item',
 													DB::raw('SUM(issued_qty_t) as served_qty'),
-													DB::raw('SUM(request_qty) as request_qty'))
+													DB::raw('SUM(request_qty) as total_request_qty'))
 											->groupBy('item')
 											->get();
 
@@ -609,7 +610,8 @@ class WBSWhsIssuanceController extends Controller
             $served_qty_per_items = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
 								->where('issuance_no',$summary->issuance_no)
 								->select('item',
-										DB::raw('SUM(issued_qty_t) as served_qty'))
+										DB::raw('SUM(issued_qty_t) as served_qty'),
+										DB::raw('SUM(request_qty) as total_request_qty'))
 								->groupBy('item')
 								->get();
 
@@ -688,7 +690,8 @@ class WBSWhsIssuanceController extends Controller
                 $served_qty_per_items = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
 								->where('issuance_no',$summary->issuance_no)
 								->select('item',
-										DB::raw('SUM(issued_qty_t) as served_qty'))
+										DB::raw('SUM(issued_qty_t) as served_qty'),
+										DB::raw('SUM(request_qty) as total_request_qty'))
 								->groupBy('item')
 								->get();
 
@@ -775,7 +778,8 @@ class WBSWhsIssuanceController extends Controller
                 $served_qty_per_items = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
 								->where('issuance_no',$summary->issuance_no)
 								->select('item',
-										DB::raw('SUM(issued_qty_t) as served_qty'))
+										DB::raw('SUM(issued_qty_t) as served_qty'),
+										DB::raw('SUM(request_qty) as total_request_qty'))
 								->groupBy('item')
 								->get();
 
@@ -860,7 +864,8 @@ class WBSWhsIssuanceController extends Controller
             $served_qty_per_items = DB::connection($this->mysql)->table('tbl_wbs_warehouse_mat_issuance_details')
 									->where('issuance_no',$summary->issuance_no)
 									->select('item',
-											DB::raw('SUM(issued_qty_t) as served_qty'))
+											DB::raw('SUM(issued_qty_t) as served_qty'),
+											DB::raw('SUM(request_qty) as total_request_qty'))
 									->groupBy('item')
 									->get();
 

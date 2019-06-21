@@ -48,6 +48,8 @@
                                     <input type="text" class="form-control input-sm" id="edit_request_qty" name="edit_request_qty" readonly>
                                 </div>
                             </div>
+
+                             <input type="hidden" class="form-control input-sm" id="total_request_qty_hidden" name="total_request_qty_hidden" readonly>
                             <div class="form-group">
                                 <label class="control-label col-sm-3">Served Qty.</label>
                                 <div class="col-sm-9">
@@ -58,6 +60,17 @@
                                 <label class="control-label col-sm-3">Issued Qty.</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control input-sm" id="edit_issued_qty" name="edit_issued_qty">
+                                </div>
+                            </div>
+						
+								
+                                    <input type="hidden" class="form-control input-sm" id="old_issued_qty" name="old_isssued_qty">
+                                
+
+                             <div class="form-group">
+                                <label class="control-label col-sm-3">Remaining issued Qty.</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control input-sm" id="remaining_issued_qty" name="remaining_issued_qty_issued_qty" readonly="">
                                 </div>
                             </div>
                             <div class="form-group">
